@@ -28,7 +28,7 @@ This index provides a quick reference to all project documentation. Each documen
 
 ### For Project Managers
 **Start here:** [Project Timeline](06-project-timeline-sprints.md)  
-**Then read:** [User Stories](07-user-stories-acceptance-criteria.md), [Next Steps Checklist](08-next-steps-checklist.md)
+**Then read:** [User Stories](07-user-stories-acceptance-criteria.md)
 
 ### For Restaurant Owners (Pilot Partner)
 **Start here:** [Executive Summary](00-executive-summary.md)  
@@ -219,27 +219,6 @@ This index provides a quick reference to all project documentation. Each documen
 
 ---
 
-### 9. Next Steps & Implementation Checklist
-**File:** [08-next-steps-checklist.md](08-next-steps-checklist.md)  
-**Audience:** All Team Members, Project Managers  
-**Length:** ~30 pages  
-**Purpose:** Step-by-step guide from documentation to launch
-
-**Key Sections:**
-- Documentation complete checklist
-- Immediate next steps (review, team assembly, kickoff)
-- Development environment setup (infrastructure, local dev, database, version control)
-- Development phase (Week 1-3 detailed tasks)
-- Launch phase (Week 4 detailed tasks)
-- Post-launch activities (monitoring, optimization, expansion)
-- Success criteria checklist
-- Key learnings and best practices
-- Final checklist before starting development
-
-**When to Read:** Right now! This is your action plan to get started.
-
----
-
 ## 🗂️ Documentation by Phase
 
 ### Pre-Development Phase (Current)
@@ -251,7 +230,7 @@ This index provides a quick reference to all project documentation. Each documen
 6. ✅ [API Specification](05-api-specification.md) - API contracts
 7. ✅ [Project Timeline](06-project-timeline-sprints.md) - When to build
 8. ✅ [User Stories](07-user-stories-acceptance-criteria.md) - Detailed requirements
-9. ✅ [Next Steps Checklist](08-next-steps-checklist.md) - Action plan
+9. ✅ [Referral Sharing Implementation Guide](09-referral-sharing-implementation-guide.md) - Code/QR sharing flow
 
 ### Development Phase (Weeks 1-3)
 - Refer to: [Project Timeline](06-project-timeline-sprints.md) for sprint tasks
@@ -260,11 +239,9 @@ This index provides a quick reference to all project documentation. Each documen
 - Refer to: [API Specification](05-api-specification.md) for API integration
 
 ### Launch Phase (Week 4)
-- Refer to: [Next Steps Checklist](08-next-steps-checklist.md) for launch tasks
 - Refer to: [Project Timeline](06-project-timeline-sprints.md) for Sprint 4 details
 
 ### Post-Launch Phase (Weeks 5-8)
-- Refer to: [Next Steps Checklist](08-next-steps-checklist.md) for post-launch activities
 - Refer to: [MVP Scope (MoSCoW)](02-mvp-scope-moscow.md) for Phase 2 roadmap
 
 ---
@@ -310,7 +287,7 @@ A: See [API Specification](05-api-specification.md) - All sections
 A: See [Project Timeline](06-project-timeline-sprints.md) - Section 1 (3-4 weeks)
 
 **Q: What do I need to do next?**  
-A: See [Next Steps Checklist](08-next-steps-checklist.md) - Section "Immediate Next Steps"
+A: See [Project Timeline](06-project-timeline-sprints.md) - Sprint 1 tasks
 
 **Q: How do I test a feature?**  
 A: See [User Stories](07-user-stories-acceptance-criteria.md) - Find the story, check acceptance criteria
@@ -344,14 +321,13 @@ A: See [Project Timeline](06-project-timeline-sprints.md) - Section 9 (RM21,000-
 3. [MVP Scope (MoSCoW)](02-mvp-scope-moscow.md) - 1 hour
 4. [Technical Architecture](04-technical-architecture.md) - 1.5 hours
 5. [Project Timeline](06-project-timeline-sprints.md) - 1.5 hours
-6. [Next Steps Checklist](08-next-steps-checklist.md) - 1 hour
 
-**Total Time: ~8 hours**
+**Total Time: ~7 hours**
 
 ### For Quick Start (Essential Only)
 1. [Executive Summary](00-executive-summary.md) - Sections 1-5 (30 min)
 2. [MVP Scope (MoSCoW)](02-mvp-scope-moscow.md) - "Must Have" section (30 min)
-3. [Next Steps Checklist](08-next-steps-checklist.md) - "Immediate Next Steps" (30 min)
+3. [Project Timeline](06-project-timeline-sprints.md) - Sprint overview (30 min)
 
 **Total Time: ~1.5 hours**
 
@@ -407,7 +383,7 @@ Before starting development, ensure:
 
 ---
 
-**Ready to build ShareSaji? Start with [Next Steps Checklist](08-next-steps-checklist.md)!** 🚀
+**Ready to build ShareSaji? Start with [Project Timeline](06-project-timeline-sprints.md)!** 🚀
 
 ---
 

@@ -1,32 +1,22 @@
 # ShareSaji 🍽️
 
-**Viral Restaurant Discount Platform for Malaysian Local Restaurants**
+**Customer Engagement & Loyalty Platform**
 
-ShareSaji is a web-based platform that helps restaurants boost foot traffic and sales through multi-level discount sharing. Customers earn rewards by referring others, creating a self-sustaining promotional ecosystem.
+ShareSaji is a web-based platform that helps restaurants increase customer engagement through a referral-based reward system. Customers can earn and redeem rewards while restaurants gain insights into their promotion effectiveness.
 
 ---
 
 ## 📋 Project Overview
 
-### The Problem
-Malaysian local restaurants struggle with:
-- High customer acquisition costs
-- One-time discounts that don't drive repeat visits
-- Difficulty tracking promotion ROI
-- Limited viral marketing mechanisms
-
-### The Solution
-ShareSaji creates a win-win-win system:
-- **Customers:** Get 5% off first visit + earn unlimited virtual currency through referrals
-- **Restaurants:** Pay for performance (discounts only on actual sales), measurable ROI
-- **Viral Growth:** Multi-level rewards (up to 3 uplines) encourage aggressive sharing
+### Purpose
+A digital solution for restaurants to manage customer loyalty programs with built-in viral mechanics and real-time analytics.
 
 ### Key Features
-- 🎟️ **Two-Tier Discounts:** 5% guaranteed + virtual currency redemption (up to 20% per bill)
-- 🔗 **Multi-Level Referrals:** Earn 1% from up to 3 levels of downlines (unlimited downlines)
-- 💰 **Virtual Currency Wallet:** Track earnings, redemptions, expiry dates
-- 📊 **Analytics Dashboard:** Restaurant owners see real-time ROI
-- 🔒 **Fraud Prevention:** Staff verification, receipt photos, expiry controls
+- 🎟️ **Discount Management:** Configurable discount system with multiple reward tiers
+- 🔗 **Referral System:** Multi-level customer referral tracking
+- 💰 **Digital Wallet:** Virtual currency management for customers
+- 📊 **Analytics Dashboard:** Real-time insights for restaurant owners
+- 🔒 **Security:** Transaction verification and fraud prevention mechanisms
 
 ---
 
@@ -156,22 +146,17 @@ See [Project Timeline](docs/06-project-timeline-sprints.md) for detailed sprint 
 
 ---
 
-## 💰 Business Model
+## 💡 Core Concepts
 
-### Revenue Model
-ShareSaji is **free for restaurants** (no subscription fees). Revenue comes from:
-1. **Premium Features** (Phase 2+): Advanced analytics, custom branding
-2. **Transaction Fees** (Phase 3+): Small fee per transaction (e.g., 0.5%)
-3. **Cross-Restaurant Network** (Phase 3+): Restaurants pay to join network
+### System Architecture
+- **Customer Portal:** Registration, wallet management, referral tracking
+- **Staff Portal:** Transaction processing, code verification, checkout interface
+- **Owner Portal:** Analytics, reporting, configuration management
 
-### Cost Structure (Per Transaction)
-- **Spender's First Use:** 5% guaranteed + 3% upline rewards = **8% total cost**
-- **Spender's Subsequent Uses:** 0% guaranteed + 3% upline rewards + up to 20% redeemed = **variable cost**
-
-### ROI for Restaurants
-- **Target:** 3:1 revenue increase vs discount costs
-- **Example:** RM100 in discounts → RM300 in new revenue
-- **Mechanism:** Increased foot traffic, repeat visits, word-of-mouth
+### Technical Approach
+- Modern web technologies for responsive, cross-platform experience
+- Real-time data synchronization for instant updates
+- Scalable backend infrastructure with cloud services
 
 ---
 
@@ -217,18 +202,18 @@ ShareSaji is **free for restaurants** (no subscription fees). Revenue comes from
 
 ## 📈 Success Metrics
 
-### MVP Success Criteria (First 4 Weeks)
-- ✅ 100+ customer registrations
-- ✅ 50%+ of users share their code
-- ✅ Average 2+ downlines per user
-- ✅ 30%+ redemption rate (virtual currency used before expiry)
-- ✅ Positive ROI for restaurant (20%+ revenue increase vs discount costs)
+### Technical Milestones
+- ✅ All core features implemented and tested
+- ✅ Responsive design across devices
+- ✅ Secure authentication and authorization
+- ✅ Real-time data synchronization
+- ✅ Production deployment successful
 
-### Long-Term KPIs (6 Months)
-- 1,000+ registered customers across 5+ restaurants
-- Virality coefficient >1.5 (self-sustaining growth)
-- Customer lifetime value 3x vs non-program customers
-- 80%+ restaurant satisfaction
+### System Performance
+- Page load time <3 seconds on 4G
+- 99% uptime during business hours
+- QR scanning <2 seconds
+- Database queries optimized with proper indexing
 
 ---
 
@@ -240,26 +225,26 @@ ShareSaji is **free for restaurants** (no subscription fees). Revenue comes from
 - Basic analytics
 - Email notifications
 
-### Phase 2: Automation & Scale (Weeks 5-10)
-- AI OCR for receipt processing
-- Cross-restaurant code sharing
-- Restaurant item database
-- Advanced analytics (CSV export, date range)
-- Social media share buttons
+### Phase 2: Enhancement (Weeks 5-10)
+- Automated receipt processing
+- Multi-location support
+- Enhanced analytics and reporting
+- Advanced data export features
+- Social media integration
 
 ### Phase 3: Optimization (Weeks 11-16)
-- Birthday offers automation
-- Personalized recommendations
-- Gamification (badges, leaderboards)
-- Parameter configuration UI for owners
-- Push notifications (PWA)
+- Automated event-based offers
+- Personalized user experience
+- Enhanced engagement features
+- Advanced configuration interface
+- Progressive Web App (PWA) capabilities
 
-### Phase 4: Growth (Months 5-6)
-- Multi-language support (Bahasa Malaysia)
-- Restaurant discovery map
-- Nutritional tracking
-- Loyalty tiers (VIP program)
-- Referral contests
+### Phase 4: Scale (Months 5-6)
+- Multi-language support
+- Location discovery features
+- Extended data tracking
+- Advanced user tiers
+- Promotional campaigns
 
 ---
 
@@ -278,19 +263,17 @@ This is currently a private project for MVP development. Contributions will be o
 
 ---
 
-## 📞 Support
+## 📞 Contact
 
-### For Customers
-- **Email:** support@sharesaji.com
-- **FAQ:** [In-app FAQ page]
+### Technical Documentation
+- **Documentation:** See `/docs` folder for comprehensive guides
+- **API Specification:** `/docs/05-api-specification.md`
+- **Architecture:** `/docs/04-technical-architecture.md`
 
-### For Restaurant Owners
-- **Email:** partners@sharesaji.com
-- **Phone:** +60 12-345-6789 (business hours)
-
-### For Developers
-- **GitHub Issues:** [Link to issues]
-- **Documentation:** See `/docs` folder
+### Project Information
+- **Status:** In Development (MVP Phase)
+- **Timeline:** 3-4 weeks estimated completion
+- **Team:** 2-3 developers
 
 ---
 
