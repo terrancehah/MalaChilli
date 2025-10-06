@@ -160,7 +160,7 @@ export default function CustomerDashboard() {
         </div>
 
         {/* Share Your Referral Code */}
-        <Card className="border-border/50 bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-950/20 dark:to-indigo-950/20">
+        <Card className="border-border/50 bg-gradient-to-br from-orange-50 to-red-50 dark:from-orange-950/20 dark:to-red-950/20">
           <CardContent className="p-5">
             <div className="flex items-center gap-2 mb-3">
               <Share2 className="h-5 w-5 text-primary" />
