@@ -63,7 +63,7 @@ export default function CustomerDashboard() {
   return (
     <div className="min-h-screen bg-background pb-6">
       {/* Header with Profile */}
-      <div className="bg-gradient-to-br from-primary to-blue-600 px-6 pt-12 pb-8 rounded-b-3xl">
+      <div className="bg-gradient-to-br from-primary to-orange-600 px-6 pt-12 pb-8 rounded-b-3xl">
         <div className="flex items-start justify-between mb-6">
           <div className="flex items-center gap-4">
             <Avatar className="h-16 w-16 border-2 border-white/20">
@@ -170,7 +170,7 @@ export default function CustomerDashboard() {
               Share your code with friends. Earn 1% when they dine!
             </p>
 
-            <div className="bg-white dark:bg-slate-800 rounded-lg p-4 border border-border/50">
+            <div className="bg-white dark:bg-slate-800 rounded-lg p-4 border border-border/50 shadow-sm">
               <div className="flex items-center justify-between mb-2">
                 <span className="text-xs text-muted-foreground uppercase tracking-wide">
                   Your Code
@@ -183,7 +183,7 @@ export default function CustomerDashboard() {
                 )}
               </div>
               <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
-                <p className="text-xl sm:text-2xl font-bold text-primary dark:text-blue-400 font-mono flex-1 break-all">
+                <p className="text-xl sm:text-2xl font-bold text-primary dark:text-orange-400 font-mono flex-1 break-all">
                   {user.referral_code}
                 </p>
                 <Button
@@ -197,8 +197,8 @@ export default function CustomerDashboard() {
               </div>
             </div>
 
-            <div className="mt-4 p-3 bg-blue-100 dark:bg-blue-950/30 rounded-lg">
-              <p className="text-xs text-blue-800 dark:text-blue-300">
+            <div className="mt-4 p-3 bg-orange-100 dark:bg-orange-950/30 rounded-lg">
+              <p className="text-xs text-orange-800 dark:text-orange-300">
                 💡 <strong>Tip:</strong> Share your link on social media to maximize your earnings!
               </p>
             </div>

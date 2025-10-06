@@ -85,7 +85,7 @@ export default function RegisterPage() {
           )}
           <p className="mt-2 text-center text-sm text-gray-600 dark:text-gray-400">
             Already have an account?{' '}
-            <Link to="/login" className="font-medium text-blue-600 dark:text-blue-400 hover:text-blue-500">
+            <Link to="/login" className="font-medium text-primary dark:text-orange-400 hover:text-primary/90">
               Sign in
             </Link>
           </p>
@@ -200,7 +200,7 @@ export default function RegisterPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed touch-manipulation min-h-[44px]"
+              className="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-base font-medium text-primary-foreground bg-primary hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary disabled:opacity-50 disabled:cursor-not-allowed touch-manipulation min-h-[44px]"
             >
               {loading ? 'Creating account...' : 'Create account'}
             </button>
@@ -208,11 +208,11 @@ export default function RegisterPage() {
 
           <div className="text-xs text-gray-500 dark:text-gray-400 text-center">
             By signing up, you agree to our{' '}
-            <Link to="/terms" className="text-blue-600 dark:text-blue-400 hover:text-blue-500 touch-manipulation">
+            <Link to="/terms" className="text-primary dark:text-orange-400 hover:text-primary/90 touch-manipulation">
               Terms of Service
             </Link>{' '}
             and{' '}
-            <Link to="/privacy" className="text-blue-600 dark:text-blue-400 hover:text-blue-500 touch-manipulation">
+            <Link to="/privacy" className="text-primary dark:text-orange-400 hover:text-primary/90 touch-manipulation">
               Privacy Policy
             </Link>
           </div>

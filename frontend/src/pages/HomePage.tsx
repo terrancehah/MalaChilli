@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 
 export default function HomePage() {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white dark:from-gray-900 dark:to-gray-950">
+    <div className="min-h-screen bg-gradient-to-b from-orange-50 to-white dark:from-gray-900 dark:to-gray-950">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
         <div className="text-center">
           <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 dark:text-white mb-4">
@@ -15,19 +15,19 @@ export default function HomePage() {
           <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center max-w-2xl mx-auto px-4">
             <Link
               to="/demo"
-              className="w-full sm:w-auto px-6 py-3 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-lg font-semibold hover:from-purple-700 hover:to-blue-700 transition shadow-lg text-center touch-manipulation min-h-[44px] flex items-center justify-center"
+              className="w-full sm:w-auto px-6 py-3 bg-gradient-to-r from-orange-600 to-red-600 text-white rounded-lg font-semibold hover:from-orange-700 hover:to-red-700 transition shadow-lg text-center touch-manipulation min-h-[44px] flex items-center justify-center"
             >
               🎨 View Demo Dashboard
             </Link>
             <Link
               to="/register"
-              className="w-full sm:w-auto px-6 py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition text-center touch-manipulation min-h-[44px] flex items-center justify-center"
+              className="w-full sm:w-auto px-6 py-3 bg-primary text-primary-foreground rounded-lg font-semibold hover:bg-primary/90 transition text-center touch-manipulation min-h-[44px] flex items-center justify-center"
             >
               Get Started
             </Link>
             <Link
               to="/login"
-              className="w-full sm:w-auto px-6 py-3 bg-white dark:bg-gray-800 text-blue-600 dark:text-blue-400 border-2 border-blue-600 dark:border-blue-400 rounded-lg font-semibold hover:bg-blue-50 dark:hover:bg-gray-700 transition text-center touch-manipulation min-h-[44px] flex items-center justify-center"
+              className="w-full sm:w-auto px-6 py-3 bg-white dark:bg-gray-800 text-primary dark:text-orange-400 border-2 border-primary dark:border-orange-400 rounded-lg font-semibold hover:bg-orange-50 dark:hover:bg-gray-700 transition text-center touch-manipulation min-h-[44px] flex items-center justify-center"
             >
               Login
             </Link>
