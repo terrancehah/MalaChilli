@@ -6,6 +6,7 @@ import HomePage from './pages/HomePage';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import CustomerDashboard from './pages/customer/Dashboard';
+import DemoDashboard from './pages/DemoDashboard';
 
 function App() {
   return (
@@ -17,6 +18,9 @@ function App() {
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/join/:restaurantSlug/:referralCode" element={<RegisterPage />} />
+          
+          {/* Demo route - no authentication needed */}
+          <Route path="/demo" element={<DemoDashboard />} />
           
           {/* Customer routes */}
           <Route path="/dashboard" element={<CustomerDashboard />} />
