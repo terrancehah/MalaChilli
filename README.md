@@ -248,21 +248,6 @@ See [Project Timeline](docs/06-project-timeline-sprints.md) for detailed sprint 
 
 ---
 
-## 🤝 Contributing
-
-This is currently a private project for MVP development. Contributions will be opened after Phase 1 launch.
-
-### Development Workflow
-1. Create feature branch from `develop`
-2. Implement feature with tests
-3. Create pull request to `develop`
-4. Code review by team lead
-5. Merge after approval and passing tests
-6. Deploy to staging for QA
-7. Merge `develop` to `main` for production
-
----
-
 ## 📞 Contact
 
 ### Technical Documentation
@@ -282,25 +267,6 @@ This is currently a private project for MVP development. Contributions will be o
 Copyright © 2025 ShareSaji. All rights reserved.
 
 This project is proprietary software. Unauthorized copying, distribution, or use is strictly prohibited.
-
----
-
-## 🙏 Acknowledgments
-
-- **Supabase** - For excellent BaaS platform
-- **Vercel** - For seamless frontend hosting
-- **SendGrid** - For reliable email delivery
-- **React Community** - For amazing open-source libraries
-
----
-
-## 📝 Changelog
-
-### Version 0.1.0 (2025-09-30)
-- Initial project setup
-- Documentation created (PRD, technical specs, timeline)
-- Database schema designed
-- Ready for development kickoff
 
 ---
 
