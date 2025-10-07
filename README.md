@@ -39,35 +39,7 @@ ShareSaji/
 
 ---
 
-## 🚀 Quick Start
 
-### Prerequisites
-- Node.js 18+ and npm
-- Supabase account (free tier)
-- SendGrid account (for emails)
-- Git
-
-### Installation (Coming Soon)
-```bash
-# Clone repository
-git clone https://github.com/yourusername/ShareSaji.git
-cd ShareSaji
-
-# Install dependencies
-npm install
-
-# Setup environment variables
-cp .env.example .env
-# Edit .env with your Supabase and SendGrid credentials
-
-# Run database migrations
-npm run db:migrate
-
-# Start development server
-npm run dev
-```
-
----
 
 ## 📚 Documentation
 
@@ -133,18 +105,7 @@ See [MVP Scope Document](docs/02-mvp-scope-moscow.md) for complete breakdown.
 
 ---
 
-## 📅 Timeline
 
-**Total Duration:** 3-4 weeks (2 developers)
-
-- **Week 1:** Foundation & Setup (auth, registration, referrals)
-- **Week 2:** Core Transactions (checkout, wallet, rewards)
-- **Week 3:** Analytics & Polish (owner dashboard, emails, UI)
-- **Week 4:** Launch Preparation (UAT, training, deployment)
-
-See [Project Timeline](docs/06-project-timeline-sprints.md) for detailed sprint plan.
-
----
 
 ## 💡 Core Concepts
 
@@ -181,86 +142,7 @@ See [Project Timeline](docs/06-project-timeline-sprints.md) for detailed sprint 
 
 ---
 
-## 🧪 Testing Strategy
 
-### Manual Testing
-- All user flows tested end-to-end
-- Responsive design verified on iOS Safari, Android Chrome, desktop
-- QR scanning tested on multiple devices
-
-### Automated Testing
-- Unit tests for utility functions (80% coverage target)
-- Integration tests for API calls
-- CI/CD pipeline with GitHub Actions
-
-### User Acceptance Testing (UAT)
-- 5-10 beta testers (friends, family)
-- Guided testing sessions
-- Feedback collection and prioritization
-
----
-
-## 📈 Success Metrics
-
-### Technical Milestones
-- ✅ All core features implemented and tested
-- ✅ Responsive design across devices
-- ✅ Secure authentication and authorization
-- ✅ Real-time data synchronization
-- ✅ Production deployment successful
-
-### System Performance
-- Page load time <3 seconds on 4G
-- 99% uptime during business hours
-- QR scanning <2 seconds
-- Database queries optimized with proper indexing
-
----
-
-## 🗺️ Roadmap
-
-### Phase 1: MVP (Weeks 1-4) - **Current**
-- Single restaurant pilot
-- Manual transaction entry
-- Basic analytics
-- Email notifications
-
-### Phase 2: Enhancement (Weeks 5-10)
-- Automated receipt processing
-- Multi-location support
-- Enhanced analytics and reporting
-- Advanced data export features
-- Social media integration
-
-### Phase 3: Optimization (Weeks 11-16)
-- Automated event-based offers
-- Personalized user experience
-- Enhanced engagement features
-- Advanced configuration interface
-- Progressive Web App (PWA) capabilities
-
-### Phase 4: Scale (Months 5-6)
-- Multi-language support
-- Location discovery features
-- Extended data tracking
-- Advanced user tiers
-- Promotional campaigns
-
----
-
-## 📞 Contact
-
-### Technical Documentation
-- **Documentation:** See `/docs` folder for comprehensive guides
-- **API Specification:** `/docs/05-api-specification.md`
-- **Architecture:** `/docs/04-technical-architecture.md`
-
-### Project Information
-- **Status:** In Development (MVP Phase)
-- **Timeline:** 3-4 weeks estimated completion
-- **Team:** 2-3 developers
-
----
 
 ## 📄 License
 
