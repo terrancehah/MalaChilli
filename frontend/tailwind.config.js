@@ -8,19 +8,35 @@ export default {
   theme: {
   	extend: {
   		colors: {
+  			// MalaChilli Brand Colors (Malaysian Green Food Theme)
+  			primary: {
+  				DEFAULT: '#0A5F0A', // Forest Green
+  				dark: '#004D00',     // Deep Green
+  				light: '#7CB342',    // Lime Green
+  				foreground: '#FFFFFF'
+  			},
+  			secondary: {
+  				DEFAULT: '#F9FAFB',  // Off-White
+  				foreground: '#111827'
+  			},
+  			// Semantic Colors
+  			success: '#10B981',
+  			warning: '#F59E0B',
+  			error: '#EF4444',
+  			info: '#3B82F6',
+  			// Gray Scale
+  			gray: {
+  				50: '#F9FAFB',
+  				100: '#E5E7EB',
+  				600: '#6B7280',
+  				900: '#111827'
+  			},
+  			// Original shadcn colors for compatibility
   			border: 'hsl(var(--border))',
   			input: 'hsl(var(--input))',
   			ring: 'hsl(var(--ring))',
   			background: 'hsl(var(--background))',
   			foreground: 'hsl(var(--foreground))',
-  			primary: {
-  				DEFAULT: 'hsl(var(--primary))',
-  				foreground: 'hsl(var(--primary-foreground))'
-  			},
-  			secondary: {
-  				DEFAULT: 'hsl(var(--secondary))',
-  				foreground: 'hsl(var(--secondary-foreground))'
-  			},
   			destructive: {
   				DEFAULT: 'hsl(var(--destructive))',
   				foreground: 'hsl(var(--destructive-foreground))'
@@ -40,19 +56,28 @@ export default {
   			card: {
   				DEFAULT: 'hsl(var(--card))',
   				foreground: 'hsl(var(--card-foreground))'
-  			},
-  			chart: {
-  				'1': 'hsl(var(--chart-1))',
-  				'2': 'hsl(var(--chart-2))',
-  				'3': 'hsl(var(--chart-3))',
-  				'4': 'hsl(var(--chart-4))',
-  				'5': 'hsl(var(--chart-5))'
   			}
+  		},
+  		fontFamily: {
+  			sans: ['Inter', 'Segoe UI', 'system-ui', '-apple-system', 'sans-serif'],
+  			display: ['Pacifico', 'Brush Script MT', 'cursive']
   		},
   		borderRadius: {
   			lg: 'var(--radius)',
   			md: 'calc(var(--radius) - 2px)',
-  			sm: 'calc(var(--radius) - 4px)'
+  			sm: 'calc(var(--radius) - 4px)',
+  			pill: '50px',  // Full pill shape for buttons
+  			card: '24px'   // Card border radius
+  		},
+  		spacing: {
+  			'1': '4px',
+  			'2': '8px',
+  			'3': '12px',
+  			'4': '16px',
+  			'5': '24px',
+  			'6': '32px',
+  			'7': '48px',
+  			'8': '64px'
   		}
   	}
   },

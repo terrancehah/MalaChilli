@@ -1,64 +1,55 @@
-import { useAuth } from '../../contexts/AuthContext';
-import { useNavigate } from 'react-router-dom';
-import { formatCurrency } from '@/lib/utils';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Card, CardContent } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import {
-  Wallet,
-  TrendingUp,
-  Receipt,
-  ChevronRight,
-  Sparkles,
+import { Link } from 'react-router-dom';
+import { 
+  Wallet, 
+  TrendingUp, 
+  Users, 
+  Copy, 
+  Check, 
   QrCode,
-  Users,
-  Share2,
-  Copy,
-  Check,
+  ChevronRight,
+  LogOut,
+  Gift,
+  History
 } from 'lucide-react';
 import { useState } from 'react';
 
-// Mock data - will be replaced with real API calls
-const mockData = {
-  balance: 0,
-  totalEarned: 0,
-  totalRedeemed: 0,
-  friendsReferred: 0,
+// Mock data for demo - will be replaced with real API calls
+const mockUser = {
+  fullName: 'Demo User',
+  email: 'demo@malachilli.com',
+  referralCode: 'SAJI-DEMO01',
+  balance: 45.50,
+  totalEarned: 125.00,
+  totalRedeemed: 79.50,
+  downlines: 12,
   memberSince: 'Jan 2024',
-  recentTransactions: [
-    // Will be populated from database
-  ],
+  profileImage: null
 };
 
+const mockTransactions = [
+  { id: 1, restaurant: 'Nasi Lemak Corner', amount: 50.00, earned: 5.00, date: '2024-10-08', type: 'reward' },
+  { id: 2, restaurant: 'Satay House', amount: 35.00, redeemed: 10.00, date: '2024-10-06', type: 'redemption' },
+  { id: 3, restaurant: 'Teh Tarik Cafe', amount: 28.00, earned: 3.50, date: '2024-10-05', type: 'reward' },
+];
+
 export default function CustomerDashboard() {
-  const { user, signOut } = useAuth();
-  const navigate = useNavigate();
   const [copied, setCopied] = useState(false);
 
-  const handleSignOut = async () => {
-    await signOut();
-    navigate('/');
-  };
-
   const handleCopyCode = () => {
-    if (user?.referral_code) {
-      navigator.clipboard.writeText(user.referral_code);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    }
+    navigator.clipboard.writeText(mockUser.referralCode);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
   };
 
-  if (!user) {
-    navigate('/login');
-    return null;
-  }
+  const formatCurrency = (amount: number) => {
+    return `RM${amount.toFixed(2)}`;
+  };
 
-  const initials = user.full_name
-    ?.split(' ')
+  const initials = mockUser.fullName
+    .split(' ')
     .map((n) => n[0])
     .join('')
-    .toUpperCase() || user.nickname?.[0]?.toUpperCase() || 'U';
+    .toUpperCase();
 
   return (
     <div className="min-h-screen bg-background pb-6">

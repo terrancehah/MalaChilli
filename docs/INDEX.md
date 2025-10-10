@@ -1,18 +1,31 @@
-# ShareSaji Documentation Index
+# MalaChilli Documentation Index
+
+**Last Updated:** 2025-10-10  
+**Status:** Reorganized & Consolidated
+
 ## Complete Project Documentation Navigator
 
-**Last Updated:** 2025-09-30  
-**Project Status:** Documentation Complete, Ready for Development
+**Last Updated:** 2025-10-10  
+**Project Status:** Documentation Reorganized, Ready for Development
 
 ---
 
-## 📖 How to Use This Documentation
+## Documentation Reorganization (2025-10-10)
 
-This index provides a quick reference to all project documentation. Each document serves a specific purpose and audience. Start with the document that matches your role and needs.
+**Changes Made:**
+- Created `09-frontend-development-guide.md` - All frontend/UI content consolidated
+- Updated `01-product-requirements-document.md` - Added final discount model decision
+- Updated `03-database-schema-design.md` - Added schema validation conclusions
+- Updated `04-technical-architecture.md` - Frontend section redirects to doc 09
+- Deleted `10-schema-design-analysis.md` - Consolidated into doc 03
+- Deleted `11-guaranteed-discount-scenarios-analysis.md` - Consolidated into doc 01
+- Deleted `12-final-discount-model-decision.md` - Consolidated into doc 01
+
+**Result:** 9 core documents (down from 12), better organized by concern
 
 ---
 
-## 🎯 Quick Start by Role
+## Quick Start by Role
 
 ### For Stakeholders & Investors
 **Start here:** [Executive Summary](00-executive-summary.md)  
@@ -22,7 +35,11 @@ This index provides a quick reference to all project documentation. Each documen
 **Start here:** [Product Requirements Document](01-product-requirements-document.md)  
 **Then read:** [MVP Scope (MoSCoW)](02-mvp-scope-moscow.md), [User Stories](07-user-stories-acceptance-criteria.md)
 
-### For Developers
+### For Frontend Developers
+**Start here:** [Frontend Development Guide](09-frontend-development-guide.md)  
+**Then read:** [API Specification](05-api-specification.md), [Referral Implementation](08-referral-sharing-implementation-guide.md)
+
+### For Backend Developers
 **Start here:** [Technical Architecture](04-technical-architecture.md)  
 **Then read:** [Database Schema](03-database-schema-design.md), [API Specification](05-api-specification.md)
 
@@ -32,12 +49,13 @@ This index provides a quick reference to all project documentation. Each documen
 
 ### For Restaurant Owners (Pilot Partner)
 **Start here:** [Executive Summary](00-executive-summary.md)  
-**Then read:** [Product Requirements Document](01-product-requirements-document.md) (Section 2: Target Users, Section 4: Discount Mechanism)
+**Then read:** [Product Requirements Document](01-product-requirements-document.md) (Section 14.1: Final Discount Model)
 
 ---
 
-## 📚 Complete Documentation List
+## Complete Documentation List
 
+{{ ... }}
 ### 1. Executive Summary
 **File:** [00-executive-summary.md](00-executive-summary.md)  
 **Audience:** Stakeholders, Investors, Restaurant Partners  
@@ -265,7 +283,7 @@ This index provides a quick reference to all project documentation. Each documen
 
 ### Common Questions & Where to Find Answers
 
-**Q: What is ShareSaji?**  
+**Q: What is MalaChilli?**  
 A: See [Executive Summary](00-executive-summary.md) - Section 1 & 2
 
 **Q: How does the referral system work?**  
@@ -351,7 +369,7 @@ A: See [Project Timeline](06-project-timeline-sprints.md) - Section 9 (RM21,000-
 - **SendGrid:** https://docs.sendgrid.com/
 
 ### Project Management
-- **GitHub:** https://github.com/yourusername/ShareSaji (to be created)
+- **GitHub:** https://github.com/yourusername/MalaChilli (to be created)
 - **Slack/WhatsApp:** Team communication channel (to be setup)
 
 ---
@@ -383,8 +401,8 @@ Before starting development, ensure:
 
 ---
 
-**Ready to build ShareSaji? Start with [Project Timeline](06-project-timeline-sprints.md)!** 🚀
+**Ready to build MalaChilli? Start with [Project Timeline](06-project-timeline-sprints.md)!** 🚀
 
 ---
 
-*This documentation was created on 2025-09-30 and represents the complete project specification for ShareSaji MVP. All documents are living documents and may be updated as the project evolves.*
+*This documentation was created on 2025-09-30 and represents the complete project specification for MalaChilli MVP. All documents are living documents and may be updated as the project evolves.*

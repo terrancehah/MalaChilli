@@ -1,11 +1,12 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './contexts/AuthContext';
 
-// Placeholder pages (to be implemented in Phase 1)
+// Auth pages with new Malaysian green food design
+import Login from './pages/customer/Login';
+import Register from './pages/customer/Register';
+
+// Other pages
 import HomePage from './pages/HomePage';
-import LoginPage from './pages/LoginPage';
-import RegisterPage from './pages/RegisterPage';
-import CustomerDashboard from './pages/customer/Dashboard';
 import DemoDashboard from './pages/DemoDashboard';
 
 function App() {
@@ -15,15 +16,13 @@ function App() {
         <Routes>
           {/* Public routes */}
           <Route path="/" element={<HomePage />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/register" element={<RegisterPage />} />
-          <Route path="/join/:restaurantSlug/:referralCode" element={<RegisterPage />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/join/:restaurantSlug/:referralCode" element={<Register />} />
           
-          {/* Demo route - no authentication needed */}
+          {/* Dashboard - no authentication needed (demo mode) */}
+          <Route path="/dashboard" element={<DemoDashboard />} />
           <Route path="/demo" element={<DemoDashboard />} />
-          
-          {/* Customer routes */}
-          <Route path="/dashboard" element={<CustomerDashboard />} />
           
           {/* Catch all - redirect to home */}
           <Route path="*" element={<Navigate to="/" replace />} />

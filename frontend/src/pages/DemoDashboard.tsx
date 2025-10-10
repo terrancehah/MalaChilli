@@ -93,7 +93,7 @@ export default function DemoDashboard() {
       </div>
 
       {/* Header with Profile */}
-      <div className="bg-gradient-to-br from-primary to-orange-600 px-6 pt-12 pb-8 rounded-b-3xl">
+      <div className="bg-gradient-to-br from-primary to-primary-light px-6 pt-12 pb-8 rounded-b-3xl">
         <div className="flex items-start justify-between mb-6">
           <div className="flex items-center gap-4">
             <Avatar className="h-16 w-16 border-2 border-white/20">
@@ -163,8 +163,8 @@ export default function DemoDashboard() {
           <Card className="border-border/50">
             <CardContent className="p-4">
               <div className="text-center">
-                <div className="h-10 w-10 rounded-lg bg-orange-500/10 flex items-center justify-center mx-auto mb-2">
-                  <Receipt className="h-5 w-5 text-orange-600" />
+                <div className="h-10 w-10 rounded-lg bg-primary-light/20 flex items-center justify-center mx-auto mb-2">
+                  <Receipt className="h-5 w-5 text-primary-light" />
                 </div>
                 <p className="text-xs text-muted-foreground mb-1">Redeemed</p>
                 <p className="text-lg font-bold text-foreground">
@@ -190,7 +190,7 @@ export default function DemoDashboard() {
         </div>
 
         {/* Share Your Referral Code */}
-        <Card className="border-border/50 bg-gradient-to-br from-orange-50 to-red-50 dark:from-orange-950/20 dark:to-red-950/20">
+        <Card className="border-border/50 bg-gradient-to-br from-primary/5 to-primary-light/10 dark:from-primary/10 dark:to-primary-light/5">
           <CardContent className="p-5">
             <div className="flex items-center gap-2 mb-3">
               <Share2 className="h-5 w-5 text-primary" />
@@ -213,7 +213,7 @@ export default function DemoDashboard() {
                 )}
               </div>
               <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
-                <p className="text-xl sm:text-2xl font-bold text-primary dark:text-orange-400 font-mono flex-1 break-all">
+                <p className="text-xl sm:text-2xl font-bold text-primary dark:text-primary-light font-mono flex-1 break-all">
                   {demoUser.referral_code}
                 </p>
                 <Button
@@ -227,8 +227,8 @@ export default function DemoDashboard() {
               </div>
             </div>
 
-            <div className="mt-4 p-3 bg-orange-100 dark:bg-orange-950/30 rounded-lg">
-              <p className="text-xs text-orange-800 dark:text-orange-300">
+            <div className="mt-4 p-3 bg-primary/10 dark:bg-primary/20 rounded-lg">
+              <p className="text-xs text-primary-dark dark:text-primary-light">
                 💡 <strong>Tip:</strong> Share your link on social media to maximize your earnings!
               </p>
             </div>

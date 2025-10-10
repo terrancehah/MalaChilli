@@ -1,8 +1,8 @@
-# ShareSaji 🍽️
+# MalaChilli 🍽️
 
 **Customer Engagement & Loyalty Platform**
 
-ShareSaji is a web-based platform that helps restaurants increase customer engagement through a referral-based reward system. Customers can earn and redeem rewards while restaurants gain insights into their promotion effectiveness.
+MalaChilli is a web-based platform that helps restaurants increase customer engagement through a referral-based reward system. Customers can earn and redeem rewards while restaurants gain insights into their promotion effectiveness.
 
 ---
 
@@ -23,7 +23,7 @@ A digital solution for restaurants to manage customer loyalty programs with buil
 ## 🏗️ Project Structure
 
 ```
-ShareSaji/
+MalaChilli/
 ├── docs/                                    # Project documentation
 │   ├── 01-product-requirements-document.md  # Comprehensive PRD
 │   ├── 02-mvp-scope-moscow.md              # Feature prioritization (MoSCoW)
@@ -146,7 +146,7 @@ See [MVP Scope Document](docs/02-mvp-scope-moscow.md) for complete breakdown.
 
 ## 📄 License
 
-Copyright © 2025 ShareSaji. All rights reserved.
+Copyright © 2025 MalaChilli. All rights reserved.
 
 This project is proprietary software. Unauthorized copying, distribution, or use is strictly prohibited.
 

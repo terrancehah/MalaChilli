@@ -2,11 +2,11 @@ import { Link } from 'react-router-dom';
 
 export default function HomePage() {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-orange-50 to-white dark:from-gray-900 dark:to-gray-950">
+    <div className="min-h-screen bg-gradient-to-b from-primary/5 to-white dark:from-gray-900 dark:to-gray-950">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
         <div className="text-center">
           <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 dark:text-white mb-4">
-            ShareSaji
+            MalaChilli
           </h1>
           <p className="text-lg sm:text-xl text-gray-600 dark:text-gray-300 mb-8 max-w-2xl mx-auto">
             Earn rewards by sharing. Save on every meal.
@@ -15,7 +15,7 @@ export default function HomePage() {
           <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center max-w-2xl mx-auto px-4">
             <Link
               to="/demo"
-              className="w-full sm:w-auto px-6 py-3 bg-gradient-to-r from-orange-600 to-red-600 text-white rounded-lg font-semibold hover:from-orange-700 hover:to-red-700 transition shadow-lg text-center touch-manipulation min-h-[44px] flex items-center justify-center"
+              className="w-full sm:w-auto px-6 py-3 bg-gradient-to-r from-primary to-primary-dark text-white rounded-lg font-semibold hover:from-primary-dark hover:to-primary-dark transition shadow-lg text-center touch-manipulation min-h-[44px] flex items-center justify-center"
             >
               🎨 View Demo Dashboard
             </Link>
@@ -27,7 +27,7 @@ export default function HomePage() {
             </Link>
             <Link
               to="/login"
-              className="w-full sm:w-auto px-6 py-3 bg-white dark:bg-gray-800 text-primary dark:text-orange-400 border-2 border-primary dark:border-orange-400 rounded-lg font-semibold hover:bg-orange-50 dark:hover:bg-gray-700 transition text-center touch-manipulation min-h-[44px] flex items-center justify-center"
+              className="w-full sm:w-auto px-6 py-3 bg-white dark:bg-gray-800 text-primary dark:text-primary-light border-2 border-primary dark:border-primary-light rounded-lg font-semibold hover:bg-primary/5 dark:hover:bg-gray-700 transition text-center touch-manipulation min-h-[44px] flex items-center justify-center"
             >
               Login
             </Link>
