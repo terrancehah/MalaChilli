@@ -10,16 +10,26 @@
 
 ---
 
-## Documentation Reorganization (2025-10-10)
+## Recent Updates
+
+### Rebranding (2025-10-10)
+**Project renamed from ShareSaji to MalaChilli**
+- ✅ All documentation updated (11 docs)
+- ✅ All code files updated (frontend, backend, migrations)
+- ✅ Malaysian green food design system implemented
+- ✅ Brand colors: Forest Green (#0A5F0A), Lime Green (#7CB342)
+- ✅ Directory renamed to `/MalaChilli`
+
+### Documentation Reorganization (2025-10-10)
 
 **Changes Made:**
-- Created `09-frontend-development-guide.md` - All frontend/UI content consolidated
-- Updated `01-product-requirements-document.md` - Added final discount model decision
-- Updated `03-database-schema-design.md` - Added schema validation conclusions
-- Updated `04-technical-architecture.md` - Frontend section redirects to doc 09
-- Deleted `10-schema-design-analysis.md` - Consolidated into doc 03
-- Deleted `11-guaranteed-discount-scenarios-analysis.md` - Consolidated into doc 01
-- Deleted `12-final-discount-model-decision.md` - Consolidated into doc 01
+- ✅ Created `09-frontend-development-guide.md` - All frontend/UI content consolidated
+- ✅ Updated `01-product-requirements-document.md` - Added final discount model decision
+- ✅ Updated `03-database-schema-design.md` - Added schema validation conclusions
+- ✅ Updated `04-technical-architecture.md` - Frontend section redirects to doc 09
+- ❌ Deleted `10-schema-design-analysis.md` - Consolidated into doc 03
+- ❌ Deleted `11-guaranteed-discount-scenarios-analysis.md` - Consolidated into doc 01
+- ❌ Deleted `12-final-discount-model-decision.md` - Consolidated into doc 01
 
 **Result:** 9 core documents (down from 12), better organized by concern
 

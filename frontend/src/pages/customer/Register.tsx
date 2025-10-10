@@ -39,7 +39,7 @@ export default function Register() {
     <div className="min-h-screen auth-gradient-bg flex items-center justify-center p-6">
       <div className="w-full max-w-md bg-white rounded-card shadow-2xl p-12">
         {/* Logo */}
-        <div className="text-center mb-8">
+        <div className="text-center mb-4">
           <h1 className="font-display text-5xl mb-2">
             <span className="text-gray-900">Mala</span>
             <span className="text-primary">Chilli</span>
@@ -48,7 +48,7 @@ export default function Register() {
         </div>
 
         {/* Profile Image Upload */}
-        <div className="mb-8">
+        <div className="mb-6">
           <div className="relative w-32 h-32 mx-auto">
             <div className="w-full h-full rounded-full overflow-hidden border-4 border-white shadow-lg bg-gradient-to-br from-primary/10 to-primary-light/10">
               {profileImage ? (

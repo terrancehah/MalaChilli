@@ -25,7 +25,7 @@ const demoUser = {
   nickname: 'Sarah',
   birthday: '1995-03-15',
   age: 29,
-  referral_code: 'SAJI-ABC123',
+  referral_code: 'CHILLI-ABC123',
   role: 'customer' as const,
   is_email_verified: true,
   email_notifications_enabled: true,
