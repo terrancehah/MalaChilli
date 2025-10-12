@@ -7,7 +7,8 @@
 
 **Recent Updates:**
 - ✅ Authentication implemented (Login & Register pages connected to Supabase)
-- ✅ Age validation (18+) on registration
+- ✅ Form validation with red borders and error messages
+- ✅ All fields required including birthday (18+ validation)
 - ✅ Referral code support in registration URL
 - ✅ Toast notifications (react-hot-toast) for success/error messages
 - ✅ Auto-redirect after successful auth
@@ -110,31 +111,41 @@
 
 **Features:**
 - Email/password registration
-- Full name required
-- Birthday optional (validates 18+ if provided)
+- All fields required (full name, email, password, birthday)
+- Real-time field validation with error messages
+- Red border highlight on invalid fields
+- Helper text below each field
 - Referral code detection from URL
-- Age calculation and validation
+- Age calculation and validation (18+)
 - Toast notifications for errors and success
 - Auto-redirect to dashboard (1.5s delay)
 
 **Implementation:**
 ```tsx
-// Uses AuthContext
+// Uses AuthContext with field validation
 const { signUp } = useAuth();
+
+// Validates all fields before submission
+// Shows red borders and error messages
+// Birthday is now required
 
 await signUp(email, password, {
   full_name: fullName,
-  birthday: birthday || null,
+  birthday: birthday, // Required field
   age: calculatedAge,
   role: 'customer'
 });
 ```
 
-**Validation:**
-- Email format validated by browser
-- Password minimum 8 characters
-- Age must be 18+ if birthday provided
-- Errors displayed as toast notifications
+**Validation Rules:**
+- **Full Name:** Required, minimum 2 characters
+- **Email:** Required, valid email format (regex validated)
+- **Password:** Required, minimum 8 characters
+- **Birthday:** Required, must be 18+ years old
+- Validation triggers on blur (when user leaves field)
+- Real-time error clearing when user corrects input
+- Red border and error text for invalid fields
+- Gray helper text for valid fields
 
 ---
 

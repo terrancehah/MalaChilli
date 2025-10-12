@@ -16,7 +16,8 @@
 **Login & Registration Connected to Supabase**
 - ✅ Login page integrated with AuthContext
 - ✅ Register page integrated with AuthContext
-- ✅ Age validation (18+) on registration
+- ✅ **Form validation** - Real-time validation with red borders and error messages
+- ✅ **Birthday required** - All fields mandatory with age validation (18+)
 - ✅ Referral code URL support (`/join/:restaurantSlug/:code`)
 - ✅ **Toast notifications** - Modern UX with react-hot-toast (top-right, auto-dismiss)
 - ✅ **Simplified registration** - Removed profile image upload for cleaner UX
