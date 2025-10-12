@@ -5,10 +5,12 @@
 **Date:** 2025-10-12  
 **Tech Stack:** React 18, Vite, Tailwind CSS, Supabase Client
 
-**Recent Updates:**
+**Recent Updates (2025-10-13):**
 - ✅ Authentication implemented (Login & Register pages connected to Supabase)
 - ✅ Form validation with red borders and error messages
 - ✅ All fields required including birthday (18+ validation)
+- ✅ **Schema validation** - Only inserts fields that exist in database
+- ✅ **Fixed registration bug** - Removed non-existent columns (nickname, age, is_email_verified, email_notifications_enabled)
 - ✅ Referral code support in registration URL
 - ✅ Toast notifications (react-hot-toast) for success/error messages
 - ✅ Auto-redirect after successful auth

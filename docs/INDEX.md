@@ -12,7 +12,7 @@
 
 ## Recent Updates
 
-### Authentication Implementation (2025-10-12)
+### Authentication Implementation (2025-10-13)
 **Login & Registration Connected to Supabase**
 - ✅ Login page integrated with AuthContext
 - ✅ Register page integrated with AuthContext
@@ -20,13 +20,15 @@
 - ✅ **Duplicate email prevention** - Clear error message if email already registered
 - ✅ **Birthday required** - All fields mandatory with age validation (18+)
 - ✅ **Age calculated from birthday** - No age column in DB, calculated via SQL views
+- ✅ **Schema fixed** - Removed non-existent columns (nickname, is_email_verified, email_notifications_enabled)
+- ✅ **Password management** - Supabase Auth handles passwords, password_hash nullable (Migration 010)
 - ✅ Referral code URL support (`/join/:restaurantSlug/:code`)
 - ✅ **Toast notifications** - Modern UX with react-hot-toast (top-right, auto-dismiss)
 - ✅ **Simplified registration** - Removed profile image upload for cleaner UX
-- ✅ **User profile creation** - Handled in AuthContext.signUp() (application-side)
+- ✅ **User profile creation** - Only inserts fields that exist in DB schema
 - ✅ **Referral code generation** - Creates CHILLI-XXXXXX codes on signup
-- ✅ **RLS policies fixed** - Migrations 008 & 009 for INSERT and SELECT permissions
-- ✅ Documentation updated (Doc 09, migrations README)
+- ✅ **RLS policies fixed** - Migrations 008, 009, 010 for INSERT, SELECT, and password_hash
+- ✅ Documentation updated to match production database schema
 
 ### Rebranding (2025-10-10)
 **Project renamed from ShareSaji to MalaChilli**

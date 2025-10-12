@@ -87,19 +87,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       // Generate referral code
       const referralCode = `CHILLI-${Math.random().toString(36).substring(2, 8).toUpperCase()}`;
       
-      // Insert user profile (age is calculated from birthday, not stored)
+      // Insert user profile (only fields that exist in database schema)
       const { error: profileError } = await supabase
         .from('users')
         .insert({
           id: data.user.id,
           email: data.user.email,
           full_name: userData.full_name || data.user.email?.split('@')[0],
-          nickname: userData.full_name?.split(' ')[0] || data.user.email?.split('@')[0],
           birthday: userData.birthday || null,
           referral_code: referralCode,
           role: userData.role || 'customer',
-          is_email_verified: data.user.email_confirmed_at ? true : false,
-          email_notifications_enabled: true,
+          email_verified: data.user.email_confirmed_at ? true : false,
         });
 
       if (profileError) throw profileError;
