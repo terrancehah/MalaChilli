@@ -76,9 +76,30 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     if (error) throw error;
     
-    // User profile will be created by database trigger
-    // Fetch the profile after signup
+    // Create user profile in database
     if (data.user) {
+      // Generate referral code
+      const referralCode = `CHILLI-${Math.random().toString(36).substring(2, 8).toUpperCase()}`;
+      
+      // Insert user profile
+      const { error: profileError } = await supabase
+        .from('users')
+        .insert({
+          id: data.user.id,
+          email: data.user.email,
+          full_name: userData.full_name || data.user.email?.split('@')[0],
+          nickname: userData.full_name?.split(' ')[0] || data.user.email?.split('@')[0],
+          birthday: userData.birthday || null,
+          age: userData.age || null,
+          referral_code: referralCode,
+          role: userData.role || 'customer',
+          is_email_verified: data.user.email_confirmed_at ? true : false,
+          email_notifications_enabled: true,
+        });
+
+      if (profileError) throw profileError;
+      
+      // Fetch the profile after creation
       await fetchUserProfile(data.user.id);
     }
   };

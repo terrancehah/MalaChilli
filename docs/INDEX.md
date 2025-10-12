@@ -20,7 +20,9 @@
 - ✅ Referral code URL support (`/join/:restaurantSlug/:code`)
 - ✅ Error handling and loading states
 - ✅ Success messages and auto-redirect
-- ✅ Documentation updated (Doc 09)
+- ✅ **User profile creation** - Handled in AuthContext.signUp() (application-side)
+- ✅ **Referral code generation** - Creates CHILLI-XXXXXX codes on signup
+- ✅ Documentation updated (Doc 09, migrations README)
 
 ### Rebranding (2025-10-10)
 **Project renamed from ShareSaji to MalaChilli**
