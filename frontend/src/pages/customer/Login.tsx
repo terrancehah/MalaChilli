@@ -1,16 +1,32 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../../contexts/AuthContext';
 
 export default function Login() {
   const [formData, setFormData] = useState({
     email: '',
     password: ''
   });
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+  
+  const { signIn } = useAuth();
+  const navigate = useNavigate();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Login:', formData);
-    // TODO: Implement Supabase login
+    setError('');
+    setLoading(true);
+
+    try {
+      await signIn(formData.email, formData.password);
+      // Redirect to dashboard on success
+      navigate('/dashboard');
+    } catch (err: any) {
+      setError(err.message || 'Failed to login. Please check your credentials.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -31,6 +47,13 @@ export default function Login() {
           </h1>
           <p className="text-sm text-gray-600">Welcome back!</p>
         </div>
+
+        {/* Error Message */}
+        {error && (
+          <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm">
+            {error}
+          </div>
+        )}
 
         {/* Login Form */}
         <form onSubmit={handleSubmit} className="space-y-6">
@@ -74,9 +97,10 @@ export default function Login() {
 
           <button
             type="submit"
-            className="w-full bg-white border-2 border-primary text-primary hover:bg-primary/5 font-semibold py-3.5 px-8 rounded-pill transition-all duration-200"
+            disabled={loading}
+            className="w-full bg-white border-2 border-primary text-primary hover:bg-primary/5 font-semibold py-3.5 px-8 rounded-pill transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            Login
+            {loading ? 'Logging in...' : 'Login'}
           </button>
         </form>
 

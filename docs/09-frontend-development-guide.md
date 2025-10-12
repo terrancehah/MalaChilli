@@ -1,9 +1,16 @@
 # Frontend Development Guide
 ## MalaChilli - React Web Application
 
-**Version:** 1.0  
-**Date:** 2025-10-10  
+**Version:** 1.1  
+**Date:** 2025-10-12  
 **Tech Stack:** React 18, Vite, Tailwind CSS, Supabase Client
+
+**Recent Updates:**
+- ✅ Authentication implemented (Login & Register pages connected to Supabase)
+- ✅ Age validation (18+) on registration
+- ✅ Referral code support in registration URL
+- ✅ Error handling and loading states
+- ✅ Auto-redirect after successful auth
 
 ---
 
@@ -75,19 +82,94 @@
 ## 3. State Management
 
 ### Global State (Context API)
-- **AuthContext:** Current user, role, login/logout functions
-- **WalletContext:** Current balance, transaction history (for customers)
+- **AuthContext:** ✅ IMPLEMENTED
+  - Current user, session management
+  - Methods: `signUp()`, `signIn()`, `signOut()`, `resetPassword()`
+  - Auto-fetches user profile from database
+  - Listens for auth state changes
+- **WalletContext:** 🚧 TO BE IMPLEMENTED
+  - Current balance, transaction history (for customers)
 
 ### Local State (useState)
 - Form inputs, UI toggles, loading states
+- Error and success messages
+- Form validation states
 
 ### Server State (Supabase Realtime)
-- Wallet balance updates (when downline spends)
-- Transaction notifications
+- Wallet balance updates (when downline spends) - 🚧 TO BE IMPLEMENTED
+- Transaction notifications - 🚧 TO BE IMPLEMENTED
 
 ---
 
-## 4. Component Design Patterns
+## 4. Authentication Flow
+
+### Registration Flow ✅ IMPLEMENTED
+
+**Route:** `/register` or `/join/:restaurantSlug/:referralCode`
+
+**Features:**
+- Email/password registration
+- Full name required
+- Birthday optional (validates 18+ if provided)
+- Profile image upload (UI ready, storage integration pending)
+- Referral code detection from URL
+- Age calculation and validation
+- Error handling with user-friendly messages
+- Success message with auto-redirect to dashboard
+
+**Implementation:**
+```tsx
+// Uses AuthContext
+const { signUp } = useAuth();
+
+await signUp(email, password, {
+  full_name: fullName,
+  birthday: birthday || null,
+  age: calculatedAge,
+  role: 'customer'
+});
+```
+
+**Validation:**
+- Email format validated by browser
+- Password minimum 8 characters
+- Age must be 18+ if birthday provided
+- All errors displayed inline
+
+---
+
+### Login Flow ✅ IMPLEMENTED
+
+**Route:** `/login`
+
+**Features:**
+- Email/password authentication
+- Password recovery link (UI ready, flow pending)
+- Error handling with user-friendly messages
+- Loading state during authentication
+- Auto-redirect to dashboard on success
+
+**Implementation:**
+```tsx
+// Uses AuthContext
+const { signIn } = useAuth();
+
+await signIn(email, password);
+// Auto-redirects to /dashboard
+```
+
+---
+
+### Protected Routes 🚧 PENDING
+
+**To be implemented:**
+- Route guard component
+- Redirect unauthenticated users to login
+- Role-based access control (customer/staff/owner)
+
+---
+
+## 5. Component Design Patterns
 
 ### Atomic Design Approach
 - **Atoms:** Button, Input, Label, Badge

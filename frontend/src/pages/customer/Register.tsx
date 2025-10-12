@@ -1,6 +1,7 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { UserPlus, Upload } from 'lucide-react';
+import { useAuth } from '../../contexts/AuthContext';
 
 export default function Register() {
   const [formData, setFormData] = useState({
@@ -10,6 +11,13 @@ export default function Register() {
     birthday: ''
   });
   const [profileImage, setProfileImage] = useState<string | null>(null);
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
+  
+  const { signUp } = useAuth();
+  const navigate = useNavigate();
+  const { referralCode } = useParams();
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -22,10 +30,51 @@ export default function Register() {
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Register:', formData);
-    // TODO: Implement Supabase registration
+    setError('');
+    setLoading(true);
+
+    // Calculate age from birthday
+    let age = null;
+    if (formData.birthday) {
+      const birthDate = new Date(formData.birthday);
+      const today = new Date();
+      age = today.getFullYear() - birthDate.getFullYear();
+      const monthDiff = today.getMonth() - birthDate.getMonth();
+      if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+        age--;
+      }
+      
+      // Validate age (must be 18+)
+      if (age < 18) {
+        setError('You must be at least 18 years old to register.');
+        setLoading(false);
+        return;
+      }
+    }
+
+    try {
+      await signUp(formData.email, formData.password, {
+        full_name: formData.fullName,
+        birthday: formData.birthday || null,
+        age: age,
+        role: 'customer',
+        // If there's a referral code from URL, it will be handled by database trigger
+      });
+      
+      setSuccess(true);
+      
+      // Show success message for 2 seconds then redirect
+      setTimeout(() => {
+        navigate('/dashboard');
+      }, 2000);
+      
+    } catch (err: any) {
+      setError(err.message || 'Failed to create account. Please try again.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -40,12 +89,31 @@ export default function Register() {
       <div className="w-full max-w-md bg-white rounded-card shadow-2xl p-12">
         {/* Logo */}
         <div className="text-center mb-4">
+          {referralCode && (
+            <div className="bg-green-50 border border-green-200 text-green-700 px-3 py-2 rounded-lg text-xs mb-3">
+              🎉 You're using referral code: <strong>{referralCode}</strong>
+            </div>
+          )}
           <h1 className="font-display text-5xl mb-2">
             <span className="text-gray-900">Mala</span>
             <span className="text-primary">Chilli</span>
           </h1>
           <p className="text-sm text-gray-600">Join and start saving!</p>
         </div>
+
+        {/* Success Message */}
+        {success && (
+          <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg text-sm mb-4">
+            ✅ Account created successfully! Redirecting...
+          </div>
+        )}
+
+        {/* Error Message */}
+        {error && (
+          <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm mb-4">
+            {error}
+          </div>
+        )}
 
         {/* Profile Image Upload */}
         <div className="mb-6">
@@ -142,9 +210,10 @@ export default function Register() {
 
           <button
             type="submit"
-            className="w-full bg-primary hover:bg-primary-dark text-white font-semibold py-3.5 px-8 rounded-pill transition-all duration-200 shadow-md hover:shadow-lg hover:-translate-y-0.5"
+            disabled={loading || success}
+            className="w-full bg-primary hover:bg-primary-dark text-white font-semibold py-3.5 px-8 rounded-pill transition-all duration-200 shadow-md hover:shadow-lg hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            Sign Up Now!
+            {loading ? 'Creating Account...' : success ? 'Success! ✓' : 'Sign Up Now!'}
           </button>
         </form>
 

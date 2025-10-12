@@ -12,6 +12,16 @@
 
 ## Recent Updates
 
+### Authentication Implementation (2025-10-12)
+**Login & Registration Connected to Supabase**
+- ✅ Login page integrated with AuthContext
+- ✅ Register page integrated with AuthContext
+- ✅ Age validation (18+) on registration
+- ✅ Referral code URL support (`/join/:restaurantSlug/:code`)
+- ✅ Error handling and loading states
+- ✅ Success messages and auto-redirect
+- ✅ Documentation updated (Doc 09)
+
 ### Rebranding (2025-10-10)
 **Project renamed from ShareSaji to MalaChilli**
 - ✅ All documentation updated (11 docs)
@@ -19,6 +29,7 @@
 - ✅ Malaysian green food design system implemented
 - ✅ Brand colors: Forest Green (#0A5F0A), Lime Green (#7CB342)
 - ✅ Directory renamed to `/MalaChilli`
+- ✅ Referral code format: `CHILLI-XXXXXX`
 
 ### Documentation Reorganization (2025-10-10)
 
