@@ -127,14 +127,17 @@ const { signUp } = useAuth();
 
 // Validates all fields before submission
 // Shows red borders and error messages
-// Birthday is now required
+// Birthday is required, age is calculated in database
 
 await signUp(email, password, {
   full_name: fullName,
-  birthday: birthday, // Required field
-  age: calculatedAge,
+  birthday: birthday, // Required - age calculated from this in DB
   role: 'customer'
 });
+
+// Note: Age is NOT stored in database
+// It's calculated via SQL: EXTRACT(YEAR FROM AGE(CURRENT_DATE, birthday))
+// Available in customer_profiles_with_age view
 ```
 
 **Validation Rules:**
@@ -146,6 +149,13 @@ await signUp(email, password, {
 - Real-time error clearing when user corrects input
 - Red border and error text for invalid fields
 - Gray helper text for valid fields
+
+**Duplicate Email Handling:**
+- Supabase Auth automatically prevents duplicate emails
+- If email already exists, shows user-friendly error:
+  - "This email is already registered. Please login or use a different email."
+- Error appears as toast notification
+- User can click "Login" link to go to login page
 
 ---
 

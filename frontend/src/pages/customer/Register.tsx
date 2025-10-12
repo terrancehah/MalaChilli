@@ -58,20 +58,11 @@ export default function Register() {
 
     setLoading(true);
 
-    // Calculate age from birthday
-    const birthDate = new Date(formData.birthday);
-    const today = new Date();
-    let age = today.getFullYear() - birthDate.getFullYear();
-    const monthDiff = today.getMonth() - birthDate.getMonth();
-    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
-      age--;
-    }
 
     try {
       await signUp(formData.email, formData.password, {
         full_name: formData.fullName,
         birthday: formData.birthday,
-        age: age,
         role: 'customer',
       });
       
@@ -83,7 +74,20 @@ export default function Register() {
       }, 1500);
       
     } catch (err: any) {
-      toast.error(err.message || 'Failed to create account. Please try again.');
+      // Handle specific error cases
+      let errorMessage = 'Failed to create account. Please try again.';
+      
+      if (err.message?.includes('already registered') || err.message?.includes('already exists')) {
+        errorMessage = 'This email is already registered. Please login or use a different email.';
+      } else if (err.message?.includes('Invalid email')) {
+        errorMessage = 'Please enter a valid email address.';
+      } else if (err.message?.includes('Password')) {
+        errorMessage = 'Password must be at least 8 characters.';
+      } else if (err.message) {
+        errorMessage = err.message;
+      }
+      
+      toast.error(errorMessage);
     } finally {
       setLoading(false);
     }

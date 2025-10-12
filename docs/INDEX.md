@@ -17,7 +17,9 @@
 - ✅ Login page integrated with AuthContext
 - ✅ Register page integrated with AuthContext
 - ✅ **Form validation** - Real-time validation with red borders and error messages
+- ✅ **Duplicate email prevention** - Clear error message if email already registered
 - ✅ **Birthday required** - All fields mandatory with age validation (18+)
+- ✅ **Age calculated from birthday** - No age column in DB, calculated via SQL views
 - ✅ Referral code URL support (`/join/:restaurantSlug/:code`)
 - ✅ **Toast notifications** - Modern UX with react-hot-toast (top-right, auto-dismiss)
 - ✅ **Simplified registration** - Removed profile image upload for cleaner UX

@@ -74,14 +74,20 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       },
     });
 
-    if (error) throw error;
+    if (error) {
+      // Improve error message for duplicate email
+      if (error.message.includes('already registered') || error.message.includes('User already registered')) {
+        throw new Error('This email is already registered. Please login or use a different email.');
+      }
+      throw error;
+    }
     
     // Create user profile in database
     if (data.user) {
       // Generate referral code
       const referralCode = `CHILLI-${Math.random().toString(36).substring(2, 8).toUpperCase()}`;
       
-      // Insert user profile
+      // Insert user profile (age is calculated from birthday, not stored)
       const { error: profileError } = await supabase
         .from('users')
         .insert({
@@ -90,7 +96,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           full_name: userData.full_name || data.user.email?.split('@')[0],
           nickname: userData.full_name?.split(' ')[0] || data.user.email?.split('@')[0],
           birthday: userData.birthday || null,
-          age: userData.age || null,
           referral_code: referralCode,
           role: userData.role || 'customer',
           is_email_verified: data.user.email_confirmed_at ? true : false,
