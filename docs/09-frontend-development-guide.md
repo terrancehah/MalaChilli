@@ -9,8 +9,9 @@
 - ✅ Authentication implemented (Login & Register pages connected to Supabase)
 - ✅ Age validation (18+) on registration
 - ✅ Referral code support in registration URL
-- ✅ Error handling and loading states
+- ✅ Toast notifications (react-hot-toast) for success/error messages
 - ✅ Auto-redirect after successful auth
+- ✅ Profile image upload removed (simplified registration)
 
 ---
 
@@ -111,11 +112,10 @@
 - Email/password registration
 - Full name required
 - Birthday optional (validates 18+ if provided)
-- Profile image upload (UI ready, storage integration pending)
 - Referral code detection from URL
 - Age calculation and validation
-- Error handling with user-friendly messages
-- Success message with auto-redirect to dashboard
+- Toast notifications for errors and success
+- Auto-redirect to dashboard (1.5s delay)
 
 **Implementation:**
 ```tsx
@@ -134,7 +134,7 @@ await signUp(email, password, {
 - Email format validated by browser
 - Password minimum 8 characters
 - Age must be 18+ if birthday provided
-- All errors displayed inline
+- Errors displayed as toast notifications
 
 ---
 
@@ -145,9 +145,9 @@ await signUp(email, password, {
 **Features:**
 - Email/password authentication
 - Password recovery link (UI ready, flow pending)
-- Error handling with user-friendly messages
+- Toast notifications for errors and success
 - Loading state during authentication
-- Auto-redirect to dashboard on success
+- Auto-redirect to dashboard (0.5s delay)
 
 **Implementation:**
 ```tsx
@@ -308,45 +308,6 @@ font-family: 'Pacifico', 'Brush Script MT', cursive;
   border-radius: 20px;
   padding: 24px;
 }
-```
-
-### Profile Image Upload
-
-```jsx
-<div className="profile-upload">
-  <img src={profileUrl || '/default-avatar.png'} alt="Profile" className="profile-img" />
-  <button className="upload-btn">+</button>
-</div>
-
-<style>
-.profile-upload {
-  position: relative;
-  width: 120px;
-  height: 120px;
-  margin: 0 auto;
-}
-.profile-img {
-  width: 100%;
-  height: 100%;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 4px solid #FFFFFF;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-}
-.upload-btn {
-  position: absolute;
-  bottom: 0;
-  right: 0;
-  width: 40px;
-  height: 40px;
-  background: #0A5F0A;
-  color: #FFFFFF;
-  border-radius: 50%;
-  border: 3px solid #FFFFFF;
-  font-size: 24px;
-  cursor: pointer;
-}
-</style>
 ```
 
 ### Layout Patterns

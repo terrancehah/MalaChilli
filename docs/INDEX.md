@@ -18,10 +18,11 @@
 - ✅ Register page integrated with AuthContext
 - ✅ Age validation (18+) on registration
 - ✅ Referral code URL support (`/join/:restaurantSlug/:code`)
-- ✅ Error handling and loading states
-- ✅ Success messages and auto-redirect
+- ✅ **Toast notifications** - Modern UX with react-hot-toast (top-right, auto-dismiss)
+- ✅ **Simplified registration** - Removed profile image upload for cleaner UX
 - ✅ **User profile creation** - Handled in AuthContext.signUp() (application-side)
 - ✅ **Referral code generation** - Creates CHILLI-XXXXXX codes on signup
+- ✅ **RLS policies fixed** - Migrations 008 & 009 for INSERT and SELECT permissions
 - ✅ Documentation updated (Doc 09, migrations README)
 
 ### Rebranding (2025-10-10)

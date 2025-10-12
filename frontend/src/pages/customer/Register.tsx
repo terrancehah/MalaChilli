@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import { UserPlus, Upload } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
+import toast, { Toaster } from 'react-hot-toast';
 
 export default function Register() {
   const [formData, setFormData] = useState({
@@ -10,29 +10,14 @@ export default function Register() {
     password: '',
     birthday: ''
   });
-  const [profileImage, setProfileImage] = useState<string | null>(null);
-  const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const [success, setSuccess] = useState(false);
   
   const { signUp } = useAuth();
   const navigate = useNavigate();
   const { referralCode } = useParams();
 
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setProfileImage(reader.result as string);
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError('');
     setLoading(true);
 
     // Calculate age from birthday
@@ -48,7 +33,7 @@ export default function Register() {
       
       // Validate age (must be 18+)
       if (age < 18) {
-        setError('You must be at least 18 years old to register.');
+        toast.error('You must be at least 18 years old to register.');
         setLoading(false);
         return;
       }
@@ -60,18 +45,17 @@ export default function Register() {
         birthday: formData.birthday || null,
         age: age,
         role: 'customer',
-        // If there's a referral code from URL, it will be handled by database trigger
       });
       
-      setSuccess(true);
+      toast.success('Account created successfully! Redirecting...');
       
-      // Show success message for 2 seconds then redirect
+      // Redirect after short delay
       setTimeout(() => {
         navigate('/dashboard');
-      }, 2000);
+      }, 1500);
       
     } catch (err: any) {
-      setError(err.message || 'Failed to create account. Please try again.');
+      toast.error(err.message || 'Failed to create account. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -85,7 +69,27 @@ export default function Register() {
   };
 
   return (
-    <div className="min-h-screen auth-gradient-bg flex items-center justify-center p-6">
+    <>
+      <Toaster position="top-right" toastOptions={{
+        duration: 4000,
+        style: {
+          background: '#fff',
+          color: '#111827',
+        },
+        success: {
+          iconTheme: {
+            primary: '#0A5F0A',
+            secondary: '#fff',
+          },
+        },
+        error: {
+          iconTheme: {
+            primary: '#DC2626',
+            secondary: '#fff',
+          },
+        },
+      }} />
+      <div className="min-h-screen auth-gradient-bg flex items-center justify-center p-6">
       <div className="w-full max-w-md bg-white rounded-card shadow-2xl p-12">
         {/* Logo */}
         <div className="text-center mb-4">
@@ -99,52 +103,6 @@ export default function Register() {
             <span className="text-primary">Chilli</span>
           </h1>
           <p className="text-sm text-gray-600">Join and start saving!</p>
-        </div>
-
-        {/* Success Message */}
-        {success && (
-          <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg text-sm mb-4">
-            ✅ Account created successfully! Redirecting...
-          </div>
-        )}
-
-        {/* Error Message */}
-        {error && (
-          <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm mb-4">
-            {error}
-          </div>
-        )}
-
-        {/* Profile Image Upload */}
-        <div className="mb-6">
-          <div className="relative w-32 h-32 mx-auto">
-            <div className="w-full h-full rounded-full overflow-hidden border-4 border-white shadow-lg bg-gradient-to-br from-primary/10 to-primary-light/10">
-              {profileImage ? (
-                <img
-                  src={profileImage}
-                  alt="Profile"
-                  className="w-full h-full object-cover"
-                />
-              ) : (
-                <div className="w-full h-full flex items-center justify-center">
-                  <UserPlus className="w-12 h-12 text-gray-400" />
-                </div>
-              )}
-            </div>
-            <label
-              htmlFor="profile-upload"
-              className="absolute bottom-0 right-0 w-10 h-10 bg-primary hover:bg-primary-dark transition-colors rounded-full border-3 border-white flex items-center justify-center cursor-pointer shadow-lg"
-            >
-              <Upload className="w-5 h-5 text-white" />
-              <input
-                id="profile-upload"
-                type="file"
-                accept="image/*"
-                className="hidden"
-                onChange={handleImageUpload}
-              />
-            </label>
-          </div>
         </div>
 
         {/* Registration Form */}
@@ -210,10 +168,10 @@ export default function Register() {
 
           <button
             type="submit"
-            disabled={loading || success}
+            disabled={loading}
             className="w-full bg-primary hover:bg-primary-dark text-white font-semibold py-3.5 px-8 rounded-pill transition-all duration-200 shadow-md hover:shadow-lg hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {loading ? 'Creating Account...' : success ? 'Success! ✓' : 'Sign Up Now!'}
+            {loading ? 'Creating Account...' : 'Sign Up Now!'}
           </button>
         </form>
 
@@ -226,5 +184,6 @@ export default function Register() {
         </p>
       </div>
     </div>
+    </>
   );
 }

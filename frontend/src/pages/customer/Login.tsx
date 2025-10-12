@@ -1,13 +1,13 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
+import toast, { Toaster } from 'react-hot-toast';
 
 export default function Login() {
   const [formData, setFormData] = useState({
     email: '',
     password: ''
   });
-  const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   
   const { signIn } = useAuth();
@@ -15,15 +15,17 @@ export default function Login() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError('');
     setLoading(true);
 
     try {
       await signIn(formData.email, formData.password);
+      toast.success('Welcome back!');
       // Redirect to dashboard on success
-      navigate('/dashboard');
+      setTimeout(() => {
+        navigate('/dashboard');
+      }, 500);
     } catch (err: any) {
-      setError(err.message || 'Failed to login. Please check your credentials.');
+      toast.error(err.message || 'Failed to login. Please check your credentials.');
     } finally {
       setLoading(false);
     }
@@ -37,7 +39,27 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen auth-gradient-bg flex items-center justify-center p-6">
+    <>
+      <Toaster position="top-right" toastOptions={{
+        duration: 4000,
+        style: {
+          background: '#fff',
+          color: '#111827',
+        },
+        success: {
+          iconTheme: {
+            primary: '#0A5F0A',
+            secondary: '#fff',
+          },
+        },
+        error: {
+          iconTheme: {
+            primary: '#DC2626',
+            secondary: '#fff',
+          },
+        },
+      }} />
+      <div className="min-h-screen auth-gradient-bg flex items-center justify-center py-8 sm:py-12 px-4 sm:px-6 lg:px-8">
       <div className="w-full max-w-md bg-white rounded-card shadow-2xl p-12">
         {/* Logo */}
         <div className="text-center mb-10">
@@ -47,13 +69,6 @@ export default function Login() {
           </h1>
           <p className="text-sm text-gray-600">Welcome back!</p>
         </div>
-
-        {/* Error Message */}
-        {error && (
-          <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm">
-            {error}
-          </div>
-        )}
 
         {/* Login Form */}
         <form onSubmit={handleSubmit} className="space-y-6">
@@ -120,5 +135,6 @@ export default function Login() {
         </div>
       </div>
     </div>
+    </>
   );
 }
