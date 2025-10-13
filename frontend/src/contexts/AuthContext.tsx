@@ -102,8 +102,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
       if (profileError) throw profileError;
       
-      // Fetch the profile after creation
-      await fetchUserProfile(data.user.id);
+      // Only fetch profile if email is confirmed, otherwise user needs to verify first
+      if (data.user.email_confirmed_at) {
+        await fetchUserProfile(data.user.id);
+      }
     }
   };
 
@@ -113,7 +115,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       password,
     });
 
-    if (error) throw error;
+    if (error) {
+      // Better error message for unconfirmed email
+      if (error.message.includes('Email not confirmed')) {
+        throw new Error('Please confirm your email address before signing in. Check your inbox for the confirmation link.');
+      }
+      throw error;
+    }
     
     // Fetch user profile immediately after sign in
     if (data.user) {

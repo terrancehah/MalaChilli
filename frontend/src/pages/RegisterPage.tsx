@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import { generateReferralCode, calculateAge, getDashboardRoute } from '../lib/utils';
+import { generateReferralCode, calculateAge } from '../lib/utils';
 
 export default function RegisterPage() {
   const { restaurantSlug, referralCode } = useParams();
@@ -12,9 +12,9 @@ export default function RegisterPage() {
   const [birthday, setBirthday] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [emailSent, setEmailSent] = useState(false);
   
   const { signUp } = useAuth();
-  const navigate = useNavigate();
 
   useEffect(() => {
     if (restaurantSlug && referralCode) {
@@ -63,14 +63,51 @@ export default function RegisterPage() {
         role,
       });
 
-      // Success! Navigate to role-based dashboard
-      navigate(getDashboardRoute(role));
+      // Success! Show email confirmation message
+      setEmailSent(true);
     } catch (err: any) {
       setError(err.message || 'Failed to create account');
     } finally {
       setLoading(false);
     }
   };
+
+  // Show email confirmation message after successful signup
+  if (emailSent) {
+    return (
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center py-8 sm:py-12 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-md w-full space-y-6 sm:space-y-8">
+          <div className="text-center">
+            <div className="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-green-100 dark:bg-green-900/20 mb-4">
+              <svg className="h-8 w-8 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
+              </svg>
+            </div>
+            <h2 className="text-2xl sm:text-3xl font-extrabold text-gray-900 dark:text-white mb-4">
+              Check your email!
+            </h2>
+            <p className="text-base text-gray-600 dark:text-gray-400 mb-2">
+              We've sent a confirmation link to:
+            </p>
+            <p className="text-lg font-semibold text-gray-900 dark:text-white mb-6">
+              {email}
+            </p>
+            <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-md p-4 mb-6">
+              <p className="text-sm text-blue-800 dark:text-blue-300">
+                Click the link in the email to verify your account. Then you can sign in to access your dashboard.
+              </p>
+            </div>
+            <Link
+              to="/login"
+              className="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-primary hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
+            >
+              Go to Login
+            </Link>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center py-8 sm:py-12 px-4 sm:px-6 lg:px-8">
