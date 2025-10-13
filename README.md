@@ -1,157 +1,255 @@
 # MalaChilli 🍽️
 
-**Customer Engagement & Loyalty Platform**
+**Full-Stack Restaurant Loyalty Platform**
 
-MalaChilli is a web-based platform that helps restaurants increase customer engagement through a referral-based reward system. Customers can earn and redeem rewards while restaurants gain insights into their promotion effectiveness.
+A modern web application built with React and Supabase that enables restaurants to manage customer loyalty programs with referral mechanics and real-time analytics.
 
----
-
-## 📋 Project Overview
-
-### Purpose
-A digital solution for restaurants to manage customer loyalty programs with built-in viral mechanics and real-time analytics.
-
-### Key Features
-- 🎟️ **Discount Management:** Configurable discount system with multiple reward tiers
-- 🔗 **Referral System:** Multi-level customer referral tracking
-- 💰 **Digital Wallet:** Virtual currency management for customers
-- 📊 **Analytics Dashboard:** Real-time insights for restaurant owners
-- 🔒 **Security:** Transaction verification and fraud prevention mechanisms
+> **Note:** This repository serves as a technical portfolio showcase. Proprietary business logic, database schemas, and detailed documentation are excluded to protect intellectual property.
 
 ---
 
-## 🏗️ Project Structure
+## 🎯 Project Highlights
+
+This project demonstrates proficiency in:
+- **Full-stack development** with modern JavaScript ecosystem
+- **Database design** with PostgreSQL and complex relational schemas
+- **Real-time features** using Supabase subscriptions
+- **Authentication & authorization** with JWT and Row-Level Security
+- **Responsive UI/UX** with React and Tailwind CSS
+- **Cloud deployment** on Vercel and Supabase platforms
+
+---
+
+## 🏗️ Architecture Overview
 
 ```
-MalaChilli/
-├── docs/                                    # Project documentation
-│   ├── 01-product-requirements-document.md  # Comprehensive PRD
-│   ├── 02-mvp-scope-moscow.md              # Feature prioritization (MoSCoW)
-│   ├── 03-database-schema-design.md        # Database schema & ERD
-│   ├── 04-technical-architecture.md        # System architecture & tech stack
-│   ├── 05-api-specification.md             # REST API documentation
-│   ├── 06-project-timeline-sprints.md      # Sprint planning & timeline
-│   └── 07-user-stories-acceptance-criteria.md # User stories & acceptance criteria
-├── src/                                     # Source code (to be created)
-├── tests/                                   # Test files (to be created)
-└── README.md                                # This file
+┌─────────────────────────────────────────────────┐
+│              Frontend (React)                    │
+│  • React 18 + TypeScript                        │
+│  • Tailwind CSS for styling                     │
+│  • React Router for navigation                  │
+│  • Vite for blazing-fast builds                 │
+└─────────────────┬───────────────────────────────┘
+                  │ HTTPS/REST API
+┌─────────────────┴───────────────────────────────┐
+│           Backend (Supabase)                     │
+│  • PostgreSQL 15 database                       │
+│  • Supabase Auth for user management            │
+│  • Row-Level Security (RLS) policies            │
+│  • Edge Functions for serverless logic          │
+│  • Storage for file uploads                     │
+└──────────────────────────────────────────────────┘
 ```
-
----
-
-
-
-## 📚 Documentation
-
-### For Product Managers
-- **[Product Requirements Document](docs/01-product-requirements-document.md)** - Complete product specification
-- **[MVP Scope (MoSCoW)](docs/02-mvp-scope-moscow.md)** - Feature prioritization for MVP
-- **[User Stories](docs/07-user-stories-acceptance-criteria.md)** - User stories with acceptance criteria
-
-### For Developers
-- **[Technical Architecture](docs/04-technical-architecture.md)** - System design & tech stack
-- **[Database Schema](docs/03-database-schema-design.md)** - Database design & ERD
-- **[API Specification](docs/05-api-specification.md)** - REST API endpoints
-
-### For Project Managers
-- **[Project Timeline](docs/06-project-timeline-sprints.md)** - Sprint planning & schedule
-- **[User Stories](docs/07-user-stories-acceptance-criteria.md)** - Backlog & story points
 
 ---
 
 ## 🛠️ Technology Stack
 
 ### Frontend
-- **React 18+** - UI framework
-- **Vite** - Build tool
-- **Tailwind CSS** - Styling
-- **React Router** - Routing
-- **react-qr-code** - QR generation
-- **html5-qrcode** - QR scanning
+- **React 18+** with TypeScript - Type-safe component development
+- **Vite** - Lightning-fast dev server and optimized builds
+- **Tailwind CSS** - Utility-first styling with custom design system
+- **shadcn/ui** - Accessible component library
+- **React Router v6** - Client-side routing
+- **Context API** - State management for auth and global state
+- **react-qr-code** - QR code generation
+- **html5-qrcode** - Camera-based QR scanning
 
 ### Backend
-- **Supabase** - Backend-as-a-Service
-  - PostgreSQL 15 (database)
-  - Supabase Auth (authentication)
-  - Supabase Storage (receipt photos)
-  - Edge Functions (cron jobs)
-- **SendGrid** - Email service
+- **Supabase** - Backend-as-a-Service platform
+  - PostgreSQL 15 (relational database)
+  - Supabase Auth (JWT-based authentication)
+  - Row-Level Security (data access control)
+  - Edge Functions (serverless compute)
+  - Storage (file uploads)
+- **Email Service** - Transactional emails via SendGrid
 
-### Infrastructure
-- **Vercel** - Frontend hosting
-- **Supabase** - Backend hosting
-- **GitHub Actions** - CI/CD
-
----
-
-## 📊 MVP Scope
-
-### Must Have (MVP Phase 1)
-✅ Customer registration with referral tracking  
-✅ Virtual currency wallet  
-✅ Staff checkout with QR scanning  
-✅ Manual transaction entry  
-✅ Owner analytics dashboard  
-✅ Email notifications  
-✅ Multi-level rewards (3 uplines, unlimited downlines)  
-
-### Won't Have (Phase 2+)
-❌ AI OCR for receipts (manual entry for MVP)  
-❌ Cross-restaurant functionality (single restaurant pilot)  
-❌ Restaurant item database (transaction amount only)  
-❌ Advanced gamification (badges, leaderboards)  
-
-See [MVP Scope Document](docs/02-mvp-scope-moscow.md) for complete breakdown.
+### DevOps & Infrastructure
+- **Vercel** - Frontend hosting with automatic deployments
+- **GitHub** - Version control and collaboration
+- **ESLint + Prettier** - Code quality and formatting
 
 ---
 
+## 📁 Project Structure
 
-
-## 💡 Core Concepts
-
-### System Architecture
-- **Customer Portal:** Registration, wallet management, referral tracking
-- **Staff Portal:** Transaction processing, code verification, checkout interface
-- **Owner Portal:** Analytics, reporting, configuration management
-
-### Technical Approach
-- Modern web technologies for responsive, cross-platform experience
-- Real-time data synchronization for instant updates
-- Scalable backend infrastructure with cloud services
-
----
-
-## 🔒 Security & Compliance
-
-### Data Protection
-- **Encryption:** HTTPS (TLS 1.2+) for all traffic, AES-256 at rest
-- **Authentication:** JWT tokens, bcrypt password hashing
-- **Authorization:** Row-Level Security (RLS) in Supabase
-
-### PDPA Compliance
-- Privacy Policy published
-- User consent required on registration
-- Data export/deletion available on request
-- Email verification for anti-spam
-
-### Fraud Prevention
-- Staff verification at checkout (prevents fake transactions)
-- Receipt photo upload (audit trail)
-- 30-day expiry on virtual currency (limits liability)
-- 20% redemption cap per transaction
+```
+MalaChilli/
+├── frontend/
+│   ├── src/
+│   │   ├── components/      # Reusable UI components
+│   │   │   └── ui/          # shadcn/ui components
+│   │   ├── contexts/        # React Context providers
+│   │   ├── pages/           # Route components
+│   │   │   └── customer/    # Customer-facing pages
+│   │   ├── lib/             # Utilities and configs
+│   │   │   ├── supabase.ts  # Supabase client setup
+│   │   │   └── utils.ts     # Helper functions
+│   │   └── types/           # TypeScript definitions
+│   ├── public/              # Static assets
+│   └── package.json         # Dependencies
+├── docs/                    # Technical documentation (private)
+└── supabase/                # Database migrations (private)
+```
 
 ---
 
+## ✨ Key Features Implemented
 
+### User Authentication
+- Email/password registration with verification
+- Secure login with JWT tokens
+- Password recovery flow
+- Role-based access control (customer, staff, owner)
+
+### Customer Portal
+- User dashboard with profile management
+- QR code display for referral sharing
+- Wallet system with transaction history
+- Referral tracking and network visualization
+
+### Staff Interface
+- QR code scanner for customer verification
+- Transaction processing workflow
+- Receipt photo upload
+- Real-time discount calculations
+
+### Analytics Dashboard
+- Transaction metrics and reporting
+- Customer acquisition tracking
+- Revenue and discount analytics
+- Export capabilities
+
+---
+
+## 🚀 Getting Started
+
+### Prerequisites
+- Node.js 18+ and npm
+- Supabase account (for backend services)
+- Git for version control
+
+### Installation
+
+1. Clone the repository:
+```bash
+git clone https://github.com/yourusername/MalaChilli.git
+cd MalaChilli
+```
+
+2. Install frontend dependencies:
+```bash
+cd frontend
+npm install
+```
+
+3. Set up environment variables:
+```bash
+cp .env.example .env
+# Add your Supabase credentials to .env
+```
+
+4. Start the development server:
+```bash
+npm run dev
+```
+
+The app will be available at `http://localhost:5173`
+
+---
+
+## 🏗️ Technical Highlights
+
+### Database Design
+- Complex relational schema with referential integrity
+- Optimized indexes for query performance
+- Stored procedures for business logic encapsulation
+- Views for efficient data aggregation
+
+### Security Implementation
+- Row-Level Security (RLS) policies for data isolation
+- Bcrypt password hashing
+- JWT token-based authentication
+- Input validation and sanitization
+- HTTPS/TLS encryption for all communications
+
+### Responsive Design
+- Mobile-first approach with Tailwind CSS
+- Accessible UI components following WCAG guidelines
+- Cross-browser compatibility
+- Progressive Web App (PWA) capabilities
+
+### Performance Optimization
+- Code splitting with React lazy loading
+- Image optimization and compression
+- Efficient state management
+- Minimal bundle size with tree-shaking
+
+---
+
+## 📊 Development Workflow
+
+### Code Quality
+- TypeScript for type safety
+- ESLint for code consistency
+- Prettier for formatting
+- Component-driven development
+
+### Version Control
+- Git branching strategy (feature branches)
+- Pull request reviews
+- Semantic commit messages
+
+### Deployment
+- Automatic deployments via Vercel
+- Preview deployments for pull requests
+- Environment-specific configurations
+
+---
+
+## 🔐 Environment Variables
+
+Required environment variables (see `.env.example`):
+
+```bash
+VITE_SUPABASE_URL=your_supabase_url
+VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
+```
+
+---
+
+## 📝 Available Scripts
+
+```bash
+npm run dev          # Start development server
+npm run build        # Build for production
+npm run preview      # Preview production build
+npm run lint         # Run ESLint
+npm run format       # Format code with Prettier
+```
+
+---
+
+## 🤝 Contributing
+
+This is a private portfolio project. Contributions are not currently accepted.
+
+---
 
 ## 📄 License
 
-Copyright © 2025 MalaChilli. All rights reserved.
+Copyright © 2025. All rights reserved.
 
-This project is proprietary software. Unauthorized copying, distribution, or use is strictly prohibited.
+This is proprietary software developed for portfolio demonstration purposes. The code is provided for viewing only. Unauthorized copying, modification, distribution, or commercial use is strictly prohibited.
 
 ---
 
-**Built with ❤️ for Malaysian local restaurants**
+## 👨‍💻 Developer
 
-*Helping restaurants grow through viral, community-driven promotions*
+Built as a full-stack portfolio project demonstrating modern web development practices, cloud architecture, and scalable application design.
+
+**Tech Stack:** React • TypeScript • Tailwind CSS • Supabase • PostgreSQL • Vercel
+
+---
+
+**Portfolio Project** | **2025**
