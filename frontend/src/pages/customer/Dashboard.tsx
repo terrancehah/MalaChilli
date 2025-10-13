@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { formatCurrency } from '../../lib/utils';
+import { supabase } from '../../lib/supabase';
 import { Avatar, AvatarFallback, AvatarImage } from '../../components/ui/avatar';
 import { Card, CardContent } from '../../components/ui/card';
 import { Button } from '../../components/ui/button';
@@ -20,11 +21,24 @@ import {
   QrCode as QrCodeIcon,
 } from 'lucide-react';
 
+// TypeScript interface for restaurant code
+interface RestaurantCode {
+  id: string;
+  restaurant_id: string;
+  referral_code: string;
+  restaurant: {
+    name: string;
+    slug: string;
+  };
+}
+
 export default function CustomerDashboard() {
   const { user, signOut, loading } = useAuth();
   const navigate = useNavigate();
-  const [copied, setCopied] = useState(false);
+  const [copied, setCopied] = useState<string | null>(null);
   const [showQR, setShowQR] = useState(false);
+  const [restaurantCodes, setRestaurantCodes] = useState<RestaurantCode[]>([]);
+  const [loadingCodes, setLoadingCodes] = useState(true);
 
   useEffect(() => {
     // Redirect to login if not authenticated
@@ -42,12 +56,52 @@ export default function CustomerDashboard() {
     }
   };
 
-  const handleCopyCode = () => {
-    if (user?.referral_code) {
-      navigator.clipboard.writeText(user.referral_code);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    }
+  // Fetch user's restaurant-specific codes
+  useEffect(() => {
+    const fetchCodes = async () => {
+      if (!user) return;
+      
+      setLoadingCodes(true);
+      try {
+        const { data, error } = await supabase
+          .from('user_restaurant_referral_codes')
+          .select(`
+            id,
+            restaurant_id,
+            referral_code,
+            restaurants (
+              name,
+              slug
+            )
+          `)
+          .eq('user_id', user.id)
+          .eq('is_active', true);
+        
+        if (error) throw error;
+        
+        // Transform data to match RestaurantCode interface
+        const transformedData: RestaurantCode[] = (data || []).map((item: any) => ({
+          id: item.id,
+          restaurant_id: item.restaurant_id,
+          referral_code: item.referral_code,
+          restaurant: item.restaurants[0] || { name: 'Unknown', slug: 'unknown' }
+        }));
+        
+        setRestaurantCodes(transformedData);
+      } catch (error) {
+        console.error('Error fetching restaurant codes:', error);
+      } finally {
+        setLoadingCodes(false);
+      }
+    };
+    
+    fetchCodes();
+  }, [user]);
+
+  const handleCopyCode = (code: string) => {
+    navigator.clipboard.writeText(code);
+    setCopied(code);
+    setTimeout(() => setCopied(null), 2000);
   };
 
   const initials = user?.full_name
@@ -184,52 +238,92 @@ export default function CustomerDashboard() {
           </Card>
         </div>
 
-        {/* Share Your Referral Code */}
-        <Card className="border-border/50 bg-gradient-to-br from-primary/5 to-primary-light/10 dark:from-primary/10 dark:to-primary-light/5">
-          <CardContent className="p-5">
-            <div className="flex items-center gap-2 mb-3">
-              <Share2 className="h-5 w-5 text-primary" />
-              <h3 className="font-semibold text-foreground">Share & Earn</h3>
+        {/* Restaurant-Specific Referral Codes */}
+        <div>
+          <div className="flex items-center justify-between mb-4">
+            <div>
+              <h2 className="text-lg font-bold text-foreground">Promote Restaurants</h2>
+              <p className="text-sm text-muted-foreground">Generate unique codes for each restaurant</p>
             </div>
-            <p className="text-sm text-muted-foreground mb-4">
-              Share your code with friends. Earn rewards when they dine!
-            </p>
+          </div>
 
-
-            <div className="bg-white dark:bg-slate-800 rounded-lg p-4 border border-border/50 shadow-sm">
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-xs text-muted-foreground uppercase tracking-wide">
-                  Your Code
-                </span>
-                {copied && (
-                  <span className="text-xs text-green-600 dark:text-green-400 flex items-center gap-1">
-                    <Check className="h-3 w-3" />
-                    Copied!
-                  </span>
-                )}
-              </div>
-              <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
-                <p className="text-xl sm:text-2xl font-bold text-primary dark:text-primary-light font-mono flex-1 break-all">
-                  {user.referral_code}
+          {loadingCodes ? (
+            <Card className="border-border/50">
+              <CardContent className="p-12 text-center">
+                <p className="text-muted-foreground text-sm">Loading restaurants...</p>
+              </CardContent>
+            </Card>
+          ) : restaurantCodes.length === 0 ? (
+            <Card className="border-border/50">
+              <CardContent className="p-12 text-center">
+                <div className="h-16 w-16 rounded-full bg-muted mx-auto mb-4 flex items-center justify-center">
+                  <Share2 className="h-8 w-8 text-muted-foreground" />
+                </div>
+                <p className="text-muted-foreground text-sm mb-2">
+                  No referral codes yet
                 </p>
-                <Button
-                  size="sm"
-                  onClick={handleCopyCode}
-                  className="bg-primary hover:bg-primary/90 whitespace-nowrap"
-                >
-                  <Copy className="h-4 w-4 mr-1" />
-                  Copy
-                </Button>
-              </div>
-            </div>
+                <p className="text-xs text-muted-foreground">
+                  Contact restaurants to get your unique promotion codes
+                </p>
+              </CardContent>
+            </Card>
+          ) : (
+            <div className="space-y-3">
+              {restaurantCodes.map((code) => (
+                <Card key={code.id} className="border-border/50 bg-gradient-to-br from-primary/5 to-primary-light/10 dark:from-primary/10 dark:to-primary-light/5">
+                  <CardContent className="p-5">
+                    <div className="flex items-start justify-between mb-3">
+                      <div>
+                        <h3 className="font-semibold text-foreground mb-1">
+                          {code.restaurant.name}
+                        </h3>
+                        <p className="text-xs text-muted-foreground">
+                          Share this code to promote {code.restaurant.name}
+                        </p>
+                      </div>
+                      <Badge variant="outline" className="bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400 border-0">
+                        Active
+                      </Badge>
+                    </div>
 
-            <div className="mt-4 p-3 bg-primary/10 dark:bg-primary/20 rounded-lg">
-              <p className="text-xs text-primary-dark dark:text-primary-light">
-                💡 <strong>Tip:</strong> Share your referral code to maximize your earnings!
-              </p>
+                    <div className="bg-white dark:bg-slate-800 rounded-lg p-4 border border-border/50 shadow-sm">
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="text-xs text-muted-foreground uppercase tracking-wide">
+                          Your Code
+                        </span>
+                        {copied === code.referral_code && (
+                          <span className="text-xs text-green-600 dark:text-green-400 flex items-center gap-1">
+                            <Check className="h-3 w-3" />
+                            Copied!
+                          </span>
+                        )}
+                      </div>
+                      <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
+                        <p className="text-lg sm:text-xl font-bold text-primary dark:text-primary-light font-mono flex-1 break-all">
+                          {code.referral_code}
+                        </p>
+                        <Button
+                          size="sm"
+                          onClick={() => handleCopyCode(code.referral_code)}
+                          className="bg-primary hover:bg-primary/90 whitespace-nowrap"
+                        >
+                          <Copy className="h-4 w-4 mr-1" />
+                          Copy
+                        </Button>
+                      </div>
+                    </div>
+
+                    <div className="mt-3 p-3 bg-primary/10 dark:bg-primary/20 rounded-lg">
+                      <p className="text-xs text-primary-dark dark:text-primary-light break-all">
+                        🔗 Share link: <strong>{window.location.origin}/join/{code.restaurant.slug}/{code.referral_code}</strong>
+                      </p>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
             </div>
-          </CardContent>
-        </Card>
+          )}
+        </div>
 
         {/* Recent Transactions - Coming Soon */}
         <div>
