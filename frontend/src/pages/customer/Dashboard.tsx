@@ -195,26 +195,6 @@ export default function CustomerDashboard() {
               Share your code with friends. Earn rewards when they dine!
             </p>
 
-            {/* QR Code - Expandable */}
-            {showQR && (
-              <div className="mb-4 p-6 bg-white dark:bg-slate-800 rounded-lg border border-border/50 shadow-sm">
-                <div className="flex flex-col items-center">
-                  <p className="text-xs text-muted-foreground uppercase tracking-wide mb-3">
-                    Scan QR Code
-                  </p>
-                  <div className="bg-white p-4 rounded-lg">
-                    <QRCode
-                      value={`${window.location.origin}/join/malachilli/${user.referral_code}`}
-                      size={200}
-                      level="H"
-                    />
-                  </div>
-                  <p className="text-xs text-muted-foreground mt-3 text-center">
-                    Let friends scan this to automatically use your referral code
-                  </p>
-                </div>
-              </div>
-            )}
 
             <div className="bg-white dark:bg-slate-800 rounded-lg p-4 border border-border/50 shadow-sm">
               <div className="flex items-center justify-between mb-2">
@@ -245,7 +225,7 @@ export default function CustomerDashboard() {
 
             <div className="mt-4 p-3 bg-primary/10 dark:bg-primary/20 rounded-lg">
               <p className="text-xs text-primary-dark dark:text-primary-light">
-                💡 <strong>Tip:</strong> Share your QR code or referral code to maximize your earnings!
+                💡 <strong>Tip:</strong> Share your referral code to maximize your earnings!
               </p>
             </div>
           </CardContent>
@@ -269,6 +249,54 @@ export default function CustomerDashboard() {
           </Card>
         </div>
       </div>
+
+      {/* QR Code Modal - For Staff to Scan at Counter */}
+      {showQR && (
+        <div 
+          className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+          onClick={() => setShowQR(false)}
+        >
+          <div 
+            className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl max-w-sm w-full p-8"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex flex-col items-center">
+              <h2 className="text-2xl font-bold text-foreground mb-2">
+                Your Customer ID
+              </h2>
+              <p className="text-sm text-muted-foreground mb-6 text-center">
+                Show this QR code to staff at the counter for transactions
+              </p>
+              
+              {/* QR Code */}
+              <div className="bg-white p-6 rounded-xl shadow-lg mb-4">
+                <QRCode
+                  value={user.id}
+                  size={220}
+                  level="H"
+                />
+              </div>
+
+              {/* User Info */}
+              <div className="text-center mb-6">
+                <p className="font-semibold text-foreground mb-1">
+                  {user.full_name || user.email}
+                </p>
+                <p className="text-xs text-muted-foreground font-mono">
+                  ID: {user.id.substring(0, 8)}...
+                </p>
+              </div>
+
+              <Button
+                onClick={() => setShowQR(false)}
+                className="w-full"
+              >
+                Close
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
