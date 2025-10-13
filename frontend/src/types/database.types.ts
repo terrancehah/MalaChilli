@@ -13,7 +13,7 @@ export interface User {
   age: number | null;
   referral_code: string;
   role: UserRole;
-  is_email_verified: boolean;
+  email_verified: boolean;
   email_notifications_enabled: boolean;
   created_at: string;
   updated_at: string;
