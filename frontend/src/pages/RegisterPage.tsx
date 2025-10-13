@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import { generateReferralCode, calculateAge } from '../lib/utils';
+import { generateReferralCode, calculateAge, getDashboardRoute } from '../lib/utils';
 
 export default function RegisterPage() {
   const { restaurantSlug, referralCode } = useParams();
@@ -53,17 +53,18 @@ export default function RegisterPage() {
 
     try {
       const userReferralCode = generateReferralCode();
+      const role = 'customer';
       
       await signUp(email, password, {
         full_name: fullName,
         birthday,
         age,
         referral_code: userReferralCode,
-        role: 'customer',
+        role,
       });
 
-      // Success! Navigate to dashboard
-      navigate('/dashboard');
+      // Success! Navigate to role-based dashboard
+      navigate(getDashboardRoute(role));
     } catch (err: any) {
       setError(err.message || 'Failed to create account');
     } finally {

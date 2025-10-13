@@ -73,3 +73,19 @@ export function calculateAge(birthday: Date | string): number {
   
   return age;
 }
+
+/**
+ * Get dashboard route based on user role
+ */
+export function getDashboardRoute(role: string): string {
+  switch (role) {
+    case 'customer':
+      return '/customer/dashboard';
+    case 'staff':
+      return '/staff/dashboard';
+    case 'owner':
+      return '/owner/dashboard';
+    default:
+      return '/customer/dashboard';
+  }
+}

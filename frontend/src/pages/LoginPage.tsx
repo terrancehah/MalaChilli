@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
+import { getDashboardRoute } from '../lib/utils';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
@@ -17,8 +18,9 @@ export default function LoginPage() {
     setLoading(true);
 
     try {
-      await signIn(email, password);
-      navigate('/dashboard');
+      const userData = await signIn(email, password);
+      // Redirect based on user role
+      navigate(getDashboardRoute(userData.role));
     } catch (err: any) {
       setError(err.message || 'Failed to login');
     } finally {
