@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
+import { supabase } from '../lib/supabase';
 import { generateReferralCode, calculateAge } from '../lib/utils';
 
 export default function RegisterPage() {
@@ -14,13 +15,83 @@ export default function RegisterPage() {
   const [loading, setLoading] = useState(false);
   const [emailSent, setEmailSent] = useState(false);
   
+  // Referral code validation state
+  const [validatingCode, setValidatingCode] = useState(false);
+  const [codeValidation, setCodeValidation] = useState<{
+    valid: boolean;
+    restaurantId?: string;
+    restaurantName?: string;
+    uplineUserId?: string;
+    uplineName?: string;
+    error?: string;
+  } | null>(null);
+  
   const { signUp } = useAuth();
 
+  // Validate referral code on mount
   useEffect(() => {
-    if (restaurantSlug && referralCode) {
-      // TODO: Validate referral code and save to saved_referral_codes table
-      console.log('Referral registration:', { restaurantSlug, referralCode });
-    }
+    const validateReferralCode = async () => {
+      if (!restaurantSlug || !referralCode) return;
+      
+      setValidatingCode(true);
+      try {
+        // First, get restaurant by slug
+        const { data: restaurant, error: restaurantError } = await supabase
+          .from('restaurants')
+          .select('id, name')
+          .eq('slug', restaurantSlug)
+          .single();
+        
+        if (restaurantError || !restaurant) {
+          setCodeValidation({
+            valid: false,
+            error: 'Restaurant not found'
+          });
+          return;
+        }
+        
+        // Validate referral code for this restaurant
+        const { data: validation, error: validationError } = await supabase
+          .rpc('validate_referral_code', {
+            p_referral_code: referralCode,
+            p_restaurant_id: restaurant.id
+          });
+        
+        if (validationError) {
+          console.error('Validation error:', validationError);
+          setCodeValidation({
+            valid: false,
+            error: 'Failed to validate code'
+          });
+          return;
+        }
+        
+        if (validation.valid) {
+          setCodeValidation({
+            valid: true,
+            restaurantId: restaurant.id,
+            restaurantName: restaurant.name,
+            uplineUserId: validation.upline_user_id,
+            uplineName: validation.upline_name
+          });
+        } else {
+          setCodeValidation({
+            valid: false,
+            error: validation.error || 'Invalid referral code'
+          });
+        }
+      } catch (err: any) {
+        console.error('Error validating code:', err);
+        setCodeValidation({
+          valid: false,
+          error: err.message || 'Failed to validate code'
+        });
+      } finally {
+        setValidatingCode(false);
+      }
+    };
+    
+    validateReferralCode();
   }, [restaurantSlug, referralCode]);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -55,13 +126,36 @@ export default function RegisterPage() {
       const userReferralCode = generateReferralCode();
       const role = 'customer';
       
-      await signUp(email, password, {
+      const userData = await signUp(email, password, {
         full_name: fullName,
         birthday,
         age,
         referral_code: userReferralCode,
         role,
       });
+
+      // If there's a valid referral code, save it
+      if (codeValidation?.valid && codeValidation.restaurantId && codeValidation.uplineUserId) {
+        try {
+          const { error: saveError } = await supabase
+            .from('saved_referral_codes')
+            .insert({
+              user_id: userData.id,
+              restaurant_id: codeValidation.restaurantId,
+              referral_code: referralCode,
+              upline_user_id: codeValidation.uplineUserId,
+              is_used: false
+            });
+          
+          if (saveError) {
+            console.error('Failed to save referral code:', saveError);
+            // Don't fail signup if code save fails
+          }
+        } catch (codeError) {
+          console.error('Error saving referral code:', codeError);
+          // Don't fail signup if code save fails
+        }
+      }
 
       // Success! Show email confirmation message
       setEmailSent(true);
@@ -116,12 +210,39 @@ export default function RegisterPage() {
           <h2 className="mt-6 text-center text-2xl sm:text-3xl font-extrabold text-gray-900 dark:text-white">
             Create your account
           </h2>
+          
+          {/* Referral Code Validation Status */}
           {referralCode && (
-            <p className="mt-2 text-center text-sm text-green-600 dark:text-green-400 font-medium">
-              🎉 You're registering with a referral code!
-            </p>
+            <div className="mt-4">
+              {validatingCode ? (
+                <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-md p-3">
+                  <p className="text-sm text-blue-800 dark:text-blue-300 text-center">
+                    🔍 Validating referral code...
+                  </p>
+                </div>
+              ) : codeValidation?.valid ? (
+                <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-md p-3">
+                  <p className="text-sm text-green-800 dark:text-green-300 text-center font-medium">
+                    ✅ Valid referral code for <strong>{codeValidation.restaurantName}</strong>
+                  </p>
+                  <p className="text-xs text-green-700 dark:text-green-400 text-center mt-1">
+                    Referred by: {codeValidation.uplineName}
+                  </p>
+                </div>
+              ) : codeValidation?.error ? (
+                <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-md p-3">
+                  <p className="text-sm text-red-800 dark:text-red-300 text-center font-medium">
+                    ❌ {codeValidation.error}
+                  </p>
+                  <p className="text-xs text-red-700 dark:text-red-400 text-center mt-1">
+                    You can still register, but the referral code won't be saved.
+                  </p>
+                </div>
+              ) : null}
+            </div>
           )}
-          <p className="mt-2 text-center text-sm text-gray-600 dark:text-gray-400">
+          
+          <p className="mt-4 text-center text-sm text-gray-600 dark:text-gray-400">
             Already have an account?{' '}
             <Link to="/login" className="font-medium text-primary dark:text-orange-400 hover:text-primary/90">
               Sign in

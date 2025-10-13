@@ -8,7 +8,7 @@ interface AuthContextType {
   user: User | null;
   session: Session | null;
   loading: boolean;
-  signUp: (email: string, password: string, userData: Partial<User>) => Promise<void>;
+  signUp: (email: string, password: string, userData: Partial<User>) => Promise<{ id: string }>;
   signIn: (email: string, password: string) => Promise<User>;
   signOut: () => Promise<void>;
   resetPassword: (email: string) => Promise<void>;
@@ -65,7 +65,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   };
 
-  const signUp = async (email: string, password: string, userData: Partial<User>) => {
+  const signUp = async (email: string, password: string, userData: Partial<User>): Promise<{ id: string }> => {
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
@@ -82,31 +82,36 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       throw error;
     }
     
-    // Create user profile in database
-    if (data.user) {
-      // Generate referral code
-      const referralCode = `CHILLI-${Math.random().toString(36).substring(2, 8).toUpperCase()}`;
-      
-      // Insert user profile (only fields that exist in database schema)
-      const { error: profileError } = await supabase
-        .from('users')
-        .insert({
-          id: data.user.id,
-          email: data.user.email,
-          full_name: userData.full_name || data.user.email?.split('@')[0],
-          birthday: userData.birthday || null,
-          referral_code: referralCode,
-          role: userData.role || 'customer',
-          email_verified: data.user.email_confirmed_at ? true : false,
-        });
-
-      if (profileError) throw profileError;
-      
-      // Only fetch profile if email is confirmed, otherwise user needs to verify first
-      if (data.user.email_confirmed_at) {
-        await fetchUserProfile(data.user.id);
-      }
+    if (!data.user) {
+      throw new Error('Failed to create user');
     }
+    
+    // Create user profile in database
+    // Generate referral code
+    const referralCode = `CHILLI-${Math.random().toString(36).substring(2, 8).toUpperCase()}`;
+    
+    // Insert user profile (only fields that exist in database schema)
+    const { error: profileError } = await supabase
+      .from('users')
+      .insert({
+        id: data.user.id,
+        email: data.user.email,
+        full_name: userData.full_name || data.user.email?.split('@')[0],
+        birthday: userData.birthday || null,
+        referral_code: referralCode,
+        role: userData.role || 'customer',
+        email_verified: data.user.email_confirmed_at ? true : false,
+      });
+
+    if (profileError) throw profileError;
+    
+    // Only fetch profile if email is confirmed, otherwise user needs to verify first
+    if (data.user.email_confirmed_at) {
+      await fetchUserProfile(data.user.id);
+    }
+    
+    // Return user ID for referral code saving
+    return { id: data.user.id };
   };
 
   const signIn = async (email: string, password: string): Promise<User> => {
