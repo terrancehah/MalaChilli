@@ -123,7 +123,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         .eq('id', data.user.id)
         .single();
 
-      if (profileError) throw profileError;
+      if (profileError) {
+        throw new Error('User profile not found. Please contact support.');
+      }
       
       setUser(userData);
       return userData;
