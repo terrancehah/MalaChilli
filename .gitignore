@@ -102,6 +102,7 @@ supabase/migrations/20251012000009_improve_user_policies.sql
 supabase/migrations/20251013000010_fix_password_hash.sql
 supabase/migrations/20251013000011_fix_recursive_policies.sql
 supabase/migrations/20251013000012_fix_signup_insert_policy.sql
+supabase/migrations/20251013000013_add_restaurant_specific_codes.sql
 supabase/migrations/README.md
 
 # Keep all other Supabase configuration private
