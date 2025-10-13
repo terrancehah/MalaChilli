@@ -6,6 +6,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '../../components/ui/avatar'
 import { Card, CardContent } from '../../components/ui/card';
 import { Button } from '../../components/ui/button';
 import { Badge } from '../../components/ui/badge';
+import QRCode from 'react-qr-code';
 import {
   Wallet,
   TrendingUp,
@@ -16,12 +17,14 @@ import {
   Copy,
   Check,
   LogOut,
+  QrCode as QrCodeIcon,
 } from 'lucide-react';
 
 export default function CustomerDashboard() {
   const { user, signOut, loading } = useAuth();
   const navigate = useNavigate();
   const [copied, setCopied] = useState(false);
+  const [showQR, setShowQR] = useState(false);
 
   useEffect(() => {
     // Redirect to login if not authenticated
@@ -96,14 +99,24 @@ export default function CustomerDashboard() {
               </Badge>
             </div>
           </div>
-          <Button
-            variant="secondary"
-            size="icon"
-            className="h-12 w-12 rounded-xl bg-white/95 hover:bg-white shadow-lg"
-            onClick={handleSignOut}
-          >
-            <LogOut className="h-6 w-6 text-primary" />
-          </Button>
+          <div className="flex gap-2">
+            <Button
+              variant="secondary"
+              size="icon"
+              className="h-12 w-12 rounded-xl bg-white/95 hover:bg-white shadow-lg"
+              onClick={() => setShowQR(!showQR)}
+            >
+              <QrCodeIcon className="h-6 w-6 text-primary" />
+            </Button>
+            <Button
+              variant="secondary"
+              size="icon"
+              className="h-12 w-12 rounded-xl bg-white/95 hover:bg-white shadow-lg"
+              onClick={handleSignOut}
+            >
+              <LogOut className="h-6 w-6 text-primary" />
+            </Button>
+          </div>
         </div>
 
         {/* Virtual Currency Balance Card */}
@@ -182,6 +195,27 @@ export default function CustomerDashboard() {
               Share your code with friends. Earn rewards when they dine!
             </p>
 
+            {/* QR Code - Expandable */}
+            {showQR && (
+              <div className="mb-4 p-6 bg-white dark:bg-slate-800 rounded-lg border border-border/50 shadow-sm">
+                <div className="flex flex-col items-center">
+                  <p className="text-xs text-muted-foreground uppercase tracking-wide mb-3">
+                    Scan QR Code
+                  </p>
+                  <div className="bg-white p-4 rounded-lg">
+                    <QRCode
+                      value={`${window.location.origin}/join/malachilli/${user.referral_code}`}
+                      size={200}
+                      level="H"
+                    />
+                  </div>
+                  <p className="text-xs text-muted-foreground mt-3 text-center">
+                    Let friends scan this to automatically use your referral code
+                  </p>
+                </div>
+              </div>
+            )}
+
             <div className="bg-white dark:bg-slate-800 rounded-lg p-4 border border-border/50 shadow-sm">
               <div className="flex items-center justify-between mb-2">
                 <span className="text-xs text-muted-foreground uppercase tracking-wide">
@@ -211,7 +245,7 @@ export default function CustomerDashboard() {
 
             <div className="mt-4 p-3 bg-primary/10 dark:bg-primary/20 rounded-lg">
               <p className="text-xs text-primary-dark dark:text-primary-light">
-                💡 <strong>Tip:</strong> Share your code on social media to maximize your earnings!
+                💡 <strong>Tip:</strong> Share your QR code or referral code to maximize your earnings!
               </p>
             </div>
           </CardContent>
