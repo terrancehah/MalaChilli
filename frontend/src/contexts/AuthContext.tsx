@@ -71,6 +71,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       password,
       options: {
         data: userData,
+        emailRedirectTo: `${window.location.origin}/login`,
       },
     });
 
