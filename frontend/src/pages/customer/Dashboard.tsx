@@ -32,6 +32,18 @@ interface RestaurantCode {
   };
 }
 
+// Interface for visited restaurant (eligible for code generation)
+interface VisitedRestaurant {
+  restaurant_id: string;
+  first_visit_date: string;
+  total_visits: number;
+  total_spent: string;
+  restaurant: {
+    name: string;
+    slug: string;
+  };
+}
+
 export default function CustomerDashboard() {
   const { user, signOut, loading } = useAuth();
   const navigate = useNavigate();
@@ -39,6 +51,8 @@ export default function CustomerDashboard() {
   const [showQR, setShowQR] = useState(false);
   const [restaurantCodes, setRestaurantCodes] = useState<RestaurantCode[]>([]);
   const [loadingCodes, setLoadingCodes] = useState(true);
+  const [visitedRestaurants, setVisitedRestaurants] = useState<VisitedRestaurant[]>([]);
+  const [generating, setGenerating] = useState<string | null>(null);
 
   useEffect(() => {
     // Redirect to login if not authenticated
@@ -56,14 +70,15 @@ export default function CustomerDashboard() {
     }
   };
 
-  // Fetch user's restaurant-specific codes
+  // Fetch user's restaurant-specific codes AND visited restaurants
   useEffect(() => {
-    const fetchCodes = async () => {
+    const fetchData = async () => {
       if (!user) return;
       
       setLoadingCodes(true);
       try {
-        const { data, error } = await supabase
+        // Fetch existing codes
+        const { data: codesData, error: codesError } = await supabase
           .from('user_restaurant_referral_codes')
           .select(`
             id,
@@ -77,31 +92,104 @@ export default function CustomerDashboard() {
           .eq('user_id', user.id)
           .eq('is_active', true);
         
-        if (error) throw error;
+        if (codesError) throw codesError;
         
-        // Transform data to match RestaurantCode interface
-        const transformedData: RestaurantCode[] = (data || []).map((item: any) => ({
+        // Transform codes data
+        const transformedCodes: RestaurantCode[] = (codesData || []).map((item: any) => ({
           id: item.id,
           restaurant_id: item.restaurant_id,
           referral_code: item.referral_code,
           restaurant: item.restaurants[0] || { name: 'Unknown', slug: 'unknown' }
         }));
         
-        setRestaurantCodes(transformedData);
+        setRestaurantCodes(transformedCodes);
+        
+        // Fetch visited restaurants (from customer_restaurant_history)
+        const { data: visitedData, error: visitedError } = await supabase
+          .from('customer_restaurant_history')
+          .select(`
+            restaurant_id,
+            first_visit_date,
+            total_visits,
+            total_spent,
+            restaurants (
+              name,
+              slug
+            )
+          `)
+          .eq('customer_id', user.id);
+        
+        if (visitedError) throw visitedError;
+        
+        // Transform visited data
+        const transformedVisited: VisitedRestaurant[] = (visitedData || []).map((item: any) => ({
+          restaurant_id: item.restaurant_id,
+          first_visit_date: item.first_visit_date,
+          total_visits: item.total_visits,
+          total_spent: item.total_spent,
+          restaurant: item.restaurants[0] || { name: 'Unknown', slug: 'unknown' }
+        }));
+        
+        setVisitedRestaurants(transformedVisited);
       } catch (error) {
-        console.error('Error fetching restaurant codes:', error);
+        console.error('Error fetching data:', error);
       } finally {
         setLoadingCodes(false);
       }
     };
     
-    fetchCodes();
+    fetchData();
   }, [user]);
 
   const handleCopyCode = (code: string) => {
     navigator.clipboard.writeText(code);
     setCopied(code);
     setTimeout(() => setCopied(null), 2000);
+  };
+
+  const handleGenerateCode = async (restaurantId: string) => {
+    if (!user) return;
+    
+    setGenerating(restaurantId);
+    try {
+      const { error } = await supabase.rpc('generate_restaurant_referral_code', {
+        p_user_id: user.id,
+        p_restaurant_id: restaurantId
+      });
+      
+      if (error) throw error;
+      
+      // Refresh codes list
+      const { data: updatedCodes, error: fetchError } = await supabase
+        .from('user_restaurant_referral_codes')
+        .select(`
+          id,
+          restaurant_id,
+          referral_code,
+          restaurants (
+            name,
+            slug
+          )
+        `)
+        .eq('user_id', user.id)
+        .eq('is_active', true);
+      
+      if (fetchError) throw fetchError;
+      
+      const transformedData: RestaurantCode[] = (updatedCodes || []).map((item: any) => ({
+        id: item.id,
+        restaurant_id: item.restaurant_id,
+        referral_code: item.referral_code,
+        restaurant: item.restaurants[0] || { name: 'Unknown', slug: 'unknown' }
+      }));
+      
+      setRestaurantCodes(transformedData);
+    } catch (error: any) {
+      console.error('Error generating code:', error);
+      alert(error.message || 'Failed to generate code');
+    } finally {
+      setGenerating(null);
+    }
   };
 
   const initials = user?.full_name
@@ -243,7 +331,7 @@ export default function CustomerDashboard() {
           <div className="flex items-center justify-between mb-4">
             <div>
               <h2 className="text-lg font-bold text-foreground">Promote Restaurants</h2>
-              <p className="text-sm text-muted-foreground">Generate unique codes for each restaurant</p>
+              <p className="text-sm text-muted-foreground">Share codes for restaurants you've visited</p>
             </div>
           </div>
 
@@ -253,22 +341,23 @@ export default function CustomerDashboard() {
                 <p className="text-muted-foreground text-sm">Loading restaurants...</p>
               </CardContent>
             </Card>
-          ) : restaurantCodes.length === 0 ? (
+          ) : visitedRestaurants.length === 0 ? (
             <Card className="border-border/50">
               <CardContent className="p-12 text-center">
                 <div className="h-16 w-16 rounded-full bg-muted mx-auto mb-4 flex items-center justify-center">
                   <Share2 className="h-8 w-8 text-muted-foreground" />
                 </div>
                 <p className="text-muted-foreground text-sm mb-2">
-                  No referral codes yet
+                  No visited restaurants yet
                 </p>
                 <p className="text-xs text-muted-foreground">
-                  Contact restaurants to get your unique promotion codes
+                  Visit a restaurant and make your first transaction to start promoting!
                 </p>
               </CardContent>
             </Card>
           ) : (
             <div className="space-y-3">
+              {/* Show existing codes */}
               {restaurantCodes.map((code) => (
                 <Card key={code.id} className="border-border/50 bg-gradient-to-br from-primary/5 to-primary-light/10 dark:from-primary/10 dark:to-primary-light/5">
                   <CardContent className="p-5">
@@ -321,6 +410,49 @@ export default function CustomerDashboard() {
                   </CardContent>
                 </Card>
               ))}
+              
+              {/* Show visited restaurants WITHOUT codes yet */}
+              {visitedRestaurants
+                .filter(visited => !restaurantCodes.some(code => code.restaurant_id === visited.restaurant_id))
+                .map((visited) => (
+                  <Card key={visited.restaurant_id} className="border-border/50">
+                    <CardContent className="p-5">
+                      <div className="flex items-start justify-between mb-3">
+                        <div>
+                          <h3 className="font-semibold text-foreground mb-1">
+                            {visited.restaurant.name}
+                          </h3>
+                          <p className="text-xs text-muted-foreground">
+                            Visited {visited.total_visits} time{visited.total_visits > 1 ? 's' : ''} • Spent RM{visited.total_spent}
+                          </p>
+                        </div>
+                        <Badge variant="outline" className="bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400 border-0">
+                          Eligible
+                        </Badge>
+                      </div>
+
+                      <div className="bg-muted/50 rounded-lg p-4 border border-border/50">
+                        <p className="text-sm text-muted-foreground mb-3 text-center">
+                          Generate your unique referral code to start promoting this restaurant
+                        </p>
+                        <Button
+                          onClick={() => handleGenerateCode(visited.restaurant_id)}
+                          disabled={generating === visited.restaurant_id}
+                          className="w-full bg-primary hover:bg-primary/90"
+                        >
+                          {generating === visited.restaurant_id ? (
+                            <>Generating...</>
+                          ) : (
+                            <>
+                              <Share2 className="h-4 w-4 mr-2" />
+                              Generate Referral Code
+                            </>
+                          )}
+                        </Button>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
             </div>
           )}
         </div>
