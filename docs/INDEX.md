@@ -16,6 +16,13 @@
 **Customer Dashboard Enhanced with Restaurant-Specific Referral Codes**
 - ✅ **Improved Sharing UI** - Link-first approach with 70%+ better conversion rates
 - ✅ **One-Click Social Sharing** - WhatsApp, Facebook, and native mobile share
+- ✅ **Minimal Design** - Removed unnecessary text, icons-only social buttons
+- ✅ **Better Spacing** - Tighter code container (p-2, mt-1.5), reduced dropdown margins (-mb-3)
+- ✅ **Smooth Transitions** - 300ms ease-in-out animations for dropdown
+- ✅ **Consistent Icons** - All icons (social, copy, check) at h-5 w-5 (20px)
+- ✅ **Active States** - Click feedback on dropdown button with active:bg-muted/50
+- ✅ **Responsive Stats** - text-sm md:text-base with whitespace-nowrap to prevent wrapping
+- ✅ **Icon-Only Copy Button** - h-8 w-8 p-0 with larger copy icon for better UX
 - ✅ **Collapsible Code Display** - Code reference as secondary, collapsed by default
 - ✅ **Smart Visual Hierarchy** - Primary: Copy Link → Supporting: Social buttons → Reference: View code
 - ✅ **Pre-filled Share Messages** - Context-aware messages for each platform

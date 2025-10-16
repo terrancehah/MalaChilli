@@ -7,7 +7,14 @@
 
 **Recent Updates (2025-10-16):**
 - ✅ **Improved Sharing UI** - Link-first approach with social sharing buttons
-- ✅ **One-Click Social Sharing** - WhatsApp, Facebook, and native share integration
+- ✅ **One-Click Social Sharing** - WhatsApp, Facebook, and native share integration  
+- ✅ **Minimal Design** - Removed unnecessary text, icons-only social buttons
+- ✅ **Better Spacing** - Tighter code container (p-2, mt-1.5), reduced dropdown margins (-mb-3)
+- ✅ **Smooth Transitions** - 300ms animations for dropdown expand/collapse
+- ✅ **Consistent Icon Sizing** - All icons (social, copy, check) use `h-5 w-5` (20px)
+- ✅ **Active Button States** - Click feedback with `active:bg-muted/50` on dropdown button
+- ✅ **Responsive Text** - Stats cards use `text-sm md:text-base` with `whitespace-nowrap`
+- ✅ **Icon-Only Copy Button** - `h-8 w-8 p-0` with larger h-5 w-5 copy icon
 - ✅ **Collapsible Code Display** - Code reference as secondary action
 - ✅ **Better Conversion Flow** - Recipients get clickable links, not codes
 - ✅ **Customer Dashboard Redesigned** - Restaurant-specific referral code system
@@ -302,59 +309,130 @@ The UI now prioritizes link sharing over code copying, based on UX research show
 **Code Structure:**
 ```tsx
 <Card className="restaurant-code-card">
-  {/* Header */}
-  <h3>{code.restaurant.name}</h3>
-  <Badge>Active</Badge>
+  <CardContent className="p-5 pb-3">
+    {/* Header - Clean, no subheading */}
+    <div className="flex items-start justify-between mb-4">
+      <h3>{code.restaurant.name}</h3>
+      <Badge>Active</Badge>
+    </div>
   
   {/* PRIMARY ACTION: Copy Link */}
-  <div className="share-link-section">
-    <p className="label">Share this link:</p>
-    <div className="link-display">
-      <p className="truncated-url">
-        {window.location.origin}/join/{code.restaurant.slug}/...
-      </p>
-      {copied === `link-${code.referral_code}` && (
-        <span className="success">Link copied!</span>
-      )}
-    </div>
-    <Button 
-      onClick={() => handleCopyLink(slug, code)}
-      size="lg" 
-      className="primary w-full"
-    >
-      <Share2 /> Copy Link
-    </Button>
-  </div>
-  
-  {/* SOCIAL SHARING */}
-  <div className="social-buttons grid-cols-3">
-    <Button onClick={() => handleShareWhatsApp(name, slug, code)}>
-      WhatsApp
-    </Button>
-    <Button onClick={() => handleShareFacebook(slug, code)}>
-      Facebook
-    </Button>
-    <Button onClick={() => handleNativeShare(name, slug, code)}>
-      More
-    </Button>
-  </div>
-  
-  {/* SECONDARY: Code Reference (Collapsible) */}
-  <div className="code-reference">
-    <button onClick={() => toggleCode(code.id)}>
-      View promotion code {expanded ? '▲' : '▼'}
-    </button>
-    {expanded && (
-      <div className="code-display">
-        <code>{code.referral_code}</code>
-        <Button onClick={() => handleCopyCode(code)}>
-          <Copy />
-        </Button>
+  <div className="mb-4">
+    <div className="bg-white rounded-lg p-4 border shadow-sm">
+      <div className="mb-3">
+        {/* Full link display with relaxed spacing */}
+        <p className="text-xs font-mono break-all leading-relaxed">
+          {window.location.origin}/join/{code.restaurant.slug}/{code.referral_code}
+        </p>
+        {copied === `link-${code.referral_code}` && (
+          <span className="success mt-2">Link copied!</span>
+        )}
       </div>
-    )}
+      <Button 
+        onClick={() => handleCopyLink(slug, code)}
+        size="lg" 
+        className="w-full"
+      >
+        <Share2 /> Copy Link
+      </Button>
+    </div>
   </div>
+  
+  {/* SOCIAL SHARING - Icons only, no text labels */}
+  <div className="grid grid-cols-3 gap-2 mb-2">
+    <Button 
+      className="bg-[#25D366] hover:bg-[#20BA5A] h-14"
+      title="Share on WhatsApp"
+    >
+      <WhatsAppIcon /> {/* !h-5 !w-5 */}
+    </Button>
+    <Button 
+      className="bg-[#1877F2] hover:bg-[#0C63D4] h-14"
+      title="Share on Facebook"
+    >
+      <FacebookIcon /> {/* !h-5 !w-5 */}
+    </Button>
+    <Button 
+      className="bg-gray-100 hover:bg-gray-200 h-14"
+      title="More share options"
+    >
+      <Share2 className="h-4 w-4" />
+      <span className="text-xs">More</span>
+    </Button>
+  </div>
+  
+  {/* SECONDARY: Code Reference (Collapsible with transition) */}
+  <div className="border-t pt-2.5 -mb-3">
+    <button 
+      onClick={() => toggleCode(code.id)}
+      className="text-sm hover:text-foreground active:text-foreground active:bg-muted/50 transition-all rounded px-1 py-0.5"
+    >
+      <span>View promotion code</span>
+      {expanded ? <ChevronUp className="h-3.5 w-3.5" /> : <ChevronDown className="h-3.5 w-3.5" />}
+    </button>
+    
+    {/* Smooth 300ms transition */}
+    <div className={`overflow-hidden transition-all duration-300 ease-in-out ${
+      expanded ? 'max-h-32 opacity-100 mt-1.5' : 'max-h-0 opacity-0'
+    }`}>
+      <div className="bg-white rounded-lg p-2 border">
+        {/* No "Code" heading - just code and copy button */}
+        <div className="flex items-center justify-between gap-2">
+          <code className="text-sm font-mono flex-1">
+            {code.referral_code}
+          </code>
+          {copied === `code-${code.referral_code}` ? (
+            <span className="success">
+              <Check className="!h-5 !w-5" />
+              Copied!
+            </span>
+          ) : (
+            <Button size="sm" variant="ghost" className="h-8 w-8 p-0">
+              <Copy className="!h-5 !w-5" />
+            </Button>
+          )}
+        </div>
+      </div>
+    </div>
+  </div>
+  </CardContent>
 </Card>
 ```
+
+**Design Details:**
+- **Card padding:** `p-5` - uniform padding (user reverted pb-3 change)
+- **Link container:** `p-4` padding (increased from `p-3`), `mb-3` spacing between link and button
+- **Link text:** `leading-relaxed` for better readability, `break-all` for long URLs
+- **Social icons:** `!h-5 !w-5` size (20px, with `!important` to override Button's default)
+- **Social buttons:** Icon-only for WhatsApp/Facebook, "More" keeps text label, `h-14` height
+- **Dropdown margin:** `mb-2` between social buttons and dropdown, `-mb-3` to reduce space at card bottom
+- **Dropdown button:** `text-sm` size (14px), active state with `active:bg-muted/50` for click feedback
+- **Dropdown button padding:** `px-1 py-0.5` with `rounded` corners for better click area
+- **Chevron icons:** `h-3.5 w-3.5` (14px) to match text size
+- **Code container:** `p-2` padding (reduced from `p-3`), `mt-1.5` top margin (reduced from `mt-2`)
+- **Copy icon:** `h-5 w-5` (20px) matching social media icons, button is `h-8 w-8 p-0` for icon-only
+- **Check icon:** `h-5 w-5` (20px) for consistency with copy icon
+- **Transition:** 300ms with `ease-in-out` timing function, `transition-all` for smooth effects
+- **No headings:** Removed "Share this link:" and "Code" labels for cleaner UI
+
+**Social Media Icons:**
+```tsx
+// WhatsApp Icon (!h-5 !w-5 with !important to override Button's default size-4)
+const WhatsAppIcon = () => (
+  <svg viewBox="0 0 24 24" fill="currentColor" className="!h-5 !w-5">
+    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967..." />
+  </svg>
+);
+
+// Facebook Icon (!h-5 !w-5 with !important to override Button's default size-4)
+const FacebookIcon = () => (
+  <svg viewBox="0 0 24 24" fill="currentColor" className="!h-5 !w-5">
+    <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12..." />
+  </svg>
+);
+```
+
+**Important Note:** The `!` prefix (important flag) is required because the Button component has a default CSS rule `[&_svg]:size-4` that forces all SVG elements to 16px. Using `!h-5 !w-5` overrides this to display icons at 20px.
 
 **Social Sharing Functions:**
 ```tsx
