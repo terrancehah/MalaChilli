@@ -5,7 +5,12 @@
 **Date:** 2025-10-16  
 **Tech Stack:** React 18, Vite, Tailwind CSS, Supabase Client
 
-**Recent Updates (2025-10-16):**
+**Recent Updates (2025-10-17):**
+- ✅ **Visit Context Display** - Restaurant cards show "X visits • Last: Y days ago" to remind users
+- ✅ **Dynamic Time Formatting** - Smart time ago function (today, yesterday, X days/weeks/months)
+- ✅ **Improved Data Fetching** - Merged visit history with referral codes for complete context
+
+**Previous Updates (2025-10-16):**
 - ✅ **Improved Sharing UI** - Link-first approach with social sharing buttons
 - ✅ **One-Click Social Sharing** - WhatsApp, Facebook, and native share integration  
 - ✅ **Minimal Design** - Removed unnecessary text, icons-only social buttons
@@ -309,12 +314,20 @@ The UI now prioritizes link sharing over code copying, based on UX research show
 **Code Structure:**
 ```tsx
 <Card className="restaurant-code-card">
-  <CardContent className="p-5 pb-3">
-    {/* Header - Clean, no subheading */}
-    <div className="flex items-start justify-between mb-4">
-      <h3>{code.restaurant.name}</h3>
+  <CardContent className="p-5">
+    {/* Header with visit stats */}
+    <div className="flex items-start justify-between mb-2">
+      <div>
+        <h3>{code.restaurant.name}</h3>
+        {code.total_visits && code.first_visit_date && (
+          <p className="text-xs text-muted-foreground mt-0.5">
+            {code.total_visits} {code.total_visits === 1 ? 'visit' : 'visits'} • Last: {getTimeAgo(code.first_visit_date)}
+          </p>
+        )}
+      </div>
       <Badge>Active</Badge>
     </div>
+    <div className="mb-4"></div>
   
   {/* PRIMARY ACTION: Copy Link */}
   <div className="mb-4">
@@ -401,6 +414,9 @@ The UI now prioritizes link sharing over code copying, based on UX research show
 
 **Design Details:**
 - **Card padding:** `p-5` - uniform padding (user reverted pb-3 change)
+- **Header spacing:** `mb-2` (reduced from `mb-4`) to accommodate visit stats subheading
+- **Visit stats:** `text-xs text-muted-foreground mt-0.5` - shows "X visits • Last: Y days ago"
+- **Time ago helper:** Dynamic formatting (today, yesterday, X days/weeks/months ago)
 - **Link container:** `p-4` padding (increased from `p-3`), `mb-3` spacing between link and button
 - **Link text:** `leading-relaxed` for better readability, `break-all` for long URLs
 - **Social icons:** `!h-5 !w-5` size (20px, with `!important` to override Button's default)

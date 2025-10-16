@@ -60,7 +60,25 @@ const mockData = {
   memberSince: 'Jan 2024',
 };
 
-// Mock restaurant codes
+// Helper function to calculate time ago
+const getTimeAgo = (dateString: string): string => {
+  const date = new Date(dateString);
+  const now = new Date();
+  const diffInMs = now.getTime() - date.getTime();
+  const diffInDays = Math.floor(diffInMs / (1000 * 60 * 60 * 24));
+  
+  if (diffInDays === 0) return 'today';
+  if (diffInDays === 1) return 'yesterday';
+  if (diffInDays < 7) return `${diffInDays} days ago`;
+  if (diffInDays < 30) {
+    const weeks = Math.floor(diffInDays / 7);
+    return weeks === 1 ? '1 week ago' : `${weeks} weeks ago`;
+  }
+  const months = Math.floor(diffInDays / 30);
+  return months === 1 ? '1 month ago' : `${months} months ago`;
+};
+
+// Mock restaurant codes with visit stats
 const mockRestaurantCodes = [
   {
     id: '1',
@@ -70,6 +88,8 @@ const mockRestaurantCodes = [
       name: 'Nasi Lemak Corner',
       slug: 'nasi-lemak-corner',
     },
+    total_visits: 5,
+    first_visit_date: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString(), // 5 days ago
   },
   {
     id: '2',
@@ -79,6 +99,8 @@ const mockRestaurantCodes = [
       name: 'Mama\'s Kitchen',
       slug: 'mamas-kitchen',
     },
+    total_visits: 2,
+    first_visit_date: new Date(Date.now() - 14 * 24 * 60 * 60 * 1000).toISOString(), // 2 weeks ago
   },
 ];
 
@@ -290,14 +312,22 @@ export default function DemoDashboard() {
             {mockRestaurantCodes.map((code) => (
               <Card key={code.id} className="border-border/50 bg-gradient-to-br from-primary/5 to-primary-light/10 dark:from-primary/10 dark:to-primary-light/5">
                 <CardContent className="p-5">
-                  <div className="flex items-start justify-between mb-4">
-                    <h3 className="font-semibold text-foreground">
-                      {code.restaurant.name}
-                    </h3>
+                  <div className="flex items-start justify-between mb-2">
+                    <div>
+                      <h3 className="font-semibold text-foreground">
+                        {code.restaurant.name}
+                      </h3>
+                      {code.total_visits && code.first_visit_date && (
+                        <p className="text-xs text-muted-foreground mt-0.5">
+                          {code.total_visits} {code.total_visits === 1 ? 'visit' : 'visits'} • Last: {getTimeAgo(code.first_visit_date)}
+                        </p>
+                      )}
+                    </div>
                     <Badge variant="outline" className="bg-green-200 text-green-800 dark:bg-green-800/40 dark:text-green-300 border-0">
                       Active
                     </Badge>
                   </div>
+                  <div className="mb-4"></div>
 
                   {/* PRIMARY: Copy Link Button */}
                   <div className="mb-4">

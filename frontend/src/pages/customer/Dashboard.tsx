@@ -47,6 +47,8 @@ interface RestaurantCode {
     name: string;
     slug: string;
   };
+  total_visits?: number;
+  first_visit_date?: string;
 }
 
 // Interface for visited restaurant (eligible for code generation)
@@ -60,6 +62,24 @@ interface VisitedRestaurant {
     slug: string;
   };
 }
+
+// Helper function to calculate time ago
+const getTimeAgo = (dateString: string): string => {
+  const date = new Date(dateString);
+  const now = new Date();
+  const diffInMs = now.getTime() - date.getTime();
+  const diffInDays = Math.floor(diffInMs / (1000 * 60 * 60 * 24));
+  
+  if (diffInDays === 0) return 'today';
+  if (diffInDays === 1) return 'yesterday';
+  if (diffInDays < 7) return `${diffInDays} days ago`;
+  if (diffInDays < 30) {
+    const weeks = Math.floor(diffInDays / 7);
+    return weeks === 1 ? '1 week ago' : `${weeks} weeks ago`;
+  }
+  const months = Math.floor(diffInDays / 30);
+  return months === 1 ? '1 month ago' : `${months} months ago`;
+};
 
 export default function CustomerDashboard() {
   const { user, signOut, loading } = useAuth();
@@ -96,34 +116,7 @@ export default function CustomerDashboard() {
       
       setLoadingCodes(true);
       try {
-        // Fetch existing codes
-        const { data: codesData, error: codesError } = await supabase
-          .from('user_restaurant_referral_codes')
-          .select(`
-            id,
-            restaurant_id,
-            referral_code,
-            restaurants (
-              name,
-              slug
-            )
-          `)
-          .eq('user_id', user.id)
-          .eq('is_active', true);
-        
-        if (codesError) throw codesError;
-        
-        // Transform codes data
-        const transformedCodes: RestaurantCode[] = (codesData || []).map((item: any) => ({
-          id: item.id,
-          restaurant_id: item.restaurant_id,
-          referral_code: item.referral_code,
-          restaurant: item.restaurants[0] || { name: 'Unknown', slug: 'unknown' }
-        }));
-        
-        setRestaurantCodes(transformedCodes);
-        
-        // Fetch visited restaurants (from customer_restaurant_history)
+        // Fetch visited restaurants first (from customer_restaurant_history)
         const { data: visitedData, error: visitedError } = await supabase
           .from('customer_restaurant_history')
           .select(`
@@ -140,7 +133,49 @@ export default function CustomerDashboard() {
         
         if (visitedError) throw visitedError;
         
-        // Transform visited data
+        // Transform visited data into a map for easy lookup
+        const visitHistoryMap = new Map();
+        (visitedData || []).forEach((item: any) => {
+          visitHistoryMap.set(item.restaurant_id, {
+            first_visit_date: item.first_visit_date,
+            total_visits: item.total_visits,
+            total_spent: item.total_spent,
+          });
+        });
+        
+        // Fetch existing referral codes
+        const { data: codesData, error: codesError } = await supabase
+          .from('user_restaurant_referral_codes')
+          .select(`
+            id,
+            restaurant_id,
+            referral_code,
+            restaurants (
+              name,
+              slug
+            )
+          `)
+          .eq('user_id', user.id)
+          .eq('is_active', true);
+        
+        if (codesError) throw codesError;
+        
+        // Transform codes data and merge with visit history
+        const transformedCodes: RestaurantCode[] = (codesData || []).map((item: any) => {
+          const visitInfo = visitHistoryMap.get(item.restaurant_id);
+          return {
+            id: item.id,
+            restaurant_id: item.restaurant_id,
+            referral_code: item.referral_code,
+            restaurant: item.restaurants[0] || { name: 'Unknown', slug: 'unknown' },
+            total_visits: visitInfo?.total_visits,
+            first_visit_date: visitInfo?.first_visit_date,
+          };
+        });
+        
+        setRestaurantCodes(transformedCodes);
+        
+        // Transform visited data for eligible restaurants
         const transformedVisited: VisitedRestaurant[] = (visitedData || []).map((item: any) => ({
           restaurant_id: item.restaurant_id,
           first_visit_date: item.first_visit_date,
@@ -426,14 +461,22 @@ export default function CustomerDashboard() {
               {restaurantCodes.map((code) => (
                 <Card key={code.id} className="border-border/50 bg-gradient-to-br from-primary/5 to-primary-light/10 dark:from-primary/10 dark:to-primary-light/5">
                   <CardContent className="p-5">
-                    <div className="flex items-start justify-between mb-4">
-                      <h3 className="font-semibold text-foreground">
-                        {code.restaurant.name}
-                      </h3>
+                    <div className="flex items-start justify-between mb-2">
+                      <div>
+                        <h3 className="font-semibold text-foreground">
+                          {code.restaurant.name}
+                        </h3>
+                        {code.total_visits && code.first_visit_date && (
+                          <p className="text-xs text-muted-foreground mt-0.5">
+                            {code.total_visits} {code.total_visits === 1 ? 'visit' : 'visits'} • Last: {getTimeAgo(code.first_visit_date)}
+                          </p>
+                        )}
+                      </div>
                       <Badge variant="outline" className="bg-green-200 text-green-800 dark:bg-green-800/40 dark:text-green-300 border-0">
                         Active
                       </Badge>
                     </div>
+                    <div className="mb-4"></div>
 
                     {/* PRIMARY: Copy Link Button */}
                     <div className="mb-4">

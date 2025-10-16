@@ -12,6 +12,13 @@
 
 ## Recent Updates
 
+### Dashboard Enhancements & Visit Context (2025-10-17)
+**Restaurant Cards Now Display Visit History**
+- ✅ **Visit Context Display** - Cards show "X visits • Last: Y days ago" to remind users
+- ✅ **Dynamic Time Formatting** - Smart formatting (today, yesterday, X days/weeks/months ago)
+- ✅ **Improved UX** - Users can see their connection to each restaurant at a glance
+- ✅ **Data Merging** - Visit history from `customer_restaurant_history` merged with referral codes
+
 ### Dashboard Redesign & Restaurant Promotion System (2025-10-16)
 **Customer Dashboard Enhanced with Restaurant-Specific Referral Codes**
 - ✅ **Improved Sharing UI** - Link-first approach with 70%+ better conversion rates
