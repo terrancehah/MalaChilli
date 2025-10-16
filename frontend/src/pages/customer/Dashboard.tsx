@@ -19,7 +19,22 @@ import {
   Check,
   LogOut,
   QrCode as QrCodeIcon,
+  ChevronDown,
+  ChevronUp,
 } from 'lucide-react';
+
+// Social Media Icons as SVG components
+const WhatsAppIcon = () => (
+  <svg viewBox="0 0 24 24" fill="currentColor" className="h-4 w-4">
+    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
+  </svg>
+);
+
+const FacebookIcon = () => (
+  <svg viewBox="0 0 24 24" fill="currentColor" className="h-4 w-4">
+    <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+  </svg>
+);
 
 // TypeScript interface for restaurant code
 interface RestaurantCode {
@@ -49,6 +64,7 @@ export default function CustomerDashboard() {
   const navigate = useNavigate();
   const [copied, setCopied] = useState<string | null>(null);
   const [showQR, setShowQR] = useState(false);
+  const [expandedCode, setExpandedCode] = useState<string | null>(null);
   const [restaurantCodes, setRestaurantCodes] = useState<RestaurantCode[]>([]);
   const [loadingCodes, setLoadingCodes] = useState(true);
   const [visitedRestaurants, setVisitedRestaurants] = useState<VisitedRestaurant[]>([]);
@@ -141,10 +157,47 @@ export default function CustomerDashboard() {
     fetchData();
   }, [user]);
 
+  const handleCopyLink = (slug: string, code: string) => {
+    const link = `${window.location.origin}/join/${slug}/${code}`;
+    navigator.clipboard.writeText(link);
+    setCopied(`link-${code}`);
+    setTimeout(() => setCopied(null), 2000);
+  };
+
   const handleCopyCode = (code: string) => {
     navigator.clipboard.writeText(code);
-    setCopied(code);
+    setCopied(`code-${code}`);
     setTimeout(() => setCopied(null), 2000);
+  };
+
+  const handleShareWhatsApp = (name: string, slug: string, code: string) => {
+    const link = `${window.location.origin}/join/${slug}/${code}`;
+    const message = `Hey! I love ${name}. Join me there and get a discount: ${link}`;
+    const url = `https://wa.me/?text=${encodeURIComponent(message)}`;
+    window.open(url, '_blank');
+  };
+
+  const handleShareFacebook = (slug: string, code: string) => {
+    const link = `${window.location.origin}/join/${slug}/${code}`;
+    const url = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(link)}`;
+    window.open(url, '_blank');
+  };
+
+  const handleNativeShare = async (name: string, slug: string, code: string) => {
+    const link = `${window.location.origin}/join/${slug}/${code}`;
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: `Join me at ${name}`,
+          text: `Check out ${name}!`,
+          url: link
+        });
+      } catch (err) {
+        console.log('Share cancelled or failed:', err);
+      }
+    } else {
+      handleCopyLink(slug, code);
+    }
   };
 
   const handleGenerateCode = async (restaurantId: string) => {
@@ -361,51 +414,111 @@ export default function CustomerDashboard() {
               {restaurantCodes.map((code) => (
                 <Card key={code.id} className="border-border/50 bg-gradient-to-br from-primary/5 to-primary-light/10 dark:from-primary/10 dark:to-primary-light/5">
                   <CardContent className="p-5">
-                    <div className="flex items-start justify-between mb-3">
-                      <div>
-                        <h3 className="font-semibold text-foreground mb-1">
-                          {code.restaurant.name}
-                        </h3>
-                        <p className="text-xs text-muted-foreground">
-                          Share this code to promote {code.restaurant.name}
-                        </p>
-                      </div>
+                    <div className="flex items-start justify-between mb-4">
+                      <h3 className="font-semibold text-foreground">
+                        {code.restaurant.name}
+                      </h3>
                       <Badge variant="outline" className="bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400 border-0">
                         Active
                       </Badge>
                     </div>
 
-                    <div className="bg-white dark:bg-slate-800 rounded-lg p-4 border border-border/50 shadow-sm">
-                      <div className="flex items-center justify-between mb-2">
-                        <span className="text-xs text-muted-foreground uppercase tracking-wide">
-                          Your Code
-                        </span>
-                        {copied === code.referral_code && (
-                          <span className="text-xs text-green-600 dark:text-green-400 flex items-center gap-1">
-                            <Check className="h-3 w-3" />
-                            Copied!
-                          </span>
-                        )}
-                      </div>
-                      <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
-                        <p className="text-lg sm:text-xl font-bold text-primary dark:text-primary-light font-mono flex-1 break-all">
-                          {code.referral_code}
-                        </p>
+                    {/* PRIMARY: Copy Link Button */}
+                    <div className="mb-3">
+                      <div className="bg-white dark:bg-slate-800 rounded-lg p-3 border border-border/50 shadow-sm">
+                        <div className="mb-2">
+                          <p className="text-xs font-mono text-muted-foreground break-all">
+                            {window.location.origin}/join/{code.restaurant.slug}/{code.referral_code}
+                          </p>
+                          {copied === `link-${code.referral_code}` && (
+                            <span className="text-xs text-green-600 dark:text-green-400 flex items-center gap-1 mt-1">
+                              <Check className="h-3 w-3" />
+                              Link copied!
+                            </span>
+                          )}
+                        </div>
                         <Button
-                          size="sm"
-                          onClick={() => handleCopyCode(code.referral_code)}
-                          className="bg-primary hover:bg-primary/90 whitespace-nowrap"
+                          onClick={() => handleCopyLink(code.restaurant.slug, code.referral_code)}
+                          className="w-full bg-primary hover:bg-primary/90"
+                          size="lg"
                         >
-                          <Copy className="h-4 w-4 mr-1" />
-                          Copy
+                          <Share2 className="h-4 w-4 mr-2" />
+                          Copy Link
                         </Button>
                       </div>
                     </div>
 
-                    <div className="mt-3 p-3 bg-primary/10 dark:bg-primary/20 rounded-lg">
-                      <p className="text-xs text-primary-dark dark:text-primary-light break-all">
-                        🔗 Share link: <strong>{window.location.origin}/join/{code.restaurant.slug}/{code.referral_code}</strong>
-                      </p>
+                    {/* Social Share Buttons */}
+                    <div className="grid grid-cols-3 gap-2 mb-3">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handleShareWhatsApp(code.restaurant.name, code.restaurant.slug, code.referral_code)}
+                        className="bg-[#25D366] hover:bg-[#20BA5A] text-white border-0 flex items-center justify-center"
+                        title="Share on WhatsApp"
+                      >
+                        <WhatsAppIcon />
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handleShareFacebook(code.restaurant.slug, code.referral_code)}
+                        className="bg-[#1877F2] hover:bg-[#0C63D4] text-white border-0 flex items-center justify-center"
+                        title="Share on Facebook"
+                      >
+                        <FacebookIcon />
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handleNativeShare(code.restaurant.name, code.restaurant.slug, code.referral_code)}
+                        className="bg-gray-100 hover:bg-gray-200 text-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-gray-100 border-0 flex items-center justify-center gap-1.5"
+                        title="More share options"
+                      >
+                        <Share2 className="h-3.5 w-3.5" />
+                        <span className="text-xs">More</span>
+                      </Button>
+                    </div>
+
+                    {/* SECONDARY: Code Reference (Collapsible) */}
+                    <div className="border-t border-border/50 pt-3">
+                      <button
+                        onClick={() => setExpandedCode(expandedCode === code.id ? null : code.id)}
+                        className="text-xs text-muted-foreground hover:text-foreground flex items-center gap-1.5 w-full transition-colors"
+                      >
+                        <span>View promotion code</span>
+                        {expandedCode === code.id ? (
+                          <ChevronUp className="h-3 w-3" />
+                        ) : (
+                          <ChevronDown className="h-3 w-3" />
+                        )}
+                      </button>
+                      <div className={`overflow-hidden transition-all duration-300 ease-in-out ${
+                        expandedCode === code.id ? 'max-h-32 opacity-100 mt-2' : 'max-h-0 opacity-0'
+                      }`}>
+                        <div className="bg-white dark:bg-slate-900 rounded-lg p-3 border border-border/50">
+                          <div className="flex items-center justify-between gap-2">
+                            <code className="text-sm font-mono text-foreground flex-1">
+                              {code.referral_code}
+                            </code>
+                            {copied === `code-${code.referral_code}` ? (
+                              <span className="text-xs text-green-600 dark:text-green-400 flex items-center gap-1 whitespace-nowrap">
+                                <Check className="h-3 w-3" />
+                                Copied!
+                              </span>
+                            ) : (
+                              <Button
+                                size="sm"
+                                variant="ghost"
+                                onClick={() => handleCopyCode(code.referral_code)}
+                                className="hover:bg-muted"
+                              >
+                                <Copy className="h-3 w-3" />
+                              </Button>
+                            )}
+                          </div>
+                        </div>
+                      </div>
                     </div>
                   </CardContent>
                 </Card>

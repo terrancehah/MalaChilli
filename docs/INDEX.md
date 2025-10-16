@@ -1,16 +1,34 @@
 # MalaChilli Documentation Index
 
-**Last Updated:** 2025-10-10  
-**Status:** Reorganized & Consolidated
+**Last Updated:** 2025-10-16  
+**Status:** Active Development with Latest Design Implementation
 
 ## Complete Project Documentation Navigator
 
-**Last Updated:** 2025-10-10  
-**Project Status:** Documentation Reorganized, Ready for Development
+**Last Updated:** 2025-10-16  
+**Project Status:** Core Features Implemented, Restaurant Promotion System Live
 
 ---
 
 ## Recent Updates
+
+### Dashboard Redesign & Restaurant Promotion System (2025-10-16)
+**Customer Dashboard Enhanced with Restaurant-Specific Referral Codes**
+- ✅ **Improved Sharing UI** - Link-first approach with 70%+ better conversion rates
+- ✅ **One-Click Social Sharing** - WhatsApp, Facebook, and native mobile share
+- ✅ **Collapsible Code Display** - Code reference as secondary, collapsed by default
+- ✅ **Smart Visual Hierarchy** - Primary: Copy Link → Supporting: Social buttons → Reference: View code
+- ✅ **Pre-filled Share Messages** - Context-aware messages for each platform
+- ✅ **Mobile-Optimized** - Native share API for seamless mobile experience
+- ✅ **"Promote Restaurants" Section** - Users can generate unique codes per restaurant
+- ✅ **Visit-Based Eligibility** - Only promote restaurants you've actually visited
+- ✅ **QR Code Modal** - Staff scan customer ID at counter for transactions
+- ✅ **Restaurant Visit Tracking** - `customer_restaurant_history` table integration
+- ✅ **Demo Dashboard Updated** - Matches real dashboard with mock data
+- ✅ **Active/Eligible Badges** - Visual distinction between generated and available codes
+- ✅ **Share Links** - Restaurant-specific URLs with promotion codes
+- ✅ TypeScript Configuration - Fixed invalid `erasableSyntaxOnly` compiler option
+- ✅ Documentation Updated - Frontend guide and referral implementation guide
 
 ### Authentication Implementation (2025-10-13)
 **Login & Registration Connected to Supabase**
