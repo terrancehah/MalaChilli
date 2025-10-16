@@ -104,9 +104,12 @@ MalaChilli/
 
 ### Customer Portal
 - User dashboard with profile management
-- QR code display for referral sharing
-- Wallet system with transaction history
-- Referral tracking and network visualization
+- Restaurant-specific referral code generation system
+- QR code display for in-store transactions
+- One-click social sharing (WhatsApp, Facebook, native share)
+- Wallet system with virtual currency balance tracking
+- Transaction history and referral analytics
+- Demo mode with sample data for testing
 
 ### Staff Interface
 - QR code scanner for customer verification
@@ -119,6 +122,26 @@ MalaChilli/
 - Customer acquisition tracking
 - Revenue and discount analytics
 - Export capabilities
+
+---
+
+## 📱 Screenshots
+
+### Customer Dashboard
+The customer dashboard provides an intuitive interface for managing virtual currency, tracking referrals, and promoting restaurants.
+
+<div align="center">
+  <img src="docs/images/dashboard-overview.png" alt="Dashboard Overview" width="300"/>
+  <p><em>Dashboard overview showing virtual currency balance, stats, and promotion section</em></p>
+</div>
+
+### Restaurant Promotion System
+Customers can share restaurant referral links through multiple channels with one-click sharing options.
+
+<div align="center">
+  <img src="docs/images/dashboard-promotion-cards.png" alt="Restaurant Promotion Cards" width="300"/>
+  <p><em>Restaurant promotion cards with social sharing and referral code management</em></p>
+</div>
 
 ---
 
