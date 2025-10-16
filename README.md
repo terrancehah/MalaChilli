@@ -66,31 +66,10 @@ Customers can share restaurant referral links through multiple channels with one
 
 ---
 
-## 🚀 Quick Start
-
-```bash
-# Clone and install
-git clone https://github.com/yourusername/MalaChilli.git
-cd MalaChilli/frontend
-npm install
-
-# Configure environment
-cp .env.example .env  # Add Supabase credentials
-
-# Run development server
-npm run dev  # localhost:5173
-```
-
-**Environment Variables:**
-```bash
-VITE_SUPABASE_URL=your_supabase_url
-VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
-```
-
----
-
 ## 📄 License
 
 **Portfolio Project** | Copyright © 2025 | All Rights Reserved
 
-This code is provided for viewing and evaluation purposes only. Unauthorized use, copying, or distribution is prohibited.
+This repository is provided for **viewing and evaluation purposes only**. The code showcases technical skills and development practices. Setup instructions, API keys, and database schemas are intentionally excluded.
+
+**Unauthorized use, copying, modification, or distribution is strictly prohibited.**
