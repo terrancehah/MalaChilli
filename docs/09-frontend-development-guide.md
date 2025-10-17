@@ -1,11 +1,20 @@
 # Frontend Development Guide
 ## MalaChilli - React Web Application
 
-**Version:** 1.2  
-**Date:** 2025-10-16  
+**Version:** 1.3  
+**Date:** 2025-10-18  
 **Tech Stack:** React 18, Vite, Tailwind CSS, Supabase Client
 
-**Recent Updates (2025-10-17):**
+**Recent Updates (2025-10-18):**
+- ✅ **Consolidated Stats Display** - Earned/Referred/Redeemed moved into virtual currency card with horizontal layout
+- ✅ **Separate Stat Backgrounds** - Each stat has distinct colored background (green/blue/primary)
+- ✅ **Simplified Restaurant Cards** - Single "Share Restaurant" button replaces complex multi-button layout
+- ✅ **Swipeable Bottom Sheet** - Mobile-friendly sharing modal with gesture support
+- ✅ **Touch Gesture Detection** - Bottom sheet follows finger during drag, dismisses on 100px+ swipe
+- ✅ **Background Scroll Prevention** - Body scroll locked when bottom sheet is open
+- ✅ **Progressive Disclosure** - All sharing options (link, social, code) in organized bottom sheet
+
+**Previous Updates (2025-10-17):**
 - ✅ **Visit Context Display** - Restaurant cards show "X visits • Last: Y days ago" to remind users
 - ✅ **Dynamic Time Formatting** - Smart time ago function (today, yesterday, X days/weeks/months)
 - ✅ **Improved Data Fetching** - Merged visit history with referral codes for complete context
@@ -222,9 +231,10 @@ await signIn(email, password);
 
 **Features:**
 - Profile header with avatar and verification badge
-- Virtual currency balance display
-- Quick stats (Earned, Redeemed, Referred)
+- Virtual currency balance display with integrated stats
+- Consolidated stats row (Earned, Referred, Redeemed) with color-coded backgrounds
 - Restaurant-specific referral code management
+- Swipeable bottom sheet for sharing options
 - QR code modal for staff scanning
 - Transaction history
 
@@ -276,20 +286,42 @@ const handleGenerateCode = async (restaurantId: string) => {
 
 **UI Components:**
 
-1. **Active Restaurant Codes (with codes already generated):**
-   - Shows restaurant name and description
-   - Displays unique referral code in large, monospaced font
-   - Copy button with "Copied!" feedback
-   - Share link showing full URL with restaurant slug
-   - Green "Active" badge
+1. **Virtual Currency Card with Integrated Stats:**
+   - Large balance display at top
+   - Horizontal stats row with color-coded backgrounds:
+     - **Earned**: Light green background (`bg-green-50` / `dark:bg-green-950/20`)
+     - **Referred**: Light blue background (`bg-blue-50` / `dark:bg-blue-950/20`)
+     - **Redeemed**: Primary color background (`bg-primary/10`)
+   - Each stat in rounded container with padding
+   - Separated by small gaps for visual distinction
+   - Member since date at bottom
 
-2. **Eligible Restaurants (visited but no code yet):**
+2. **Simplified Restaurant Cards:**
+   - Restaurant name and visit statistics
+   - Green "Active" badge
+   - Single prominent "Share Restaurant" button
+   - Clean, minimal design with reduced clutter
+
+3. **Swipeable Bottom Sheet (Sharing Modal):**
+   - Slides up from bottom with smooth animation
+   - Touch gesture support - follows finger during drag
+   - Dismisses when swiped down >100px
+   - Snaps back if swipe is <100px
+   - Prevents background scrolling when open
+   - Contains all sharing options:
+     - **Referral Link** section with copy button
+     - **Social Media** buttons (WhatsApp, Facebook, More)
+     - **Promotion Code** section with copy button
+   - Backdrop overlay with blur effect
+   - Handle bar at top for visual affordance
+
+4. **Eligible Restaurants (visited but no code yet):**
    - Shows restaurant name and visit statistics
    - Display total visits and amount spent
    - "Generate Referral Code" button
    - Blue "Eligible" badge
 
-3. **QR Code Modal:**
+5. **QR Code Modal:**
    - Triggered by QR icon button in header
    - Displays customer ID as QR code for staff scanning
    - Shows user name and truncated ID
@@ -306,130 +338,258 @@ The UI now prioritizes link sharing over code copying, based on UX research show
 
 **Visual Hierarchy:**
 ```
-1. PRIMARY: "Copy Link" button (large, prominent)
-2. SUPPORTING: Social share buttons (WhatsApp, Facebook, More)
-3. REFERENCE: View code (collapsible, secondary)
+1. PRIMARY: "Share Restaurant" button (single, prominent CTA)
+2. MODAL: Bottom sheet with organized sharing options
+   - Referral link section
+   - Social media buttons  
+   - Promotion code section
 ```
 
 **Code Structure:**
+
+**1. Virtual Currency Card with Stats:**
+```tsx
+<Card className="bg-white/95 backdrop-blur border-0 shadow-lg">
+  <CardContent className="p-5">
+    {/* Balance Display */}
+    <div className="flex items-center justify-between mb-4">
+      <div>
+        <p className="text-sm text-muted-foreground mb-1">Virtual Currency</p>
+        <p className="text-4xl font-bold text-foreground mb-1">
+          {formatCurrency(0)}
+        </p>
+      </div>
+      <div className="h-16 w-16 rounded-full bg-primary/10">
+        <Wallet className="h-8 w-8 text-primary" />
+      </div>
+    </div>
+    
+    {/* Consolidated Stats Row */}
+    <div className="flex items-center gap-2 pt-4 mt-4 border-t border-border/20 -mx-5 px-5 pb-4">
+      <div className="text-center flex-1 bg-green-50 dark:bg-green-950/20 rounded-lg py-3">
+        <p className="text-xs text-muted-foreground mb-0.5">Earned</p>
+        <p className="text-sm font-semibold text-green-600">
+          {formatCurrency(0)}
+        </p>
+      </div>
+      <div className="text-center flex-1 bg-blue-50 dark:bg-blue-950/20 rounded-lg py-3">
+        <p className="text-xs text-muted-foreground mb-0.5">Referred</p>
+        <p className="text-sm font-semibold text-blue-600">0</p>
+      </div>
+      <div className="text-center flex-1 bg-primary/10 rounded-lg py-3">
+        <p className="text-xs text-muted-foreground mb-0.5">Redeemed</p>
+        <p className="text-sm font-semibold text-primary">
+          {formatCurrency(0)}
+        </p>
+      </div>
+    </div>
+    
+    <p className="text-xs text-muted-foreground text-center mt-3">
+      Member since {memberSince}
+    </p>
+  </CardContent>
+</Card>
+```
+
+**2. Simplified Restaurant Card:**
 ```tsx
 <Card className="restaurant-code-card">
   <CardContent className="p-5">
     {/* Header with visit stats */}
-    <div className="flex items-start justify-between mb-2">
+    <div className="flex items-start justify-between mb-4">
       <div>
         <h3>{code.restaurant.name}</h3>
         {code.total_visits && code.first_visit_date && (
           <p className="text-xs text-muted-foreground mt-0.5">
-            {code.total_visits} {code.total_visits === 1 ? 'visit' : 'visits'} • Last: {getTimeAgo(code.first_visit_date)}
+            {code.total_visits} visits • Last: {getTimeAgo(code.first_visit_date)}
           </p>
         )}
       </div>
       <Badge>Active</Badge>
     </div>
-    <div className="mb-4"></div>
-  
-  {/* PRIMARY ACTION: Copy Link */}
-  <div className="mb-4">
-    <div className="bg-white rounded-lg p-4 border shadow-sm">
-      <div className="mb-3">
-        {/* Full link display with relaxed spacing */}
-        <p className="text-xs font-mono break-all leading-relaxed">
-          {window.location.origin}/join/{code.restaurant.slug}/{code.referral_code}
-        </p>
-        {copied === `link-${code.referral_code}` && (
-          <span className="success mt-2">Link copied!</span>
-        )}
-      </div>
-      <Button 
-        onClick={() => handleCopyLink(slug, code)}
-        size="lg" 
-        className="w-full"
-      >
-        <Share2 /> Copy Link
-      </Button>
-    </div>
-  </div>
-  
-  {/* SOCIAL SHARING - Icons only, no text labels */}
-  <div className="grid grid-cols-3 gap-2 mb-2">
-    <Button 
-      className="bg-[#25D366] hover:bg-[#20BA5A] h-14"
-      title="Share on WhatsApp"
+
+    {/* Single Share Button */}
+    <Button
+      onClick={() => {
+        setSelectedRestaurant({
+          name: code.restaurant.name,
+          slug: code.restaurant.slug,
+          code: code.referral_code
+        });
+        setShowShareSheet(true);
+      }}
+      className="w-full bg-primary hover:bg-primary/90"
+      size="lg"
     >
-      <WhatsAppIcon /> {/* !h-5 !w-5 */}
+      <Share2 className="h-4 w-4 mr-2" />
+      Share Restaurant
     </Button>
-    <Button 
-      className="bg-[#1877F2] hover:bg-[#0C63D4] h-14"
-      title="Share on Facebook"
-    >
-      <FacebookIcon /> {/* !h-5 !w-5 */}
-    </Button>
-    <Button 
-      className="bg-gray-100 hover:bg-gray-200 h-14"
-      title="More share options"
-    >
-      <Share2 className="h-4 w-4" />
-      <span className="text-xs">More</span>
-    </Button>
-  </div>
-  
-  {/* SECONDARY: Code Reference (Collapsible with transition) */}
-  <div className="border-t pt-2.5 -mb-3">
-    <button 
-      onClick={() => toggleCode(code.id)}
-      className="text-sm hover:text-foreground active:text-foreground active:bg-muted/50 transition-all rounded px-1 py-0.5"
-    >
-      <span>View promotion code</span>
-      {expanded ? <ChevronUp className="h-3.5 w-3.5" /> : <ChevronDown className="h-3.5 w-3.5" />}
-    </button>
-    
-    {/* Smooth 300ms transition */}
-    <div className={`overflow-hidden transition-all duration-300 ease-in-out ${
-      expanded ? 'max-h-32 opacity-100 mt-1.5' : 'max-h-0 opacity-0'
-    }`}>
-      <div className="bg-white rounded-lg p-2 border">
-        {/* No "Code" heading - just code and copy button */}
-        <div className="flex items-center justify-between gap-2">
-          <code className="text-sm font-mono flex-1">
-            {code.referral_code}
-          </code>
-          {copied === `code-${code.referral_code}` ? (
-            <span className="success">
-              <Check className="!h-5 !w-5" />
-              Copied!
-            </span>
-          ) : (
-            <Button size="sm" variant="ghost" className="h-8 w-8 p-0">
-              <Copy className="!h-5 !w-5" />
-            </Button>
-          )}
-        </div>
-      </div>
-    </div>
-  </div>
   </CardContent>
 </Card>
 ```
 
+**3. Swipeable Bottom Sheet:**
+```tsx
+{/* State management */}
+const [showShareSheet, setShowShareSheet] = useState(false);
+const [selectedRestaurant, setSelectedRestaurant] = useState(null);
+const [touchStart, setTouchStart] = useState(0);
+const [touchCurrent, setTouchCurrent] = useState(0);
+const [isDragging, setIsDragging] = useState(false);
+
+{/* Prevent body scroll when sheet is open */}
+useEffect(() => {
+  if (showShareSheet) {
+    document.body.style.overflow = 'hidden';
+  } else {
+    document.body.style.overflow = 'unset';
+  }
+  return () => {
+    document.body.style.overflow = 'unset';
+  };
+}, [showShareSheet]);
+
+{/* Bottom Sheet Component */}
+{showShareSheet && selectedRestaurant && (
+  <>
+    {/* Backdrop */}
+    <div 
+      className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 transition-opacity duration-300 animate-in fade-in overflow-hidden"
+      onClick={() => setShowShareSheet(false)}
+      style={{ touchAction: 'none' }}
+    />
+    
+    {/* Swipeable Sheet */}
+    <div 
+      className="fixed inset-x-0 bottom-0 z-50"
+      style={{
+        transform: isDragging && touchCurrent > touchStart 
+          ? `translateY(${touchCurrent - touchStart}px)` 
+          : 'translateY(0)',
+        transition: isDragging ? 'none' : 'transform 0.3s ease-out'
+      }}
+      onTouchStart={(e) => {
+        setTouchStart(e.targetTouches[0].clientY);
+        setTouchCurrent(e.targetTouches[0].clientY);
+        setIsDragging(true);
+      }}
+      onTouchMove={(e) => {
+        if (isDragging) {
+          const current = e.targetTouches[0].clientY;
+          if (current > touchStart) {
+            setTouchCurrent(current);
+          }
+        }
+      }}
+      onTouchEnd={() => {
+        setIsDragging(false);
+        const dragDistance = touchCurrent - touchStart;
+        if (dragDistance > 100) {
+          setShowShareSheet(false);
+        } else {
+          setTouchCurrent(touchStart);
+        }
+      }}
+    >
+      <div className="bg-background rounded-t-3xl shadow-2xl border-t border-border max-h-[85vh] overflow-y-auto">
+        <div className="p-6">
+          {/* Handle Bar */}
+          <div className="w-12 h-1.5 bg-muted rounded-full mx-auto mb-6"></div>
+          
+          {/* Header */}
+          <div className="mb-6">
+            <h3 className="text-xl font-bold">Share {selectedRestaurant.name}</h3>
+            <p className="text-sm text-muted-foreground">
+              Choose how you'd like to share this restaurant
+            </p>
+          </div>
+
+          {/* Referral Link Section */}
+          <div className="mb-6">
+            <label className="text-sm font-medium mb-2 block">Referral Link</label>
+            <div className="bg-muted/50 rounded-lg p-4 border">
+              <p className="text-xs font-mono break-all leading-relaxed mb-3">
+                {window.location.origin}/join/{selectedRestaurant.slug}/{selectedRestaurant.code}
+              </p>
+              <Button onClick={() => handleCopyLink()} className="w-full" size="lg">
+                <Copy className="h-4 w-4 mr-2" />
+                Copy Link
+              </Button>
+            </div>
+          </div>
+
+          {/* Social Share Options */}
+          <div className="mb-6">
+            <label className="text-sm font-medium mb-2 block">Share via Social Media</label>
+            <div className="grid grid-cols-3 gap-3">
+              <Button onClick={() => handleShareWhatsApp()}>
+                <WhatsAppIcon />
+                <span className="text-xs">WhatsApp</span>
+              </Button>
+              {/* Facebook, More buttons... */}
+            </div>
+          </div>
+
+          {/* Promotion Code Section */}
+          <div className="mb-4">
+            <label className="text-sm font-medium mb-2 block">Promotion Code</label>
+            <div className="bg-muted/50 rounded-lg p-4 border">
+              <div className="flex items-center justify-between gap-3">
+                <code className="text-base font-mono flex-1">
+                  {selectedRestaurant.code}
+                </code>
+                <Button size="sm" onClick={() => handleCopyCode()}>
+                  <Copy className="h-4 w-4 mr-1" />
+                  Copy
+                </Button>
+              </div>
+            </div>
+          </div>
+
+          {/* Close Button */}
+          <Button onClick={() => setShowShareSheet(false)} variant="outline" className="w-full">
+            Close
+          </Button>
+        </div>
+      </div>
+    </div>
+  </>
+)}
+```
+
 **Design Details:**
-- **Card padding:** `p-5` - uniform padding (user reverted pb-3 change)
-- **Header spacing:** `mb-2` (reduced from `mb-4`) to accommodate visit stats subheading
+
+**Virtual Currency Card:**
+- **Card padding:** `p-5` - uniform padding
+- **Stats row layout:** `flex items-center gap-2` - horizontal with small gaps
+- **Stat backgrounds:** 
+  - Earned: `bg-green-50 dark:bg-green-950/20` - light green
+  - Referred: `bg-blue-50 dark:bg-blue-950/20` - light blue
+  - Redeemed: `bg-primary/10` - primary color tint
+- **Stat containers:** `rounded-lg py-3` - rounded corners with vertical padding
+- **Stat spacing:** `-mx-5 px-5` - extends to card edges for full-width background
+
+**Restaurant Cards:**
+- **Card padding:** `p-5` - uniform padding
+- **Header spacing:** `mb-4` - adequate space before button
 - **Visit stats:** `text-xs text-muted-foreground mt-0.5` - shows "X visits • Last: Y days ago"
 - **Time ago helper:** Dynamic formatting (today, yesterday, X days/weeks/months ago)
-- **Link container:** `p-4` padding (increased from `p-3`), `mb-3` spacing between link and button
-- **Link text:** `leading-relaxed` for better readability, `break-all` for long URLs
-- **Social icons:** `!h-5 !w-5` size (20px, with `!important` to override Button's default)
-- **Social buttons:** Icon-only for WhatsApp/Facebook, "More" keeps text label, `h-14` height
-- **Dropdown margin:** `mb-2` between social buttons and dropdown, `-mb-3` to reduce space at card bottom
-- **Dropdown button:** `text-sm` size (14px), active state with `active:bg-muted/50` for click feedback
-- **Dropdown button padding:** `px-1 py-0.5` with `rounded` corners for better click area
-- **Chevron icons:** `h-3.5 w-3.5` (14px) to match text size
-- **Code container:** `p-2` padding (reduced from `p-3`), `mt-1.5` top margin (reduced from `mt-2`)
-- **Copy icon:** `h-5 w-5` (20px) matching social media icons, button is `h-8 w-8 p-0` for icon-only
-- **Check icon:** `h-5 w-5` (20px) for consistency with copy icon
-- **Transition:** 300ms with `ease-in-out` timing function, `transition-all` for smooth effects
-- **No headings:** Removed "Share this link:" and "Code" labels for cleaner UI
+- **Share button:** `w-full size-lg` - prominent, full-width CTA
+
+**Bottom Sheet:**
+- **Animation:** Slides up with `animate-in slide-in-from-bottom duration-300`
+- **Backdrop:** `bg-black/50 backdrop-blur-sm` with fade-in animation
+- **Gesture tracking:** Real-time `translateY()` follows finger position
+- **Drag threshold:** 100px swipe down to dismiss
+- **Snap-back:** Smooth 0.3s ease-out transition if swipe < 100px
+- **Touch handling:**
+  - `touchAction: 'none'` on backdrop - prevents background scroll
+  - Real-time `touchCurrent` state updates during drag
+  - `isDragging` flag disables transition during touch
+- **Visual affordance:** 12px × 1.5px handle bar at top
+- **Max height:** `max-h-[85vh]` with `overflow-y-auto` for scrollable content
+- **Border radius:** `rounded-t-3xl` for smooth top corners
+- **Z-index:** `z-50` ensures it appears above other content
 
 **Social Media Icons:**
 ```tsx
@@ -483,6 +643,14 @@ const handleNativeShare = async (name: string, slug: string, code: string) => {
 };
 ```
 
+**Benefits of Bottom Sheet Approach:**
+- **Progressive Disclosure:** Keeps main interface clean, shows options only when needed
+- **Reduced Decision Paralysis:** Single "Share Restaurant" button vs multiple choices
+- **Native Mobile Feel:** Swipeable bottom sheet is familiar iOS/Android pattern
+- **Better Organization:** All sharing options logically grouped in one place
+- **Touch-Optimized:** Large touch targets, swipe gestures, native interactions
+- **Focus Mode:** Backdrop blur helps user focus on sharing task
+
 **Benefits of Link-First Approach:**
 - **Higher Conversion:** Recipients click link → auto-redirect to registration with restaurant pre-selected
 - **Social Media Ready:** Links are clickable on WhatsApp, Facebook, Instagram stories
@@ -492,11 +660,13 @@ const handleNativeShare = async (name: string, slug: string, code: string) => {
 
 **User Flow:**
 1. Customer generates promotion code for restaurant
-2. Clicks "Copy Link" (primary action)
-3. Shares link via WhatsApp/Facebook/etc.
-4. Recipient clicks link → lands on `/join/{slug}/{code}`
-5. Registration page pre-fills restaurant context
-6. One-click signup = higher conversion
+2. Clicks "Share Restaurant" button (single, clear CTA)
+3. Bottom sheet slides up with all sharing options
+4. Chooses method: Copy link, WhatsApp, Facebook, or copy code
+5. Swipes down or taps backdrop to close
+6. Recipient clicks link → lands on `/join/{slug}/{code}`
+7. Registration page pre-fills restaurant context
+8. One-click signup = higher conversion
 
 **Database Tables Used:**
 - `user_restaurant_referral_codes` - Stores generated restaurant-specific codes
