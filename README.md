@@ -48,20 +48,36 @@
 
 ## 📱 Screenshots
 
-### Customer Dashboard
-The customer dashboard provides an intuitive interface for managing virtual currency, tracking referrals, and promoting restaurants.
+### Customer Dashboard - Virtual Currency Card
+Consolidated view showing balance and color-coded stats (Earned, Referred, Redeemed) with verified badge and member information.
 
 <div align="center">
-  <img src="docs/images/dashboard-overview.png" alt="Dashboard Overview" width="300"/>
-  <p><em>Dashboard overview showing virtual currency balance, stats, and promotion section</em></p>
+  <img src="docs/images/dashboard-currency-card.png" alt="Virtual Currency Card" width="300"/>
+  <p><em>Virtual currency balance with integrated stats display</em></p>
 </div>
 
-### Restaurant Promotion System
-Customers can share restaurant referral links through multiple channels with one-click sharing options.
+### Restaurant Promotion Cards
+Simplified card design with visit tracking and single-action sharing button for each restaurant.
 
 <div align="center">
-  <img src="docs/images/dashboard-promotion-cards.png" alt="Restaurant Promotion Cards" width="300"/>
-  <p><em>Restaurant promotion cards with social sharing and referral code management</em></p>
+  <img src="docs/images/dashboard-restaurant-cards.png" alt="Restaurant Cards" width="300"/>
+  <p><em>Clean restaurant cards showing visit history and share button</em></p>
+</div>
+
+### How It Works Modal
+Information modal explaining the restaurant promotion mechanism and virtual currency earning system.
+
+<div align="center">
+  <img src="docs/images/dashboard-how-it-works.png" alt="How It Works" width="300"/>
+  <p><em>User guide explaining earning and using virtual currency</em></p>
+</div>
+
+### Swipeable Share Bottom Sheet
+Mobile-optimized bottom sheet with organized sharing options: referral link, social media buttons (WhatsApp, Facebook), and promotion code.
+
+<div align="center">
+  <img src="docs/images/dashboard-share-bottom-sheet.png" alt="Share Bottom Sheet" width="300"/>
+  <p><em>Native-feeling swipeable bottom sheet with all sharing options</em></p>
 </div>
 
 ---
