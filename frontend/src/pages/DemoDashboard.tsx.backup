@@ -5,13 +5,17 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
   Wallet,
+  TrendingUp,
   Receipt,
   Sparkles,
   QrCode as QrCodeIcon,
+  Users,
   Share2,
   Copy,
   Check,
   LogOut,
+  ChevronDown,
+  ChevronUp,
   Info,
   X,
 } from 'lucide-react';
@@ -29,7 +33,7 @@ const FacebookIcon = () => (
   </svg>
 );
 import QRCode from 'react-qr-code';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 
 // Sample user data for demo
 const demoUser = {
@@ -117,28 +121,8 @@ const mockVisitedRestaurants = [
 export default function DemoDashboard() {
   const [copied, setCopied] = useState<string | null>(null);
   const [showQR, setShowQR] = useState(false);
+  const [expandedCode, setExpandedCode] = useState<string | null>(null);
   const [showInfoModal, setShowInfoModal] = useState(false);
-  const [showShareSheet, setShowShareSheet] = useState(false);
-  const [selectedRestaurant, setSelectedRestaurant] = useState<{
-    name: string;
-    slug: string;
-    code: string;
-  } | null>(null);
-  const [touchStart, setTouchStart] = useState(0);
-  const [touchCurrent, setTouchCurrent] = useState(0);
-  const [isDragging, setIsDragging] = useState(false);
-
-  // Prevent body scroll when bottom sheet is open
-  useEffect(() => {
-    if (showShareSheet) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = 'unset';
-    }
-    return () => {
-      document.body.style.overflow = 'unset';
-    };
-  }, [showShareSheet]);
 
   const handleCopyLink = (slug: string, code: string) => {
     const link = `${window.location.origin}/join/${slug}/${code}`;
@@ -241,48 +225,70 @@ export default function DemoDashboard() {
         {/* Virtual Currency Balance Card */}
         <Card className="bg-white/95 backdrop-blur border-0 shadow-lg">
           <CardContent className="p-5">
-            <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-muted-foreground mb-1">Virtual Currency</p>
                 <p className="text-4xl font-bold text-foreground mb-1">
                   {formatCurrency(mockData.balance)}
+                </p>
+                <p className="text-xs text-muted-foreground">
+                  Member since {mockData.memberSince}
                 </p>
               </div>
               <div className="h-16 w-16 rounded-full bg-primary/10 flex items-center justify-center">
                 <Wallet className="h-8 w-8 text-primary" />
               </div>
             </div>
-            
-            {/* Stats Row */}
-            <div className="flex items-center gap-2 pt-4 mt-4 border-t border-border/20 -mx-5 px-5 pb-4">
-              <div className="text-center flex-1 bg-green-50 dark:bg-green-950/20 rounded-lg py-3">
-                <p className="text-xs text-muted-foreground mb-0.5">Earned</p>
-                <p className="text-sm font-semibold text-green-600">
-                  {formatCurrency(mockData.totalEarned)}
-                </p>
-              </div>
-              <div className="text-center flex-1 bg-blue-50 dark:bg-blue-950/20 rounded-lg py-3">
-                <p className="text-xs text-muted-foreground mb-0.5">Referred</p>
-                <p className="text-sm font-semibold text-blue-600">
-                  {mockData.friendsReferred}
-                </p>
-              </div>
-              <div className="text-center flex-1 bg-primary/10 rounded-lg py-3">
-                <p className="text-xs text-muted-foreground mb-0.5">Redeemed</p>
-                <p className="text-sm font-semibold text-primary">
-                  {formatCurrency(mockData.totalRedeemed)}
-                </p>
-              </div>
-            </div>
-            
-            <p className="text-xs text-muted-foreground text-center mt-3">
-              Member since {mockData.memberSince}
-            </p>
           </CardContent>
         </Card>
       </div>
 
       <div className="px-6 mt-6 space-y-6">
+        {/* Quick Stats */}
+        <div className="grid grid-cols-3 gap-4">
+          <Card className="border-border/50">
+            <CardContent className="p-4">
+              <div className="text-center">
+                <div className="h-10 w-10 rounded-lg bg-green-500/10 flex items-center justify-center mx-auto mb-2">
+                  <TrendingUp className="h-5 w-5 text-green-600" />
+                </div>
+                <p className="text-xs text-muted-foreground mb-1">Earned</p>
+                <p className="text-sm md:text-base font-bold text-foreground whitespace-nowrap">
+                  {formatCurrency(mockData.totalEarned)}
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="border-border/50">
+            <CardContent className="p-4">
+              <div className="text-center">
+                <div className="h-10 w-10 rounded-lg bg-primary-light/20 flex items-center justify-center mx-auto mb-2">
+                  <Receipt className="h-5 w-5 text-primary-light" />
+                </div>
+                <p className="text-xs text-muted-foreground mb-1">Redeemed</p>
+                <p className="text-sm md:text-base font-bold text-foreground whitespace-nowrap">
+                  {formatCurrency(mockData.totalRedeemed)}
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="border-border/50">
+            <CardContent className="p-4">
+              <div className="text-center">
+                <div className="h-10 w-10 rounded-lg bg-blue-500/10 flex items-center justify-center mx-auto mb-2">
+                  <Users className="h-5 w-5 text-blue-600" />
+                </div>
+                <p className="text-xs text-muted-foreground mb-1">Referred</p>
+                <p className="text-sm md:text-base font-bold text-foreground whitespace-nowrap">
+                  {mockData.friendsReferred}
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
         {/* Restaurant-Specific Referral Codes */}
         <div>
           <div className="flex items-center justify-between mb-4">
@@ -306,7 +312,7 @@ export default function DemoDashboard() {
             {mockRestaurantCodes.map((code) => (
               <Card key={code.id} className="border-border/50 bg-gradient-to-br from-primary/5 to-primary-light/10 dark:from-primary/10 dark:to-primary-light/5">
                 <CardContent className="p-5">
-                  <div className="flex items-start justify-between mb-4">
+                  <div className="flex items-start justify-between mb-2">
                     <div>
                       <h3 className="font-semibold text-foreground">
                         {code.restaurant.name}
@@ -321,23 +327,102 @@ export default function DemoDashboard() {
                       Active
                     </Badge>
                   </div>
+                  <div className="mb-4"></div>
 
-                  {/* Single Share Button */}
-                  <Button
-                    onClick={() => {
-                      setSelectedRestaurant({
-                        name: code.restaurant.name,
-                        slug: code.restaurant.slug,
-                        code: code.referral_code
-                      });
-                      setShowShareSheet(true);
-                    }}
-                    className="w-full bg-primary hover:bg-primary/90"
-                    size="lg"
-                  >
-                    <Share2 className="h-4 w-4 mr-2" />
-                    Share Restaurant
-                  </Button>
+                  {/* PRIMARY: Copy Link Button */}
+                  <div className="mb-4">
+                    <div className="bg-white dark:bg-slate-800 rounded-lg p-4 border border-border/50 shadow-sm">
+                      <div className="mb-3">
+                        <p className="text-xs font-mono text-muted-foreground break-all leading-relaxed">
+                          {window.location.origin}/join/{code.restaurant.slug}/{code.referral_code}
+                        </p>
+                        {copied === `link-${code.referral_code}` && (
+                          <span className="text-xs text-green-600 dark:text-green-400 flex items-center gap-1 mt-2">
+                            <Check className="h-3 w-3" />
+                            Link copied!
+                          </span>
+                        )}
+                      </div>
+                      <Button
+                        onClick={() => handleCopyLink(code.restaurant.slug, code.referral_code)}
+                        className="w-full bg-primary hover:bg-primary/90"
+                        size="lg"
+                      >
+                        <Share2 className="h-4 w-4 mr-2" />
+                        Copy Link
+                      </Button>
+                    </div>
+                  </div>
+
+                  {/* Social Share Buttons */}
+                  <div className="grid grid-cols-3 gap-2 mb-2">
+                    <Button
+                      variant="outline"
+                      onClick={() => handleShareWhatsApp(code.restaurant.name, code.restaurant.slug, code.referral_code)}
+                      className="bg-[#25D366] hover:bg-[#20BA5A] text-white border-0 flex items-center justify-center h-14"
+                      title="Share on WhatsApp"
+                    >
+                      <WhatsAppIcon />
+                    </Button>
+                    <Button
+                      variant="outline"
+                      onClick={() => handleShareFacebook(code.restaurant.slug, code.referral_code)}
+                      className="bg-[#1877F2] hover:bg-[#0C63D4] text-white border-0 flex items-center justify-center h-14"
+                      title="Share on Facebook"
+                    >
+                      <FacebookIcon />
+                    </Button>
+                    <Button
+                      variant="outline"
+                      onClick={() => handleNativeShare(code.restaurant.name, code.restaurant.slug, code.referral_code)}
+                      className="bg-gray-200 hover:bg-gray-300 text-gray-800 dark:bg-gray-600 dark:hover:bg-gray-500 dark:text-gray-100 border-0 flex items-center justify-center gap-1.5 h-14"
+                      title="More share options"
+                    >
+                      <Share2 className="h-4 w-4" />
+                      <span className="text-xs">More</span>
+                    </Button>
+                  </div>
+
+                  {/* SECONDARY: Code Reference (Collapsible) */}
+                  <div className="border-t border-border/50 pt-2.5 -mb-3">
+                    <button
+                      onClick={() => setExpandedCode(expandedCode === code.id ? null : code.id)}
+                      className="text-sm text-muted-foreground hover:text-foreground active:text-foreground active:bg-muted/50 flex items-center gap-1.5 w-full transition-all rounded px-1 py-0.5"
+                    >
+                      <span>View promotion code</span>
+                      {expandedCode === code.id ? (
+                        <ChevronUp className="h-3.5 w-3.5" />
+                      ) : (
+                        <ChevronDown className="h-3.5 w-3.5" />
+                      )}
+                    </button>
+                    <div className={`overflow-hidden transition-all duration-300 ease-in-out ${
+                      expandedCode === code.id ? 'max-h-32 opacity-100 mt-1.5' : 'max-h-0 opacity-0'
+                    }`}>
+                      <div className="bg-white dark:bg-slate-900 rounded-lg p-2 border border-border/50">
+                        <div className="flex items-center justify-between gap-2">
+                          <code className="text-sm font-mono text-foreground flex-1">
+                            {code.referral_code}
+                          </code>
+                          {copied === `code-${code.referral_code}` ? (
+                            <span className="text-xs text-green-600 dark:text-green-400 flex items-center gap-1 whitespace-nowrap">
+                              <Check className="!h-5 !w-5" />
+                              Copied!
+                            </span>
+                          ) : (
+                            <Button
+                              size="sm"
+                              variant="ghost"
+                              onClick={() => handleCopyCode(code.referral_code)}
+                              className="hover:bg-muted h-8 w-8 p-0"
+                            >
+                              <Copy className="!h-5 !w-5" />
+                            </Button>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </CardContent>
               </Card>
             ))}
@@ -396,179 +481,6 @@ export default function DemoDashboard() {
           </Card>
         </div>
       </div>
-
-      {/* Bottom Sheet for Sharing Options */}
-      {showShareSheet && selectedRestaurant && (
-        <>
-          {/* Backdrop */}
-          <div 
-            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 transition-opacity duration-300 animate-in fade-in overflow-hidden"
-            onClick={() => setShowShareSheet(false)}
-            style={{ touchAction: 'none' }}
-          />
-          
-          {/* Bottom Sheet */}
-          <div 
-            className="fixed inset-x-0 bottom-0 z-50"
-            style={{
-              transform: isDragging && touchCurrent > touchStart ? `translateY(${touchCurrent - touchStart}px)` : 'translateY(0)',
-              transition: isDragging ? 'none' : 'transform 0.3s ease-out'
-            }}
-            onTouchStart={(e) => {
-              setTouchStart(e.targetTouches[0].clientY);
-              setTouchCurrent(e.targetTouches[0].clientY);
-              setIsDragging(true);
-            }}
-            onTouchMove={(e) => {
-              if (isDragging) {
-                const current = e.targetTouches[0].clientY;
-                if (current > touchStart) {
-                  setTouchCurrent(current);
-                }
-              }
-            }}
-            onTouchEnd={() => {
-              setIsDragging(false);
-              const dragDistance = touchCurrent - touchStart;
-              if (dragDistance > 100) {
-                setShowShareSheet(false);
-              } else {
-                setTouchCurrent(touchStart);
-              }
-            }}
-          >
-            <div className="bg-background rounded-t-3xl shadow-2xl border-t border-border max-h-[85vh] overflow-y-auto">
-              <div className="p-6">
-                {/* Handle Bar */}
-                <div className="w-12 h-1.5 bg-muted rounded-full mx-auto mb-6"></div>
-                
-                {/* Header */}
-                <div className="mb-6">
-                  <h3 className="text-xl font-bold text-foreground mb-1">
-                    Share {selectedRestaurant.name}
-                  </h3>
-                  <p className="text-sm text-muted-foreground">
-                    Choose how you'd like to share this restaurant
-                  </p>
-                </div>
-
-                {/* Referral Link Section */}
-                <div className="mb-6">
-                  <label className="text-sm font-medium text-foreground mb-2 block">
-                    Referral Link
-                  </label>
-                  <div className="bg-muted/50 rounded-lg p-4 border border-border/50">
-                    <p className="text-xs font-mono text-muted-foreground break-all leading-relaxed mb-3">
-                      {window.location.origin}/join/{selectedRestaurant.slug}/{selectedRestaurant.code}
-                    </p>
-                    <Button
-                      onClick={() => handleCopyLink(selectedRestaurant.slug, selectedRestaurant.code)}
-                      className="w-full bg-primary hover:bg-primary/90"
-                      size="lg"
-                    >
-                      {copied === `link-${selectedRestaurant.code}` ? (
-                        <>
-                          <Check className="h-4 w-4 mr-2" />
-                          Link Copied!
-                        </>
-                      ) : (
-                        <>
-                          <Copy className="h-4 w-4 mr-2" />
-                          Copy Link
-                        </>
-                      )}
-                    </Button>
-                  </div>
-                </div>
-
-                {/* Social Share Options */}
-                <div className="mb-6">
-                  <label className="text-sm font-medium text-foreground mb-2 block">
-                    Share via Social Media
-                  </label>
-                  <div className="grid grid-cols-3 gap-3">
-                    <Button
-                      variant="outline"
-                      onClick={() => {
-                        handleShareWhatsApp(selectedRestaurant.name, selectedRestaurant.slug, selectedRestaurant.code);
-                        setShowShareSheet(false);
-                      }}
-                      className="bg-[#25D366] hover:bg-[#20BA5A] text-white border-0 flex flex-col items-center justify-center h-20 gap-2"
-                    >
-                      <WhatsAppIcon />
-                      <span className="text-xs">WhatsApp</span>
-                    </Button>
-                    <Button
-                      variant="outline"
-                      onClick={() => {
-                        handleShareFacebook(selectedRestaurant.slug, selectedRestaurant.code);
-                        setShowShareSheet(false);
-                      }}
-                      className="bg-[#1877F2] hover:bg-[#0C63D4] text-white border-0 flex flex-col items-center justify-center h-20 gap-2"
-                    >
-                      <FacebookIcon />
-                      <span className="text-xs">Facebook</span>
-                    </Button>
-                    <Button
-                      variant="outline"
-                      onClick={() => {
-                        handleNativeShare(selectedRestaurant.name, selectedRestaurant.slug, selectedRestaurant.code);
-                        setShowShareSheet(false);
-                      }}
-                      className="bg-muted hover:bg-muted/80 text-foreground border border-border flex flex-col items-center justify-center h-20 gap-2"
-                    >
-                      <Share2 className="h-5 w-5" />
-                      <span className="text-xs">More</span>
-                    </Button>
-                  </div>
-                </div>
-
-                {/* Promotion Code Section */}
-                <div className="mb-4">
-                  <label className="text-sm font-medium text-foreground mb-2 block">
-                    Promotion Code
-                  </label>
-                  <div className="bg-muted/50 rounded-lg p-4 border border-border/50">
-                    <div className="flex items-center justify-between gap-3">
-                      <code className="text-base font-mono text-foreground flex-1">
-                        {selectedRestaurant.code}
-                      </code>
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        onClick={() => handleCopyCode(selectedRestaurant.code)}
-                        className="shrink-0"
-                      >
-                        {copied === `code-${selectedRestaurant.code}` ? (
-                          <>
-                            <Check className="h-4 w-4 mr-1" />
-                            Copied
-                          </>
-                        ) : (
-                          <>
-                            <Copy className="h-4 w-4 mr-1" />
-                            Copy
-                          </>
-                        )}
-                      </Button>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Close Button */}
-                <Button
-                  onClick={() => setShowShareSheet(false)}
-                  variant="outline"
-                  className="w-full"
-                  size="lg"
-                >
-                  Close
-                </Button>
-              </div>
-            </div>
-          </div>
-        </>
-      )}
 
       {/* Info Modal */}
       {showInfoModal && (
