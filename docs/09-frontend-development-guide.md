@@ -1,11 +1,18 @@
 # Frontend Development Guide
 ## MalaChilli - React Web Application
 
-**Version:** 1.3  
+**Version:** 1.5  
 **Date:** 2025-10-18  
 **Tech Stack:** React 18, Vite, Tailwind CSS, Supabase Client
 
-**Recent Updates (2025-10-18):**
+**Recent Updates (2025-10-18 - Latest):**
+- ✅ **Corner Radius Hierarchy** - Implemented proper visual hierarchy: nested elements use smaller radius (stats: `rounded-lg` 8px inside `rounded-2xl` 16px card)
+- ✅ **Split Information Modals** - Separated into two focused modals: Restaurant Promotion Info and Virtual Currency Info
+- ✅ **Contextual Help Buttons** - Info icons placed next to relevant sections (Promote Restaurants heading, Virtual Currency label)
+- ✅ **Optimized Modal Headers** - Removed subtitles, used `leading-none` on headings, added `pt-2` for alignment
+- ✅ **Absolute Positioned Close Buttons** - Close button no longer affects heading height, positioned at top-right with `absolute top-0 right-0`
+- ✅ **Improved Visual Hierarchy** - Following Apple's design language: parent containers have larger radius, children have progressively smaller radius
+- ✅ **Improved Virtual Currency Layout** - Grouped heading and amount together with wallet icon aligned to the group
 - ✅ **Consolidated Stats Display** - Earned/Referred/Redeemed moved into virtual currency card with horizontal layout
 - ✅ **Separate Stat Backgrounds** - Each stat has distinct colored background (green/blue/primary)
 - ✅ **Simplified Restaurant Cards** - Single "Share Restaurant" button replaces complex multi-button layout
@@ -351,28 +358,42 @@ The UI now prioritizes link sharing over code copying, based on UX research show
 ```tsx
 <Card className="bg-white/95 backdrop-blur border-0 shadow-lg">
   <CardContent className="p-5">
-    {/* Balance Display */}
-    <div className="flex items-center justify-between mb-4">
+    {/* Grouped Balance Display with Info Button */}
+    <div className="flex items-start justify-between">
       <div>
-        <p className="text-sm text-muted-foreground mb-1">Virtual Currency</p>
-        <p className="text-4xl font-bold text-foreground mb-1">
+        {/* Heading with Info Button */}
+        <div className="flex items-center gap-2 mb-1">
+          <p className="text-sm text-muted-foreground">Virtual Currency</p>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => setShowCurrencyInfoModal(true)}
+            className="h-5 w-5 p-0"
+            title="How virtual currency works"
+          >
+            <Info className="h-4 w-4 text-muted-foreground" />
+          </Button>
+        </div>
+        {/* Amount */}
+        <p className="text-4xl font-bold text-foreground">
           {formatCurrency(0)}
         </p>
       </div>
-      <div className="h-16 w-16 rounded-full bg-primary/10">
+      {/* Wallet Icon aligned with entire group */}
+      <div className="h-16 w-16 rounded-full bg-primary/10 flex items-center justify-center">
         <Wallet className="h-8 w-8 text-primary" />
       </div>
     </div>
     
-    {/* Consolidated Stats Row */}
-    <div className="flex items-center gap-2 pt-4 mt-4 border-t border-border/20 -mx-5 px-5 pb-4">
-      <div className="text-center flex-1 bg-green-50 dark:bg-green-950/20 rounded-lg py-3">
+    {/* Consolidated Stats Row - Children Use Smaller Radius */}
+    <div className="flex items-center gap-2 pt-4 mt-2 border-t border-border/20 -mx-5 px-5 pb-4">
+      <div className="text-center flex-1 bg-primary/10 rounded-lg py-3">
         <p className="text-xs text-muted-foreground mb-0.5">Earned</p>
         <p className="text-sm font-semibold text-green-600">
           {formatCurrency(0)}
         </p>
       </div>
-      <div className="text-center flex-1 bg-blue-50 dark:bg-blue-950/20 rounded-lg py-3">
+      <div className="text-center flex-1 bg-primary/10 rounded-lg py-3">
         <p className="text-xs text-muted-foreground mb-0.5">Referred</p>
         <p className="text-sm font-semibold text-blue-600">0</p>
       </div>
@@ -384,7 +405,7 @@ The UI now prioritizes link sharing over code copying, based on UX research show
       </div>
     </div>
     
-    <p className="text-xs text-muted-foreground text-center mt-3">
+    <p className="text-xs text-muted-foreground text-center mt-2">
       Member since {memberSince}
     </p>
   </CardContent>
@@ -561,13 +582,16 @@ useEffect(() => {
 
 **Virtual Currency Card:**
 - **Card padding:** `p-5` - uniform padding
+- **Layout:** `flex items-start justify-between` - heading/amount grouped on left, wallet icon on right
+- **Heading group:** 
+  - Info button inline with label: `flex items-center gap-2 mb-1`
+  - Amount below label with minimal spacing
+  - Wallet icon aligned to entire group (not just amount)
 - **Stats row layout:** `flex items-center gap-2` - horizontal with small gaps
-- **Stat backgrounds:** 
-  - Earned: `bg-green-50 dark:bg-green-950/20` - light green
-  - Referred: `bg-blue-50 dark:bg-blue-950/20` - light blue
-  - Redeemed: `bg-primary/10` - primary color tint
-- **Stat containers:** `rounded-lg py-3` - rounded corners with vertical padding
+- **Stat backgrounds:** `bg-primary/10` - consistent primary color tint
+- **Stat containers:** `rounded-lg py-3` - medium rounded corners (8px) with vertical padding
 - **Stat spacing:** `-mx-5 px-5` - extends to card edges for full-width background
+- **Border radius hierarchy:** Stats use `rounded-lg` (8px) because they're nested inside a `rounded-2xl` (16px) card - following the principle that child elements should have smaller radius than their parent
 
 **Restaurant Cards:**
 - **Card padding:** `p-5` - uniform padding
@@ -679,6 +703,241 @@ const handleNativeShare = async (name: string, slug: string, code: string) => {
 
 Example: https://malachi lli.com/join/nasi-lemak-corner/CHILLI-REST1-ABC
 ```
+
+---
+
+## 4.6 Information Modal Architecture ✅ IMPLEMENTED
+
+### Overview
+The dashboard features two focused information modals that provide contextual help to users about different aspects of the platform. This architecture follows the principle of **progressive disclosure** - information is available when needed, but doesn't clutter the main interface.
+
+### Modal Structure
+
+#### 1. Restaurant Promotion Info Modal
+**Trigger:** Info icon button next to "Promote Restaurants" section heading
+**Purpose:** Explains how to promote restaurants and earn virtual currency
+
+**Content:**
+- Visit a restaurant and make a transaction to unlock promotion for that restaurant
+- Generate your unique referral code for each restaurant you've visited
+- Share your referral link with friends via WhatsApp, Facebook, or copy the link
+- When someone uses your link and makes their first transaction at that restaurant, you both earn virtual currency
+
+#### 2. Virtual Currency Info Modal
+**Trigger:** Info icon button next to "Virtual Currency" label in balance card
+**Purpose:** Explains the virtual currency system and balance breakdown
+
+**Content:**
+- Redeem your virtual currency for discounts at participating restaurants
+- Check your balance and transaction history in the dashboard
+- The more friends you refer, the more you earn!
+- **Earned:** Total virtual currency you've earned from referrals
+- **Referred:** Number of friends you've successfully referred
+- **Redeemed:** Total amount you've used for discounts
+
+### Implementation Details
+
+**Info Button Placement:**
+```tsx
+{/* Restaurant Promotion Info Button */}
+<div className="flex items-center justify-between mb-4">
+  <div>
+    <h2 className="text-lg font-bold text-foreground">Promote Restaurants</h2>
+    <p className="text-sm text-muted-foreground">Share codes for restaurants you've visited</p>
+  </div>
+  <Button
+    variant="ghost"
+    size="sm"
+    onClick={() => setShowInfoModal(true)}
+    className="h-8 w-8 p-0"
+    title="How it works"
+  >
+    <Info className="h-5 w-5 text-muted-foreground" />
+  </Button>
+</div>
+
+{/* Virtual Currency Info Button */}
+<div className="flex items-center gap-2 mb-1">
+  <p className="text-sm text-muted-foreground">Virtual Currency</p>
+  <Button
+    variant="ghost"
+    size="sm"
+    onClick={() => setShowCurrencyInfoModal(true)}
+    className="h-5 w-5 p-0"
+    title="How virtual currency works"
+  >
+    <Info className="h-4 w-4 text-muted-foreground" />
+  </Button>
+</div>
+```
+
+**Modal Structure with Optimized Close Button:**
+```tsx
+{showInfoModal && (
+  <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4"
+    onClick={() => setShowInfoModal(false)}
+  >
+    <div
+      className="bg-background rounded-2xl max-w-lg w-full shadow-2xl border border-border"
+      onClick={(e) => e.stopPropagation()}
+    >
+      <div className="p-6">
+        {/* Header with Absolute Positioned Close Button */}
+        <div className="relative mb-6">
+          <h3 className="text-xl font-bold text-foreground leading-none pt-2">
+            How It Works
+          </h3>
+          <button
+            onClick={() => setShowInfoModal(false)}
+            className="absolute top-0 right-0 h-6 w-6 p-0 hover:bg-muted rounded-md transition-colors flex items-center justify-center"
+            aria-label="Close"
+          >
+            <X className="h-5 w-5" />
+          </button>
+        </div>
+
+        {/* Content */}
+        <div className="text-sm">
+          <ul className="space-y-2 text-muted-foreground">
+            <li className="flex items-start gap-2">
+              <span className="text-primary mt-0.5">•</span>
+              <span>Visit a restaurant and make a transaction...</span>
+            </li>
+            {/* More items... */}
+          </ul>
+        </div>
+
+        <Button
+          onClick={() => setShowInfoModal(false)}
+          className="w-full mt-6"
+        >
+          Got it!
+        </Button>
+      </div>
+    </div>
+  </div>
+)}
+```
+
+### Close Button Positioning Solution
+
+**Challenge:** The close button needed to be at the top-right corner without affecting the heading's height.
+
+**Evolution of Solution:**
+
+1. **Initial Attempt:** Used `flex justify-between` with button in same row
+   - Issue: Button's height (32px) expanded the entire container
+
+2. **Second Attempt:** Tried `items-start` alignment
+   - Issue: Button was vertically centered, not top-aligned
+
+3. **Third Attempt:** Replaced shadcn Button with native `<button>`
+   - Issue: Still had centering issues
+
+4. **Final Solution:** Absolute positioning
+   ```tsx
+   <div className="relative mb-6">
+     <h3 className="text-xl font-bold text-foreground leading-none pt-2">
+       Modal Title
+     </h3>
+     <button
+       className="absolute top-0 right-0 h-6 w-6 p-0 hover:bg-muted rounded-md transition-colors flex items-center justify-center"
+       aria-label="Close"
+     >
+       <X className="h-5 w-5" />
+     </button>
+   </div>
+   ```
+
+**Key Implementation Details:**
+- **Container:** `relative mb-6` provides positioning context
+- **Heading:** 
+  - `leading-none` removes default line-height spacing
+  - `pt-2` (8px) aligns heading baseline with button for visual balance
+- **Button:**
+  - `absolute top-0 right-0` positions independently of heading
+  - `h-6 w-6` (24px) compact size that doesn't overwhelm
+  - `flex items-center justify-center` centers X icon within button
+  - Native `<button>` instead of shadcn Button to avoid internal flex centering
+
+### Visual Consistency & Corner Radius Hierarchy
+
+**Design Principle: Nested Elements Use SMALLER Radius**
+
+Following Apple's design language and industry best practices, corner radius should follow a hierarchical system where:
+- Larger/parent elements → Larger radius
+- Smaller/child elements → Smaller radius
+- This creates visual harmony and helps users understand parent-child relationships
+
+**Border Radius Hierarchy:**
+
+| Element | Border Radius | Size | Usage |
+|---------|---------------|------|-------|
+| Modals/Sheets | `rounded-3xl` | 24px | Largest overlays, bottom sheets |
+| Profile Header | `rounded-b-3xl` | 24px | Hero section, visual anchor |
+| Cards (parent) | `rounded-2xl` | 16px | Virtual currency card, restaurant cards |
+| Action Buttons | `rounded-xl` | 12px | QR button, Logout button |
+| Stats Cards (nested) | `rounded-lg` | 8px | Inside virtual currency card (children smaller than parent) |
+| Small Buttons | `rounded-md` | 6px | Modal close button, subtle elements |
+| Modal Container | `rounded-2xl` | 16px | Modal windows |
+| Avatar/Icons | `rounded-full` | - | Circular elements |
+
+**Why Stats Use `rounded-lg` Instead of `rounded-xl`:**
+
+Stats cards are **nested inside** the Virtual Currency Card, so they use a smaller radius (8px vs 16px) to:
+1. **Visual Hierarchy**: Clearly indicate they're children of the parent container
+2. **Depth Perception**: Create layering effect showing containment
+3. **Professional Polish**: Matches expectations from well-designed apps (Apple, Google)
+4. **Proportional Harmony**: Each element's radius proportional to its size
+
+**Correct Implementation:**
+```tsx
+{/* Parent: Virtual Currency Card */}
+<Card className="rounded-2xl shadow-lg">  {/* 16px - parent */}
+  
+  {/* Children: Stats Cards */}
+  <div className="text-center flex-1 bg-primary/10 rounded-lg py-3">  {/* 8px - child */}
+    <p>Earned</p>
+    <p>RM 150.00</p>
+  </div>
+  
+</Card>
+```
+
+**Incorrect Implementation (Avoid):**
+```tsx
+{/* Parent and child same size - creates visual confusion */}
+<Card className="rounded-xl">  {/* 12px */}
+  <div className="rounded-xl">  {/* 12px - should be smaller! */}
+    {/* Content */}
+  </div>
+</Card>
+```
+
+**Real-World Examples:**
+- **Apple iOS**: App icons (22% radius) → Widget buttons (~12px) → Badges (~6px)
+- **Material Design**: Cards (16px) → Chips (8px) → Buttons (4-8px)
+- **Our Implementation**: Card (16px) → Stats (8px) → Close button (6px)
+
+### Design Principles Applied
+
+1. **Contextual Help:** Info icons placed directly next to the sections they explain
+2. **Progressive Disclosure:** Complex information hidden until user requests it
+3. **Consistent Positioning:** All close buttons use same positioning strategy
+4. **Visual Hierarchy:** Heading size and weight clearly indicate modal purpose
+5. **Typography Control:** `leading-none` prevents unwanted spacing
+6. **Accessibility:** 
+   - `aria-label="Close"` on icon-only buttons
+   - Click outside to close functionality
+   - Large touch targets (24px minimum)
+
+### User Experience Benefits
+
+- **Reduced Cognitive Load:** Main interface stays clean, help is available on demand
+- **Faster Learning:** Users can access help exactly when they need it
+- **Better Organization:** Related information grouped in focused modals
+- **Consistent Interaction:** All info modals follow same structure and behavior
+- **Mobile Friendly:** Modals are responsive and touch-optimized
 
 ---
 

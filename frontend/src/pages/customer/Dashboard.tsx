@@ -83,6 +83,7 @@ export default function CustomerDashboard() {
   const [copied, setCopied] = useState<string | null>(null);
   const [showQR, setShowQR] = useState(false);
   const [showInfoModal, setShowInfoModal] = useState(false);
+  const [showCurrencyInfoModal, setShowCurrencyInfoModal] = useState(false);
   const [showShareSheet, setShowShareSheet] = useState(false);
   const [selectedRestaurant, setSelectedRestaurant] = useState<{
     name: string;
@@ -371,10 +372,21 @@ export default function CustomerDashboard() {
         {/* Virtual Currency Balance Card */}
         <Card className="bg-white/95 backdrop-blur border-0 shadow-lg">
           <CardContent className="p-5">
-            <div className="flex items-center justify-between mb-4">
+            <div className="flex items-start justify-between">
               <div>
-                <p className="text-sm text-muted-foreground mb-1">Virtual Currency</p>
-                <p className="text-4xl font-bold text-foreground mb-1">
+                <div className="flex items-center gap-2 mb-1">
+                  <p className="text-sm text-muted-foreground">Virtual Currency</p>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => setShowCurrencyInfoModal(true)}
+                    className="h-5 w-5 p-0"
+                    title="How virtual currency works"
+                  >
+                    <Info className="h-4 w-4 text-muted-foreground" />
+                  </Button>
+                </div>
+                <p className="text-4xl font-bold text-foreground">
                   {formatCurrency(0)}
                 </p>
               </div>
@@ -384,14 +396,14 @@ export default function CustomerDashboard() {
             </div>
             
             {/* Stats Row */}
-            <div className="flex items-center gap-2 pt-4 mt-4 border-t border-border/20 -mx-5 px-5 pb-4">
-              <div className="text-center flex-1 bg-green-50 dark:bg-green-950/20 rounded-lg py-3">
+            <div className="flex items-center gap-2 pt-4 mt-2 border-t border-border/20 -mx-5 px-5 pb-4">
+              <div className="text-center flex-1 bg-primary/10 rounded-lg py-3">
                 <p className="text-xs text-muted-foreground mb-0.5">Earned</p>
                 <p className="text-sm font-semibold text-green-600">
                   {formatCurrency(0)}
                 </p>
               </div>
-              <div className="text-center flex-1 bg-blue-50 dark:bg-blue-950/20 rounded-lg py-3">
+              <div className="text-center flex-1 bg-primary/10 rounded-lg py-3">
                 <p className="text-xs text-muted-foreground mb-0.5">Referred</p>
                 <p className="text-sm font-semibold text-blue-600">
                   0
@@ -405,7 +417,7 @@ export default function CustomerDashboard() {
               </div>
             </div>
             
-            <p className="text-xs text-muted-foreground text-center mt-3">
+            <p className="text-xs text-muted-foreground text-center mt-2">
               Member since {memberSince}
             </p>
           </CardContent>
@@ -570,9 +582,11 @@ export default function CustomerDashboard() {
           
           {/* Bottom Sheet */}
           <div 
-            className="fixed inset-x-0 bottom-0 z-50"
+            className="fixed inset-x-0 bottom-0 z-50 animate-in slide-in-from-bottom duration-300"
             style={{
-              transform: isDragging && touchCurrent > touchStart ? `translateY(${touchCurrent - touchStart}px)` : 'translateY(0)',
+              transform: isDragging && touchCurrent > touchStart 
+                ? `translateY(${touchCurrent - touchStart}px)` 
+                : 'translateY(0)',
               transition: isDragging ? 'none' : 'transform 0.3s ease-out'
             }}
             onTouchStart={(e) => {
@@ -604,8 +618,15 @@ export default function CustomerDashboard() {
                 <div className="w-12 h-1.5 bg-muted rounded-full mx-auto mb-6"></div>
                 
                 {/* Header */}
-                <div className="mb-6">
-                  <h3 className="text-xl font-bold text-foreground mb-1">
+                <div className="mb-6 relative">
+                  <button
+                    onClick={() => setShowShareSheet(false)}
+                    className="absolute -top-2 right-0 p-2 hover:bg-muted rounded-full transition-colors"
+                    aria-label="Close"
+                  >
+                    <X className="h-5 w-5 text-muted-foreground" />
+                  </button>
+                  <h3 className="text-xl font-bold text-foreground mb-1 pr-10">
                     Share {selectedRestaurant.name}
                   </h3>
                   <p className="text-sm text-muted-foreground">
@@ -716,22 +737,13 @@ export default function CustomerDashboard() {
                   </div>
                 </div>
 
-                {/* Close Button */}
-                <Button
-                  onClick={() => setShowShareSheet(false)}
-                  variant="outline"
-                  className="w-full"
-                  size="lg"
-                >
-                  Close
-                </Button>
               </div>
             </div>
           </div>
         </>
       )}
 
-      {/* Info Modal */}
+      {/* Restaurant Promotion Info Modal */}
       {showInfoModal && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4"
           onClick={() => setShowInfoModal(false)}
@@ -742,68 +754,104 @@ export default function CustomerDashboard() {
           >
             <div className="p-6">
               {/* Header */}
-              <div className="flex items-start justify-between mb-4">
-                <div>
-                  <h3 className="text-xl font-bold text-foreground mb-2">How It Works</h3>
-                  <p className="text-sm text-muted-foreground">
-                    Restaurant promotion mechanism
-                  </p>
-                </div>
-                <Button
-                  variant="ghost"
-                  size="sm"
+              <div className="relative mb-6">
+                <h3 className="text-xl font-bold text-foreground leading-none pt-2">How It Works</h3>
+                <button
                   onClick={() => setShowInfoModal(false)}
-                  className="h-8 w-8 p-0 -mt-1 -mr-1"
+                  className="absolute top-0 right-0 h-6 w-6 p-0 hover:bg-muted rounded-md transition-colors flex items-center justify-center"
+                  aria-label="Close"
                 >
                   <X className="h-5 w-5" />
-                </Button>
+                </button>
               </div>
 
               {/* Content */}
-              <div className="space-y-4 text-sm">
-                <div>
-                  <h4 className="font-semibold text-foreground mb-2">Earning Virtual Currency</h4>
-                  <ul className="space-y-2 text-muted-foreground">
-                    <li className="flex items-start gap-2">
-                      <span className="text-primary mt-0.5">•</span>
-                      <span>Visit a restaurant and make a transaction to unlock promotion for that restaurant</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <span className="text-primary mt-0.5">•</span>
-                      <span>Generate your unique referral code for each restaurant you've visited</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <span className="text-primary mt-0.5">•</span>
-                      <span>Share your referral link with friends via WhatsApp, Facebook, or copy the link</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <span className="text-primary mt-0.5">•</span>
-                      <span>When someone uses your link and makes their first transaction at that restaurant, you both earn virtual currency</span>
-                    </li>
-                  </ul>
-                </div>
-
-                <div>
-                  <h4 className="font-semibold text-foreground mb-2">Using Virtual Currency</h4>
-                  <ul className="space-y-2 text-muted-foreground">
-                    <li className="flex items-start gap-2">
-                      <span className="text-primary mt-0.5">•</span>
-                      <span>Redeem your virtual currency for discounts at participating restaurants</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <span className="text-primary mt-0.5">•</span>
-                      <span>Check your balance and transaction history in the dashboard</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <span className="text-primary mt-0.5">•</span>
-                      <span>The more friends you refer, the more you earn!</span>
-                    </li>
-                  </ul>
-                </div>
+              <div className="text-sm">
+                <ul className="space-y-2 text-muted-foreground">
+                  <li className="flex items-start gap-2">
+                    <span className="text-primary mt-0.5">•</span>
+                    <span>Visit a restaurant and make a transaction to unlock promotion for that restaurant</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-primary mt-0.5">•</span>
+                    <span>Generate your unique referral code for each restaurant you've visited</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-primary mt-0.5">•</span>
+                    <span>Share your referral link with friends via WhatsApp, Facebook, or copy the link</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-primary mt-0.5">•</span>
+                    <span>When someone uses your link and makes their first transaction at that restaurant, you both earn virtual currency</span>
+                  </li>
+                </ul>
               </div>
 
               <Button
                 onClick={() => setShowInfoModal(false)}
+                className="w-full mt-6"
+              >
+                Got it!
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Virtual Currency Info Modal */}
+      {showCurrencyInfoModal && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4"
+          onClick={() => setShowCurrencyInfoModal(false)}
+        >
+          <div
+            className="bg-background rounded-2xl max-w-lg w-full shadow-2xl border border-border"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="p-6">
+              {/* Header */}
+              <div className="relative mb-6">
+                <h3 className="text-xl font-bold text-foreground leading-none pt-2">Virtual Currency</h3>
+                <button
+                  onClick={() => setShowCurrencyInfoModal(false)}
+                  className="absolute top-0 right-0 h-6 w-6 p-0 hover:bg-muted rounded-md transition-colors flex items-center justify-center"
+                  aria-label="Close"
+                >
+                  <X className="h-5 w-5" />
+                </button>
+              </div>
+
+              {/* Content */}
+              <div className="text-sm">
+                <ul className="space-y-2 text-muted-foreground">
+                  <li className="flex items-start gap-2">
+                    <span className="text-primary mt-0.5">•</span>
+                    <span>Redeem your virtual currency for discounts at participating restaurants</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-primary mt-0.5">•</span>
+                    <span>Check your balance and transaction history in the dashboard</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-primary mt-0.5">•</span>
+                    <span>The more friends you refer, the more you earn!</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-green-600 mt-0.5">•</span>
+                    <span><strong>Earned:</strong> Total virtual currency you've earned from referrals</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-blue-600 mt-0.5">•</span>
+                    <span><strong>Referred:</strong> Number of friends you've successfully referred</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-primary mt-0.5">•</span>
+                    <span><strong>Redeemed:</strong> Total amount you've used for discounts</span>
+                  </li>
+                </ul>
+              </div>
+
+              <Button
+                onClick={() => setShowCurrencyInfoModal(false)}
                 className="w-full mt-6"
               >
                 Got it!
