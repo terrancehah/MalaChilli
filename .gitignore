@@ -88,6 +88,7 @@ docs/05-api-specification.md
 docs/06-project-timeline-sprints.md
 docs/07-user-stories-acceptance-criteria.md
 docs/08-referral-sharing-implementation-guide.md
+docs/10-frontend-implementation-guide.md
 
 # Supabase migrations (contains proprietary business logic)
 supabase/migrations/20251009000001_initial_schema.sql

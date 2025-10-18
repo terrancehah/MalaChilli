@@ -12,6 +12,7 @@ interface AuthContextType {
   signIn: (email: string, password: string) => Promise<User>;
   signOut: () => Promise<void>;
   resetPassword: (email: string) => Promise<void>;
+  updateProfile: (userId: string, updates: Partial<User>) => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -163,6 +164,28 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     if (error) throw error;
   };
 
+  const updateProfile = async (userId: string, updates: Partial<User>) => {
+    // Only allow updating specific fields
+    const allowedFields: (keyof User)[] = ['full_name', 'birthday'];
+    const filteredUpdates: Record<string, any> = {};
+    
+    allowedFields.forEach((field) => {
+      if (field in updates && updates[field] !== undefined) {
+        filteredUpdates[field] = updates[field];
+      }
+    });
+
+    const { error } = await supabase
+      .from('users')
+      .update(filteredUpdates)
+      .eq('id', userId);
+
+    if (error) throw error;
+
+    // Refresh user profile after update
+    await fetchUserProfile(userId);
+  };
+
   const value = {
     user,
     session,
@@ -171,6 +194,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     signIn,
     signOut,
     resetPassword,
+    updateProfile,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

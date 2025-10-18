@@ -14,7 +14,12 @@ import {
   LogOut,
   Info,
   X,
+  Settings,
+  Edit2,
 } from 'lucide-react';
+import QRCode from 'react-qr-code';
+import { useState, useEffect } from 'react';
+import { InfoModal } from '@/components/customer';
 
 // Social Media Icons as SVG components
 const WhatsAppIcon = () => (
@@ -28,8 +33,23 @@ const FacebookIcon = () => (
     <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
   </svg>
 );
-import QRCode from 'react-qr-code';
-import { useState, useEffect } from 'react';
+
+// Info modal content
+const RESTAURANT_INFO = [
+  { text: 'Visit a restaurant and make a transaction to unlock promotion for that restaurant' },
+  { text: 'Generate your unique referral code for each restaurant you\'ve visited' },
+  { text: 'Share your referral link with friends via WhatsApp, Facebook, or copy the link' },
+  { text: 'When someone uses your link and makes their first transaction at that restaurant, you both earn virtual currency' }
+] as const;
+
+const CURRENCY_INFO = [
+  { text: 'Redeem your virtual currency for discounts at participating restaurants' },
+  { text: 'Check your balance and transaction history in the dashboard' },
+  { text: 'The more friends you refer, the more you earn!' },
+  { text: '<strong>Earned:</strong> Total virtual currency you\'ve earned from referrals', color: 'green' as const },
+  { text: '<strong>Referred:</strong> Number of friends you\'ve successfully referred', color: 'blue' as const },
+  { text: '<strong>Redeemed:</strong> Total amount you\'ve used for discounts', color: 'primary' as const }
+];
 
 // Sample user data for demo
 const demoUser = {
@@ -119,6 +139,8 @@ export default function DemoDashboard() {
   const [showQR, setShowQR] = useState(false);
   const [showInfoModal, setShowInfoModal] = useState(false);
   const [showCurrencyInfoModal, setShowCurrencyInfoModal] = useState(false);
+  const [showSettings, setShowSettings] = useState(false);
+  const [isSettingsClosing, setIsSettingsClosing] = useState(false);
   const [showShareSheet, setShowShareSheet] = useState(false);
   const [selectedRestaurant, setSelectedRestaurant] = useState<{
     name: string;
@@ -200,17 +222,17 @@ export default function DemoDashboard() {
       </div>
 
       {/* Header with Profile */}
-      <div className="bg-gradient-to-br from-primary to-primary-light px-6 pt-12 pb-8 rounded-b-3xl">
-        <div className="flex items-start justify-between mb-6">
-          <div className="flex items-center gap-4">
-            <Avatar className="h-16 w-16 border-2 border-white/20">
+      <div className="bg-gradient-to-br from-primary to-primary-light px-6 pt-10 pb-7 rounded-b-3xl">
+        <div className="flex items-start justify-between mb-5">
+          <div className="flex items-center gap-3 min-w-0 flex-1">
+            <Avatar className="h-14 w-14 border-2 border-white/20 flex-shrink-0">
               <AvatarImage src="" alt={demoUser.full_name} />
-              <AvatarFallback className="bg-white/10 text-primary-foreground text-lg">
+              <AvatarFallback className="bg-white/10 text-primary-foreground text-base">
                 {initials}
               </AvatarFallback>
             </Avatar>
-            <div>
-              <h1 className="text-2xl font-bold text-primary-foreground mb-1">
+            <div className="min-w-0 flex-1">
+              <h1 className="text-xl sm:text-2xl font-bold text-primary-foreground mb-0.5 whitespace-nowrap overflow-hidden text-ellipsis">
                 {demoUser.full_name}
               </h1>
               <Badge variant="secondary" className="bg-white/20 text-primary-foreground border-0">
@@ -219,7 +241,7 @@ export default function DemoDashboard() {
               </Badge>
             </div>
           </div>
-          <div className="flex gap-2">
+          <div className="flex gap-2 flex-shrink-0">
             <Button
               variant="secondary"
               size="icon"
@@ -232,9 +254,9 @@ export default function DemoDashboard() {
               variant="secondary"
               size="icon"
               className="h-12 w-12 rounded-xl bg-white/95 hover:bg-white shadow-lg"
-              onClick={() => window.location.href = '/'}
+              onClick={() => setShowSettings(true)}
             >
-              <LogOut className="h-6 w-6 text-primary" />
+              <Settings className="h-6 w-6 text-primary" />
             </Button>
           </div>
         </div>
@@ -581,122 +603,20 @@ export default function DemoDashboard() {
       )}
 
       {/* Restaurant Promotion Info Modal */}
-      {showInfoModal && (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4"
-          onClick={() => setShowInfoModal(false)}
-        >
-          <div
-            className="bg-background rounded-2xl max-w-lg w-full shadow-2xl border border-border"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="p-6">
-              {/* Header */}
-              <div className="relative mb-6">
-                <h3 className="text-xl font-bold text-foreground leading-none pt-2">How It Works</h3>
-                <button
-                  onClick={() => setShowInfoModal(false)}
-                  className="absolute top-0 right-0 h-6 w-6 p-0 hover:bg-muted rounded-md transition-colors flex items-center justify-center"
-                  aria-label="Close"
-                >
-                  <X className="h-5 w-5" />
-                </button>
-              </div>
-
-              {/* Content */}
-              <div className="text-sm">
-                <ul className="space-y-2 text-muted-foreground">
-                  <li className="flex items-start gap-2">
-                    <span className="text-primary mt-0.5">•</span>
-                    <span>Visit a restaurant and make a transaction to unlock promotion for that restaurant</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-primary mt-0.5">•</span>
-                    <span>Generate your unique referral code for each restaurant you've visited</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-primary mt-0.5">•</span>
-                    <span>Share your referral link with friends via WhatsApp, Facebook, or copy the link</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-primary mt-0.5">•</span>
-                    <span>When someone uses your link and makes their first transaction at that restaurant, you both earn virtual currency</span>
-                  </li>
-                </ul>
-              </div>
-
-              <Button
-                onClick={() => setShowInfoModal(false)}
-                className="w-full mt-6"
-              >
-                Got it!
-              </Button>
-            </div>
-          </div>
-        </div>
-      )}
+      <InfoModal
+        isOpen={showInfoModal}
+        onClose={() => setShowInfoModal(false)}
+        title="How It Works"
+        items={RESTAURANT_INFO}
+      />
 
       {/* Virtual Currency Info Modal */}
-      {showCurrencyInfoModal && (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4"
-          onClick={() => setShowCurrencyInfoModal(false)}
-        >
-          <div
-            className="bg-background rounded-2xl max-w-lg w-full shadow-2xl border border-border"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="p-6">
-              {/* Header */}
-              <div className="relative mb-6">
-                <h3 className="text-xl font-bold text-foreground leading-none pt-2">Virtual Currency</h3>
-                <button
-                  onClick={() => setShowCurrencyInfoModal(false)}
-                  className="absolute top-0 right-0 h-6 w-6 p-0 hover:bg-muted rounded-md transition-colors flex items-center justify-center"
-                  aria-label="Close"
-                >
-                  <X className="h-5 w-5" />
-                </button>
-              </div>
-
-              {/* Content */}
-              <div className="text-sm">
-                <ul className="space-y-2 text-muted-foreground">
-                  <li className="flex items-start gap-2">
-                    <span className="text-primary mt-0.5">•</span>
-                    <span>Redeem your virtual currency for discounts at participating restaurants</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-primary mt-0.5">•</span>
-                    <span>Check your balance and transaction history in the dashboard</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-primary mt-0.5">•</span>
-                    <span>The more friends you refer, the more you earn!</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-green-600 mt-0.5">•</span>
-                    <span><strong>Earned:</strong> Total virtual currency you've earned from referrals</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-blue-600 mt-0.5">•</span>
-                    <span><strong>Referred:</strong> Number of friends you've successfully referred</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-primary mt-0.5">•</span>
-                    <span><strong>Redeemed:</strong> Total amount you've used for discounts</span>
-                  </li>
-                </ul>
-              </div>
-
-              <Button
-                onClick={() => setShowCurrencyInfoModal(false)}
-                className="w-full mt-6"
-              >
-                Got it!
-              </Button>
-            </div>
-          </div>
-        </div>
-      )}
+      <InfoModal
+        isOpen={showCurrencyInfoModal}
+        onClose={() => setShowCurrencyInfoModal(false)}
+        title="Virtual Currency"
+        items={CURRENCY_INFO}
+      />
 
       {/* QR Code Modal - For Staff to Scan at Counter */}
       {showQR && (
@@ -744,6 +664,138 @@ export default function DemoDashboard() {
             </div>
           </div>
         </div>
+      )}
+
+      {/* Settings Modal */}
+      {showSettings && (
+        <>
+          <div 
+            className={`fixed inset-0 bg-black/50 backdrop-blur-sm z-50 transition-opacity ${
+              isSettingsClosing 
+                ? 'opacity-0 duration-300 pointer-events-none' 
+                : 'opacity-100 duration-200'
+            }`}
+            onClick={() => {
+              if (!isSettingsClosing) {
+                setIsSettingsClosing(true);
+              }
+            }}
+          />
+          <div
+            className={`fixed inset-y-0 right-0 z-50 w-full max-w-md bg-background shadow-2xl border-l border-border overflow-y-auto ${
+              isSettingsClosing ? 'animate-out slide-out-to-right duration-300' : 'animate-in slide-in-from-right duration-300'
+            }`}
+            onAnimationEnd={() => {
+              if (isSettingsClosing) {
+                setShowSettings(false);
+                setIsSettingsClosing(false);
+              }
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="p-6">
+              {/* Header */}
+              <div className="relative mb-6">
+                <h3 className="text-xl font-bold text-foreground leading-none pt-2">Settings</h3>
+                <button
+                  onClick={() => setIsSettingsClosing(true)}
+                  className="absolute top-0 right-0 h-6 w-6 p-0 hover:bg-muted rounded-md transition-colors flex items-center justify-center"
+                  aria-label="Close"
+                >
+                  <X className="h-5 w-5" />
+                </button>
+              </div>
+
+              {/* Profile Section */}
+              <div className="mb-6">
+                <h4 className="text-base font-bold text-foreground mb-4">Profile</h4>
+                
+                {/* Demo Notice */}
+                <div className="mb-3 p-3 rounded-lg text-sm bg-yellow-50 dark:bg-yellow-900/20 text-yellow-800 dark:text-yellow-200 border border-yellow-200 dark:border-yellow-800">
+                  Profile editing disabled in demo mode
+                </div>
+
+                <div className="space-y-3">
+                  {/* Name Field - Demo (Non-editable with icon) */}
+                  <div className="bg-muted/50 rounded-lg">
+                    <div className="p-3 flex items-center justify-between">
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-semibold text-foreground mb-2">Name</p>
+                        <p className="text-sm text-muted-foreground">{demoUser.full_name}</p>
+                      </div>
+                      <button
+                        className="text-muted-foreground cursor-not-allowed opacity-50 flex-shrink-0 ml-3"
+                        disabled
+                      >
+                        <Edit2 className="h-4 w-4" />
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Email Field - Read Only */}
+                  <div className="p-3 bg-muted/50 rounded-lg">
+                    <p className="text-sm font-semibold text-foreground mb-2">Email</p>
+                    <p className="text-sm text-muted-foreground">demo@malachilli.com</p>
+                  </div>
+
+                  {/* Member Since - Read Only */}
+                  <div className="p-3 bg-muted/50 rounded-lg">
+                    <p className="text-sm font-semibold text-foreground mb-2">Member Since</p>
+                    <p className="text-sm text-muted-foreground">{mockData.memberSince}</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Preferences Section */}
+              <div className="mb-6">
+                <h4 className="text-base font-bold text-foreground mb-4">Preferences</h4>
+                <div className="space-y-3">
+                  <button className="w-full flex items-center justify-between p-3 bg-muted/50 rounded-lg hover:bg-muted transition-colors">
+                    <div className="text-left">
+                      <p className="text-sm font-semibold text-foreground">Language</p>
+                      <p className="text-sm text-muted-foreground mt-0.5">English</p>
+                    </div>
+                    <span className="text-muted-foreground text-xs">Coming soon</span>
+                  </button>
+                  <button className="w-full flex items-center justify-between p-3 bg-muted/50 rounded-lg hover:bg-muted transition-colors">
+                    <div className="text-left">
+                      <p className="text-sm font-semibold text-foreground">Notifications</p>
+                      <p className="text-sm text-muted-foreground mt-0.5">Email preferences</p>
+                    </div>
+                    <span className="text-muted-foreground text-xs">Coming soon</span>
+                  </button>
+                </div>
+              </div>
+
+              {/* About Section */}
+              <div className="mb-6">
+                <h4 className="text-base font-bold text-foreground mb-4">About</h4>
+                <div className="space-y-3">
+                  <button className="w-full flex items-center justify-between p-3 bg-muted/50 rounded-lg hover:bg-muted transition-colors">
+                    <p className="text-sm font-semibold text-foreground">Privacy Policy</p>
+                  </button>
+                  <button className="w-full flex items-center justify-between p-3 bg-muted/50 rounded-lg hover:bg-muted transition-colors">
+                    <p className="text-sm font-semibold text-foreground">Terms of Service</p>
+                  </button>
+                  <div className="p-3 bg-muted/50 rounded-lg">
+                    <p className="text-sm font-semibold text-foreground mb-2">App Version</p>
+                    <p className="text-sm text-muted-foreground">1.0.0 (Demo)</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Exit Demo Button */}
+              <Button
+                onClick={() => window.location.href = '/'}
+                variant="destructive"
+                className="w-full"
+              >
+                <LogOut className="h-4 w-4 mr-2" />
+                Exit Demo
+              </Button>
+            </div>
+          </div>
+        </>
       )}
     </div>
   );
