@@ -1,6 +1,22 @@
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { LoginModal, RegisterModal } from '../components/auth';
+import { Toaster } from 'react-hot-toast';
 
 export default function HomePage() {
+  const [showLoginModal, setShowLoginModal] = useState(false);
+  const [showRegisterModal, setShowRegisterModal] = useState(false);
+
+  const handleSwitchToSignUp = () => {
+    setShowLoginModal(false);
+    setShowRegisterModal(true);
+  };
+
+  const handleSwitchToLogin = () => {
+    setShowRegisterModal(false);
+    setShowLoginModal(true);
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-primary/5 to-white dark:from-gray-900 dark:to-gray-950">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
@@ -19,18 +35,18 @@ export default function HomePage() {
             >
               🎨 View Demo Dashboard
             </Link>
-            <Link
-              to="/register"
+            <button
+              onClick={() => setShowRegisterModal(true)}
               className="w-full sm:w-auto px-6 py-3 bg-primary text-primary-foreground rounded-lg font-semibold hover:bg-primary/90 transition text-center touch-manipulation min-h-[44px] flex items-center justify-center"
             >
               Get Started
-            </Link>
-            <Link
-              to="/login"
+            </button>
+            <button
+              onClick={() => setShowLoginModal(true)}
               className="w-full sm:w-auto px-6 py-3 bg-white dark:bg-gray-800 text-primary dark:text-primary-light border-2 border-primary dark:border-primary-light rounded-lg font-semibold hover:bg-primary/5 dark:hover:bg-gray-700 transition text-center touch-manipulation min-h-[44px] flex items-center justify-center"
             >
               Login
-            </Link>
+            </button>
           </div>
         </div>
 
@@ -57,6 +73,39 @@ export default function HomePage() {
           </div>
         </div>
       </div>
+
+      {/* Toast Notifications */}
+      <Toaster position="top-right" toastOptions={{
+        duration: 4000,
+        style: {
+          background: '#fff',
+          color: '#111827',
+        },
+        success: {
+          iconTheme: {
+            primary: '#0A5F0A',
+            secondary: '#fff',
+          },
+        },
+        error: {
+          iconTheme: {
+            primary: '#DC2626',
+            secondary: '#fff',
+          },
+        },
+      }} />
+
+      {/* Auth Modals */}
+      <LoginModal 
+        isOpen={showLoginModal} 
+        onClose={() => setShowLoginModal(false)}
+        onSwitchToSignUp={handleSwitchToSignUp}
+      />
+      <RegisterModal 
+        isOpen={showRegisterModal} 
+        onClose={() => setShowRegisterModal(false)}
+        onSwitchToLogin={handleSwitchToLogin}
+      />
     </div>
   );
 }
