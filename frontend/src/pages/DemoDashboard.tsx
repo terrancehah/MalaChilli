@@ -137,6 +137,7 @@ const mockVisitedRestaurants = [
 export default function DemoDashboard() {
   const [copied, setCopied] = useState<string | null>(null);
   const [showQR, setShowQR] = useState(false);
+  const [isQRAnimating, setIsQRAnimating] = useState(false);
   const [showInfoModal, setShowInfoModal] = useState(false);
   const [showCurrencyInfoModal, setShowCurrencyInfoModal] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
@@ -162,6 +163,18 @@ export default function DemoDashboard() {
       document.body.style.overflow = 'unset';
     };
   }, [showShareSheet]);
+
+  // Handle QR modal animations
+  useEffect(() => {
+    if (showQR) {
+      // Trigger animation after modal is rendered
+      requestAnimationFrame(() => {
+        setIsQRAnimating(true);
+      });
+    } else {
+      setIsQRAnimating(false);
+    }
+  }, [showQR]);
 
   const handleCopyLink = (slug: string, code: string) => {
     const link = `${window.location.origin}/join/${slug}/${code}`;
@@ -621,11 +634,15 @@ export default function DemoDashboard() {
       {/* QR Code Modal - For Staff to Scan at Counter */}
       {showQR && (
         <div 
-          className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+          className={`fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4 transition-opacity duration-200 ${
+            isQRAnimating ? 'opacity-100' : 'opacity-0'
+          }`}
           onClick={() => setShowQR(false)}
         >
           <div 
-            className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl max-w-sm w-full p-8"
+            className={`bg-white dark:bg-gray-800 rounded-2xl shadow-2xl max-w-sm w-full p-8 transition-all duration-200 ${
+              isQRAnimating ? 'scale-100 opacity-100' : 'scale-95 opacity-0'
+            }`}
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex flex-col items-center">

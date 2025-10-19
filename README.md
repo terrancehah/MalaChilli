@@ -39,7 +39,7 @@
 ## ✨ Core Features
 
 **Authentication System** - JWT tokens, role-based access control, email verification  
-**Customer Dashboard** - Virtual currency tracking, referral management, QR codes  
+**Customer Dashboard** - Restaurant-specific virtual currency tracking, referral management, QR codes  
 **Social Sharing** - One-click WhatsApp/Facebook sharing with pre-filled messages  
 **Transaction Processing** - QR scanning, receipt uploads, real-time calculations  
 **Analytics** - Metrics dashboard with reporting and export capabilities
@@ -48,20 +48,20 @@
 
 ## 📱 Screenshots
 
-### Customer Dashboard - Virtual Currency Card
-Consolidated view showing balance and color-coded stats (Earned, Referred, Redeemed) with verified badge and member information.
+### Total Virtual Currency Stats
+Centralized stats card showing total earnings and savings across all restaurants, giving users a complete overview of their loyalty rewards throughout their app lifecycle.
 
 <div align="center">
-  <img src="docs/images/dashboard-currency-card.png" alt="Virtual Currency Card" width="300"/>
-  <p><em>Virtual currency balance with integrated stats display</em></p>
+  <img src="docs/images/dashboard-total-stats.png" alt="Total Stats" width="300"/>
+  <p><em>Total earned and redeemed VC across all restaurants</em></p>
 </div>
 
-### Restaurant Promotion Cards
-Simplified card design with visit tracking and single-action sharing button for each restaurant.
+### Restaurant-Specific Promotion Cards
+Minimal restaurant cards displaying individual VC balance, visit tracking, and share functionality. Each restaurant maintains its own separate VC balance to prevent cross-restaurant exploitation. Currency earned at one restaurant can only be redeemed at that restaurant, ensuring fair distribution.
 
 <div align="center">
   <img src="docs/images/dashboard-restaurant-cards.png" alt="Restaurant Cards" width="300"/>
-  <p><em>Clean restaurant cards showing visit history and share button</em></p>
+  <p><em>Clean restaurant cards with minimal VC balance display</em></p>
 </div>
 
 ### How It Works Modal

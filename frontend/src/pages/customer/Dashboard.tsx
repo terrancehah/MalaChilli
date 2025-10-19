@@ -21,7 +21,7 @@ import {
   ShareBottomSheet,
   RestaurantCard,
   EligibleRestaurantCard,
-  VirtualCurrencyCard
+  TotalStatsCard
 } from '../../components/customer';
 
 // TypeScript interfaces
@@ -35,6 +35,10 @@ interface RestaurantCode {
   };
   total_visits?: number;
   first_visit_date?: string;
+  // Virtual currency fields (restaurant-specific)
+  balance?: number;
+  earned?: number;
+  redeemed?: number;
 }
 
 interface VisitedRestaurant {
@@ -46,6 +50,10 @@ interface VisitedRestaurant {
     name: string;
     slug: string;
   };
+  // Virtual currency fields (restaurant-specific)
+  balance?: number;
+  earned?: number;
+  redeemed?: number;
 }
 
 // Helper function to calculate time ago
@@ -75,12 +83,12 @@ const RESTAURANT_INFO = [
 ] as const;
 
 const CURRENCY_INFO = [
-  { text: 'Redeem your virtual currency for discounts at participating restaurants' },
-  { text: 'Check your balance and transaction history in the dashboard' },
-  { text: 'The more friends you refer, the more you earn!' },
-  { text: '<strong>Earned:</strong> Total virtual currency you\'ve earned from referrals', color: 'green' as const },
-  { text: '<strong>Referred:</strong> Number of friends you\'ve successfully referred', color: 'blue' as const },
-  { text: '<strong>Redeemed:</strong> Total amount you\'ve used for discounts', color: 'primary' as const }
+  { text: '<strong>Restaurant-Specific:</strong> Each restaurant has its own separate virtual currency balance' },
+  { text: 'Earn virtual currency by referring friends to specific restaurants' },
+  { text: 'Currency earned from one restaurant can only be redeemed at that same restaurant' },
+  { text: 'This ensures fair distribution and prevents exploitation across different restaurants' },
+  { text: '<strong>Earned:</strong> Total virtual currency you\'ve earned from referrals at this restaurant', color: 'green' as const },
+  { text: '<strong>Redeemed:</strong> Total amount you\'ve used for discounts at this restaurant', color: 'primary' as const }
 ];
 
 export default function CustomerDashboard() {
@@ -99,6 +107,9 @@ export default function CustomerDashboard() {
   const [visitedRestaurants, setVisitedRestaurants] = useState<VisitedRestaurant[]>([]);
   const [loadingCodes, setLoadingCodes] = useState(true);
   const [generating, setGenerating] = useState<string | null>(null);
+  const [totalEarned, setTotalEarned] = useState(0);
+  const [totalRedeemed, setTotalRedeemed] = useState(0);
+  const [totalReferred, setTotalReferred] = useState(0);
   const [selectedRestaurant, setSelectedRestaurant] = useState<{
     name: string;
     slug: string;
@@ -123,7 +134,7 @@ export default function CustomerDashboard() {
     };
   }, [showShareSheet]);
 
-  // Fetch restaurant codes and visited restaurants
+  // Fetch restaurant codes and visited restaurants with VC balances
   useEffect(() => {
     const fetchData = async () => {
       if (!user) return;
@@ -143,6 +154,34 @@ export default function CustomerDashboard() {
           .eq('customer_id', user.id);
         
         if (visitedError) throw visitedError;
+        
+        // Fetch restaurant-specific virtual currency balances
+        const { data: walletData, error: walletError } = await supabase
+          .from('customer_wallet_balance')
+          .select('*')
+          .eq('user_id', user.id);
+        
+        if (walletError) throw walletError;
+        
+        // Fetch total referred count (count unique downlines where user is upline)
+        const { data: referralData, error: referralError } = await supabase
+          .from('referrals')
+          .select('downline_id')
+          .eq('upline_id', user.id);
+        
+        if (referralError) throw referralError;
+        const uniqueReferrals = new Set((referralData || []).map(r => r.downline_id)).size;
+        setTotalReferred(uniqueReferrals);
+        
+        // Create wallet balance map by restaurant_id
+        const walletMap = new Map();
+        (walletData || []).forEach((wallet: any) => {
+          walletMap.set(wallet.restaurant_id, {
+            balance: wallet.available_balance || 0,
+            earned: wallet.total_earned || 0,
+            redeemed: wallet.total_redeemed || 0,
+          });
+        });
         
         // Create visit history map
         const visitHistoryMap = new Map();
@@ -168,9 +207,10 @@ export default function CustomerDashboard() {
         
         if (codesError) throw codesError;
         
-        // Transform and merge data
+        // Transform and merge data with VC balances
         const transformedCodes: RestaurantCode[] = (codesData || []).map((item: any) => {
           const visitInfo = visitHistoryMap.get(item.restaurant_id);
+          const walletInfo = walletMap.get(item.restaurant_id);
           return {
             id: item.id,
             restaurant_id: item.restaurant_id,
@@ -178,20 +218,35 @@ export default function CustomerDashboard() {
             restaurant: item.restaurants[0] || { name: 'Unknown', slug: 'unknown' },
             total_visits: visitInfo?.total_visits,
             first_visit_date: visitInfo?.first_visit_date,
+            balance: walletInfo?.balance,
+            earned: walletInfo?.earned,
+            redeemed: walletInfo?.redeemed,
           };
         });
         
         setRestaurantCodes(transformedCodes);
         
-        const transformedVisited: VisitedRestaurant[] = (visitedData || []).map((item: any) => ({
-          restaurant_id: item.restaurant_id,
-          first_visit_date: item.first_visit_date,
-          total_visits: item.total_visits,
-          total_spent: item.total_spent,
-          restaurant: item.restaurants[0] || { name: 'Unknown', slug: 'unknown' }
-        }));
+        const transformedVisited: VisitedRestaurant[] = (visitedData || []).map((item: any) => {
+          const walletInfo = walletMap.get(item.restaurant_id);
+          return {
+            restaurant_id: item.restaurant_id,
+            first_visit_date: item.first_visit_date,
+            total_visits: item.total_visits,
+            total_spent: item.total_spent,
+            restaurant: item.restaurants[0] || { name: 'Unknown', slug: 'unknown' },
+            balance: walletInfo?.balance,
+            earned: walletInfo?.earned,
+            redeemed: walletInfo?.redeemed,
+          };
+        });
         
         setVisitedRestaurants(transformedVisited);
+        
+        // Calculate totals across all restaurants
+        const totalEarnedAmount = (walletData || []).reduce((sum: number, wallet: any) => sum + (wallet.total_earned || 0), 0);
+        const totalRedeemedAmount = (walletData || []).reduce((sum: number, wallet: any) => sum + (wallet.total_redeemed || 0), 0);
+        setTotalEarned(totalEarnedAmount);
+        setTotalRedeemed(totalRedeemedAmount);
       } catch (error) {
         console.error('Error fetching data:', error);
       } finally {
@@ -268,13 +323,6 @@ export default function CustomerDashboard() {
     ? user.full_name.split(' ').map((n) => n[0]).join('').toUpperCase()
     : user?.email?.charAt(0).toUpperCase() || '?';
 
-  const memberSince = user?.created_at
-    ? new Date(user.created_at).toLocaleDateString('en-US', {
-        month: 'short',
-        year: 'numeric',
-      })
-    : 'Recently';
-
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
@@ -329,13 +377,11 @@ export default function CustomerDashboard() {
           </div>
         </div>
 
-        {/* Virtual Currency Card */}
-        <VirtualCurrencyCard
-          balance={0}
-          earned={0}
-          referred={0}
-          redeemed={0}
-          memberSince={memberSince}
+        {/* Total Stats Card */}
+        <TotalStatsCard 
+          totalEarned={totalEarned} 
+          totalReferred={totalReferred}
+          totalRedeemed={totalRedeemed}
           onInfoClick={() => setShowCurrencyInfoModal(true)}
         />
       </div>
@@ -442,7 +488,7 @@ export default function CustomerDashboard() {
       <InfoModal
         isOpen={showCurrencyInfoModal}
         onClose={() => setShowCurrencyInfoModal(false)}
-        title="Virtual Currency"
+        title="Restaurant-Specific Virtual Currency"
         items={CURRENCY_INFO}
       />
 
