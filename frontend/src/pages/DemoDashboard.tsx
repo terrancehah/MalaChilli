@@ -191,7 +191,7 @@ export default function DemoDashboard() {
     window.location.href = '/';
   };
 
-  const handleSaveName = (name: string) => {
+  const handleSaveName = async (name: string) => {
     console.log('Demo mode: Name editing not available', name);
   };
 
