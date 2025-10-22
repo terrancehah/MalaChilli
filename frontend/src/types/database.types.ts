@@ -13,6 +13,8 @@ export interface User {
   age: number | null;
   referral_code: string;
   role: UserRole;
+  branch_id: string | null; // For staff - which branch they work at
+  restaurant_id: string | null; // For staff and owners - which restaurant they belong to
   email_verified: boolean;
   email_notifications_enabled: boolean;
   created_at: string;
