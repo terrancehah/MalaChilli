@@ -256,7 +256,7 @@ Content-Type: application/json
 
 **Endpoint:** `POST /rest/v1/rpc/generate_restaurant_referral_code`
 
-**Description:** Generate a unique restaurant-specific referral code for a user. Each user gets one code per restaurant.
+**Description:** Generate a unique restaurant-specific referral code for a user. Each user gets one code per restaurant. **Note:** This is called automatically by the backend when a customer makes their first transaction at a restaurant - not called directly by frontend.
 
 **Request Headers:**
 ```

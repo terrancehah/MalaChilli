@@ -105,6 +105,7 @@ supabase/migrations/20251013000011_fix_recursive_policies.sql
 supabase/migrations/20251013000012_fix_signup_insert_policy.sql
 supabase/migrations/20251013000013_add_restaurant_specific_codes.sql
 supabase/migrations/20251016000014_sync_email_verification.sql
+supabase/migrations/20251022000015_auto_generate_referral_codes.sql
 supabase/migrations/README.md
 
 # Keep all other Supabase configuration private

@@ -20,7 +20,6 @@ import {
   SettingsPanel,
   ShareBottomSheet,
   RestaurantCard,
-  EligibleRestaurantCard,
   TotalStatsCard
 } from '../../components/customer';
 
@@ -35,21 +34,6 @@ interface RestaurantCode {
   };
   total_visits?: number;
   first_visit_date?: string;
-  // Virtual currency fields (restaurant-specific)
-  balance?: number;
-  earned?: number;
-  redeemed?: number;
-}
-
-interface VisitedRestaurant {
-  restaurant_id: string;
-  first_visit_date: string;
-  total_visits: number;
-  total_spent: string;
-  restaurant: {
-    name: string;
-    slug: string;
-  };
   // Virtual currency fields (restaurant-specific)
   balance?: number;
   earned?: number;
@@ -77,7 +61,7 @@ const getTimeAgo = (dateString: string): string => {
 // Info modal content
 const RESTAURANT_INFO = [
   { text: 'Visit a restaurant and make a transaction to unlock promotion for that restaurant' },
-  { text: 'Generate your unique referral code for each restaurant you\'ve visited' },
+  { text: 'Your unique referral code is automatically created when you make your first visit' },
   { text: 'Share your referral link with friends via WhatsApp, Facebook, or copy the link' },
   { text: 'When someone uses your link and makes their first transaction at that restaurant, you both earn virtual currency' }
 ] as const;
@@ -104,9 +88,7 @@ export default function CustomerDashboard() {
   
   // Data states
   const [restaurantCodes, setRestaurantCodes] = useState<RestaurantCode[]>([]);
-  const [visitedRestaurants, setVisitedRestaurants] = useState<VisitedRestaurant[]>([]);
   const [loadingCodes, setLoadingCodes] = useState(true);
-  const [generating, setGenerating] = useState<string | null>(null);
   const [totalEarned, setTotalEarned] = useState(0);
   const [totalRedeemed, setTotalRedeemed] = useState(0);
   const [totalReferred, setTotalReferred] = useState(0);
@@ -114,6 +96,7 @@ export default function CustomerDashboard() {
     name: string;
     slug: string;
     code: string;
+    balance: number;
   } | null>(null);
 
   useEffect(() => {
@@ -226,22 +209,6 @@ export default function CustomerDashboard() {
         
         setRestaurantCodes(transformedCodes);
         
-        const transformedVisited: VisitedRestaurant[] = (visitedData || []).map((item: any) => {
-          const walletInfo = walletMap.get(item.restaurant_id);
-          return {
-            restaurant_id: item.restaurant_id,
-            first_visit_date: item.first_visit_date,
-            total_visits: item.total_visits,
-            total_spent: item.total_spent,
-            restaurant: item.restaurants[0] || { name: 'Unknown', slug: 'unknown' },
-            balance: walletInfo?.balance,
-            earned: walletInfo?.earned,
-            redeemed: walletInfo?.redeemed,
-          };
-        });
-        
-        setVisitedRestaurants(transformedVisited);
-        
         // Calculate totals across all restaurants
         const totalEarnedAmount = (walletData || []).reduce((sum: number, wallet: any) => sum + (wallet.total_earned || 0), 0);
         const totalRedeemedAmount = (walletData || []).reduce((sum: number, wallet: any) => sum + (wallet.total_redeemed || 0), 0);
@@ -272,51 +239,9 @@ export default function CustomerDashboard() {
     }
   };
 
-  const handleShare = (name: string, slug: string, code: string) => {
-    setSelectedRestaurant({ name, slug, code });
+  const handleShare = (name: string, slug: string, code: string, balance: number = 0) => {
+    setSelectedRestaurant({ name, slug, code, balance });
     setShowShareSheet(true);
-  };
-
-  const handleGenerateCode = async (restaurantId: string) => {
-    if (!user) return;
-    
-    setGenerating(restaurantId);
-    try {
-      const { error } = await supabase.rpc('generate_restaurant_referral_code', {
-        p_user_id: user.id,
-        p_restaurant_id: restaurantId
-      });
-      
-      if (error) throw error;
-      
-      // Refresh codes list
-      const { data: updatedCodes, error: fetchError } = await supabase
-        .from('user_restaurant_referral_codes')
-        .select(`
-          id,
-          restaurant_id,
-          referral_code,
-          restaurants (name, slug)
-        `)
-        .eq('user_id', user.id)
-        .eq('is_active', true);
-      
-      if (fetchError) throw fetchError;
-      
-      const transformedData: RestaurantCode[] = (updatedCodes || []).map((item: any) => ({
-        id: item.id,
-        restaurant_id: item.restaurant_id,
-        referral_code: item.referral_code,
-        restaurant: item.restaurants[0] || { name: 'Unknown', slug: 'unknown' }
-      }));
-      
-      setRestaurantCodes(transformedData);
-    } catch (error: any) {
-      console.error('Error generating code:', error);
-      alert(error.message || 'Failed to generate code');
-    } finally {
-      setGenerating(null);
-    }
   };
 
   const initials = user?.full_name
@@ -411,7 +336,7 @@ export default function CustomerDashboard() {
                 <p className="text-muted-foreground text-sm">Loading restaurants...</p>
               </CardContent>
             </Card>
-          ) : visitedRestaurants.length === 0 ? (
+          ) : restaurantCodes.length === 0 ? (
             <Card className="border-border/50">
               <CardContent className="p-12 text-center">
                 <div className="h-16 w-16 rounded-full bg-muted mx-auto mb-4 flex items-center justify-center">
@@ -427,7 +352,7 @@ export default function CustomerDashboard() {
             </Card>
           ) : (
             <div className="space-y-3">
-              {/* Restaurants with codes */}
+              {/* Restaurants with codes (auto-generated on first visit) */}
               {restaurantCodes.map((code) => (
                 <RestaurantCard
                   key={code.id}
@@ -436,18 +361,6 @@ export default function CustomerDashboard() {
                   onShare={handleShare}
                 />
               ))}
-              
-              {/* Eligible restaurants without codes */}
-              {visitedRestaurants
-                .filter(visited => !restaurantCodes.some(code => code.restaurant_id === visited.restaurant_id))
-                .map((visited) => (
-                  <EligibleRestaurantCard
-                    key={visited.restaurant_id}
-                    restaurant={visited}
-                    generating={generating === visited.restaurant_id}
-                    onGenerate={() => handleGenerateCode(visited.restaurant_id)}
-                  />
-                ))}
             </div>
           )}
         </div>

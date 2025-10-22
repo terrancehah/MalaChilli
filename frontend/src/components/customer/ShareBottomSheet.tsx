@@ -22,6 +22,7 @@ interface ShareBottomSheetProps {
     name: string;
     slug: string;
     code: string;
+    balance: number;
   } | null;
 }
 
@@ -125,10 +126,10 @@ export function ShareBottomSheet({ isOpen, onClose, restaurant }: ShareBottomShe
         <div className="bg-background rounded-t-3xl shadow-2xl border-t border-border max-h-[85vh] overflow-y-auto">
           <div className="p-6">
             {/* Handle Bar */}
-            <div className="w-12 h-1.5 bg-muted rounded-full mx-auto mb-6"></div>
+            <div className="w-12 h-1.5 bg-muted rounded-full mx-auto mb-5"></div>
             
             {/* Header */}
-            <div className="mb-6 relative">
+            <div className="mb-5 relative">
               <button
                 onClick={onClose}
                 className="absolute -top-2 right-0 p-2 hover:bg-muted rounded-full transition-colors"
@@ -144,8 +145,18 @@ export function ShareBottomSheet({ isOpen, onClose, restaurant }: ShareBottomShe
               </p>
             </div>
 
+            {/* Restaurant VC Balance */}
+            <div className="mb-5 bg-primary/5 rounded-lg p-3 border border-primary/20">
+              <div className="flex items-center gap-2">
+                <div className="text-xs text-muted-foreground">Your VC Balance</div>
+              </div>
+              <div className="text-2xl font-bold text-foreground mt-1">
+                RM {restaurant.balance.toFixed(2)}
+              </div>
+            </div>
+
             {/* Referral Link Section */}
-            <div className="mb-6">
+            <div className="mb-5">
               <label className="text-sm font-medium text-foreground mb-2 block">
                 Referral Link
               </label>
@@ -174,7 +185,7 @@ export function ShareBottomSheet({ isOpen, onClose, restaurant }: ShareBottomShe
             </div>
 
             {/* Social Share Options */}
-            <div className="mb-6">
+            <div className="mb-5">
               <label className="text-sm font-medium text-foreground mb-2 block">
                 Share via Social Media
               </label>
@@ -211,7 +222,7 @@ export function ShareBottomSheet({ isOpen, onClose, restaurant }: ShareBottomShe
               <label className="text-sm font-medium text-foreground mb-2 block">
                 Promotion Code
               </label>
-              <div className="bg-muted/50 rounded-lg p-4 border border-border/50">
+              <div className="bg-muted/50 rounded-lg p-2.5 border border-border/50">
                 <div className="flex items-center justify-between gap-3">
                   <code className="text-base font-mono text-foreground flex-1">
                     {restaurant.code}

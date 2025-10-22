@@ -34,12 +34,12 @@
 - ✅ **Smart Visual Hierarchy** - Primary: Copy Link → Supporting: Social buttons → Reference: View code
 - ✅ **Pre-filled Share Messages** - Context-aware messages for each platform
 - ✅ **Mobile-Optimized** - Native share API for seamless mobile experience
-- ✅ **"Promote Restaurants" Section** - Users can generate unique codes per restaurant
-- ✅ **Visit-Based Eligibility** - Only promote restaurants you've actually visited
+- ✅ **"Promote Restaurants" Section** - Unique codes automatically created on first visit
+- ✅ **Automatic Code Generation** - No manual step required, codes appear immediately after first transaction
 - ✅ **QR Code Modal** - Staff scan customer ID at counter for transactions
 - ✅ **Restaurant Visit Tracking** - `customer_restaurant_history` table integration
 - ✅ **Demo Dashboard Updated** - Matches real dashboard with mock data
-- ✅ **Active/Eligible Badges** - Visual distinction between generated and available codes
+- ✅ **Active Badges** - Visual indication of restaurant promotion codes
 - ✅ **Share Links** - Restaurant-specific URLs with promotion codes
 - ✅ TypeScript Configuration - Fixed invalid `erasableSyntaxOnly` compiler option
 - ✅ Documentation Updated - Frontend guide and referral implementation guide

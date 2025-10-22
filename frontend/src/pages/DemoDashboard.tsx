@@ -17,7 +17,6 @@ import {
   SettingsPanel,
   ShareBottomSheet,
   RestaurantCard,
-  EligibleRestaurantCard,
   TotalStatsCard
 } from '../components/customer';
 
@@ -173,6 +172,7 @@ export default function DemoDashboard() {
     name: string;
     slug: string;
     code: string;
+    balance: number;
   } | null>(null);
 
   // Prevent body scroll when bottom sheet is open
@@ -195,14 +195,9 @@ export default function DemoDashboard() {
     console.log('Demo mode: Name editing not available', name);
   };
 
-  const handleShare = (name: string, slug: string, code: string) => {
-    setSelectedRestaurant({ name, slug, code });
+  const handleShare = (name: string, slug: string, code: string, balance: number = 0) => {
+    setSelectedRestaurant({ name, slug, code, balance });
     setShowShareSheet(true);
-  };
-
-  const handleGenerateCode = (restaurantId: string) => {
-    alert('Demo mode: Code generation not available');
-    console.log('Generate code for restaurant:', restaurantId);
   };
 
   const initials = demoUser.full_name
@@ -304,7 +299,7 @@ export default function DemoDashboard() {
             </Card>
           ) : (
             <div className="space-y-3">
-              {/* Restaurants with codes */}
+              {/* Restaurants with codes (auto-generated on first visit) */}
               {mockRestaurantCodes.map((code) => (
                 <RestaurantCard
                   key={code.id}
@@ -313,18 +308,6 @@ export default function DemoDashboard() {
                   onShare={handleShare}
                 />
               ))}
-              
-              {/* Eligible restaurants without codes */}
-              {mockVisitedRestaurants
-                .filter(visited => !mockRestaurantCodes.some(code => code.restaurant_id === visited.restaurant_id))
-                .map((visited) => (
-                  <EligibleRestaurantCard
-                    key={visited.restaurant_id}
-                    restaurant={visited}
-                    generating={false}
-                    onGenerate={() => handleGenerateCode(visited.restaurant_id)}
-                  />
-                ))}
             </div>
           )}
         </div>
