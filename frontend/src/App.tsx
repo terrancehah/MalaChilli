@@ -12,7 +12,6 @@ import DemoDashboard from './pages/DemoDashboard';
 
 // Staff pages
 import StaffDashboard from './pages/staff/Dashboard';
-import StaffCheckout from './pages/staff/Checkout';
 import StaffTransactions from './pages/staff/Transactions';
 
 // Owner pages
@@ -50,14 +49,6 @@ function App() {
             element={
               <ProtectedRoute allowedRoles={['staff']}>
                 <StaffDashboard />
-              </ProtectedRoute>
-            } 
-          />
-          <Route 
-            path="/staff/checkout" 
-            element={
-              <ProtectedRoute allowedRoles={['staff']}>
-                <StaffCheckout />
               </ProtectedRoute>
             } 
           />

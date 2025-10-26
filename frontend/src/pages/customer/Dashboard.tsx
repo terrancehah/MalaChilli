@@ -2,17 +2,17 @@ import { useEffect, useState } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../../lib/supabase';
-import { Avatar, AvatarFallback, AvatarImage } from '../../components/ui/avatar';
 import { Card, CardContent } from '../../components/ui/card';
 import { Button } from '../../components/ui/button';
-import { Badge } from '../../components/ui/badge';
 import {
-  Sparkles,
   Share2,
   Info,
   QrCode as QrCodeIcon,
   Settings,
   Receipt,
+  TrendingUp, 
+  Users, 
+  Gift
 } from 'lucide-react';
 import {
   QRCodeModal,
@@ -20,8 +20,9 @@ import {
   SettingsPanel,
   ShareBottomSheet,
   RestaurantCard,
-  TotalStatsCard
 } from '../../components/customer';
+import { DashboardHeader } from '../../components/shared/DashboardHeader';
+import { StatsCard } from '../../components/shared/StatsCard';
 
 // TypeScript interfaces
 interface RestaurantCode {
@@ -244,10 +245,6 @@ export default function CustomerDashboard() {
     setShowShareSheet(true);
   };
 
-  const initials = user?.full_name
-    ? user.full_name.split(' ').map((n) => n[0]).join('').toUpperCase()
-    : user?.email?.charAt(0).toUpperCase() || '?';
-
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
@@ -260,29 +257,32 @@ export default function CustomerDashboard() {
     return null;
   }
 
+  const customerStats = [
+    {
+      label: 'Earned',
+      value: `RM ${totalEarned.toFixed(2)}`,
+      icon: <TrendingUp className="h-5 w-5 text-green-600 dark:text-green-400" />,
+    },
+    {
+      label: 'Referred',
+      value: totalReferred,
+      icon: <Users className="h-5 w-5 text-blue-600 dark:text-blue-400" />,
+    },
+    {
+      label: 'Redeemed',
+      value: `RM ${totalRedeemed.toFixed(2)}`,
+      icon: <Gift className="h-5 w-5 text-primary" />,
+    },
+  ];
+
   return (
     <div className="min-h-screen bg-background pb-6">
-      {/* Header with Profile */}
-      <div className="bg-gradient-to-br from-primary to-primary-light px-6 pt-10 pb-7 rounded-b-3xl">
-        <div className="flex items-start justify-between mb-5">
-          <div className="flex items-center gap-3 min-w-0 flex-1">
-            <Avatar className="h-14 w-14 border-2 border-white/20 flex-shrink-0">
-              <AvatarImage src="" alt={user.full_name || user.email} />
-              <AvatarFallback className="bg-white/10 text-primary-foreground text-base">
-                {initials}
-              </AvatarFallback>
-            </Avatar>
-            <div className="min-w-0 flex-1">
-              <h1 className="text-xl sm:text-2xl font-bold text-primary-foreground mb-0.5 whitespace-nowrap overflow-hidden text-ellipsis">
-                {user.full_name || user.email}
-              </h1>
-              <Badge variant="secondary" className="bg-white/20 text-primary-foreground border-0">
-                <Sparkles className="h-3 w-3 mr-1" />
-                {user.email_verified ? 'Verified' : 'Unverified'}
-              </Badge>
-            </div>
-          </div>
-          <div className="flex gap-2 flex-shrink-0">
+      <DashboardHeader
+        user={user}
+        title={user.full_name || user.email}
+        subtitle={user.email_verified ? 'Verified Customer' : 'Unverified Customer'}
+        actions={
+          <>
             <Button
               variant="secondary"
               size="icon"
@@ -299,16 +299,12 @@ export default function CustomerDashboard() {
             >
               <Settings className="h-6 w-6 text-primary" />
             </Button>
-          </div>
-        </div>
+          </>
+        }
+      />
 
-        {/* Total Stats Card */}
-        <TotalStatsCard 
-          totalEarned={totalEarned} 
-          totalReferred={totalReferred}
-          totalRedeemed={totalRedeemed}
-          onInfoClick={() => setShowCurrencyInfoModal(true)}
-        />
+      <div className="px-6 -mt-16 space-y-6">
+        <StatsCard stats={customerStats} />
       </div>
 
       <div className="px-6 mt-6 space-y-6">

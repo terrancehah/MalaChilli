@@ -12,7 +12,6 @@ import { Separator } from '../../components/ui/separator';
 import { Alert, AlertDescription } from '../../components/ui/alert';
 import { ArrowLeft, QrCode, User, Receipt, Camera, Upload, CheckCircle, AlertCircle, Loader2 } from 'lucide-react';
 import { Html5QrcodeScanner } from 'html5-qrcode';
-import type { User as UserType } from '../../types/database.types';
 
 interface CustomerInfo {
   id: number;

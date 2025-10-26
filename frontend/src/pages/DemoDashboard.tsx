@@ -1,8 +1,6 @@
 import { useState, useEffect } from 'react';
-import { Avatar, AvatarFallback, AvatarImage } from '../components/ui/avatar';
 import { Card, CardContent } from '../components/ui/card';
 import { Button } from '../components/ui/button';
-import { Badge } from '../components/ui/badge';
 import {
   Sparkles,
   Share2,
@@ -17,8 +15,9 @@ import {
   SettingsPanel,
   ShareBottomSheet,
   RestaurantCard,
-  TotalStatsCard
 } from '../components/customer';
+import { DashboardHeader } from '../components/shared/DashboardHeader';
+import { StatsCard } from '../components/shared/StatsCard';
 
 // TypeScript interfaces
 interface RestaurantCode {
@@ -200,11 +199,23 @@ export default function DemoDashboard() {
     setShowShareSheet(true);
   };
 
-  const initials = demoUser.full_name
-    .split(' ')
-    .map((n) => n[0])
-    .join('')
-    .toUpperCase();
+  const demoStats = [
+    {
+      label: 'Earned',
+      value: `RM ${mockData.totalEarned.toFixed(2)}`,
+      icon: <Sparkles className="h-5 w-5 text-green-600 dark:text-green-400" />,
+    },
+    {
+      label: 'Referred',
+      value: mockData.totalReferred,
+      icon: <Share2 className="h-5 w-5 text-blue-600 dark:text-blue-400" />,
+    },
+    {
+      label: 'Redeemed',
+      value: `RM ${mockData.totalRedeemed.toFixed(2)}`,
+      icon: <Receipt className="h-5 w-5 text-primary" />,
+    },
+  ];
 
   return (
     <div className="min-h-screen bg-background pb-6">
@@ -215,27 +226,12 @@ export default function DemoDashboard() {
         </p>
       </div>
 
-      {/* Header with Profile */}
-      <div className="bg-gradient-to-br from-primary to-primary-light px-6 pt-10 pb-7 rounded-b-3xl">
-        <div className="flex items-start justify-between mb-5">
-          <div className="flex items-center gap-3 min-w-0 flex-1">
-            <Avatar className="h-14 w-14 border-2 border-white/20 flex-shrink-0">
-              <AvatarImage src="" alt={demoUser.full_name} />
-              <AvatarFallback className="bg-white/10 text-primary-foreground text-base">
-                {initials}
-              </AvatarFallback>
-            </Avatar>
-            <div className="min-w-0 flex-1">
-              <h1 className="text-xl sm:text-2xl font-bold text-primary-foreground mb-0.5 whitespace-nowrap overflow-hidden text-ellipsis">
-                {demoUser.full_name}
-              </h1>
-              <Badge variant="secondary" className="bg-white/20 text-primary-foreground border-0">
-                <Sparkles className="h-3 w-3 mr-1" />
-                Verified
-              </Badge>
-            </div>
-          </div>
-          <div className="flex gap-2 flex-shrink-0">
+      <DashboardHeader
+        user={demoUser}
+        title={demoUser.full_name}
+        subtitle="Verified Customer"
+        actions={
+          <>
             <Button
               variant="secondary"
               size="icon"
@@ -252,16 +248,12 @@ export default function DemoDashboard() {
             >
               <Settings className="h-6 w-6 text-primary" />
             </Button>
-          </div>
-        </div>
+          </>
+        }
+      />
 
-        {/* Total Stats Card */}
-        <TotalStatsCard 
-          totalEarned={mockData.totalEarned} 
-          totalReferred={mockData.totalReferred}
-          totalRedeemed={mockData.totalRedeemed}
-          onInfoClick={() => setShowCurrencyInfoModal(true)}
-        />
+      <div className="px-6 -mt-16 space-y-6">
+        <StatsCard stats={demoStats} />
       </div>
 
       <div className="px-6 mt-6 space-y-6">
