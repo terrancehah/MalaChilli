@@ -26,30 +26,45 @@ export function QRScannerSheet({ isOpen, onClose, onScanSuccess }: QRScannerShee
       const scanner = new Html5Qrcode('qr-scanner-region');
       scannerRef.current = scanner;
 
-      scanner.start(
-        { facingMode: 'environment' }, // Use back camera
-        {
-          fps: 10,
-          qrbox: { width: 250, height: 250 },
-        },
-        (decodedText) => {
-          // Success callback
-          onScanSuccess(decodedText);
-          scanner.stop().then(() => {
-            scanner.clear();
-            scannerRef.current = null;
-          }).catch(() => {
-            // Ignore stop errors
+      // Get available cameras and use the first back camera or any camera
+      Html5Qrcode.getCameras().then(devices => {
+        if (devices && devices.length) {
+          // Try to find back camera, otherwise use first available
+          const backCamera = devices.find(device => 
+            device.label.toLowerCase().includes('back') || 
+            device.label.toLowerCase().includes('rear') ||
+            device.label.toLowerCase().includes('environment')
+          );
+          const cameraId = backCamera ? backCamera.id : devices[0].id;
+
+          scanner.start(
+            cameraId,
+            {
+              fps: 10,
+              qrbox: { width: 250, height: 250 },
+            },
+            (decodedText) => {
+              // Success callback
+              onScanSuccess(decodedText);
+              scanner.stop().then(() => {
+                scanner.clear();
+                scannerRef.current = null;
+              }).catch(() => {
+                // Ignore stop errors
+              });
+              onClose();
+            },
+            () => {
+              // Error callback - suppress continuous scanning errors
+            }
+          ).then(() => {
+            setScanning(true);
+          }).catch((err) => {
+            console.error('Failed to start scanner:', err);
           });
-          onClose();
-        },
-        () => {
-          // Error callback - suppress continuous scanning errors
         }
-      ).then(() => {
-        setScanning(true);
-      }).catch((err) => {
-        console.error('Failed to start scanner:', err);
+      }).catch(err => {
+        console.error('Failed to get cameras:', err);
       });
 
       return () => {
