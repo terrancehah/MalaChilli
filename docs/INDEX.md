@@ -1,16 +1,28 @@
 # MalaChilli Documentation Index
 
-**Last Updated:** 2025-10-16  
+**Last Updated:** 2025-10-26  
 **Status:** Active Development with Latest Design Implementation
 
 ## Complete Project Documentation Navigator
 
-**Last Updated:** 2025-10-16  
-**Project Status:** Core Features Implemented, Restaurant Promotion System Live
+**Last Updated:** 2025-10-26  
+**Project Status:** Core Features Implemented, Staff Checkout Streamlined
 
 ---
 
 ## Recent Updates
+
+### Staff Checkout Streamlined (2025-10-26)
+**Staff Dashboard Redesigned with Integrated Checkout**
+- ✅ **Removed Multi-Step Checkout Page** - All checkout now happens directly on staff dashboard
+- ✅ **QR Scanner Bottom Sheet** - Custom camera overlay with frame, button-activated (not automatic)
+- ✅ **Customer Verification Modal** - Quick confirmation popup after successful scan
+- ✅ **Checkout Bottom Sheet** - Complete transaction interface with customer info card
+- ✅ **VC Redemption UI** - Number input with +/- buttons (max 20% of bill)
+- ✅ **Receipt Photo Upload** - Skeleton for future OCR integration (camera + file upload)
+- ✅ **iPad Optimization** - Larger icons (!h-12/!h-14), better spacing, responsive design
+- ✅ **Bug Fix** - QR code lookup now uses user ID (UUID) instead of referral code
+- ✅ **Component Reuse** - Follows design system patterns (bottom sheet, modal architecture)
 
 ### Dashboard Enhancements & Visit Context (2025-10-17)
 **Restaurant Cards Now Display Visit History**

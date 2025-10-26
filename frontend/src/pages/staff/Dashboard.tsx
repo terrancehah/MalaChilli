@@ -106,18 +106,19 @@ export default function StaffDashboard() {
     setLoading(true);
 
     try {
-      // Format code (remove prefix if present)
-      const formattedCode = code.replace(/^CHILLI-/, '').toUpperCase();
+      // The QR code contains the customer's user ID (UUID)
+      const customerId = code.trim();
 
-      // Look up customer by referral code
+      // Look up customer by user ID
       const { data: customer, error: customerError } = await supabase
         .from('users')
         .select('id, full_name, referral_code')
-        .eq('referral_code', `CHILLI-${formattedCode}`)
+        .eq('id', customerId)
+        .eq('user_type', 'customer')
         .single();
 
       if (customerError || !customer) {
-        throw new Error('Customer not found. Please check the code and try again.');
+        throw new Error('Customer not found. Please check the QR code and try again.');
       }
 
       // Get customer's wallet balance
