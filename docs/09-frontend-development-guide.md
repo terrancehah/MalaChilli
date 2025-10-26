@@ -9,8 +9,8 @@ This guide defines the **UI/UX design patterns, visual standards, and component 
 - API integration → `05-api-specification.md`
 - Component code → `/frontend/src/` directory
 
-**Version:** 2.0  
-**Last Updated:** 2025-10-18  
+**Version:** 2.1  
+**Last Updated:** 2025-10-26  
 **Design System:** Tailwind CSS + Shadcn/UI
 
 ---
@@ -99,6 +99,12 @@ Card (rounded-2xl = 16px)
 ```
 Entry: slide-in-from-right duration-300
 Exit:  slide-out-to-right duration-300
+```
+
+**Bottom Sheet (Responsive):**
+```
+Mobile:          slide-in-from-bottom duration-300
+iPad Landscape:  slide-in-from-left duration-300
 ```
 
 **Modal Backdrop:**
@@ -197,10 +203,19 @@ CSS Grid: grid-template-rows: 0fr → 1fr (300ms)
 - Background scroll lock
 - Gesture follows finger
 - Touch-optimized layout
+- **Responsive:** Bottom sheet on mobile, left panel (60%) on iPad landscape
 
-**Use Cases:** Share options, action menus
+**Use Cases:** Share options, action menus, QR scanner
 
-**Implementation:** `/frontend/src/pages/customer/Dashboard.tsx` - Share bottom sheet
+**Implementation Examples:**
+- `/frontend/src/pages/customer/Dashboard.tsx` - Share bottom sheet
+- `/frontend/src/components/staff/QRScannerSheet.tsx` - Scanner with iPad split-view
+
+**iPad Landscape Behavior:**
+- Transforms to left panel (60% width)
+- Full height split-view
+- Slides in from left (not bottom)
+- Dashboard remains visible on right (40%)
 
 ---
 
@@ -231,7 +246,43 @@ CSS Grid: grid-template-rows: 0fr → 1fr (300ms)
 
 ---
 
-### 4. Grid Animation Technique
+### 4. QR Scanner UI Pattern
+
+**Design Decision: Corner Brackets vs Full Frame**
+
+**Why Corner Brackets:**
+- Industry standard (WhatsApp, WeChat, Instagram, banking apps)
+- Less visual clutter - only shows corners
+- Clear framing - user knows where to align
+- Better visibility - white stands out on any background
+- Professional appearance
+
+**Visual Specifications:**
+```
+Scanner Area: 256x256px (w-64 h-64)
+Corner Brackets: 48x48px (w-12 h-12) L-shaped
+Border Width: 4px (border-4)
+Color: White (border-white)
+Corner Radius: 12px (rounded-xl)
+```
+
+**Camera Feed:**
+```
+Library: @yudiel/react-qr-scanner (React-native, 200KB lighter than html5-qrcode)
+Constraints: { facingMode: 'environment' } - Back camera
+Container: Black background (bg-black), 400px height (500px on iPad)
+Object Fit: cover - Fills container without distortion
+```
+
+**Responsive Behavior:**
+- **Mobile:** Bottom sheet, camera viewfinder with corner brackets
+- **iPad Landscape:** Left panel (60%), taller scanner (500px), dashboard visible on right
+
+**Implementation:** `/frontend/src/components/staff/QRScannerSheet.tsx`
+
+---
+
+### 5. Grid Animation Technique
 
 **Problem:** CSS doesn't animate `height: auto`
 

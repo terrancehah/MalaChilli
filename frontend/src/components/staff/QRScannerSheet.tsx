@@ -1,9 +1,9 @@
-import { useEffect, useRef, useState } from 'react';
+import { useState, useEffect } from 'react';
+import { Scanner } from '@yudiel/react-qr-scanner';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 import { Label } from '../ui/label';
 import { X, Keyboard } from 'lucide-react';
-import { Html5Qrcode } from 'html5-qrcode';
 
 interface QRScannerSheetProps {
   isOpen: boolean;
@@ -17,82 +17,6 @@ export function QRScannerSheet({ isOpen, onClose, onScanSuccess }: QRScannerShee
   const [touchStart, setTouchStart] = useState(0);
   const [touchCurrent, setTouchCurrent] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
-  const [scanning, setScanning] = useState(false);
-  const scannerRef = useRef<Html5Qrcode | null>(null);
-
-  // Initialize and start QR scanner
-  useEffect(() => {
-    if (isOpen && !showManualInput && !scanning) {
-      const scanner = new Html5Qrcode('qr-scanner-region');
-      scannerRef.current = scanner;
-
-      // Get available cameras and use the first back camera or any camera
-      Html5Qrcode.getCameras().then(devices => {
-        if (devices && devices.length) {
-          // Try to find back camera, otherwise use first available
-          const backCamera = devices.find(device => 
-            device.label.toLowerCase().includes('back') || 
-            device.label.toLowerCase().includes('rear') ||
-            device.label.toLowerCase().includes('environment')
-          );
-          const cameraId = backCamera ? backCamera.id : devices[0].id;
-
-          scanner.start(
-            cameraId,
-            {
-              fps: 10,
-              qrbox: { width: 250, height: 250 },
-            },
-            (decodedText) => {
-              // Success callback
-              onScanSuccess(decodedText);
-              scanner.stop().then(() => {
-                scanner.clear();
-                scannerRef.current = null;
-              }).catch(() => {
-                // Ignore stop errors
-              });
-              onClose();
-            },
-            () => {
-              // Error callback - suppress continuous scanning errors
-            }
-          ).then(() => {
-            setScanning(true);
-          }).catch((err) => {
-            console.error('Failed to start scanner:', err);
-          });
-        }
-      }).catch(err => {
-        console.error('Failed to get cameras:', err);
-      });
-
-      return () => {
-        if (scannerRef.current) {
-          scannerRef.current.stop().then(() => {
-            scannerRef.current?.clear();
-            scannerRef.current = null;
-            setScanning(false);
-          }).catch(() => {
-            // Ignore cleanup errors
-          });
-        }
-      };
-    }
-  }, [isOpen, showManualInput, scanning, onScanSuccess, onClose]);
-
-  // Cleanup on close
-  useEffect(() => {
-    if (!isOpen && scannerRef.current) {
-      scannerRef.current.stop().then(() => {
-        scannerRef.current?.clear();
-        scannerRef.current = null;
-        setScanning(false);
-      }).catch(() => {
-        // Ignore cleanup errors
-      });
-    }
-  }, [isOpen]);
 
   // Lock body scroll when sheet is open
   useEffect(() => {
@@ -116,6 +40,14 @@ export function QRScannerSheet({ isOpen, onClose, onScanSuccess }: QRScannerShee
     }
   };
 
+  const handleScan = (detectedCodes: any[]) => {
+    if (detectedCodes && detectedCodes.length > 0) {
+      const code = detectedCodes[0].rawValue;
+      onScanSuccess(code);
+      onClose();
+    }
+  };
+
   const handleManualSubmit = () => {
     if (manualCode.trim()) {
       onScanSuccess(manualCode.trim());
@@ -125,18 +57,7 @@ export function QRScannerSheet({ isOpen, onClose, onScanSuccess }: QRScannerShee
   };
 
   const toggleInputMode = () => {
-    if (scannerRef.current) {
-      scannerRef.current.stop().then(() => {
-        scannerRef.current?.clear();
-        scannerRef.current = null;
-        setScanning(false);
-        setShowManualInput(!showManualInput);
-      }).catch(() => {
-        setShowManualInput(!showManualInput);
-      });
-    } else {
-      setShowManualInput(!showManualInput);
-    }
+    setShowManualInput(!showManualInput);
   };
 
   if (!isOpen) return null;
@@ -150,9 +71,9 @@ export function QRScannerSheet({ isOpen, onClose, onScanSuccess }: QRScannerShee
         style={{ touchAction: 'none' }}
       />
       
-      {/* Bottom Sheet */}
+      {/* Bottom Sheet (Mobile) / Split View (iPad Landscape) */}
       <div 
-        className="fixed inset-x-0 bottom-0 z-50 animate-in slide-in-from-bottom duration-300"
+        className="fixed inset-x-0 bottom-0 md:landscape:inset-y-0 md:landscape:left-0 md:landscape:right-auto md:landscape:w-[60%] z-50 animate-in slide-in-from-bottom md:landscape:slide-in-from-left duration-300"
         style={{
           transform: isDragging && touchCurrent > touchStart 
             ? `translateY(${touchCurrent - touchStart}px)` 
@@ -174,10 +95,10 @@ export function QRScannerSheet({ isOpen, onClose, onScanSuccess }: QRScannerShee
         }}
         onTouchEnd={handleTouchEnd}
       >
-        <div className="bg-background rounded-t-3xl shadow-2xl border-t border-border max-h-[85vh] overflow-y-auto">
-          <div className="p-6">
-            {/* Handle Bar */}
-            <div className="w-12 h-1.5 bg-muted rounded-full mx-auto mb-5"></div>
+        <div className="bg-background rounded-t-3xl md:landscape:rounded-none md:landscape:rounded-r-3xl shadow-2xl border-t md:landscape:border-t-0 md:landscape:border-r border-border max-h-[85vh] md:landscape:max-h-full md:landscape:h-full overflow-y-auto">
+          <div className="p-6 md:landscape:h-full md:landscape:flex md:landscape:flex-col">
+            {/* Handle Bar (Mobile Only) */}
+            <div className="w-12 h-1.5 bg-muted rounded-full mx-auto mb-5 md:landscape:hidden"></div>
             
             {/* Header */}
             <div className="mb-5 relative">
@@ -198,14 +119,43 @@ export function QRScannerSheet({ isOpen, onClose, onScanSuccess }: QRScannerShee
 
             {/* Scanner or Manual Input */}
             {!showManualInput ? (
-              <div className="mb-5">
+              <div className="mb-5 md:landscape:flex-1 md:landscape:flex md:landscape:flex-col md:landscape:justify-center">
                 {/* Camera Scanner Container */}
-                <div className="relative bg-black rounded-2xl overflow-hidden">
-                  <div id="qr-scanner-region" className="w-full min-h-[400px]"></div>
+                <div className="relative bg-black rounded-2xl overflow-hidden h-[400px] md:landscape:h-[500px]">
+                  <Scanner
+                    onScan={handleScan}
+                    onError={(error) => console.error('Scanner error:', error)}
+                    constraints={{
+                      facingMode: 'environment',
+                    }}
+                    styles={{
+                      container: {
+                        width: '100%',
+                        height: '100%',
+                      },
+                      video: {
+                        width: '100%',
+                        height: '100%',
+                        objectFit: 'cover',
+                      },
+                    }}
+                    components={{
+                      finder: false,
+                    }}
+                  />
                   
-                  {/* Overlay Frame */}
-                  <div className="absolute inset-0 pointer-events-none">
-                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 border-4 border-primary rounded-2xl shadow-lg"></div>
+                  {/* Custom Corner Brackets Overlay */}
+                  <div className="absolute inset-0 pointer-events-none flex items-center justify-center">
+                    <div className="relative w-64 h-64">
+                      {/* Top Left Corner */}
+                      <div className="absolute top-0 left-0 w-12 h-12 border-t-4 border-l-4 border-white rounded-tl-xl"></div>
+                      {/* Top Right Corner */}
+                      <div className="absolute top-0 right-0 w-12 h-12 border-t-4 border-r-4 border-white rounded-tr-xl"></div>
+                      {/* Bottom Left Corner */}
+                      <div className="absolute bottom-0 left-0 w-12 h-12 border-b-4 border-l-4 border-white rounded-bl-xl"></div>
+                      {/* Bottom Right Corner */}
+                      <div className="absolute bottom-0 right-0 w-12 h-12 border-b-4 border-r-4 border-white rounded-br-xl"></div>
+                    </div>
                   </div>
                 </div>
 
@@ -217,27 +167,29 @@ export function QRScannerSheet({ isOpen, onClose, onScanSuccess }: QRScannerShee
                 </div>
               </div>
             ) : (
-              <div className="mb-5">
-                <Label htmlFor="manual-code" className="text-sm font-semibold">
-                  Customer Code
-                </Label>
-                <Input
-                  id="manual-code"
-                  type="text"
-                  placeholder="CHILLI-ABC123"
-                  value={manualCode}
-                  onChange={(e) => setManualCode(e.target.value.toUpperCase())}
-                  className="mt-2 text-base"
-                  autoFocus
-                />
-                <Button
-                  onClick={handleManualSubmit}
-                  className="w-full mt-3 bg-primary hover:bg-primary/90"
-                  size="lg"
-                  disabled={!manualCode.trim()}
-                >
-                  Verify Customer
-                </Button>
+              <div className="mb-5 md:landscape:flex-1 md:landscape:flex md:landscape:flex-col md:landscape:justify-center">
+                <div>
+                  <Label htmlFor="manual-code" className="text-sm font-semibold">
+                    Customer Code
+                  </Label>
+                  <Input
+                    id="manual-code"
+                    type="text"
+                    placeholder="CHILLI-ABC123"
+                    value={manualCode}
+                    onChange={(e) => setManualCode(e.target.value.toUpperCase())}
+                    className="mt-2 text-base md:landscape:text-lg md:landscape:h-14"
+                    autoFocus
+                  />
+                  <Button
+                    onClick={handleManualSubmit}
+                    className="w-full mt-3 bg-primary hover:bg-primary/90"
+                    size="lg"
+                    disabled={!manualCode.trim()}
+                  >
+                    Verify Customer
+                  </Button>
+                </div>
               </div>
             )}
 

@@ -114,7 +114,7 @@ export default function StaffDashboard() {
         .from('users')
         .select('id, full_name, referral_code')
         .eq('id', customerId)
-        .eq('user_type', 'customer')
+        .eq('role', 'customer')
         .single();
 
       if (customerError || !customer) {

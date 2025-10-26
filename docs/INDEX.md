@@ -15,13 +15,16 @@
 ### Staff Checkout Streamlined (2025-10-26)
 **Staff Dashboard Redesigned with Integrated Checkout**
 - ✅ **Removed Multi-Step Checkout Page** - All checkout now happens directly on staff dashboard
-- ✅ **QR Scanner Bottom Sheet** - Custom camera overlay with frame, button-activated (not automatic)
+- ✅ **QR Scanner Sheet** - Clean camera viewfinder with white corner bracket overlay
+- ✅ **React QR Scanner** - Replaced html5-qrcode with @yudiel/react-qr-scanner (200KB smaller bundle)
+- ✅ **iPad Split View** - Scanner left panel (60%), dashboard right (40%) in landscape mode
+- ✅ **Responsive Animations** - Slides from bottom on mobile, slides from left on iPad landscape
 - ✅ **Customer Verification Modal** - Quick confirmation popup after successful scan
 - ✅ **Checkout Bottom Sheet** - Complete transaction interface with customer info card
 - ✅ **VC Redemption UI** - Number input with +/- buttons (max 20% of bill)
 - ✅ **Receipt Photo Upload** - Skeleton for future OCR integration (camera + file upload)
 - ✅ **iPad Optimization** - Larger icons (!h-12/!h-14), better spacing, responsive design
-- ✅ **Bug Fix** - QR code lookup now uses user ID (UUID) instead of referral code
+- ✅ **Bug Fixes** - QR lookup uses `role` column (not `user_type`), user ID (UUID) based lookup
 - ✅ **Component Reuse** - Follows design system patterns (bottom sheet, modal architecture)
 
 ### Dashboard Enhancements & Visit Context (2025-10-17)
