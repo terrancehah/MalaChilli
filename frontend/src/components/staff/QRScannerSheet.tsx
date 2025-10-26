@@ -2,8 +2,8 @@ import { useEffect, useRef, useState } from 'react';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 import { Label } from '../ui/label';
-import { X, QrCode, Keyboard } from 'lucide-react';
-import { Html5QrcodeScanner } from 'html5-qrcode';
+import { X, Keyboard } from 'lucide-react';
+import { Html5Qrcode } from 'html5-qrcode';
 
 interface QRScannerSheetProps {
   isOpen: boolean;
@@ -12,58 +12,72 @@ interface QRScannerSheetProps {
 }
 
 export function QRScannerSheet({ isOpen, onClose, onScanSuccess }: QRScannerSheetProps) {
-  const qrScannerRef = useRef<HTMLDivElement>(null);
-  const [scanner, setScanner] = useState<Html5QrcodeScanner | null>(null);
   const [manualCode, setManualCode] = useState('');
   const [showManualInput, setShowManualInput] = useState(false);
   const [touchStart, setTouchStart] = useState(0);
   const [touchCurrent, setTouchCurrent] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
+  const [scanning, setScanning] = useState(false);
+  const scannerRef = useRef<Html5Qrcode | null>(null);
 
-  // Initialize QR scanner when sheet opens
+  // Initialize and start QR scanner
   useEffect(() => {
-    if (isOpen && qrScannerRef.current && !showManualInput) {
-      const qrScanner = new Html5QrcodeScanner(
-        'qr-scanner-region',
+    if (isOpen && !showManualInput && !scanning) {
+      const scanner = new Html5Qrcode('qr-scanner-region');
+      scannerRef.current = scanner;
+
+      scanner.start(
+        { facingMode: 'environment' }, // Use back camera
         {
           fps: 10,
           qrbox: { width: 250, height: 250 },
-          aspectRatio: 1.0,
         },
-        false
-      );
-
-      qrScanner.render(
         (decodedText) => {
+          // Success callback
           onScanSuccess(decodedText);
-          qrScanner.clear();
+          scanner.stop().then(() => {
+            scanner.clear();
+            scannerRef.current = null;
+          }).catch(() => {
+            // Ignore stop errors
+          });
           onClose();
         },
-        (errorMessage) => {
-          // Suppress error logging for continuous scanning
-          console.debug('QR scan error:', errorMessage);
+        () => {
+          // Error callback - suppress continuous scanning errors
         }
-      );
-
-      setScanner(qrScanner);
+      ).then(() => {
+        setScanning(true);
+      }).catch((err) => {
+        console.error('Failed to start scanner:', err);
+      });
 
       return () => {
-        qrScanner.clear().catch(() => {
-          // Ignore cleanup errors
-        });
+        if (scannerRef.current) {
+          scannerRef.current.stop().then(() => {
+            scannerRef.current?.clear();
+            scannerRef.current = null;
+            setScanning(false);
+          }).catch(() => {
+            // Ignore cleanup errors
+          });
+        }
       };
     }
-  }, [isOpen, showManualInput, onScanSuccess, onClose]);
+  }, [isOpen, showManualInput, scanning, onScanSuccess, onClose]);
 
-  // Cleanup scanner on unmount or close
+  // Cleanup on close
   useEffect(() => {
-    if (!isOpen && scanner) {
-      scanner.clear().catch(() => {
+    if (!isOpen && scannerRef.current) {
+      scannerRef.current.stop().then(() => {
+        scannerRef.current?.clear();
+        scannerRef.current = null;
+        setScanning(false);
+      }).catch(() => {
         // Ignore cleanup errors
       });
-      setScanner(null);
     }
-  }, [isOpen, scanner]);
+  }, [isOpen]);
 
   // Lock body scroll when sheet is open
   useEffect(() => {
@@ -96,12 +110,17 @@ export function QRScannerSheet({ isOpen, onClose, onScanSuccess }: QRScannerShee
   };
 
   const toggleInputMode = () => {
-    setShowManualInput(!showManualInput);
-    if (scanner) {
-      scanner.clear().catch(() => {
-        // Ignore cleanup errors
+    if (scannerRef.current) {
+      scannerRef.current.stop().then(() => {
+        scannerRef.current?.clear();
+        scannerRef.current = null;
+        setScanning(false);
+        setShowManualInput(!showManualInput);
+      }).catch(() => {
+        setShowManualInput(!showManualInput);
       });
-      setScanner(null);
+    } else {
+      setShowManualInput(!showManualInput);
     }
   };
 
@@ -167,11 +186,10 @@ export function QRScannerSheet({ isOpen, onClose, onScanSuccess }: QRScannerShee
               <div className="mb-5">
                 {/* Camera Scanner Container */}
                 <div className="relative bg-black rounded-2xl overflow-hidden">
-                  <div id="qr-scanner-region" ref={qrScannerRef} className="w-full"></div>
+                  <div id="qr-scanner-region" className="w-full min-h-[400px]"></div>
                   
                   {/* Overlay Frame */}
                   <div className="absolute inset-0 pointer-events-none">
-                    <div className="absolute inset-0 border-2 border-primary/30 rounded-2xl"></div>
                     <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 border-4 border-primary rounded-2xl shadow-lg"></div>
                   </div>
                 </div>
@@ -215,17 +233,8 @@ export function QRScannerSheet({ isOpen, onClose, onScanSuccess }: QRScannerShee
               className="w-full"
               size="lg"
             >
-              {showManualInput ? (
-                <>
-                  <QrCode className="h-5 w-5 mr-2" />
-                  Switch to Camera
-                </>
-              ) : (
-                <>
-                  <Keyboard className="h-5 w-5 mr-2" />
-                  Enter Code Manually
-                </>
-              )}
+              <Keyboard className="h-5 w-5 mr-2" />
+              {showManualInput ? 'Switch to Camera' : 'Enter Code Manually'}
             </Button>
           </div>
         </div>
