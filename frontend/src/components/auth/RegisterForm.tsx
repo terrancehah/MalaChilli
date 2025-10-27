@@ -24,19 +24,22 @@ export function RegisterForm({
     fullName: '',
     email: '',
     password: '',
-    birthday: ''
+    birthday: '',
+    agreedToTerms: false
   });
   const [errors, setErrors] = useState({
     fullName: '',
     email: '',
     password: '',
-    birthday: ''
+    birthday: '',
+    agreedToTerms: ''
   });
   const [touched, setTouched] = useState({
     fullName: false,
     email: false,
     password: false,
-    birthday: false
+    birthday: false,
+    agreedToTerms: false
   });
   const [loading, setLoading] = useState(false);
   
@@ -74,6 +77,10 @@ export function RegisterForm({
         if (age > 120) return 'Please enter a valid birthday';
         return '';
       
+      case 'agreedToTerms':
+        if (!value || value === 'false') return 'You must agree to the Terms and Privacy Policy';
+        return '';
+      
       default:
         return '';
     }
@@ -87,7 +94,8 @@ export function RegisterForm({
       fullName: true,
       email: true,
       password: true,
-      birthday: true
+      birthday: true,
+      agreedToTerms: true
     });
 
     // Validate all fields
@@ -95,7 +103,8 @@ export function RegisterForm({
       fullName: validateField('fullName', formData.fullName),
       email: validateField('email', formData.email),
       password: validateField('password', formData.password),
-      birthday: validateField('birthday', formData.birthday)
+      birthday: validateField('birthday', formData.birthday),
+      agreedToTerms: validateField('agreedToTerms', String(formData.agreedToTerms))
     };
 
     setErrors(newErrors);
@@ -149,17 +158,19 @@ export function RegisterForm({
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
+    const { name, value, type, checked } = e.target;
+    const newValue = type === 'checkbox' ? checked : value;
+    
     setFormData({
       ...formData,
-      [name]: value
+      [name]: newValue
     });
     
-    // Clear error when user starts typing
+    // Clear error when user starts typing/checking
     if (touched[name as keyof typeof touched]) {
       setErrors({
         ...errors,
-        [name]: validateField(name, value)
+        [name]: validateField(name, type === 'checkbox' ? String(checked) : value)
       });
     }
   };
@@ -269,6 +280,36 @@ export function RegisterForm({
           )}
           {!errors.birthday && (
             <p className="text-gray-500 dark:text-gray-400 text-xs mt-1">You must be 18 or older</p>
+          )}
+        </div>
+
+        {/* PDPA Consent Checkbox */}
+        <div className="space-y-2">
+          <div className="flex items-start">
+            <input
+              type="checkbox"
+              id="agreedToTerms"
+              name="agreedToTerms"
+              checked={formData.agreedToTerms}
+              onChange={handleChange}
+              onBlur={handleBlur}
+              className="mt-1 h-4 w-4 text-primary border-gray-300 rounded focus:ring-primary"
+            />
+            <label htmlFor="agreedToTerms" className="ml-2 text-xs text-gray-600 dark:text-gray-400">
+              I agree to the{' '}
+              <Link to="/terms" target="_blank" className="text-primary hover:underline font-medium">
+                Terms of Service
+              </Link>
+              {' '}and{' '}
+              <Link to="/privacy" target="_blank" className="text-primary hover:underline font-medium">
+                Privacy Policy
+              </Link>
+              , and consent to the collection and use of my personal data as described.
+              <span className="text-red-500 ml-1">*</span>
+            </label>
+          </div>
+          {touched.agreedToTerms && errors.agreedToTerms && (
+            <p className="text-red-500 text-xs ml-6">{errors.agreedToTerms}</p>
           )}
         </div>
 

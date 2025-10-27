@@ -5,6 +5,8 @@ import { ProtectedRoute } from './components/auth/ProtectedRoute';
 // Auth pages with new Malaysian green food design
 import Login from './pages/customer/Login';
 import Register from './pages/customer/Register';
+import ForgotPassword from './pages/customer/ForgotPassword';
+import ResetPassword from './pages/customer/ResetPassword';
 
 // Customer pages
 import CustomerDashboard from './pages/customer/Dashboard';
@@ -22,6 +24,10 @@ import OwnerTransactions from './pages/owner/Transactions';
 // Other pages
 import HomePage from './pages/HomePage';
 
+// Legal pages
+import PrivacyPolicy from './pages/legal/PrivacyPolicy';
+import TermsOfService from './pages/legal/TermsOfService';
+
 function App() {
   return (
     <BrowserRouter>
@@ -32,6 +38,12 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/join/:restaurantSlug/:referralCode" element={<Register />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
+          
+          {/* Legal pages */}
+          <Route path="/privacy" element={<PrivacyPolicy />} />
+          <Route path="/terms" element={<TermsOfService />} />
           
           {/* Customer Dashboard (protected) */}
           <Route 
