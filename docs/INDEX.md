@@ -20,11 +20,11 @@
 - ✅ **iPad Split View** - Scanner left panel (60%), dashboard right (40%) in landscape mode
 - ✅ **Responsive Animations** - Slides from bottom on mobile, slides from left on iPad landscape
 - ✅ **Customer Verification Modal** - Quick confirmation popup after successful scan
-- ✅ **Checkout Bottom Sheet** - Complete transaction interface with customer info card
+- ✅ **Checkout Bottom Sheet** - Streamlined transaction interface with bill entry and VC redemption
 - ✅ **VC Redemption UI** - Number input with +/- buttons (max 20% of bill)
-- ✅ **Receipt Photo Upload** - Skeleton for future OCR integration (camera + file upload)
+- ✅ **Receipt OCR** - Moved to dashboard as separate feature (staff upload when convenient)
 - ✅ **iPad Optimization** - Larger icons (!h-12/!h-14), better spacing, responsive design
-- ✅ **Bug Fixes** - QR lookup uses `role` column (not `user_type`), user ID (UUID) based lookup
+- ✅ **Bug Fixes** - QR lookup uses `role` column, RLS policies for staff/customer access, function parameter fixes
 - ✅ **Component Reuse** - Follows design system patterns (bottom sheet, modal architecture)
 
 ### Dashboard Enhancements & Visit Context (2025-10-17)

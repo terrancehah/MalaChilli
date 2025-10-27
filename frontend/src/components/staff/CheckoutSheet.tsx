@@ -1,10 +1,9 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 import { Label } from '../ui/label';
-import { Textarea } from '../ui/textarea';
 import { Separator } from '../ui/separator';
-import { X, Camera, Upload, Plus, Minus, Loader2, CheckCircle } from 'lucide-react';
+import { X, Plus, Minus, Loader2, CheckCircle } from 'lucide-react';
 import { CustomerInfoCard } from './CustomerInfoCard';
 import { formatCurrency } from '../../lib/utils';
 
@@ -21,8 +20,6 @@ interface CheckoutSheetProps {
   onSubmit: (data: {
     billAmount: number;
     redeemAmount: number;
-    receiptPhoto: File | null;
-    notes: string;
   }) => Promise<void>;
 }
 
@@ -34,14 +31,8 @@ export function CheckoutSheet({
   isFirstVisit,
   onSubmit 
 }: CheckoutSheetProps) {
-  const fileInputRef = useRef<HTMLInputElement>(null);
-  const cameraInputRef = useRef<HTMLInputElement>(null);
-  
   const [billAmount, setBillAmount] = useState('');
   const [redeemAmount, setRedeemAmount] = useState(0);
-  const [receiptPhoto, setReceiptPhoto] = useState<File | null>(null);
-  const [receiptPreview, setReceiptPreview] = useState<string>('');
-  const [notes, setNotes] = useState('');
   const [loading, setLoading] = useState(false);
   
   // Calculations
@@ -109,14 +100,6 @@ export function CheckoutSheet({
     }
   };
 
-  const handlePhotoUpload = (file: File | null) => {
-    if (file) {
-      setReceiptPhoto(file);
-      const reader = new FileReader();
-      reader.onload = (e) => setReceiptPreview(e.target?.result as string);
-      reader.readAsDataURL(file);
-    }
-  };
 
   const handleIncreaseRedeem = () => {
     const step = 1; // RM 1 increment
@@ -143,17 +126,12 @@ export function CheckoutSheet({
     try {
       await onSubmit({
         billAmount: parseFloat(billAmount),
-        redeemAmount,
-        receiptPhoto,
-        notes: notes.trim()
+        redeemAmount
       });
       
       // Reset form
       setBillAmount('');
       setRedeemAmount(0);
-      setReceiptPhoto(null);
-      setReceiptPreview('');
-      setNotes('');
       
       onClose();
     } catch (error) {
@@ -345,87 +323,6 @@ export function CheckoutSheet({
               </div>
             )}
 
-            {/* Receipt Photo Upload (Skeleton for OCR) */}
-            <div className="mb-5">
-              <Label className="text-sm font-semibold mb-2 block">
-                Receipt Photo <span className="text-muted-foreground font-normal">(Optional - for OCR)</span>
-              </Label>
-              
-              {receiptPreview ? (
-                <div className="relative">
-                  <img 
-                    src={receiptPreview} 
-                    alt="Receipt preview" 
-                    className="w-full h-48 object-cover rounded-lg border border-border"
-                  />
-                  <Button
-                    type="button"
-                    variant="destructive"
-                    size="sm"
-                    className="absolute top-2 right-2"
-                    onClick={() => {
-                      setReceiptPhoto(null);
-                      setReceiptPreview('');
-                    }}
-                  >
-                    <X className="h-4 w-4" />
-                  </Button>
-                </div>
-              ) : (
-                <div className="grid grid-cols-2 gap-3">
-                  <Button
-                    type="button"
-                    variant="outline"
-                    className="h-24 flex flex-col items-center justify-center gap-2"
-                    onClick={() => cameraInputRef.current?.click()}
-                  >
-                    <Camera className="h-6 w-6" />
-                    <span className="text-sm">Take Photo</span>
-                  </Button>
-                  <Button
-                    type="button"
-                    variant="outline"
-                    className="h-24 flex flex-col items-center justify-center gap-2"
-                    onClick={() => fileInputRef.current?.click()}
-                  >
-                    <Upload className="h-6 w-6" />
-                    <span className="text-sm">Upload</span>
-                  </Button>
-                </div>
-              )}
-              
-              {/* Hidden file inputs */}
-              <input
-                ref={cameraInputRef}
-                type="file"
-                accept="image/*"
-                capture="environment"
-                className="hidden"
-                onChange={(e) => handlePhotoUpload(e.target.files?.[0] || null)}
-              />
-              <input
-                ref={fileInputRef}
-                type="file"
-                accept="image/*"
-                className="hidden"
-                onChange={(e) => handlePhotoUpload(e.target.files?.[0] || null)}
-              />
-            </div>
-
-            {/* Notes */}
-            <div className="mb-5">
-              <Label htmlFor="notes" className="text-sm font-semibold mb-2 block">
-                Notes <span className="text-muted-foreground font-normal">(Optional)</span>
-              </Label>
-              <Textarea
-                id="notes"
-                placeholder="Add any additional notes..."
-                value={notes}
-                onChange={(e) => setNotes(e.target.value)}
-                className="resize-none"
-                rows={3}
-              />
-            </div>
 
             {/* Submit Button */}
             <Button

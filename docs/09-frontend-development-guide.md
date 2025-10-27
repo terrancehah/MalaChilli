@@ -9,8 +9,8 @@ This guide defines the **UI/UX design patterns, visual standards, and component 
 - API integration → `05-api-specification.md`
 - Component code → `/frontend/src/` directory
 
-**Version:** 2.1  
-**Last Updated:** 2025-10-26  
+**Version:** 2.2  
+**Last Updated:** 2025-10-27  
 **Design System:** Tailwind CSS + Shadcn/UI
 
 ---
@@ -282,7 +282,49 @@ Object Fit: cover - Fills container without distortion
 
 ---
 
-### 5. Grid Animation Technique
+### 5. Staff Checkout Flow Pattern
+
+**Design Decision: Streamlined Single-Screen Checkout**
+
+**Why Streamlined:**
+- Fast transaction processing at counter
+- No multi-step navigation
+- All info visible at once
+- Staff efficiency prioritized
+
+**Checkout Flow:**
+```
+1. Scan Customer QR → 2. Verify Customer → 3. Enter Bill & Redeem VC → 4. Submit
+   (QR Scanner Sheet)    (Verification Modal)   (Checkout Sheet)           (Done!)
+```
+
+**Key Design Decisions:**
+
+**Receipt Upload Removed from Checkout:**
+- Staff shouldn't photograph receipts during transaction (inefficient)
+- Receipt OCR moved to separate dashboard feature
+- Staff can upload receipts during downtime
+- Checkout stays fast and focused
+
+**Minimal Input Fields:**
+- Bill amount (required)
+- VC redemption (optional, max 20% of bill)
+- No notes, no receipt upload during checkout
+- Single "Process Transaction" button
+
+**Visual Feedback:**
+- Customer info card shows: name, referral code, wallet balance, visit status
+- Real-time VC redemption calculation
+- Guaranteed discount display (if applicable)
+- Final amount calculation
+
+**Implementation:** 
+- `/frontend/src/pages/staff/Dashboard.tsx` - Main flow orchestration
+- `/frontend/src/components/staff/CheckoutSheet.tsx` - Transaction UI
+
+---
+
+### 6. Grid Animation Technique
 
 **Problem:** CSS doesn't animate `height: auto`
 

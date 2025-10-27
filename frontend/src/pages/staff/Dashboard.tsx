@@ -159,30 +159,10 @@ export default function StaffDashboard() {
   const handleCheckoutSubmit = async (data: {
     billAmount: number;
     redeemAmount: number;
-    receiptPhoto: File | null;
-    notes: string;
   }) => {
     if (!customerData || !user?.id) return;
 
     try {
-      let receiptUrl = '';
-
-      // Upload receipt photo if provided
-      if (data.receiptPhoto) {
-        const fileName = `receipt_${Date.now()}_${customerData.id}.jpg`;
-        const { error: uploadError } = await supabase.storage
-          .from('receipts')
-          .upload(fileName, data.receiptPhoto);
-
-        if (uploadError) throw uploadError;
-
-        const { data: { publicUrl } } = supabase.storage
-          .from('receipts')
-          .getPublicUrl(fileName);
-
-        receiptUrl = publicUrl;
-      }
-
       // Call the process_checkout_transaction function
       const { data: transactionId, error: transactionError } = await supabase
         .rpc('process_checkout_transaction', {
@@ -191,8 +171,8 @@ export default function StaffDashboard() {
           p_staff_id: user.id,
           p_bill_amount: data.billAmount,
           p_virtual_currency_redeemed: data.redeemAmount,
-          p_receipt_photo_url: receiptUrl || null,
-          p_transaction_notes: data.notes || null
+          p_receipt_photo_url: null,
+          p_saved_code_id: null
         });
 
       if (transactionError) throw transactionError;
