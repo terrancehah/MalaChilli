@@ -3,6 +3,8 @@ import { Button } from '../ui/button';
 import { Badge } from '../ui/badge';
 import { Share2, Wallet } from 'lucide-react';
 import { formatCurrency } from '../../lib/utils';
+import { getTranslation } from '../../translations';
+import type { Language } from '../../translations';
 
 interface Restaurant {
   id: string;
@@ -25,9 +27,11 @@ interface RestaurantCardProps {
   restaurant: Restaurant;
   getTimeAgo: (date: string) => string;
   onShare: (name: string, slug: string, code: string, balance: number, totalSpent: number) => void;
+  language?: Language;
 }
 
-export function RestaurantCard({ restaurant, getTimeAgo, onShare }: RestaurantCardProps) {
+export function RestaurantCard({ restaurant, getTimeAgo, onShare, language = 'en' }: RestaurantCardProps) {
+  const t = getTranslation(language);
   // Default values for VC fields
   const balance = restaurant.balance ?? 0;
   const totalSpent = restaurant.total_spent ?? 0;
@@ -42,12 +46,12 @@ export function RestaurantCard({ restaurant, getTimeAgo, onShare }: RestaurantCa
             </h3>
             {restaurant.total_visits && restaurant.first_visit_date && (
               <p className="text-xs text-muted-foreground mt-0.5">
-                {restaurant.total_visits} {restaurant.total_visits === 1 ? 'visit' : 'visits'} • Last: {getTimeAgo(restaurant.first_visit_date)}
+                {restaurant.total_visits} {restaurant.total_visits === 1 ? t.restaurantCard.visit : t.restaurantCard.visits} • Last: {getTimeAgo(restaurant.first_visit_date)}
               </p>
             )}
           </div>
           <Badge variant="outline" className="bg-green-200 text-green-800 dark:bg-green-800/40 dark:text-green-300 border-0">
-            Active
+            {t.restaurantCard.active}
           </Badge>
         </div>
 
@@ -57,7 +61,7 @@ export function RestaurantCard({ restaurant, getTimeAgo, onShare }: RestaurantCa
             <Wallet className="h-3.5 w-3.5 text-primary" />
           </div>
           <div>
-            <p className="text-[10px] text-muted-foreground leading-tight">VC Balance</p>
+            <p className="text-[10px] text-muted-foreground leading-tight">{t.restaurantCard.vcBalance}</p>
             <p className="text-base font-bold text-foreground leading-tight">{formatCurrency(balance)}</p>
           </div>
         </div>
@@ -68,7 +72,7 @@ export function RestaurantCard({ restaurant, getTimeAgo, onShare }: RestaurantCa
           size="lg"
         >
           <Share2 className="h-4 w-4 mr-2" />
-          Share Restaurant
+          {t.restaurantCard.share}
         </Button>
       </CardContent>
     </Card>

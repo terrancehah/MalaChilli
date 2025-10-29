@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import { Button } from '../ui/button';
 import { X, Edit2, Save, LogOut } from 'lucide-react';
+import { getTranslation } from '../../translations';
+import type { Language } from '../../translations';
 
 interface SettingsPanelProps {
   isOpen: boolean;
@@ -13,9 +15,11 @@ interface SettingsPanelProps {
   };
   onSaveName: (name: string) => Promise<void>;
   onSignOut: () => void;
+  language?: Language;
 }
 
-export function SettingsPanel({ isOpen, onClose, user, onSaveName, onSignOut }: SettingsPanelProps) {
+export function SettingsPanel({ isOpen, onClose, user, onSaveName, onSignOut, language = 'en' }: SettingsPanelProps) {
+  const t = getTranslation(language);
   const [isClosing, setIsClosing] = useState(false);
   const [isEditingName, setIsEditingName] = useState(false);
   const [editedName, setEditedName] = useState('');
@@ -38,7 +42,7 @@ export function SettingsPanel({ isOpen, onClose, user, onSaveName, onSignOut }: 
 
   const handleSaveName = async () => {
     if (!editedName.trim()) {
-      setMessage({ type: 'error', text: 'Name cannot be empty' });
+      setMessage({ type: 'error', text: t.settings.nameEmpty });
       setTimeout(() => setMessage(null), 3000);
       return;
     }
@@ -51,11 +55,11 @@ export function SettingsPanel({ isOpen, onClose, user, onSaveName, onSignOut }: 
     setIsSaving(true);
     try {
       await onSaveName(editedName);
-      setMessage({ type: 'success', text: 'Name updated successfully!' });
+      setMessage({ type: 'success', text: t.settings.nameUpdated });
       setIsEditingName(false);
       setTimeout(() => setMessage(null), 3000);
     } catch (error) {
-      setMessage({ type: 'error', text: 'Failed to update name. Please try again.' });
+      setMessage({ type: 'error', text: t.settings.nameUpdateFailed });
       setTimeout(() => setMessage(null), 3000);
     } finally {
       setIsSaving(false);
@@ -113,7 +117,7 @@ export function SettingsPanel({ isOpen, onClose, user, onSaveName, onSignOut }: 
         <div className="p-6">
           {/* Header */}
           <div className="relative mb-6">
-            <h3 className="text-xl font-bold text-foreground leading-none pt-2">Settings</h3>
+            <h3 className="text-xl font-bold text-foreground leading-none pt-2">{t.settings.title}</h3>
             <button
               onClick={handleClose}
               className="absolute top-0 right-0 h-6 w-6 p-0 hover:bg-muted rounded-md transition-colors flex items-center justify-center"
@@ -125,7 +129,7 @@ export function SettingsPanel({ isOpen, onClose, user, onSaveName, onSignOut }: 
 
           {/* Profile Section */}
           <div className="mb-6">
-            <h4 className="text-base font-bold text-foreground mb-4">Profile</h4>
+            <h4 className="text-base font-bold text-foreground mb-4">{t.settings.profile}</h4>
             
             {/* Success/Error Message */}
             {message && (
@@ -145,10 +149,10 @@ export function SettingsPanel({ isOpen, onClose, user, onSaveName, onSignOut }: 
               }`}>
                 <div className="p-3 flex items-center justify-between">
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-semibold text-foreground mb-2">Name</p>
+                    <p className="text-sm font-semibold text-foreground mb-2">{t.settings.name}</p>
                     
                     {!isEditingName && (
-                      <p className="text-sm text-muted-foreground">{user.full_name || 'Not set'}</p>
+                      <p className="text-sm text-muted-foreground">{user.full_name || t.settings.notSet}</p>
                     )}
                     
                     {/* Input and Buttons */}
@@ -162,7 +166,7 @@ export function SettingsPanel({ isOpen, onClose, user, onSaveName, onSignOut }: 
                             value={editedName}
                             onChange={(e) => setEditedName(e.target.value)}
                             className="w-full px-3 py-2 text-sm bg-background border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary transition-all duration-200"
-                            placeholder="Enter your name"
+                            placeholder={t.settings.enterName}
                             disabled={isSaving}
                             autoFocus
                           />
@@ -173,11 +177,11 @@ export function SettingsPanel({ isOpen, onClose, user, onSaveName, onSignOut }: 
                               className="flex-1 h-9 text-sm px-4 py-2 font-medium"
                             >
                               {isSaving ? (
-                                'Saving...'
+                                t.settings.saving
                               ) : (
                                 <>
                                   <Save className="h-4 w-4 mr-1.5" />
-                                  Save
+                                  {t.settings.save}
                                 </>
                               )}
                             </Button>
@@ -187,7 +191,7 @@ export function SettingsPanel({ isOpen, onClose, user, onSaveName, onSignOut }: 
                               disabled={isSaving}
                               className="flex-1 h-9 text-sm px-4 py-2 font-medium"
                             >
-                              Cancel
+                              {t.settings.cancel}
                             </Button>
                           </div>
                         </div>
@@ -209,13 +213,13 @@ export function SettingsPanel({ isOpen, onClose, user, onSaveName, onSignOut }: 
 
               {/* Email Field */}
               <div className="p-3 bg-muted/50 rounded-lg">
-                <p className="text-sm font-semibold text-foreground mb-2">Email</p>
+                <p className="text-sm font-semibold text-foreground mb-2">{t.settings.email}</p>
                 <p className="text-sm text-muted-foreground">{user.email}</p>
               </div>
 
               {/* Member Since */}
               <div className="p-3 bg-muted/50 rounded-lg">
-                <p className="text-sm font-semibold text-foreground mb-2">Member Since</p>
+                <p className="text-sm font-semibold text-foreground mb-2">{t.settings.memberSince}</p>
                 <p className="text-sm text-muted-foreground">{memberSince}</p>
               </div>
             </div>
@@ -223,37 +227,37 @@ export function SettingsPanel({ isOpen, onClose, user, onSaveName, onSignOut }: 
 
           {/* Preferences Section */}
           <div className="mb-6">
-            <h4 className="text-base font-bold text-foreground mb-4">Preferences</h4>
+            <h4 className="text-base font-bold text-foreground mb-4">{t.settings.preferences}</h4>
             <div className="space-y-3">
               <button className="w-full flex items-center justify-between p-3 bg-muted/50 rounded-lg hover:bg-muted transition-colors">
                 <div className="text-left">
-                  <p className="text-sm font-semibold text-foreground">Language</p>
+                  <p className="text-sm font-semibold text-foreground">{t.settings.language}</p>
                   <p className="text-sm text-muted-foreground mt-0.5">English</p>
                 </div>
-                <span className="text-muted-foreground text-xs">Coming soon</span>
+                <span className="text-muted-foreground text-xs">{t.settings.comingSoon}</span>
               </button>
               <button className="w-full flex items-center justify-between p-3 bg-muted/50 rounded-lg hover:bg-muted transition-colors">
                 <div className="text-left">
-                  <p className="text-sm font-semibold text-foreground">Notifications</p>
-                  <p className="text-sm text-muted-foreground mt-0.5">Email preferences</p>
+                  <p className="text-sm font-semibold text-foreground">{t.settings.notifications}</p>
+                  <p className="text-sm text-muted-foreground mt-0.5">{t.settings.emailPreferences}</p>
                 </div>
-                <span className="text-muted-foreground text-xs">Coming soon</span>
+                <span className="text-muted-foreground text-xs">{t.settings.comingSoon}</span>
               </button>
             </div>
           </div>
 
           {/* About Section */}
           <div className="mb-6">
-            <h4 className="text-base font-bold text-foreground mb-4">About</h4>
+            <h4 className="text-base font-bold text-foreground mb-4">{t.settings.about}</h4>
             <div className="space-y-3">
               <button className="w-full flex items-center justify-between p-3 bg-muted/50 rounded-lg hover:bg-muted transition-colors">
-                <p className="text-sm font-semibold text-foreground">Privacy Policy</p>
+                <p className="text-sm font-semibold text-foreground">{t.settings.privacyPolicy}</p>
               </button>
               <button className="w-full flex items-center justify-between p-3 bg-muted/50 rounded-lg hover:bg-muted transition-colors">
-                <p className="text-sm font-semibold text-foreground">Terms of Service</p>
+                <p className="text-sm font-semibold text-foreground">{t.settings.termsOfService}</p>
               </button>
               <div className="p-3 bg-muted/50 rounded-lg">
-                <p className="text-sm font-semibold text-foreground mb-2">App Version</p>
+                <p className="text-sm font-semibold text-foreground mb-2">{t.settings.appVersion}</p>
                 <p className="text-sm text-muted-foreground">1.0.0</p>
               </div>
             </div>
@@ -266,7 +270,7 @@ export function SettingsPanel({ isOpen, onClose, user, onSaveName, onSignOut }: 
             className="w-full"
           >
             <LogOut className="h-4 w-4 mr-2" />
-            Logout
+            {t.settings.logout}
           </Button>
         </div>
       </div>

@@ -9,8 +9,8 @@ This guide defines the **UI/UX design patterns, visual standards, and component 
 - API integration → `05-api-specification.md`
 - Component code → `/frontend/src/` directory
 
-**Version:** 2.2  
-**Last Updated:** 2025-10-27  
+**Version:** 2.3  
+**Last Updated:** 2025-10-30  
 **Design System:** Tailwind CSS + Shadcn/UI
 
 ---
@@ -589,6 +589,56 @@ When creating a new component, ensure:
 - Extremely concise format
 - Shows on transaction cards without downline earnings
 - Detailed breakdown available in transaction detail sheet
+
+### Translation System
+**Location:** `/frontend/src/translations/`
+
+**Supported Languages:**
+- English (en) - Default
+- Bahasa Malaysia (ms)
+- Chinese Simplified (zh)
+
+**Structure:**
+```typescript
+import { getTranslation } from '../../translations';
+import type { Language } from '../../translations';
+
+// In component
+const t = getTranslation(language); // language: 'en' | 'ms' | 'zh'
+```
+
+**Complete Coverage:**
+- Dashboard header and profile section
+- Stats cards (Earned, Referred, Redeemed)
+- Promote Restaurants section
+- Restaurant sorting tabs
+- Restaurant cards (Active badge, Share button, VC Balance, visits)
+- Recent transactions section
+- Transaction detail sheet (all labels and sections)
+- Referral info modal (3-level system explanation)
+- Share bottom sheet (all labels, buttons, social media)
+- QR Code modal (title, subtitle, close button)
+- Settings panel (all sections: Profile, Preferences, About, Logout)
+
+**Translation Files:**
+- `en.ts` - English translations (complete)
+- `ms.ts` - Bahasa Malaysia translations (complete)
+- `zh.ts` - Chinese translations (complete)
+- `index.ts` - Export and helper functions
+
+**Language Selector:**
+- Located next to QR code button in dashboard header
+- Globe icon (🌐) with dropdown menu
+- Supports: English, Bahasa Malaysia, 中文
+- Updates all UI text immediately on selection
+
+**Translated Components:**
+- `Dashboard.tsx` - All sections and labels
+- `RestaurantCard.tsx` - Badge, button, labels
+- `ShareBottomSheet.tsx` - Complete sheet content
+- `TransactionDetailSheet.tsx` - All transaction details
+- `QRCodeModal.tsx` - Title, subtitle, labels
+- `SettingsPanel.tsx` - All settings sections
 
 ---
 

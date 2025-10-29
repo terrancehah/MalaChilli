@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import { Button } from '../ui/button';
 import { Share2, Copy, Check, X } from 'lucide-react';
+import { getTranslation } from '../../translations';
+import type { Language } from '../../translations';
 
 // Social Media Icons
 const WhatsAppIcon = () => (
@@ -25,9 +27,11 @@ interface ShareBottomSheetProps {
     balance: number;
     totalSpent?: number;
   } | null;
+  language?: Language;
 }
 
-export function ShareBottomSheet({ isOpen, onClose, restaurant }: ShareBottomSheetProps) {
+export function ShareBottomSheet({ isOpen, onClose, restaurant, language = 'en' }: ShareBottomSheetProps) {
+  const t = getTranslation(language);
   const [copied, setCopied] = useState<string | null>(null);
   const [touchStart, setTouchStart] = useState(0);
   const [touchCurrent, setTouchCurrent] = useState(0);
@@ -67,7 +71,7 @@ export function ShareBottomSheet({ isOpen, onClose, restaurant }: ShareBottomShe
 
   const handleShareWhatsApp = () => {
     const link = `${window.location.origin}/join/${restaurant.slug}/${restaurant.code}`;
-    const message = `Hey! I love ${restaurant.name}. Join me there and get a discount: ${link}`;
+    const message = t.shareSheet.shareMessage.replace('{restaurant}', restaurant.name).replace('{link}', link);
     const url = `https://wa.me/?text=${encodeURIComponent(message)}`;
     window.open(url, '_blank');
     onClose();
@@ -160,17 +164,17 @@ export function ShareBottomSheet({ isOpen, onClose, restaurant }: ShareBottomShe
             {/* Header */}
             <div className="mb-5">
               <h3 className="text-xl font-bold text-foreground mb-1">
-                Share {restaurant.name}
+                {t.shareSheet.title} {restaurant.name}
               </h3>
               <p className="text-sm text-muted-foreground">
-                Choose how you'd like to share this restaurant
+                {t.shareSheet.subtitle}
               </p>
             </div>
 
             {/* Referral Link Section */}
             <div className="mb-5">
               <label className="text-sm font-medium text-foreground mb-2 block">
-                Referral Link
+                {t.shareSheet.referralLink}
               </label>
               <div className="bg-muted/50 rounded-lg p-4 border border-border/50">
                 <p className="text-xs font-mono text-muted-foreground break-all leading-relaxed mb-3">
@@ -184,12 +188,12 @@ export function ShareBottomSheet({ isOpen, onClose, restaurant }: ShareBottomShe
                   {copied === 'link' ? (
                     <>
                       <Check className="h-4 w-4 mr-2" />
-                      Link Copied!
+                      {t.shareSheet.linkCopied}
                     </>
                   ) : (
                     <>
                       <Copy className="h-4 w-4 mr-2" />
-                      Copy Link
+                      {t.shareSheet.copyLink}
                     </>
                   )}
                 </Button>
@@ -199,7 +203,7 @@ export function ShareBottomSheet({ isOpen, onClose, restaurant }: ShareBottomShe
             {/* Social Share Options */}
             <div className="mb-5">
               <label className="text-sm font-medium text-foreground mb-2 block">
-                Share via Social Media
+                {t.shareSheet.shareViaSocial}
               </label>
               <div className="grid grid-cols-3 gap-3">
                 <Button
@@ -208,7 +212,7 @@ export function ShareBottomSheet({ isOpen, onClose, restaurant }: ShareBottomShe
                   className="bg-[#25D366] hover:bg-[#20BA5A] text-white border-0 flex flex-col items-center justify-center h-20 gap-2"
                 >
                   <WhatsAppIcon />
-                  <span className="text-xs">WhatsApp</span>
+                  <span className="text-xs">{t.shareSheet.whatsapp}</span>
                 </Button>
                 <Button
                   variant="outline"
@@ -216,7 +220,7 @@ export function ShareBottomSheet({ isOpen, onClose, restaurant }: ShareBottomShe
                   className="bg-[#1877F2] hover:bg-[#0C63D4] text-white border-0 flex flex-col items-center justify-center h-20 gap-2"
                 >
                   <FacebookIcon />
-                  <span className="text-xs">Facebook</span>
+                  <span className="text-xs">{t.shareSheet.facebook}</span>
                 </Button>
                 <Button
                   variant="outline"
@@ -224,7 +228,7 @@ export function ShareBottomSheet({ isOpen, onClose, restaurant }: ShareBottomShe
                   className="bg-muted hover:bg-muted/80 text-foreground border border-border flex flex-col items-center justify-center h-20 gap-2"
                 >
                   <Share2 className="h-5 w-5" />
-                  <span className="text-xs">More</span>
+                  <span className="text-xs">{t.shareSheet.more}</span>
                 </Button>
               </div>
             </div>
@@ -232,7 +236,7 @@ export function ShareBottomSheet({ isOpen, onClose, restaurant }: ShareBottomShe
             {/* Promotion Code Section */}
             <div className="mb-4">
               <label className="text-sm font-medium text-foreground mb-2 block">
-                Promotion Code
+                {t.shareSheet.promotionCode}
               </label>
               <div className="bg-muted/50 rounded-lg p-2.5 border border-border/50">
                 <div className="flex items-center justify-between gap-3">
@@ -248,12 +252,12 @@ export function ShareBottomSheet({ isOpen, onClose, restaurant }: ShareBottomShe
                     {copied === 'code' ? (
                       <>
                         <Check className="h-4 w-4 mr-1" />
-                        Copied
+                        {t.shareSheet.codeCopied}
                       </>
                     ) : (
                       <>
                         <Copy className="h-4 w-4 mr-1" />
-                        Copy
+                        {t.shareSheet.copyCode}
                       </>
                     )}
                   </Button>

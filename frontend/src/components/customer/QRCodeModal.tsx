@@ -2,15 +2,19 @@ import QRCode from 'react-qr-code';
 import { Button } from '../ui/button';
 import { X } from 'lucide-react';
 import { useState, useEffect } from 'react';
+import { getTranslation } from '../../translations';
+import type { Language } from '../../translations';
 
 interface QRCodeModalProps {
   isOpen: boolean;
   onClose: () => void;
   userId: string;
   userName: string;
+  language?: Language;
 }
 
-export function QRCodeModal({ isOpen, onClose, userId, userName }: QRCodeModalProps) {
+export function QRCodeModal({ isOpen, onClose, userId, userName, language = 'en' }: QRCodeModalProps) {
+  const t = getTranslation(language);
   const [isAnimating, setIsAnimating] = useState(false);
   const [shouldRender, setShouldRender] = useState(false);
 
@@ -50,9 +54,9 @@ export function QRCodeModal({ isOpen, onClose, userId, userName }: QRCodeModalPr
           {/* Header */}
           <div className="relative mb-6">
             <div className="text-center">
-              <h3 className="text-xl font-bold text-foreground mb-2">Your QR Code</h3>
+              <h3 className="text-xl font-bold text-foreground mb-2">{t.qrCode.title}</h3>
               <p className="text-sm text-muted-foreground">
-                Show this to staff when making a transaction
+                {t.qrCode.subtitle}
               </p>
             </div>
             <button
@@ -79,7 +83,7 @@ export function QRCodeModal({ isOpen, onClose, userId, userName }: QRCodeModalPr
               {userName}
             </p>
             <p className="text-xs text-muted-foreground font-mono">
-              ID: {userId.substring(0, 8)}...
+              {t.qrCode.idLabel} {userId.substring(0, 8)}...
             </p>
           </div>
 
@@ -87,7 +91,7 @@ export function QRCodeModal({ isOpen, onClose, userId, userName }: QRCodeModalPr
             onClick={onClose}
             className="w-full"
           >
-            Close
+            {t.qrCode.close}
           </Button>
         </div>
       </div>

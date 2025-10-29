@@ -1,19 +1,21 @@
-import { useEffect, useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../../lib/supabase';
 import { Card, CardContent } from '../../components/ui/card';
 import { Button } from '../../components/ui/button';
 import {
-  Share2,
   Info,
   QrCode as QrCodeIcon,
   Settings,
   Receipt,
   TrendingUp, 
   Users, 
-  Gift
+  Gift,
+  Languages
 } from 'lucide-react';
+import { getTranslation } from '../../translations';
+import type { Language } from '../../translations';
 import {
   QRCodeModal,
   InfoModal,
@@ -105,6 +107,11 @@ export default function CustomerDashboard() {
   } | null>(null);
   const [selectedTransaction, setSelectedTransaction] = useState<any | null>(null);
   const [showTransactionSheet, setShowTransactionSheet] = useState(false);
+  const [language, setLanguage] = useState<Language>('en');
+  const [showLanguageMenu, setShowLanguageMenu] = useState(false);
+  
+  // Get translations based on current language
+  const t = getTranslation(language);
 
   useEffect(() => {
     if (!loading && !user) {
@@ -313,17 +320,17 @@ export default function CustomerDashboard() {
 
   const customerStats = [
     {
-      label: 'Earned',
+      label: t.stats.totalEarned,
       value: `RM ${totalEarned.toFixed(2)}`,
       icon: <TrendingUp className="h-5 w-5 text-green-600 dark:text-green-400" />,
     },
     {
-      label: 'Referred',
+      label: t.stats.totalReferred,
       value: totalReferred,
       icon: <Users className="h-5 w-5 text-blue-600 dark:text-blue-400" />,
     },
     {
-      label: 'Redeemed',
+      label: t.stats.totalRedeemed,
       value: `RM ${totalRedeemed.toFixed(2)}`,
       icon: <Gift className="h-5 w-5 text-primary" />,
     },
@@ -334,7 +341,7 @@ export default function CustomerDashboard() {
       <DashboardHeader
         user={user}
         title={user.full_name || user.email}
-        subtitle={user.email_verified ? 'Verified Customer' : 'Unverified Customer'}
+        subtitle={t.profile.welcome}
         actions={
           <>
             <Button
@@ -345,6 +352,62 @@ export default function CustomerDashboard() {
             >
               <QrCodeIcon className="h-6 w-6 text-primary" />
             </Button>
+            <div className="relative">
+              <Button
+                variant="secondary"
+                size="icon"
+                className="h-12 w-12 rounded-xl bg-white/95 hover:bg-white shadow-lg"
+                onClick={() => setShowLanguageMenu(!showLanguageMenu)}
+              >
+                <Languages className="h-6 w-6 text-primary" />
+              </Button>
+              {showLanguageMenu && (
+                <>
+                  <div 
+                    className="fixed inset-0 z-40" 
+                    onClick={() => setShowLanguageMenu(false)}
+                  />
+                  <div className="absolute right-0 top-14 z-50 bg-white dark:bg-gray-800 rounded-xl shadow-xl border border-border/50 overflow-hidden min-w-[140px]">
+                    <button
+                      onClick={() => {
+                        setLanguage('en');
+                        setShowLanguageMenu(false);
+                      }}
+                      className={`w-full px-4 py-3 text-left text-sm hover:bg-muted transition-colors flex items-center justify-between ${
+                        language === 'en' ? 'bg-primary/10 text-primary font-semibold' : 'text-foreground'
+                      }`}
+                    >
+                      <span>English</span>
+                      {language === 'en' && <span className="text-xs">✓</span>}
+                    </button>
+                    <button
+                      onClick={() => {
+                        setLanguage('ms');
+                        setShowLanguageMenu(false);
+                      }}
+                      className={`w-full px-4 py-3 text-left text-sm hover:bg-muted transition-colors flex items-center justify-between ${
+                        language === 'ms' ? 'bg-primary/10 text-primary font-semibold' : 'text-foreground'
+                      }`}
+                    >
+                      <span>Bahasa Malaysia</span>
+                      {language === 'ms' && <span className="text-xs">✓</span>}
+                    </button>
+                    <button
+                      onClick={() => {
+                        setLanguage('zh');
+                        setShowLanguageMenu(false);
+                      }}
+                      className={`w-full px-4 py-3 text-left text-sm hover:bg-muted transition-colors flex items-center justify-between ${
+                        language === 'zh' ? 'bg-primary/10 text-primary font-semibold' : 'text-foreground'
+                      }`}
+                    >
+                      <span>中文</span>
+                      {language === 'zh' && <span className="text-xs">✓</span>}
+                    </button>
+                  </div>
+                </>
+              )}
+            </div>
             <Button
               variant="secondary"
               size="icon"
@@ -366,7 +429,7 @@ export default function CustomerDashboard() {
             <div className="flex items-center gap-2">
               <div>
                 <div className="flex items-center gap-2">
-                  <h2 className="text-lg font-bold text-foreground">Promote Restaurants</h2>
+                  <h2 className="text-lg font-bold text-foreground">{t.promoteRestaurants.title}</h2>
                   <Button
                     variant="ghost"
                     size="sm"
@@ -377,7 +440,7 @@ export default function CustomerDashboard() {
                     <Info className="h-4 w-4 text-muted-foreground" />
                   </Button>
                 </div>
-                <p className="text-sm text-muted-foreground">Share codes for restaurants you've visited</p>
+                <p className="text-sm text-muted-foreground">{t.promoteRestaurants.subtitle}</p>
               </div>
             </div>
             <div className="flex items-center gap-1 bg-muted p-1 rounded-lg">
@@ -389,7 +452,7 @@ export default function CustomerDashboard() {
                     : 'text-muted-foreground hover:text-foreground'
                 }`}
               >
-                Recent
+                {t.restaurantSorting.recent}
               </button>
               <button
                 onClick={() => setSortBy('balance')}
@@ -399,7 +462,7 @@ export default function CustomerDashboard() {
                     : 'text-muted-foreground hover:text-foreground'
                 }`}
               >
-                Balance
+                {t.restaurantSorting.balance}
               </button>
               <button
                 onClick={() => setSortBy('visits')}
@@ -409,7 +472,7 @@ export default function CustomerDashboard() {
                     : 'text-muted-foreground hover:text-foreground'
                 }`}
               >
-                Visits
+                {t.restaurantSorting.visits}
               </button>
             </div>
           </div>
@@ -423,14 +486,11 @@ export default function CustomerDashboard() {
           ) : restaurantCodes.length === 0 ? (
             <Card className="border-border/50">
               <CardContent className="p-12 text-center">
-                <div className="h-16 w-16 rounded-full bg-muted mx-auto mb-4 flex items-center justify-center">
-                  <Share2 className="h-8 w-8 text-muted-foreground" />
-                </div>
-                <p className="text-muted-foreground text-sm mb-2">
-                  No visited restaurants yet
+                <p className="text-lg font-semibold text-muted-foreground mb-2">
+                  {t.promoteRestaurants.noRestaurants}
                 </p>
                 <p className="text-xs text-muted-foreground">
-                  Visit a restaurant and make your first transaction to start promoting!
+                  {t.promoteRestaurants.noRestaurantsDesc}
                 </p>
               </CardContent>
             </Card>
@@ -454,6 +514,7 @@ export default function CustomerDashboard() {
                     restaurant={code}
                     getTimeAgo={getTimeAgo}
                     onShare={handleShare}
+                    language={language}
                   />
                 ))}
             </div>
@@ -463,7 +524,7 @@ export default function CustomerDashboard() {
         {/* Recent Transactions */}
         <div>
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-bold text-foreground">Recent Transactions</h2>
+            <h2 className="text-lg font-bold text-foreground">{t.recentTransactions.title}</h2>
           </div>
           {recentTransactions.length === 0 ? (
             <Card className="border-border/50">
@@ -472,7 +533,7 @@ export default function CustomerDashboard() {
                   <Receipt className="h-8 w-8 text-muted-foreground" />
                 </div>
                 <p className="text-muted-foreground text-sm">
-                  No transactions yet. Start dining at our partner restaurants to earn rewards!
+                  {t.recentTransactions.noTransactions}
                 </p>
               </CardContent>
             </Card>
@@ -512,7 +573,7 @@ export default function CustomerDashboard() {
                         <div className="text-right">
                           <p className="font-bold text-foreground">RM {transaction.bill_amount}</p>
                           {transaction.is_first_transaction && (
-                            <p className="text-xs text-green-600 dark:text-green-400">First Visit!</p>
+                            <p className="text-xs text-green-600 dark:text-green-400">{t.recentTransactions.firstVisit}</p>
                           )}
                         </div>
                       </div>
@@ -523,19 +584,19 @@ export default function CustomerDashboard() {
                           {transaction.guaranteed_discount_amount > 0 && (
                             <span className="flex items-center gap-1">
                               <span className="text-green-600 dark:text-green-400">-RM {transaction.guaranteed_discount_amount}</span>
-                              <span>discount</span>
+                              <span>{t.recentTransactions.discount}</span>
                             </span>
                           )}
                           {transaction.virtual_currency_redeemed > 0 && (
                             <span className="flex items-center gap-1">
                               <span className="text-primary">-RM {transaction.virtual_currency_redeemed}</span>
-                              <span>VC used</span>
+                              <span>{t.recentTransactions.vcUsed}</span>
                             </span>
                           )}
                           {hasEarnings && (
                             <span className="flex items-center gap-1">
                               <span className="text-green-600 dark:text-green-400">+RM {transaction.vc_earned.toFixed(2)}</span>
-                              <span>VC earned</span>
+                              <span>{t.recentTransactions.vcEarned}</span>
                             </span>
                           )}
                         </div>
@@ -544,7 +605,7 @@ export default function CustomerDashboard() {
                         {!hasEarnings && (
                           <div className="bg-amber-50 dark:bg-amber-900/20 rounded-md p-2 border border-amber-200 dark:border-amber-800">
                             <p className="text-xs text-amber-800 dark:text-amber-200">
-                              <span className="font-semibold">💡 Unrealized:</span> <span className="font-bold">RM {totalPotentialEarning.toFixed(2)}</span>
+                              <span className="font-semibold">💡 {t.recentTransactions.unrealized}:</span> <span className="font-bold">RM {totalPotentialEarning.toFixed(2)}</span>
                             </p>
                           </div>
                         )}
@@ -564,6 +625,7 @@ export default function CustomerDashboard() {
         onClose={() => setShowQR(false)}
         userId={user.id}
         userName={user.full_name || user.email}
+        language={language}
       />
 
       <InfoModal
@@ -586,18 +648,21 @@ export default function CustomerDashboard() {
         user={user}
         onSaveName={handleSaveName}
         onSignOut={handleSignOut}
+        language={language}
       />
 
       <ShareBottomSheet
         isOpen={showShareSheet}
         onClose={() => setShowShareSheet(false)}
         restaurant={selectedRestaurant}
+        language={language}
       />
 
       <TransactionDetailSheet
         isOpen={showTransactionSheet}
         onClose={() => setShowTransactionSheet(false)}
         transaction={selectedTransaction}
+        language={language}
       />
     </div>
   );

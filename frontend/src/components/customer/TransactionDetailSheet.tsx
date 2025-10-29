@@ -1,20 +1,25 @@
 import { useState, useEffect } from 'react';
 import { X, MapPin, Clock, Receipt, TrendingUp, AlertCircle, Info } from 'lucide-react';
 import { Button } from '../ui/button';
+import { getTranslation } from '../../translations';
+import type { Language } from '../../translations';
 
 interface TransactionDetailSheetProps {
   isOpen: boolean;
   onClose: () => void;
   transaction: any | null;
+  language?: Language;
 }
 
-export function TransactionDetailSheet({ isOpen, onClose, transaction }: TransactionDetailSheetProps) {
+export function TransactionDetailSheet({ isOpen, onClose, transaction, language = 'en' }: TransactionDetailSheetProps) {
   const [touchStart, setTouchStart] = useState(0);
   const [touchCurrent, setTouchCurrent] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false);
   const [shouldRender, setShouldRender] = useState(false);
   const [showReferralInfo, setShowReferralInfo] = useState(false);
+  
+  const t = getTranslation(language);
 
   useEffect(() => {
     if (isOpen) {
@@ -103,7 +108,7 @@ export function TransactionDetailSheet({ isOpen, onClose, transaction }: Transac
             {/* Header */}
             <div className="mb-5">
               <h3 className="text-xl font-bold text-foreground mb-1">
-                Transaction Details
+                {t.transactionDetail.title}
               </h3>
               <p className="text-sm text-muted-foreground">
                 {transaction.branches.restaurants.name}
@@ -118,7 +123,7 @@ export function TransactionDetailSheet({ isOpen, onClose, transaction }: Transac
                   <Clock className="h-5 w-5 text-primary" />
                 </div>
                 <div>
-                  <p className="text-xs text-muted-foreground">Transaction Time</p>
+                  <p className="text-xs text-muted-foreground">{t.transactionDetail.transactionTime}</p>
                   <p className="text-sm font-semibold text-foreground">
                     {new Date(transaction.created_at).toLocaleString('en-MY', {
                       day: 'numeric',
@@ -137,7 +142,7 @@ export function TransactionDetailSheet({ isOpen, onClose, transaction }: Transac
                   <MapPin className="h-5 w-5 text-primary" />
                 </div>
                 <div>
-                  <p className="text-xs text-muted-foreground">Branch</p>
+                  <p className="text-xs text-muted-foreground">{t.transactionDetail.branch}</p>
                   <p className="text-sm font-semibold text-foreground">
                     {transaction.branches.name}
                   </p>
@@ -150,7 +155,7 @@ export function TransactionDetailSheet({ isOpen, onClose, transaction }: Transac
                   <Receipt className="h-5 w-5 text-primary" />
                 </div>
                 <div>
-                  <p className="text-xs text-muted-foreground">Bill Amount</p>
+                  <p className="text-xs text-muted-foreground">{t.transactionDetail.billAmount}</p>
                   <p className="text-sm font-semibold text-foreground">
                     RM {transaction.bill_amount}
                   </p>
@@ -165,13 +170,13 @@ export function TransactionDetailSheet({ isOpen, onClose, transaction }: Transac
                   <TrendingUp className="h-5 w-5 text-green-600 dark:text-green-400 mt-0.5" />
                   <div className="flex-1">
                     <p className="text-sm font-semibold text-foreground mb-1">
-                      VC Earned from Downlines
+                      {t.transactionDetail.vcEarnedTitle}
                     </p>
                     <p className="text-2xl font-bold text-green-600 dark:text-green-400 mb-2">
                       +RM {transaction.vc_earned.toFixed(2)}
                     </p>
                     <p className="text-xs text-muted-foreground">
-                      Your referrals spent at this restaurant and you earned 1% VC
+                      {t.transactionDetail.vcEarnedDesc}
                     </p>
                   </div>
                 </div>
@@ -186,7 +191,7 @@ export function TransactionDetailSheet({ isOpen, onClose, transaction }: Transac
                   <div className="flex-1">
                     <div className="flex items-center gap-2 mb-3">
                       <p className="text-sm font-semibold text-foreground">
-                        Unrealized Potential Earnings
+                        {t.transactionDetail.unrealizedTitle}
                       </p>
                       <Button
                         variant="ghost"
@@ -199,14 +204,14 @@ export function TransactionDetailSheet({ isOpen, onClose, transaction }: Transac
                       </Button>
                     </div>
                     <p className="text-xs text-muted-foreground mb-3">
-                      If you had shared your code and friends spent the same amount:
+                      {t.transactionDetail.unrealizedDesc}
                     </p>
                     
                     <div className="space-y-2">
                       {potentialReferrals.map((ref) => (
                         <div key={ref.level} className="flex items-center justify-between bg-white dark:bg-gray-800 rounded-md p-2 border border-amber-200 dark:border-amber-700">
                           <span className="text-xs text-muted-foreground">
-                            Level {ref.level} referral
+                            {ref.level === 1 ? t.transactionDetail.level1Referral : ref.level === 2 ? t.transactionDetail.level2Referral : t.transactionDetail.level3Referral}
                           </span>
                           <span className="text-sm font-bold text-amber-600 dark:text-amber-400">
                             +RM {ref.amount.toFixed(2)}
@@ -216,7 +221,7 @@ export function TransactionDetailSheet({ isOpen, onClose, transaction }: Transac
                       
                       <div className="flex items-center justify-between bg-amber-100 dark:bg-amber-900/40 rounded-md p-2 border border-amber-300 dark:border-amber-600 mt-2">
                         <span className="text-xs font-semibold text-foreground">
-                          Total (3 referrals)
+                          {t.transactionDetail.totalReferrals}
                         </span>
                         <span className="text-base font-bold text-amber-600 dark:text-amber-400">
                           +RM {(potentialEarning * 3).toFixed(2)}
@@ -231,11 +236,11 @@ export function TransactionDetailSheet({ isOpen, onClose, transaction }: Transac
             {/* Discounts Applied */}
             {(transaction.guaranteed_discount_amount > 0 || transaction.virtual_currency_redeemed > 0) && (
               <div className="bg-muted/50 rounded-lg p-4 border border-border/50">
-                <p className="text-xs font-semibold text-foreground mb-2">Discounts Applied</p>
+                <p className="text-xs font-semibold text-foreground mb-2">{t.transactionDetail.discountsTitle}</p>
                 <div className="space-y-1">
                   {transaction.guaranteed_discount_amount > 0 && (
                     <div className="flex items-center justify-between text-xs">
-                      <span className="text-muted-foreground">Guaranteed Discount (5%)</span>
+                      <span className="text-muted-foreground">{t.transactionDetail.guaranteedDiscount}</span>
                       <span className="text-green-600 dark:text-green-400 font-semibold">
                         -RM {transaction.guaranteed_discount_amount}
                       </span>
@@ -243,7 +248,7 @@ export function TransactionDetailSheet({ isOpen, onClose, transaction }: Transac
                   )}
                   {transaction.virtual_currency_redeemed > 0 && (
                     <div className="flex items-center justify-between text-xs">
-                      <span className="text-muted-foreground">VC Redeemed</span>
+                      <span className="text-muted-foreground">{t.transactionDetail.vcRedeemed}</span>
                       <span className="text-primary font-semibold">
                         -RM {transaction.virtual_currency_redeemed}
                       </span>
@@ -266,7 +271,7 @@ export function TransactionDetailSheet({ isOpen, onClose, transaction }: Transac
           <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90%] max-w-md bg-background rounded-2xl shadow-2xl z-[60] p-6">
             <div className="flex items-start justify-between mb-4">
               <h3 className="text-lg font-bold text-foreground">
-                How Referral Levels Work
+                {t.referralInfo.title}
               </h3>
               <button
                 onClick={() => setShowReferralInfo(false)}
@@ -279,62 +284,62 @@ export function TransactionDetailSheet({ isOpen, onClose, transaction }: Transac
             <div className="space-y-4">
               <div className="bg-amber-50 dark:bg-amber-900/20 rounded-lg p-3 border border-amber-200 dark:border-amber-800 mb-4">
                 <p className="text-xs font-semibold text-foreground mb-1">
-                  📊 How It Works:
+                  📊 {t.referralInfo.howItWorks}
                 </p>
                 <p className="text-xs text-muted-foreground">
-                  Each transaction earns <span className="font-semibold text-primary">1% VC per upline level</span> (max 3 levels). Multiple people at each level can contribute to reach the full potential.
+                  {t.referralInfo.howItWorksDesc}
                 </p>
               </div>
 
               <div className="bg-primary/5 rounded-lg p-3 border border-primary/20">
                 <p className="text-sm font-semibold text-foreground mb-2">
-                  🎯 Level 1 - Direct Referrals
+                  🎯 {t.referralInfo.level1Title}
                 </p>
                 <p className="text-xs text-muted-foreground mb-2">
-                  People who use <span className="font-semibold">your code</span> directly. Each person who spends contributes <span className="font-semibold text-primary">1%</span> of their bill to this level.
+                  {t.referralInfo.level1Desc}
                 </p>
                 <p className="text-xs text-amber-600 dark:text-amber-400">
-                  Upper limit: 1% of your transaction amount
+                  {t.referralInfo.upperLimit}
                 </p>
               </div>
 
               <div className="bg-primary/5 rounded-lg p-3 border border-primary/20">
                 <p className="text-sm font-semibold text-foreground mb-2">
-                  🎯 Level 2 - Indirect Referrals
+                  🎯 {t.referralInfo.level2Title}
                 </p>
                 <p className="text-xs text-muted-foreground mb-2">
-                  People referred by <span className="font-semibold">your Level 1 referrals</span>. Each person who spends contributes <span className="font-semibold text-primary">1%</span> of their bill to this level.
+                  {t.referralInfo.level2Desc}
                 </p>
                 <p className="text-xs text-amber-600 dark:text-amber-400">
-                  Upper limit: 1% of your transaction amount
+                  {t.referralInfo.upperLimit}
                 </p>
               </div>
 
               <div className="bg-primary/5 rounded-lg p-3 border border-primary/20">
                 <p className="text-sm font-semibold text-foreground mb-2">
-                  🎯 Level 3 - Extended Network
+                  🎯 {t.referralInfo.level3Title}
                 </p>
                 <p className="text-xs text-muted-foreground mb-2">
-                  People referred by <span className="font-semibold">your Level 2 referrals</span>. Each person who spends contributes <span className="font-semibold text-primary">1%</span> of their bill to this level.
+                  {t.referralInfo.level3Desc}
                 </p>
                 <p className="text-xs text-amber-600 dark:text-amber-400">
-                  Upper limit: 1% of your transaction amount
+                  {t.referralInfo.upperLimit}
                 </p>
               </div>
 
               <div className="bg-green-50 dark:bg-green-900/20 rounded-lg p-3 border border-green-200 dark:border-green-800">
                 <p className="text-xs font-semibold text-foreground mb-2">
-                  💰 Example (Your bill: RM 100):
+                  💰 {t.referralInfo.exampleTitle}
                 </p>
                 <p className="text-xs text-muted-foreground">
-                  <span className="font-semibold">Maximum potential per level:</span>
-                  <br />• Level 1: Up to RM 1.00 (1% of RM 100)
-                  <br />• Level 2: Up to RM 1.00 (1% of RM 100)
-                  <br />• Level 3: Up to RM 1.00 (1% of RM 100)
-                  <br /><span className="font-semibold text-green-600 dark:text-green-400">Total Potential: RM 3.00</span>
+                  <span className="font-semibold">{t.referralInfo.maxPotential}</span>
+                  <br />• {t.referralInfo.level1Max}
+                  <br />• {t.referralInfo.level2Max}
+                  <br />• {t.referralInfo.level3Max}
+                  <br /><span className="font-semibold text-green-600 dark:text-green-400">{t.referralInfo.totalPotential}</span>
                 </p>
                 <p className="text-xs text-muted-foreground mt-2 pt-2 border-t border-green-200 dark:border-green-700">
-                  <span className="font-semibold">Note:</span> Multiple referrals at each level can contribute until the limit is reached. If one person doesn't spend enough, others can fill the gap.
+                  <span className="font-semibold">{t.referralInfo.note}</span> {t.referralInfo.noteDesc}
                 </p>
               </div>
             </div>
