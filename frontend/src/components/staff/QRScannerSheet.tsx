@@ -111,20 +111,22 @@ export function QRScannerSheet({ isOpen, onClose, onScanSuccess }: QRScannerShee
         onTouchEnd={handleTouchEnd}
       >
         <div className="bg-background rounded-t-3xl md:landscape:rounded-none md:landscape:rounded-r-3xl shadow-2xl border-t md:landscape:border-t-0 md:landscape:border-r border-border max-h-[85vh] md:landscape:max-h-full md:landscape:h-full overflow-y-auto">
-          <div className="p-6 md:landscape:h-full md:landscape:flex md:landscape:flex-col">
+          <div className="p-6 pt-4 md:landscape:h-full md:landscape:flex md:landscape:flex-col">
+            {/* Close Button - Top Right */}
+            <button
+              onClick={onClose}
+              className="absolute top-4 right-4 p-2 hover:bg-muted rounded-full transition-colors z-10"
+              aria-label="Close"
+            >
+              <X className="h-5 w-5 text-muted-foreground" />
+            </button>
+            
             {/* Handle Bar (Mobile Only) */}
-            <div className="w-12 h-1.5 bg-muted rounded-full mx-auto mb-5 md:landscape:hidden"></div>
+            <div className="w-12 h-1.5 bg-muted rounded-full mx-auto mb-4 md:landscape:hidden"></div>
             
             {/* Header */}
-            <div className="mb-5 relative">
-              <button
-                onClick={onClose}
-                className="absolute -top-2 right-0 p-2 hover:bg-muted rounded-full transition-colors"
-                aria-label="Close"
-              >
-                <X className="h-5 w-5 text-muted-foreground" />
-              </button>
-              <h3 className="text-xl font-bold text-foreground mb-1 pr-10">
+            <div className="mb-5">
+              <h3 className="text-xl font-bold text-foreground mb-1">
                 Scan Customer QR
               </h3>
               <p className="text-sm text-muted-foreground">

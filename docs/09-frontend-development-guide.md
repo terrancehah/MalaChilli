@@ -553,6 +553,45 @@ When creating a new component, ensure:
 
 ---
 
+## Recent Updates (2025-10-29)
+
+### Transaction Detail Bottom Sheet
+**Component:** `/frontend/src/components/customer/TransactionDetailSheet.tsx`
+
+**Features:**
+- Clickable transaction cards that open detailed bottom sheet
+- Smooth slide-in/out animations with backdrop fade
+- Swipe-down gesture to close
+- Body scroll prevention when open
+- Displays:
+  - Transaction time (full date and time)
+  - Branch location
+  - Bill amount
+  - Realized VC earnings from downlines (if any)
+  - Unrealized potential earnings breakdown:
+    - Level 1, 2, 3 referral potential (1% each)
+    - Total potential from 3 referrals
+  - Applied discounts (guaranteed + VC redeemed)
+
+**Purpose:** Educate users on multi-level earning potential to motivate code sharing
+
+### Restaurant Sorting Component
+**Location:** Customer Dashboard → "Promote Restaurants" section
+
+**Implementation:**
+- Replaced dropdown with shadcn-style tab buttons
+- Three sorting options: Recent | Balance | Visits
+- Active state with background shadow and smooth transitions
+- Inline with section header
+
+### Unrealized Earnings Display
+**Format:** "💡 Unrealized: RM X.XX"
+- Extremely concise format
+- Shows on transaction cards without downline earnings
+- Detailed breakdown available in transaction detail sheet
+
+---
+
 ## Future Considerations
 
 ### Planned Patterns

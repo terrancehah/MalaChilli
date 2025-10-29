@@ -14,6 +14,7 @@ interface Restaurant {
   referral_code: string;
   total_visits?: number;
   first_visit_date?: string;
+  total_spent?: number;
   // Virtual currency fields (restaurant-specific)
   balance?: number;
   earned?: number;
@@ -23,12 +24,13 @@ interface Restaurant {
 interface RestaurantCardProps {
   restaurant: Restaurant;
   getTimeAgo: (date: string) => string;
-  onShare: (name: string, slug: string, code: string, balance: number) => void;
+  onShare: (name: string, slug: string, code: string, balance: number, totalSpent: number) => void;
 }
 
 export function RestaurantCard({ restaurant, getTimeAgo, onShare }: RestaurantCardProps) {
   // Default values for VC fields
   const balance = restaurant.balance ?? 0;
+  const totalSpent = restaurant.total_spent ?? 0;
 
   return (
     <Card className="border-border/50 bg-gradient-to-br from-primary/5 to-primary-light/10 dark:from-primary/10 dark:to-primary-light/5">
@@ -61,7 +63,7 @@ export function RestaurantCard({ restaurant, getTimeAgo, onShare }: RestaurantCa
         </div>
 
         <Button
-          onClick={() => onShare(restaurant.restaurant.name, restaurant.restaurant.slug, restaurant.referral_code, balance)}
+          onClick={() => onShare(restaurant.restaurant.name, restaurant.restaurant.slug, restaurant.referral_code, balance, totalSpent)}
           className="w-full bg-primary hover:bg-primary/90"
           size="lg"
         >

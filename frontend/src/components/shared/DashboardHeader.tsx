@@ -8,15 +8,16 @@ interface DashboardHeaderProps {
   title: string;
   subtitle: string;
   actions?: React.ReactNode;
+  children?: React.ReactNode;
 }
 
-export function DashboardHeader({ user, title, subtitle, actions }: DashboardHeaderProps) {
+export function DashboardHeader({ user, title, subtitle, actions, children }: DashboardHeaderProps) {
   const initials = user?.full_name
     ? user.full_name.split(' ').map((n) => n[0]).join('').toUpperCase()
     : user?.email?.charAt(0).toUpperCase() || '?';
 
   return (
-    <div className="bg-gradient-to-br from-primary to-primary-light px-6 pt-10 pb-24 md:pb-28 rounded-b-3xl">
+    <div className="bg-gradient-to-br from-primary to-primary-light px-6 pt-10 pb-6 rounded-b-3xl">
       <div className="flex items-start justify-between mb-5">
         <div className="flex items-center gap-3 min-w-0 flex-1">
           <Avatar className="h-14 w-14 border-2 border-white/20 flex-shrink-0">
@@ -36,6 +37,11 @@ export function DashboardHeader({ user, title, subtitle, actions }: DashboardHea
           {actions}
         </div>
       </div>
+      {children && (
+        <div className="mt-6">
+          {children}
+        </div>
+      )}
     </div>
   );
 }

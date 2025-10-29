@@ -250,10 +250,11 @@ export default function StaffDashboard() {
             <Settings className="h-6 w-6 text-primary" />
           </Button>
         }
-      />
-
-      <div className="max-w-7xl mx-auto px-6 -mt-20 md:-mt-24 space-y-6">
+      >
         <StatsCard stats={staffStats} />
+      </DashboardHeader>
+
+      <div className="max-w-7xl mx-auto px-6 mt-6 space-y-6">
 
         {/* Success/Error Messages */}
         {success && (

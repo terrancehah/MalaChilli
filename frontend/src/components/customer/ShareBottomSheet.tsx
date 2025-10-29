@@ -23,6 +23,7 @@ interface ShareBottomSheetProps {
     slug: string;
     code: string;
     balance: number;
+    totalSpent?: number;
   } | null;
 }
 
@@ -143,35 +144,27 @@ export function ShareBottomSheet({ isOpen, onClose, restaurant }: ShareBottomShe
         onTouchEnd={handleTouchEnd}
       >
         <div className="bg-background rounded-t-3xl shadow-2xl border-t border-border max-h-[85vh] overflow-y-auto">
-          <div className="p-6">
+          <div className="p-6 pt-4">
+            {/* Close Button - Top Right */}
+            <button
+              onClick={onClose}
+              className="absolute top-4 right-4 p-2 hover:bg-muted rounded-full transition-colors z-10"
+              aria-label="Close"
+            >
+              <X className="h-5 w-5 text-muted-foreground" />
+            </button>
+            
             {/* Handle Bar */}
-            <div className="w-12 h-1.5 bg-muted rounded-full mx-auto mb-5"></div>
+            <div className="w-12 h-1.5 bg-muted rounded-full mx-auto mb-4"></div>
             
             {/* Header */}
-            <div className="mb-5 relative">
-              <button
-                onClick={onClose}
-                className="absolute -top-2 right-0 p-2 hover:bg-muted rounded-full transition-colors"
-                aria-label="Close"
-              >
-                <X className="h-5 w-5 text-muted-foreground" />
-              </button>
-              <h3 className="text-xl font-bold text-foreground mb-1 pr-10">
+            <div className="mb-5">
+              <h3 className="text-xl font-bold text-foreground mb-1">
                 Share {restaurant.name}
               </h3>
               <p className="text-sm text-muted-foreground">
                 Choose how you'd like to share this restaurant
               </p>
-            </div>
-
-            {/* Restaurant VC Balance */}
-            <div className="mb-5 bg-primary/5 rounded-lg p-3 border border-primary/20">
-              <div className="flex items-center gap-2">
-                <div className="text-xs text-muted-foreground">Your VC Balance</div>
-              </div>
-              <div className="text-2xl font-bold text-foreground mt-1">
-                RM {restaurant.balance.toFixed(2)}
-              </div>
             </div>
 
             {/* Referral Link Section */}

@@ -21,6 +21,7 @@ import {
   ShareBottomSheet,
   RestaurantCard,
 } from '../../components/customer';
+import { TransactionDetailSheet } from '../../components/customer/TransactionDetailSheet';
 import { DashboardHeader } from '../../components/shared/DashboardHeader';
 import { StatsCard } from '../../components/shared/StatsCard';
 
@@ -93,12 +94,17 @@ export default function CustomerDashboard() {
   const [totalEarned, setTotalEarned] = useState(0);
   const [totalRedeemed, setTotalRedeemed] = useState(0);
   const [totalReferred, setTotalReferred] = useState(0);
+  const [recentTransactions, setRecentTransactions] = useState<any[]>([]);
+  const [sortBy, setSortBy] = useState<'recent' | 'balance' | 'visits'>('recent');
   const [selectedRestaurant, setSelectedRestaurant] = useState<{
     name: string;
     slug: string;
     code: string;
     balance: number;
+    totalSpent?: number;
   } | null>(null);
+  const [selectedTransaction, setSelectedTransaction] = useState<any | null>(null);
+  const [showTransactionSheet, setShowTransactionSheet] = useState(false);
 
   useEffect(() => {
     if (!loading && !user) {
@@ -108,7 +114,7 @@ export default function CustomerDashboard() {
 
   // Prevent body scroll when bottom sheet is open
   useEffect(() => {
-    if (showShareSheet) {
+    if (showShareSheet || showTransactionSheet) {
       document.body.style.overflow = 'hidden';
     } else {
       document.body.style.overflow = 'unset';
@@ -116,7 +122,7 @@ export default function CustomerDashboard() {
     return () => {
       document.body.style.overflow = 'unset';
     };
-  }, [showShareSheet]);
+  }, [showShareSheet, showTransactionSheet]);
 
   // Fetch restaurant codes and visited restaurants with VC balances
   useEffect(() => {
@@ -141,7 +147,7 @@ export default function CustomerDashboard() {
         
         // Fetch restaurant-specific virtual currency balances
         const { data: walletData, error: walletError } = await supabase
-          .from('customer_wallet_balance')
+          .from('customer_wallet_balance_by_restaurant')
           .select('*')
           .eq('user_id', user.id);
         
@@ -157,13 +163,13 @@ export default function CustomerDashboard() {
         const uniqueReferrals = new Set((referralData || []).map(r => r.downline_id)).size;
         setTotalReferred(uniqueReferrals);
         
-        // Create wallet balance map by restaurant_id
+        // Create wallet balance map by restaurant_id (restaurant-specific VC)
         const walletMap = new Map();
         (walletData || []).forEach((wallet: any) => {
           walletMap.set(wallet.restaurant_id, {
-            balance: wallet.available_balance || 0,
-            earned: wallet.total_earned || 0,
-            redeemed: wallet.total_redeemed || 0,
+            balance: parseFloat(wallet.available_balance) || 0,
+            earned: parseFloat(wallet.total_earned) || 0,
+            redeemed: parseFloat(wallet.total_redeemed) || 0,
           });
         });
         
@@ -211,10 +217,58 @@ export default function CustomerDashboard() {
         setRestaurantCodes(transformedCodes);
         
         // Calculate totals across all restaurants
-        const totalEarnedAmount = (walletData || []).reduce((sum: number, wallet: any) => sum + (wallet.total_earned || 0), 0);
-        const totalRedeemedAmount = (walletData || []).reduce((sum: number, wallet: any) => sum + (wallet.total_redeemed || 0), 0);
+        const totalEarnedAmount = (walletData || []).reduce((sum: number, wallet: any) => 
+          sum + (parseFloat(wallet.total_earned) || 0), 0);
+        const totalRedeemedAmount = (walletData || []).reduce((sum: number, wallet: any) => 
+          sum + (parseFloat(wallet.total_redeemed) || 0), 0);
+        
         setTotalEarned(totalEarnedAmount);
         setTotalRedeemed(totalRedeemedAmount);
+        
+        // Fetch recent transactions with VC earned
+        const { data: transactionsData, error: transactionsError } = await supabase
+          .from('transactions')
+          .select(`
+            id,
+            bill_amount,
+            guaranteed_discount_amount,
+            virtual_currency_redeemed,
+            is_first_transaction,
+            created_at,
+            branches!inner (
+              name,
+              restaurants!inner (
+                name,
+                id
+              )
+            )
+          `)
+          .eq('customer_id', user.id)
+          .order('created_at', { ascending: false })
+          .limit(5);
+        
+        if (transactionsError) throw transactionsError;
+        
+        // Fetch VC earned from each transaction (from downlines)
+        const transactionsWithVC = await Promise.all(
+          (transactionsData || []).map(async (transaction: any) => {
+            const { data: vcEarned } = await supabase
+              .from('virtual_currency_ledger')
+              .select('amount')
+              .eq('user_id', user.id)
+              .eq('related_transaction_id', transaction.id)
+              .eq('transaction_type', 'earn');
+            
+            const totalVCEarned = (vcEarned || []).reduce((sum, vc) => sum + parseFloat(vc.amount), 0);
+            
+            return {
+              ...transaction,
+              vc_earned: totalVCEarned
+            };
+          })
+        );
+        
+        setRecentTransactions(transactionsWithVC);
       } catch (error) {
         console.error('Error fetching data:', error);
       } finally {
@@ -240,8 +294,8 @@ export default function CustomerDashboard() {
     }
   };
 
-  const handleShare = (name: string, slug: string, code: string, balance: number = 0) => {
-    setSelectedRestaurant({ name, slug, code, balance });
+  const handleShare = (name: string, slug: string, code: string, balance: number = 0, totalSpent: number = 0) => {
+    setSelectedRestaurant({ name, slug, code, balance, totalSpent });
     setShowShareSheet(true);
   };
 
@@ -301,29 +355,63 @@ export default function CustomerDashboard() {
             </Button>
           </>
         }
-      />
-
-      <div className="px-6 -mt-16 space-y-6">
+      >
         <StatsCard stats={customerStats} />
-      </div>
+      </DashboardHeader>
 
       <div className="px-6 mt-6 space-y-6">
         {/* Restaurant-Specific Referral Codes */}
         <div>
-          <div className="flex items-center justify-between mb-4">
-            <div>
-              <h2 className="text-lg font-bold text-foreground">Promote Restaurants</h2>
-              <p className="text-sm text-muted-foreground">Share codes for restaurants you've visited</p>
+          <div className="flex items-start justify-between mb-4">
+            <div className="flex items-center gap-2">
+              <div>
+                <div className="flex items-center gap-2">
+                  <h2 className="text-lg font-bold text-foreground">Promote Restaurants</h2>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => setShowInfoModal(true)}
+                    className="h-6 w-6 p-0"
+                    title="How it works"
+                  >
+                    <Info className="h-4 w-4 text-muted-foreground" />
+                  </Button>
+                </div>
+                <p className="text-sm text-muted-foreground">Share codes for restaurants you've visited</p>
+              </div>
             </div>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => setShowInfoModal(true)}
-              className="h-8 w-8 p-0"
-              title="How it works"
-            >
-              <Info className="h-5 w-5 text-muted-foreground" />
-            </Button>
+            <div className="flex items-center gap-1 bg-muted p-1 rounded-lg">
+              <button
+                onClick={() => setSortBy('recent')}
+                className={`px-3 py-1 text-xs font-medium rounded-md transition-colors ${
+                  sortBy === 'recent'
+                    ? 'bg-background text-foreground shadow-sm'
+                    : 'text-muted-foreground hover:text-foreground'
+                }`}
+              >
+                Recent
+              </button>
+              <button
+                onClick={() => setSortBy('balance')}
+                className={`px-3 py-1 text-xs font-medium rounded-md transition-colors ${
+                  sortBy === 'balance'
+                    ? 'bg-background text-foreground shadow-sm'
+                    : 'text-muted-foreground hover:text-foreground'
+                }`}
+              >
+                Balance
+              </button>
+              <button
+                onClick={() => setSortBy('visits')}
+                className={`px-3 py-1 text-xs font-medium rounded-md transition-colors ${
+                  sortBy === 'visits'
+                    ? 'bg-background text-foreground shadow-sm'
+                    : 'text-muted-foreground hover:text-foreground'
+                }`}
+              >
+                Visits
+              </button>
+            </div>
           </div>
 
           {loadingCodes ? (
@@ -349,14 +437,25 @@ export default function CustomerDashboard() {
           ) : (
             <div className="space-y-3">
               {/* Restaurants with codes (auto-generated on first visit) */}
-              {restaurantCodes.map((code) => (
-                <RestaurantCard
-                  key={code.id}
-                  restaurant={code}
-                  getTimeAgo={getTimeAgo}
-                  onShare={handleShare}
-                />
-              ))}
+              {[...restaurantCodes]
+                .sort((a, b) => {
+                  if (sortBy === 'balance') {
+                    return (b.balance || 0) - (a.balance || 0);
+                  } else if (sortBy === 'visits') {
+                    return (b.total_visits || 0) - (a.total_visits || 0);
+                  } else {
+                    // Sort by recent (first_visit_date)
+                    return new Date(b.first_visit_date || 0).getTime() - new Date(a.first_visit_date || 0).getTime();
+                  }
+                })
+                .map((code) => (
+                  <RestaurantCard
+                    key={code.id}
+                    restaurant={code}
+                    getTimeAgo={getTimeAgo}
+                    onShare={handleShare}
+                  />
+                ))}
             </div>
           )}
         </div>
@@ -366,16 +465,95 @@ export default function CustomerDashboard() {
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-lg font-bold text-foreground">Recent Transactions</h2>
           </div>
-          <Card className="border-border/50">
-            <CardContent className="p-12 text-center">
-              <div className="h-16 w-16 rounded-full bg-muted mx-auto mb-4 flex items-center justify-center">
-                <Receipt className="h-8 w-8 text-muted-foreground" />
-              </div>
-              <p className="text-muted-foreground text-sm">
-                No transactions yet. Start dining at our partner restaurants to earn rewards!
-              </p>
-            </CardContent>
-          </Card>
+          {recentTransactions.length === 0 ? (
+            <Card className="border-border/50">
+              <CardContent className="p-12 text-center">
+                <div className="h-16 w-16 rounded-full bg-muted mx-auto mb-4 flex items-center justify-center">
+                  <Receipt className="h-8 w-8 text-muted-foreground" />
+                </div>
+                <p className="text-muted-foreground text-sm">
+                  No transactions yet. Start dining at our partner restaurants to earn rewards!
+                </p>
+              </CardContent>
+            </Card>
+          ) : (
+            <div className="space-y-3">
+              {recentTransactions.map((transaction: any) => {
+                // Calculate potential earnings (1% of bill amount)
+                const potentialEarning = transaction.bill_amount * 0.01;
+                const hasEarnings = transaction.vc_earned > 0;
+                
+                return (
+                  <Card 
+                    key={transaction.id} 
+                    className="border-border/50 cursor-pointer hover:border-primary/50 transition-colors"
+                    onClick={() => {
+                      setSelectedTransaction(transaction);
+                      setShowTransactionSheet(true);
+                    }}
+                  >
+                    <CardContent className="p-4">
+                      <div className="flex items-start justify-between mb-2">
+                        <div className="flex-1">
+                          <h3 className="font-semibold text-foreground">
+                            {transaction.branches.restaurants.name}
+                          </h3>
+                          <p className="text-xs text-muted-foreground mt-0.5">
+                            {new Date(transaction.created_at).toLocaleString('en-MY', {
+                              day: 'numeric',
+                              month: 'short',
+                              year: 'numeric',
+                              hour: '2-digit',
+                              minute: '2-digit'
+                            })}
+                          </p>
+                        </div>
+                        <div className="text-right">
+                          <p className="font-bold text-foreground">RM {transaction.bill_amount}</p>
+                          {transaction.is_first_transaction && (
+                            <p className="text-xs text-green-600 dark:text-green-400">First Visit!</p>
+                          )}
+                        </div>
+                      </div>
+                      
+                      {/* Transaction Details */}
+                      <div className="space-y-2 pt-2 border-t border-border/50">
+                        <div className="flex items-center gap-3 text-xs text-muted-foreground">
+                          {transaction.guaranteed_discount_amount > 0 && (
+                            <span className="flex items-center gap-1">
+                              <span className="text-green-600 dark:text-green-400">-RM {transaction.guaranteed_discount_amount}</span>
+                              <span>discount</span>
+                            </span>
+                          )}
+                          {transaction.virtual_currency_redeemed > 0 && (
+                            <span className="flex items-center gap-1">
+                              <span className="text-primary">-RM {transaction.virtual_currency_redeemed}</span>
+                              <span>VC used</span>
+                            </span>
+                          )}
+                          {hasEarnings && (
+                            <span className="flex items-center gap-1">
+                              <span className="text-green-600 dark:text-green-400">+RM {transaction.vc_earned.toFixed(2)}</span>
+                              <span>VC earned</span>
+                            </span>
+                          )}
+                        </div>
+                        
+                        {/* Potential Earnings Banner */}
+                        {!hasEarnings && (
+                          <div className="bg-amber-50 dark:bg-amber-900/20 rounded-md p-2 border border-amber-200 dark:border-amber-800">
+                            <p className="text-xs text-amber-800 dark:text-amber-200">
+                              <span className="font-semibold">💡 Unrealized:</span> <span className="font-bold">RM {potentialEarning.toFixed(2)}</span>
+                            </p>
+                          </div>
+                        )}
+                      </div>
+                    </CardContent>
+                  </Card>
+                );
+              })}
+            </div>
+          )}
         </div>
       </div>
 
@@ -413,6 +591,12 @@ export default function CustomerDashboard() {
         isOpen={showShareSheet}
         onClose={() => setShowShareSheet(false)}
         restaurant={selectedRestaurant}
+      />
+
+      <TransactionDetailSheet
+        isOpen={showTransactionSheet}
+        onClose={() => setShowTransactionSheet(false)}
+        transaction={selectedTransaction}
       />
     </div>
   );
