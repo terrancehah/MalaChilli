@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
-import { X, MapPin, Clock, Receipt, TrendingUp, AlertCircle } from 'lucide-react';
+import { X, MapPin, Clock, Receipt, TrendingUp, AlertCircle, Info } from 'lucide-react';
+import { Button } from '../ui/button';
 
 interface TransactionDetailSheetProps {
   isOpen: boolean;
@@ -13,6 +14,7 @@ export function TransactionDetailSheet({ isOpen, onClose, transaction }: Transac
   const [isDragging, setIsDragging] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false);
   const [shouldRender, setShouldRender] = useState(false);
+  const [showReferralInfo, setShowReferralInfo] = useState(false);
 
   useEffect(() => {
     if (isOpen) {
@@ -182,9 +184,20 @@ export function TransactionDetailSheet({ isOpen, onClose, transaction }: Transac
                 <div className="flex items-start gap-3">
                   <AlertCircle className="h-5 w-5 text-amber-600 dark:text-amber-400 mt-0.5" />
                   <div className="flex-1">
-                    <p className="text-sm font-semibold text-foreground mb-3">
-                      Unrealized Potential Earnings
-                    </p>
+                    <div className="flex items-center gap-2 mb-3">
+                      <p className="text-sm font-semibold text-foreground">
+                        Unrealized Potential Earnings
+                      </p>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => setShowReferralInfo(true)}
+                        className="h-5 w-5 p-0"
+                        title="How referral levels work"
+                      >
+                        <Info className="h-3.5 w-3.5 text-muted-foreground" />
+                      </Button>
+                    </div>
                     <p className="text-xs text-muted-foreground mb-3">
                       If you had shared your code and friends spent the same amount:
                     </p>
@@ -242,6 +255,92 @@ export function TransactionDetailSheet({ isOpen, onClose, transaction }: Transac
           </div>
         </div>
       </div>
+
+      {/* Referral Info Modal */}
+      {showReferralInfo && (
+        <>
+          <div
+            className="fixed inset-0 bg-black/50 z-[60]"
+            onClick={() => setShowReferralInfo(false)}
+          />
+          <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90%] max-w-md bg-background rounded-2xl shadow-2xl z-[60] p-6">
+            <div className="flex items-start justify-between mb-4">
+              <h3 className="text-lg font-bold text-foreground">
+                How Referral Levels Work
+              </h3>
+              <button
+                onClick={() => setShowReferralInfo(false)}
+                className="h-8 w-8 rounded-full bg-muted hover:bg-muted/80 flex items-center justify-center transition-colors"
+              >
+                <X className="h-4 w-4 text-muted-foreground" />
+              </button>
+            </div>
+            
+            <div className="space-y-4">
+              <div className="bg-amber-50 dark:bg-amber-900/20 rounded-lg p-3 border border-amber-200 dark:border-amber-800 mb-4">
+                <p className="text-xs font-semibold text-foreground mb-1">
+                  📊 How It Works:
+                </p>
+                <p className="text-xs text-muted-foreground">
+                  Each transaction earns <span className="font-semibold text-primary">1% VC per upline level</span> (max 3 levels). Multiple people at each level can contribute to reach the full potential.
+                </p>
+              </div>
+
+              <div className="bg-primary/5 rounded-lg p-3 border border-primary/20">
+                <p className="text-sm font-semibold text-foreground mb-2">
+                  🎯 Level 1 - Direct Referrals
+                </p>
+                <p className="text-xs text-muted-foreground mb-2">
+                  People who use <span className="font-semibold">your code</span> directly. Each person who spends contributes <span className="font-semibold text-primary">1%</span> of their bill to this level.
+                </p>
+                <p className="text-xs text-amber-600 dark:text-amber-400">
+                  Upper limit: 1% of your transaction amount
+                </p>
+              </div>
+
+              <div className="bg-primary/5 rounded-lg p-3 border border-primary/20">
+                <p className="text-sm font-semibold text-foreground mb-2">
+                  🎯 Level 2 - Indirect Referrals
+                </p>
+                <p className="text-xs text-muted-foreground mb-2">
+                  People referred by <span className="font-semibold">your Level 1 referrals</span>. Each person who spends contributes <span className="font-semibold text-primary">1%</span> of their bill to this level.
+                </p>
+                <p className="text-xs text-amber-600 dark:text-amber-400">
+                  Upper limit: 1% of your transaction amount
+                </p>
+              </div>
+
+              <div className="bg-primary/5 rounded-lg p-3 border border-primary/20">
+                <p className="text-sm font-semibold text-foreground mb-2">
+                  🎯 Level 3 - Extended Network
+                </p>
+                <p className="text-xs text-muted-foreground mb-2">
+                  People referred by <span className="font-semibold">your Level 2 referrals</span>. Each person who spends contributes <span className="font-semibold text-primary">1%</span> of their bill to this level.
+                </p>
+                <p className="text-xs text-amber-600 dark:text-amber-400">
+                  Upper limit: 1% of your transaction amount
+                </p>
+              </div>
+
+              <div className="bg-green-50 dark:bg-green-900/20 rounded-lg p-3 border border-green-200 dark:border-green-800">
+                <p className="text-xs font-semibold text-foreground mb-2">
+                  💰 Example (Your bill: RM 100):
+                </p>
+                <p className="text-xs text-muted-foreground">
+                  <span className="font-semibold">Maximum potential per level:</span>
+                  <br />• Level 1: Up to RM 1.00 (1% of RM 100)
+                  <br />• Level 2: Up to RM 1.00 (1% of RM 100)
+                  <br />• Level 3: Up to RM 1.00 (1% of RM 100)
+                  <br /><span className="font-semibold text-green-600 dark:text-green-400">Total Potential: RM 3.00</span>
+                </p>
+                <p className="text-xs text-muted-foreground mt-2 pt-2 border-t border-green-200 dark:border-green-700">
+                  <span className="font-semibold">Note:</span> Multiple referrals at each level can contribute until the limit is reached. If one person doesn't spend enough, others can fill the gap.
+                </p>
+              </div>
+            </div>
+          </div>
+        </>
+      )}
     </>
   );
 }

@@ -479,8 +479,9 @@ export default function CustomerDashboard() {
           ) : (
             <div className="space-y-3">
               {recentTransactions.map((transaction: any) => {
-                // Calculate potential earnings (1% of bill amount)
-                const potentialEarning = transaction.bill_amount * 0.01;
+                // Calculate potential earnings from all 3 referral levels (1% each)
+                const potentialEarningPerLevel = transaction.bill_amount * 0.01;
+                const totalPotentialEarning = potentialEarningPerLevel * 3; // 3 levels
                 const hasEarnings = transaction.vc_earned > 0;
                 
                 return (
@@ -543,7 +544,7 @@ export default function CustomerDashboard() {
                         {!hasEarnings && (
                           <div className="bg-amber-50 dark:bg-amber-900/20 rounded-md p-2 border border-amber-200 dark:border-amber-800">
                             <p className="text-xs text-amber-800 dark:text-amber-200">
-                              <span className="font-semibold">💡 Unrealized:</span> <span className="font-bold">RM {potentialEarning.toFixed(2)}</span>
+                              <span className="font-semibold">💡 Unrealized:</span> <span className="font-bold">RM {totalPotentialEarning.toFixed(2)}</span>
                             </p>
                           </div>
                         )}
