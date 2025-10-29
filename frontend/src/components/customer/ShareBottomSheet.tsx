@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from '../ui/button';
 import { Share2, Copy, Check, X } from 'lucide-react';
 
@@ -31,8 +31,25 @@ export function ShareBottomSheet({ isOpen, onClose, restaurant }: ShareBottomShe
   const [touchStart, setTouchStart] = useState(0);
   const [touchCurrent, setTouchCurrent] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
+  const [isAnimating, setIsAnimating] = useState(false);
+  const [shouldRender, setShouldRender] = useState(false);
 
-  if (!isOpen || !restaurant) return null;
+  useEffect(() => {
+    if (isOpen) {
+      setShouldRender(true);
+      requestAnimationFrame(() => {
+        setIsAnimating(true);
+      });
+    } else {
+      setIsAnimating(false);
+      const timer = setTimeout(() => {
+        setShouldRender(false);
+      }, 300); // Match transition duration
+      return () => clearTimeout(timer);
+    }
+  }, [isOpen]);
+
+  if (!shouldRender || !restaurant) return null;
 
   const handleCopyLink = () => {
     const link = `${window.location.origin}/join/${restaurant.slug}/${restaurant.code}`;
@@ -94,18 +111,20 @@ export function ShareBottomSheet({ isOpen, onClose, restaurant }: ShareBottomShe
     <>
       {/* Backdrop */}
       <div 
-        className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 transition-opacity duration-300 animate-in fade-in overflow-hidden"
+        className={`fixed inset-0 bg-black/50 backdrop-blur-sm z-50 transition-opacity duration-300 overflow-hidden ${
+          isAnimating ? 'opacity-100' : 'opacity-0'
+        }`}
         onClick={onClose}
         style={{ touchAction: 'none' }}
       />
       
       {/* Bottom Sheet */}
       <div 
-        className="fixed inset-x-0 bottom-0 z-50 animate-in slide-in-from-bottom duration-300"
+        className="fixed inset-x-0 bottom-0 z-50 transition-transform duration-300 ease-out"
         style={{
           transform: isDragging && touchCurrent > touchStart 
             ? `translateY(${touchCurrent - touchStart}px)` 
-            : 'translateY(0)',
+            : isAnimating ? 'translateY(0)' : 'translateY(100%)',
           transition: isDragging ? 'none' : 'transform 0.3s ease-out'
         }}
         onTouchStart={(e) => {

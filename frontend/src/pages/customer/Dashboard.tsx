@@ -199,7 +199,7 @@ export default function CustomerDashboard() {
             id: item.id,
             restaurant_id: item.restaurant_id,
             referral_code: item.referral_code,
-            restaurant: item.restaurants[0] || { name: 'Unknown', slug: 'unknown' },
+            restaurant: item.restaurants || { name: 'Unknown', slug: 'unknown' },
             total_visits: visitInfo?.total_visits,
             first_visit_date: visitInfo?.first_visit_date,
             balance: walletInfo?.balance,

@@ -5,12 +5,30 @@
 
 ## Complete Project Documentation Navigator
 
-**Last Updated:** 2025-10-26  
-**Project Status:** Core Features Implemented, Staff Checkout Streamlined
+**Last Updated:** 2025-10-28  
+**Project Status:** Production Ready (95%) - All P0/P1 Complete ✅
 
 ---
 
 ## Recent Updates
+
+### VC Expiry Cron Job Deployed (2025-10-28)
+**Automated Virtual Currency Expiry System - LIVE** ✅
+- ✅ **Edge Function** - Deployed to Supabase (`expire-vc`)
+- ✅ **Database Extensions** - pg_cron and pg_net enabled
+- ✅ **Cron Job Active** - Runs daily at 2:00 AM MYT (18:00 UTC)
+- ✅ **Tested** - Database function verified (0 expired entries)
+- ✅ **Monitoring** - Audit logs and execution tracking enabled
+
+### Production Ready - Legal & Security Complete (2025-10-27)
+**PDPA Compliance & Authentication Improvements**
+- ✅ **Privacy Policy** - Comprehensive PDPA-compliant policy page (/privacy)
+- ✅ **Terms of Service** - Complete terms with Malaysian law compliance (/terms)
+- ✅ **Consent Checkbox** - Required PDPA consent on registration with legal links
+- ✅ **Password Recovery** - Forgot password flow with email reset (/forgot-password, /reset-password)
+- ✅ **Enhanced Registration** - Birthday field with age validation (18+), password strength validation
+- ✅ **Animation System** - All sheets/modals have proper in/out animations
+- ✅ **Production Readiness** - 90% ready for soft launch, all P0/P1 issues resolved
 
 ### Staff Checkout Streamlined (2025-10-26)
 **Staff Dashboard Redesigned with Integrated Checkout**

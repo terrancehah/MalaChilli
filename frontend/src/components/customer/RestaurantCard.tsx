@@ -32,8 +32,8 @@ export function RestaurantCard({ restaurant, getTimeAgo, onShare }: RestaurantCa
 
   return (
     <Card className="border-border/50 bg-gradient-to-br from-primary/5 to-primary-light/10 dark:from-primary/10 dark:to-primary-light/5">
-      <CardContent className="p-5">
-        <div className="flex items-start justify-between mb-4">
+      <CardContent className="p-4">
+        <div className="flex items-start justify-between mb-3">
           <div className="flex-1">
             <h3 className="font-semibold text-foreground">
               {restaurant.restaurant.name}
@@ -49,14 +49,14 @@ export function RestaurantCard({ restaurant, getTimeAgo, onShare }: RestaurantCa
           </Badge>
         </div>
 
-        {/* Restaurant VC Balance - Clean Minimal Design */}
-        <div className="bg-primary/5 rounded-lg p-3 mb-4 flex items-center gap-2">
-          <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
-            <Wallet className="h-4 w-4 text-primary" />
+        {/* Restaurant VC Balance - Compact Design */}
+        <div className="bg-primary/5 rounded-lg p-2.5 mb-3 flex items-center gap-2">
+          <div className="h-7 w-7 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
+            <Wallet className="h-3.5 w-3.5 text-primary" />
           </div>
           <div>
-            <p className="text-xs text-muted-foreground">VC Balance</p>
-            <p className="text-lg font-bold text-foreground">{formatCurrency(balance)}</p>
+            <p className="text-[10px] text-muted-foreground leading-tight">VC Balance</p>
+            <p className="text-base font-bold text-foreground leading-tight">{formatCurrency(balance)}</p>
           </div>
         </div>
 
