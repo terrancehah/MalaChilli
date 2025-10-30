@@ -12,7 +12,9 @@ import {
   TrendingUp, 
   Users, 
   Gift,
-  Languages
+  Languages,
+  ArrowDown,
+  ArrowUp
 } from 'lucide-react';
 import { getTranslation } from '../../translations';
 import type { Language } from '../../translations';
@@ -97,7 +99,8 @@ export default function CustomerDashboard() {
   const [totalRedeemed, setTotalRedeemed] = useState(0);
   const [totalReferred, setTotalReferred] = useState(0);
   const [recentTransactions, setRecentTransactions] = useState<any[]>([]);
-  const [sortBy, setSortBy] = useState<'recent' | 'balance' | 'visits'>('recent');
+  const [sortBy, setSortBy] = useState<'recent' | 'balance'>('recent');
+  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
   const [selectedRestaurant, setSelectedRestaurant] = useState<{
     name: string;
     slug: string;
@@ -352,62 +355,6 @@ export default function CustomerDashboard() {
             >
               <QrCodeIcon className="h-6 w-6 text-primary" />
             </Button>
-            <div className="relative">
-              <Button
-                variant="secondary"
-                size="icon"
-                className="h-12 w-12 rounded-xl bg-white/95 hover:bg-white shadow-lg"
-                onClick={() => setShowLanguageMenu(!showLanguageMenu)}
-              >
-                <Languages className="h-6 w-6 text-primary" />
-              </Button>
-              {showLanguageMenu && (
-                <>
-                  <div 
-                    className="fixed inset-0 z-40" 
-                    onClick={() => setShowLanguageMenu(false)}
-                  />
-                  <div className="absolute right-0 top-14 z-50 bg-white dark:bg-gray-800 rounded-xl shadow-xl border border-border/50 overflow-hidden min-w-[140px]">
-                    <button
-                      onClick={() => {
-                        setLanguage('en');
-                        setShowLanguageMenu(false);
-                      }}
-                      className={`w-full px-4 py-3 text-left text-sm hover:bg-muted transition-colors flex items-center justify-between ${
-                        language === 'en' ? 'bg-primary/10 text-primary font-semibold' : 'text-foreground'
-                      }`}
-                    >
-                      <span>English</span>
-                      {language === 'en' && <span className="text-xs">✓</span>}
-                    </button>
-                    <button
-                      onClick={() => {
-                        setLanguage('ms');
-                        setShowLanguageMenu(false);
-                      }}
-                      className={`w-full px-4 py-3 text-left text-sm hover:bg-muted transition-colors flex items-center justify-between ${
-                        language === 'ms' ? 'bg-primary/10 text-primary font-semibold' : 'text-foreground'
-                      }`}
-                    >
-                      <span>Bahasa Malaysia</span>
-                      {language === 'ms' && <span className="text-xs">✓</span>}
-                    </button>
-                    <button
-                      onClick={() => {
-                        setLanguage('zh');
-                        setShowLanguageMenu(false);
-                      }}
-                      className={`w-full px-4 py-3 text-left text-sm hover:bg-muted transition-colors flex items-center justify-between ${
-                        language === 'zh' ? 'bg-primary/10 text-primary font-semibold' : 'text-foreground'
-                      }`}
-                    >
-                      <span>中文</span>
-                      {language === 'zh' && <span className="text-xs">✓</span>}
-                    </button>
-                  </div>
-                </>
-              )}
-            </div>
             <Button
               variant="secondary"
               size="icon"
@@ -425,10 +372,10 @@ export default function CustomerDashboard() {
       <div className="px-6 mt-6 space-y-6">
         {/* Restaurant-Specific Referral Codes */}
         <div>
-          <div className="flex items-start justify-between mb-4">
-            <div className="flex items-center gap-2">
+          <div className="mb-4">
+            <div className="flex items-start justify-between mb-3">
               <div>
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-1 mb-1">
                   <h2 className="text-lg font-bold text-foreground">{t.promoteRestaurants.title}</h2>
                   <Button
                     variant="ghost"
@@ -442,39 +389,50 @@ export default function CustomerDashboard() {
                 </div>
                 <p className="text-sm text-muted-foreground">{t.promoteRestaurants.subtitle}</p>
               </div>
+              
             </div>
-            <div className="flex items-center gap-1 bg-muted p-1 rounded-lg">
+            <div className="flex w-min justify-end gap-1 bg-muted p-1 rounded-lg">
               <button
-                onClick={() => setSortBy('recent')}
-                className={`px-3 py-1 text-xs font-medium rounded-md transition-colors ${
+                onClick={() => {
+                  if (sortBy === 'recent') {
+                    setSortOrder(sortOrder === 'desc' ? 'asc' : 'desc');
+                  } else {
+                    setSortBy('recent');
+                    setSortOrder('desc');
+                  }
+                }}
+                className={`px-3 py-1.5 text-xs font-medium rounded-md transition-colors flex items-center gap-1.5 ${
                   sortBy === 'recent'
                     ? 'bg-background text-foreground shadow-sm'
                     : 'text-muted-foreground hover:text-foreground'
                 }`}
               >
-                {t.restaurantSorting.recent}
+                <span>{t.restaurantSorting.recent}</span>
+                {sortBy === 'recent' && (
+                  sortOrder === 'desc' ? <ArrowDown className="h-3 w-3" /> : <ArrowUp className="h-3 w-3" />
+                )}
               </button>
               <button
-                onClick={() => setSortBy('balance')}
-                className={`px-3 py-1 text-xs font-medium rounded-md transition-colors ${
+                onClick={() => {
+                  if (sortBy === 'balance') {
+                    setSortOrder(sortOrder === 'desc' ? 'asc' : 'desc');
+                  } else {
+                    setSortBy('balance');
+                    setSortOrder('desc');
+                  }
+                }}
+                className={`px-3 py-1.5 text-xs font-medium rounded-md transition-colors flex items-center gap-1.5 ${
                   sortBy === 'balance'
                     ? 'bg-background text-foreground shadow-sm'
                     : 'text-muted-foreground hover:text-foreground'
                 }`}
               >
-                {t.restaurantSorting.balance}
+                <span>{t.restaurantSorting.balance}</span>
+                {sortBy === 'balance' && (
+                  sortOrder === 'desc' ? <ArrowDown className="h-3 w-3" /> : <ArrowUp className="h-3 w-3" />
+                )}
               </button>
-              <button
-                onClick={() => setSortBy('visits')}
-                className={`px-3 py-1 text-xs font-medium rounded-md transition-colors ${
-                  sortBy === 'visits'
-                    ? 'bg-background text-foreground shadow-sm'
-                    : 'text-muted-foreground hover:text-foreground'
-                }`}
-              >
-                {t.restaurantSorting.visits}
-              </button>
-            </div>
+              </div>
           </div>
 
           {loadingCodes ? (
@@ -499,14 +457,14 @@ export default function CustomerDashboard() {
               {/* Restaurants with codes (auto-generated on first visit) */}
               {[...restaurantCodes]
                 .sort((a, b) => {
+                  let comparison = 0;
                   if (sortBy === 'balance') {
-                    return (b.balance || 0) - (a.balance || 0);
-                  } else if (sortBy === 'visits') {
-                    return (b.total_visits || 0) - (a.total_visits || 0);
+                    comparison = (b.balance || 0) - (a.balance || 0);
                   } else {
                     // Sort by recent (first_visit_date)
-                    return new Date(b.first_visit_date || 0).getTime() - new Date(a.first_visit_date || 0).getTime();
+                    comparison = new Date(b.first_visit_date || 0).getTime() - new Date(a.first_visit_date || 0).getTime();
                   }
+                  return sortOrder === 'desc' ? comparison : -comparison;
                 })
                 .map((code) => (
                   <RestaurantCard
@@ -603,9 +561,9 @@ export default function CustomerDashboard() {
                         
                         {/* Potential Earnings Banner */}
                         {!hasEarnings && (
-                          <div className="bg-amber-50 dark:bg-amber-900/20 rounded-md p-2 border border-amber-200 dark:border-amber-800">
-                            <p className="text-xs text-amber-800 dark:text-amber-200">
-                              <span className="font-semibold">💡 {t.recentTransactions.unrealized}:</span> <span className="font-bold">RM {totalPotentialEarning.toFixed(2)}</span>
+                          <div className="bg-muted/30 rounded-md p-2.5 border border-dashed border-muted-foreground/30">
+                            <p className="text-xs text-muted-foreground">
+                              <span className="font-medium">{t.recentTransactions.unrealized}:</span> <span className="font-semibold text-foreground">RM {totalPotentialEarning.toFixed(2)}</span>
                             </p>
                           </div>
                         )}
@@ -649,6 +607,7 @@ export default function CustomerDashboard() {
         onSaveName={handleSaveName}
         onSignOut={handleSignOut}
         language={language}
+        onLanguageChange={setLanguage}
       />
 
       <ShareBottomSheet

@@ -52,7 +52,7 @@ export const zh = {
     discount: '折扣',
     vcUsed: '已使用 VC',
     vcEarned: '已赚取 VC',
-    unrealized: '未实现',
+    unrealized: '未实现收益',
   },
 
   // Dashboard - Restaurant Sorting

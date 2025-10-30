@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { X, MapPin, Clock, Receipt, TrendingUp, AlertCircle, Info } from 'lucide-react';
+import { X, MapPin, Clock, Receipt, TrendingUp, DollarSign, Info } from 'lucide-react';
 import { Button } from '../ui/button';
 import { getTranslation } from '../../translations';
 import type { Language } from '../../translations';
@@ -97,9 +97,10 @@ export function TransactionDetailSheet({ isOpen, onClose, transaction, language 
             {/* Close Button */}
             <button
               onClick={onClose}
-              className="absolute top-4 right-4 h-8 w-8 rounded-full bg-muted hover:bg-muted/80 flex items-center justify-center transition-colors z-10"
+              className="absolute top-4 right-4 p-2 hover:bg-muted rounded-full transition-colors z-10"
+              aria-label="Close"
             >
-              <X className="h-4 w-4 text-muted-foreground" />
+              <X className="h-5 w-5 text-muted-foreground" />
             </button>
             
             {/* Handle Bar */}
@@ -185,9 +186,9 @@ export function TransactionDetailSheet({ isOpen, onClose, transaction, language 
 
             {/* Unrealized Potential Earnings */}
             {!hasEarnings && (
-              <div className="mb-5 bg-amber-50 dark:bg-amber-900/20 rounded-lg p-4 border border-amber-200 dark:border-amber-800">
+              <div className="mb-5 bg-muted/30 rounded-lg p-4 border border-dashed border-muted-foreground/30">
                 <div className="flex items-start gap-3">
-                  <AlertCircle className="h-5 w-5 text-amber-600 dark:text-amber-400 mt-0.5" />
+                  <DollarSign className="h-5 w-5 text-muted-foreground/50 mt-0.5" />
                   <div className="flex-1">
                     <div className="flex items-center gap-2 mb-3">
                       <p className="text-sm font-semibold text-foreground">
@@ -209,21 +210,21 @@ export function TransactionDetailSheet({ isOpen, onClose, transaction, language 
                     
                     <div className="space-y-2">
                       {potentialReferrals.map((ref) => (
-                        <div key={ref.level} className="flex items-center justify-between bg-white dark:bg-gray-800 rounded-md p-2 border border-amber-200 dark:border-amber-700">
+                        <div key={ref.level} className="flex items-center justify-between bg-background rounded-md p-2.5 border border-border">
                           <span className="text-xs text-muted-foreground">
                             {ref.level === 1 ? t.transactionDetail.level1Referral : ref.level === 2 ? t.transactionDetail.level2Referral : t.transactionDetail.level3Referral}
                           </span>
-                          <span className="text-sm font-bold text-amber-600 dark:text-amber-400">
+                          <span className="text-sm font-semibold text-foreground">
                             +RM {ref.amount.toFixed(2)}
                           </span>
                         </div>
                       ))}
                       
-                      <div className="flex items-center justify-between bg-amber-100 dark:bg-amber-900/40 rounded-md p-2 border border-amber-300 dark:border-amber-600 mt-2">
+                      <div className="flex items-center justify-between bg-muted rounded-md p-2.5 border border-border mt-2">
                         <span className="text-xs font-semibold text-foreground">
                           {t.transactionDetail.totalReferrals}
                         </span>
-                        <span className="text-base font-bold text-amber-600 dark:text-amber-400">
+                        <span className="text-base font-bold text-foreground">
                           +RM {(potentialEarning * 3).toFixed(2)}
                         </span>
                       </div>

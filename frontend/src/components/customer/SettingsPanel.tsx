@@ -16,10 +16,18 @@ interface SettingsPanelProps {
   onSaveName: (name: string) => Promise<void>;
   onSignOut: () => void;
   language?: Language;
+  onLanguageChange?: (lang: Language) => void;
 }
 
-export function SettingsPanel({ isOpen, onClose, user, onSaveName, onSignOut, language = 'en' }: SettingsPanelProps) {
+export function SettingsPanel({ isOpen, onClose, user, onSaveName, onSignOut, language = 'en', onLanguageChange }: SettingsPanelProps) {
   const t = getTranslation(language);
+  const [showLanguageMenu, setShowLanguageMenu] = useState(false);
+  
+  const languageLabels = {
+    en: 'English',
+    ms: 'Bahasa Malaysia',
+    zh: '中文'
+  };
   const [isClosing, setIsClosing] = useState(false);
   const [isEditingName, setIsEditingName] = useState(false);
   const [editedName, setEditedName] = useState('');
@@ -229,13 +237,61 @@ export function SettingsPanel({ isOpen, onClose, user, onSaveName, onSignOut, la
           <div className="mb-6">
             <h4 className="text-base font-bold text-foreground mb-4">{t.settings.preferences}</h4>
             <div className="space-y-3">
-              <button className="w-full flex items-center justify-between p-3 bg-muted/50 rounded-lg hover:bg-muted transition-colors">
-                <div className="text-left">
-                  <p className="text-sm font-semibold text-foreground">{t.settings.language}</p>
-                  <p className="text-sm text-muted-foreground mt-0.5">English</p>
-                </div>
-                <span className="text-muted-foreground text-xs">{t.settings.comingSoon}</span>
-              </button>
+              <div className="relative">
+                <button 
+                  onClick={() => setShowLanguageMenu(!showLanguageMenu)}
+                  className="w-full flex items-center justify-between p-3 bg-muted/50 rounded-lg hover:bg-muted transition-colors"
+                >
+                  <div className="text-left">
+                    <p className="text-sm font-semibold text-foreground">{t.settings.language}</p>
+                    <p className="text-sm text-muted-foreground mt-0.5">{languageLabels[language]}</p>
+                  </div>
+                  <span className="text-muted-foreground text-xs">▼</span>
+                </button>
+                {showLanguageMenu && onLanguageChange && (
+                  <>
+                    <div 
+                      className="fixed inset-0 z-40" 
+                      onClick={() => setShowLanguageMenu(false)}
+                    />
+                    <div className="absolute left-0 right-0 top-full mt-1 z-50 bg-background rounded-lg shadow-xl border border-border overflow-hidden">
+                      <button
+                        onClick={() => {
+                          onLanguageChange('en');
+                          setShowLanguageMenu(false);
+                        }}
+                        className={`w-full px-4 py-3 text-left text-sm hover:bg-muted transition-colors ${
+                          language === 'en' ? 'bg-primary/10 text-primary font-semibold' : 'text-foreground'
+                        }`}
+                      >
+                        English
+                      </button>
+                      <button
+                        onClick={() => {
+                          onLanguageChange('ms');
+                          setShowLanguageMenu(false);
+                        }}
+                        className={`w-full px-4 py-3 text-left text-sm hover:bg-muted transition-colors ${
+                          language === 'ms' ? 'bg-primary/10 text-primary font-semibold' : 'text-foreground'
+                        }`}
+                      >
+                        Bahasa Malaysia
+                      </button>
+                      <button
+                        onClick={() => {
+                          onLanguageChange('zh');
+                          setShowLanguageMenu(false);
+                        }}
+                        className={`w-full px-4 py-3 text-left text-sm hover:bg-muted transition-colors ${
+                          language === 'zh' ? 'bg-primary/10 text-primary font-semibold' : 'text-foreground'
+                        }`}
+                      >
+                        中文
+                      </button>
+                    </div>
+                  </>
+                )}
+              </div>
               <button className="w-full flex items-center justify-between p-3 bg-muted/50 rounded-lg hover:bg-muted transition-colors">
                 <div className="text-left">
                   <p className="text-sm font-semibold text-foreground">{t.settings.notifications}</p>

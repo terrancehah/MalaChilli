@@ -52,7 +52,7 @@ export const en = {
     discount: 'discount',
     vcUsed: 'VC used',
     vcEarned: 'VC earned',
-    unrealized: 'Unrealized',
+    unrealized: 'Unrealized Earning',
   },
 
   // Dashboard - Restaurant Sorting

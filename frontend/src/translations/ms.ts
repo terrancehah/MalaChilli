@@ -52,7 +52,7 @@ export const ms = {
     discount: 'diskaun',
     vcUsed: 'VC digunakan',
     vcEarned: 'VC diperoleh',
-    unrealized: 'Belum Direalisasi',
+    unrealized: 'Pendapatan Belum Direalisasi',
   },
 
   // Dashboard - Restaurant Sorting
