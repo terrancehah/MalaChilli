@@ -4,6 +4,7 @@ import { useAuth } from '../../contexts/AuthContext';
 import { supabase } from '../../lib/supabase';
 import { Button } from '../../components/ui/button';
 import { Card, CardContent } from '../../components/ui/card';
+import { Skeleton, HeaderSkeleton } from '../../components/ui/skeleton';
 import { LogOut, Receipt, Users, DollarSign, TrendingUp } from 'lucide-react';
 
 export default function OwnerDashboard() {
@@ -75,8 +76,25 @@ export default function OwnerDashboard() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
-        <div className="text-gray-600 dark:text-gray-400">Loading...</div>
+      <div className="min-h-screen bg-background pb-6">
+        <HeaderSkeleton />
+        <div className="px-6 mt-6 space-y-6">
+          {/* Owner stats skeleton - 2x2 grid */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            {Array.from({ length: 4 }).map((_, index) => (
+              <Card key={index} className="border-border/50">
+                <CardContent className="p-4">
+                  <div className="flex items-center justify-between mb-2">
+                    <Skeleton className="h-8 w-8 rounded-full" />
+                    <Skeleton className="h-4 w-16" />
+                  </div>
+                  <Skeleton className="h-6 w-20 mb-1" />
+                  <Skeleton className="h-3 w-24" />
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
       </div>
     );
   }

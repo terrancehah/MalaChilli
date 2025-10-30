@@ -12,9 +12,8 @@ import {
   TrendingUp, 
   Users, 
   Gift,
-  Languages,
   ArrowDown,
-  ArrowUp
+  ArrowUp,
 } from 'lucide-react';
 import { getTranslation } from '../../translations';
 import type { Language } from '../../translations';
@@ -28,6 +27,7 @@ import {
 import { TransactionDetailSheet } from '../../components/customer/TransactionDetailSheet';
 import { DashboardHeader } from '../../components/shared/DashboardHeader';
 import { StatsCard } from '../../components/shared/StatsCard';
+import { ListSkeleton } from '../../components/ui/skeleton';
 
 // TypeScript interfaces
 interface RestaurantCode {
@@ -40,17 +40,20 @@ interface RestaurantCode {
   };
   total_visits?: number;
   first_visit_date?: string;
+  last_visit_date?: string;
   // Virtual currency fields (restaurant-specific)
   balance?: number;
   earned?: number;
   redeemed?: number;
 }
 
-// Helper function to calculate time ago
+// Helper function to calculate time ago (Malaysia timezone)
 const getTimeAgo = (dateString: string): string => {
   const date = new Date(dateString);
-  const now = new Date();
-  const diffInMs = now.getTime() - date.getTime();
+  // Convert to Malaysia timezone (UTC+8)
+  const malaysiaDate = new Date(date.getTime() + (8 * 60 * 60 * 1000));
+  const malaysiaNow = new Date(new Date().getTime() + (8 * 60 * 60 * 1000));
+  const diffInMs = malaysiaNow.getTime() - malaysiaDate.getTime();
   const diffInDays = Math.floor(diffInMs / (1000 * 60 * 60 * 24));
   
   if (diffInDays === 0) return 'today';
@@ -99,6 +102,7 @@ export default function CustomerDashboard() {
   const [totalRedeemed, setTotalRedeemed] = useState(0);
   const [totalReferred, setTotalReferred] = useState(0);
   const [recentTransactions, setRecentTransactions] = useState<any[]>([]);
+  const [loadingTransactions, setLoadingTransactions] = useState(true);
   const [sortBy, setSortBy] = useState<'recent' | 'balance'>('recent');
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
   const [selectedRestaurant, setSelectedRestaurant] = useState<{
@@ -111,7 +115,6 @@ export default function CustomerDashboard() {
   const [selectedTransaction, setSelectedTransaction] = useState<any | null>(null);
   const [showTransactionSheet, setShowTransactionSheet] = useState(false);
   const [language, setLanguage] = useState<Language>('en');
-  const [showLanguageMenu, setShowLanguageMenu] = useState(false);
   
   // Get translations based on current language
   const t = getTranslation(language);
@@ -140,6 +143,7 @@ export default function CustomerDashboard() {
       if (!user) return;
       
       setLoadingCodes(true);
+      setLoadingTransactions(true);
       try {
         // Fetch visited restaurants
         const { data: visitedData, error: visitedError } = await supabase
@@ -147,6 +151,7 @@ export default function CustomerDashboard() {
           .select(`
             restaurant_id,
             first_visit_date,
+            last_visit_date,
             total_visits,
             total_spent,
             restaurants (name, slug)
@@ -188,6 +193,7 @@ export default function CustomerDashboard() {
         (visitedData || []).forEach((item: any) => {
           visitHistoryMap.set(item.restaurant_id, {
             first_visit_date: item.first_visit_date,
+            last_visit_date: item.last_visit_date,
             total_visits: item.total_visits,
             total_spent: item.total_spent,
           });
@@ -218,6 +224,7 @@ export default function CustomerDashboard() {
             restaurant: item.restaurants || { name: 'Unknown', slug: 'unknown' },
             total_visits: visitInfo?.total_visits,
             first_visit_date: visitInfo?.first_visit_date,
+            last_visit_date: visitInfo?.last_visit_date,
             balance: walletInfo?.balance,
             earned: walletInfo?.earned,
             redeemed: walletInfo?.redeemed,
@@ -283,6 +290,7 @@ export default function CustomerDashboard() {
         console.error('Error fetching data:', error);
       } finally {
         setLoadingCodes(false);
+        setLoadingTransactions(false);
       }
     };
     
@@ -342,7 +350,6 @@ export default function CustomerDashboard() {
   return (
     <div className="min-h-screen bg-background pb-6">
       <DashboardHeader
-        user={user}
         title={user.full_name || user.email}
         subtitle={t.profile.welcome}
         actions={
@@ -391,7 +398,7 @@ export default function CustomerDashboard() {
               </div>
               
             </div>
-            <div className="flex w-min justify-end gap-1 bg-muted p-1 rounded-lg">
+            <div className="flex w-fit ml-auto gap-1 bg-muted p-1 rounded-lg">
               <button
                 onClick={() => {
                   if (sortBy === 'recent') {
@@ -436,11 +443,7 @@ export default function CustomerDashboard() {
           </div>
 
           {loadingCodes ? (
-            <Card className="border-border/50">
-              <CardContent className="p-12 text-center">
-                <p className="text-muted-foreground text-sm">Loading restaurants...</p>
-              </CardContent>
-            </Card>
+            <ListSkeleton items={3} />
           ) : restaurantCodes.length === 0 ? (
             <Card className="border-border/50">
               <CardContent className="p-12 text-center">
@@ -461,8 +464,8 @@ export default function CustomerDashboard() {
                   if (sortBy === 'balance') {
                     comparison = (b.balance || 0) - (a.balance || 0);
                   } else {
-                    // Sort by recent (first_visit_date)
-                    comparison = new Date(b.first_visit_date || 0).getTime() - new Date(a.first_visit_date || 0).getTime();
+                    // Sort by recent (last_visit_date)
+                    comparison = new Date(b.last_visit_date || 0).getTime() - new Date(a.last_visit_date || 0).getTime();
                   }
                   return sortOrder === 'desc' ? comparison : -comparison;
                 })
@@ -484,7 +487,9 @@ export default function CustomerDashboard() {
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-lg font-bold text-foreground">{t.recentTransactions.title}</h2>
           </div>
-          {recentTransactions.length === 0 ? (
+          {loadingTransactions ? (
+            <ListSkeleton items={3} />
+          ) : recentTransactions.length === 0 ? (
             <Card className="border-border/50">
               <CardContent className="p-12 text-center">
                 <div className="h-16 w-16 rounded-full bg-muted mx-auto mb-4 flex items-center justify-center">
@@ -519,13 +524,17 @@ export default function CustomerDashboard() {
                             {transaction.branches.restaurants.name}
                           </h3>
                           <p className="text-xs text-muted-foreground mt-0.5">
-                            {new Date(transaction.created_at).toLocaleString('en-MY', {
-                              day: 'numeric',
-                              month: 'short',
-                              year: 'numeric',
-                              hour: '2-digit',
-                              minute: '2-digit'
-                            })}
+                            {(() => {
+                              const date = new Date(transaction.created_at);
+                              const malaysiaTime = new Date(date.getTime() + (8 * 60 * 60 * 1000));
+                              return malaysiaTime.toLocaleString('en-MY', {
+                                day: 'numeric',
+                                month: 'short',
+                                year: 'numeric',
+                                hour: '2-digit',
+                                minute: '2-digit'
+                              });
+                            })()}
                           </p>
                         </div>
                         <div className="text-right">

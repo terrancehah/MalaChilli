@@ -1,13 +1,16 @@
 import { Button } from '../ui/button';
-import { X, CheckCircle } from 'lucide-react';
+import { X, CheckCircle, Edit, Cake } from 'lucide-react';
 import { useState, useEffect } from 'react';
 
 interface CustomerVerifiedModalProps {
   isOpen: boolean;
   onClose: () => void;
   onContinue: () => void;
+  onEdit: () => void;
   customerName: string;
   referralCode: string;
+  isBirthday?: boolean;
+  isFirstVisit?: boolean;
 }
 
 /**
@@ -18,8 +21,11 @@ export function CustomerVerifiedModal({
   isOpen, 
   onClose, 
   onContinue,
+  onEdit,
   customerName,
-  referralCode
+  referralCode,
+  isBirthday = false,
+  isFirstVisit = false
 }: CustomerVerifiedModalProps) {
   const [isAnimating, setIsAnimating] = useState(false);
   const [shouldRender, setShouldRender] = useState(false);
@@ -77,25 +83,52 @@ export function CustomerVerifiedModal({
 
           {/* Content */}
           <div className="text-center mb-6">
-            <h3 className="text-xl font-bold text-foreground mb-2">
+            <h3 className="text-xl font-bold text-foreground mb-3">
               Customer Verified
             </h3>
-            <p className="text-lg font-semibold text-foreground mb-1">
-              {customerName}
-            </p>
+            
+            {/* Badges */}
+            <div className="flex gap-2 justify-center mb-3">
+              {isBirthday && (
+                <div className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-gradient-to-r from-pink-500 to-purple-500 text-white rounded-full text-xs font-semibold shadow-lg">
+                  <Cake className="h-3.5 w-3.5" />
+                  Birthday Today! 🎉
+                </div>
+              )}
+              {isFirstVisit && (
+                <div className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-gradient-to-r from-green-500 to-emerald-500 text-white rounded-full text-xs font-semibold shadow-lg">
+                  ✨ First Visit
+                </div>
+              )}
+            </div>
+
+            <div className="flex items-center justify-center gap-2 mb-1">
+              <p className="text-lg font-semibold text-foreground">
+                {customerName}
+              </p>
+              <button
+                onClick={onEdit}
+                className="h-7 w-7 rounded-lg hover:bg-muted flex items-center justify-center transition-colors"
+                title="Edit customer details"
+              >
+                <Edit className="h-4 w-4 text-muted-foreground" />
+              </button>
+            </div>
             <p className="text-sm text-muted-foreground font-mono">
               {referralCode}
             </p>
           </div>
 
-          {/* Action Button */}
-          <Button
-            onClick={onContinue}
-            className="w-full bg-primary hover:bg-primary/90"
-            size="lg"
-          >
-            Continue to Checkout
-          </Button>
+          {/* Action Buttons */}
+          <div className="space-y-2">
+            <Button
+              onClick={onContinue}
+              className="w-full bg-primary hover:bg-primary/90 h-11"
+              size="lg"
+            >
+              Continue to Checkout
+            </Button>
+          </div>
         </div>
       </div>
     </div>

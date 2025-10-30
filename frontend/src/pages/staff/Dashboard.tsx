@@ -4,20 +4,23 @@ import { useAuth } from '../../contexts/AuthContext';
 import { supabase } from '../../lib/supabase';
 import { Button } from '../../components/ui/button';
 import { Alert, AlertDescription } from '../../components/ui/alert';
-import { Settings, Receipt, Users, QrCode, AlertCircle, CheckCircle } from 'lucide-react';
+import { Settings, Receipt, QrCode, AlertCircle, CheckCircle, Camera } from 'lucide-react';
 import { 
   SettingsPanel, 
   QRScannerSheet, 
   CustomerVerifiedModal, 
-  CheckoutSheet 
+  CheckoutSheet,
+  EditCustomerSheet
 } from '../../components/staff';
 import { DashboardHeader } from '../../components/shared/DashboardHeader';
-import { StatsCard } from '../../components/shared/StatsCard';
+import { HeaderSkeleton } from '../../components/ui/skeleton';
 
 interface CustomerInfo {
-  id: number;
+  id: string;
   full_name: string;
+  email: string;
   referral_code: string;
+  birthday?: string;
 }
 
 export default function StaffDashboard() {
@@ -29,62 +32,22 @@ export default function StaffDashboard() {
   const [showScanner, setShowScanner] = useState(false);
   const [showVerified, setShowVerified] = useState(false);
   const [showCheckout, setShowCheckout] = useState(false);
+  const [showEditCustomer, setShowEditCustomer] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string>('');
   const [success, setSuccess] = useState<string>('');
-  
-  // Stats
-  const [stats, setStats] = useState({
-    todayTransactions: 0,
-    todayRegistrations: 0,
-    todayCustomersHelped: 0,
-  });
   
   // Customer Data
   const [customerData, setCustomerData] = useState<CustomerInfo | null>(null);
   const [customerWalletBalance, setCustomerWalletBalance] = useState(0);
   const [isFirstVisit, setIsFirstVisit] = useState(false);
+  const [isBirthday, setIsBirthday] = useState(false);
 
   useEffect(() => {
-    // Fetch today's stats
-    const fetchStats = async () => {
-      if (!user?.id) return;
-
-      try {
-        // Fetch all transactions for this restaurant
-        const { data: allTransactions } = await supabase
-          .from('transactions')
-          .select('customer_id')
-          .eq('staff_id', user.id)
-          .order('created_at', { ascending: false });
-
-        // Fetch today's transactions
-        const today = new Date();
-        today.setHours(0, 0, 0, 0);
-        
-        const { data: todayTransactions } = await supabase
-          .from('transactions')
-          .select('customer_id')
-          .eq('staff_id', user.id)
-          .gte('created_at', today.toISOString());
-
-        // Fetch customers registered through this staff's transactions
-        const customerIds = [...new Set(allTransactions?.map(t => t.customer_id) || [])];
-        const todayCustomerIds = [...new Set(todayTransactions?.map(t => t.customer_id) || [])];
-
-        setStats({
-          todayTransactions: todayTransactions?.length || 0,
-          todayRegistrations: todayCustomerIds.length,
-          todayCustomersHelped: customerIds.length,
-        });
-      } catch (error) {
-        console.error('Error fetching stats:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchStats();
+    // Set loading to false once user is loaded
+    if (user) {
+      setLoading(false);
+    }
   }, [user]);
 
   const handleSignOut = async () => {
@@ -112,7 +75,7 @@ export default function StaffDashboard() {
       // Look up customer by user ID
       const { data: customer, error: customerError } = await supabase
         .from('users')
-        .select('id, full_name, referral_code')
+        .select('id, full_name, email, referral_code, birthday')
         .eq('id', customerId)
         .eq('role', 'customer')
         .single();
@@ -120,6 +83,13 @@ export default function StaffDashboard() {
       if (customerError || !customer) {
         throw new Error('Customer not found. Please check the QR code and try again.');
       }
+
+      // Check if today is customer's birthday
+      const today = new Date();
+      const customerBirthday = customer.birthday ? new Date(customer.birthday) : null;
+      const isBirthdayToday = customerBirthday && 
+        customerBirthday.getMonth() === today.getMonth() && 
+        customerBirthday.getDate() === today.getDate();
 
       // Get customer's wallet balance
       const { data: walletData } = await supabase
@@ -140,6 +110,7 @@ export default function StaffDashboard() {
       setCustomerData(customer);
       setCustomerWalletBalance(walletData?.available_balance || 0);
       setIsFirstVisit(!visitHistory || visitHistory.total_visits === 0);
+      setIsBirthday(isBirthdayToday || false);
       setShowScanner(false);
       setShowVerified(true);
     } catch (err: any) {
@@ -185,21 +156,6 @@ export default function StaffDashboard() {
       setCustomerWalletBalance(0);
       setIsFirstVisit(false);
 
-      // Refresh stats
-      const today = new Date();
-      today.setHours(0, 0, 0, 0);
-      
-      const { data: todayTransactions } = await supabase
-        .from('transactions')
-        .select('customer_id')
-        .eq('staff_id', user.id)
-        .gte('created_at', today.toISOString());
-
-      setStats(prev => ({
-        ...prev,
-        todayTransactions: todayTransactions?.length || 0,
-      }));
-
       // Clear success message after 3 seconds
       setTimeout(() => setSuccess(''), 3000);
     } catch (err: any) {
@@ -208,28 +164,10 @@ export default function StaffDashboard() {
     }
   };
 
-  const staffStats = [
-    {
-      label: 'Transactions',
-      value: stats.todayTransactions,
-      icon: <Receipt className="h-6 w-6 md:h-7 md:w-7 text-blue-600 dark:text-blue-400" />,
-    },
-    {
-      label: 'New Sign-ups',
-      value: stats.todayRegistrations,
-      icon: <Users className="h-6 w-6 md:h-7 md:w-7 text-green-600 dark:text-green-400" />,
-    },
-    {
-      label: 'Customers Helped',
-      value: stats.todayCustomersHelped,
-      icon: <Users className="h-6 w-6 md:h-7 md:w-7 text-purple-600 dark:text-purple-400" />,
-    },
-  ];
-
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
-        <div className="text-gray-600 dark:text-gray-400">Loading...</div>
+      <div className="min-h-screen bg-background pb-6">
+        <HeaderSkeleton />
       </div>
     );
   }
@@ -237,7 +175,6 @@ export default function StaffDashboard() {
   return (
     <div className="min-h-screen bg-background pb-6">
       <DashboardHeader
-        user={user}
         title={user?.full_name || user?.email || 'Staff'}
         subtitle="Staff Portal"
         actions={
@@ -250,9 +187,7 @@ export default function StaffDashboard() {
             <Settings className="h-6 w-6 text-primary" />
           </Button>
         }
-      >
-        <StatsCard stats={staffStats} />
-      </DashboardHeader>
+      />
 
       <div className="max-w-7xl mx-auto px-6 mt-6 space-y-6">
 
@@ -277,24 +212,37 @@ export default function StaffDashboard() {
         {/* Quick Actions */}
         <div>
           <h2 className="text-lg md:text-xl font-bold text-foreground mb-4">Quick Actions</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {/* Primary Action - Scan Customer QR */}
             <Button
               onClick={() => setShowScanner(true)}
-              className="h-20 md:h-24 text-base md:text-lg bg-primary hover:bg-primary/90 font-semibold"
+              className="h-32 md:h-36 bg-gradient-to-br from-primary to-primary-light hover:from-primary/90 hover:to-primary-light/90 shadow-lg hover:shadow-xl transition-all duration-300 rounded-2xl flex flex-col items-center justify-center gap-4 group"
               size="lg"
             >
-              <QrCode className="!h-12 !w-12 md:!h-14 md:!w-14 mr-3" />
-              Scan Customer QR
+              <QrCode className="!h-12 !w-12 md:!h-14 md:!w-14 text-white group-hover:scale-110 transition-transform duration-300" />
+              <span className="text-base md:text-lg font-semibold text-white">Scan Customer QR</span>
             </Button>
 
+            {/* Secondary Action - Scan Receipt */}
+            <Button
+              onClick={() => setError('Receipt scanning feature coming soon!')}
+              variant="outline"
+              className="h-32 md:h-36 border-2 border-border hover:border-primary/50 hover:bg-primary/5 shadow-md hover:shadow-lg transition-all duration-300 rounded-2xl flex flex-col items-center justify-center gap-4 group"
+              size="lg"
+            >
+              <Camera className="!h-16 !w-16 md:!h-20 md:!w-20 text-muted-foreground group-hover:text-primary group-hover:scale-110 transition-all duration-300" />
+              <span className="text-base md:text-lg font-semibold text-foreground">Scan Receipt</span>
+            </Button>
+
+            {/* Secondary Action - View Transactions */}
             <Button
               onClick={handleViewTransactions}
               variant="outline"
-              className="h-20 md:h-24 text-base md:text-lg font-semibold"
+              className="h-32 md:h-36 border-2 border-border hover:border-primary/50 hover:bg-primary/5 shadow-md hover:shadow-lg transition-all duration-300 rounded-2xl flex flex-col items-center justify-center gap-4 group"
               size="lg"
             >
-              <Receipt className="!h-12 !w-12 md:!h-14 md:!w-14 mr-3" />
-              View Transactions
+              <Receipt className="!h-16 !w-16 md:!h-20 md:!w-20 text-muted-foreground group-hover:text-primary group-hover:scale-110 transition-all duration-300" />
+              <span className="text-base md:text-lg font-semibold text-foreground">View Transactions</span>
             </Button>
           </div>
         </div>
@@ -320,8 +268,24 @@ export default function StaffDashboard() {
             isOpen={showVerified}
             onClose={() => setShowVerified(false)}
             onContinue={handleContinueToCheckout}
+            onEdit={() => {
+              setShowVerified(false);
+              setShowEditCustomer(true);
+            }}
             customerName={customerData.full_name}
             referralCode={customerData.referral_code}
+            isBirthday={isBirthday}
+            isFirstVisit={isFirstVisit}
+          />
+
+          <EditCustomerSheet
+            isOpen={showEditCustomer}
+            onClose={() => setShowEditCustomer(false)}
+            customerData={customerData}
+            onUpdate={() => {
+              // Refresh customer data after update
+              handleScanSuccess(customerData.id);
+            }}
           />
 
           <CheckoutSheet

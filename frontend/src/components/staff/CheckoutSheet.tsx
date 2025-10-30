@@ -11,7 +11,7 @@ interface CheckoutSheetProps {
   isOpen: boolean;
   onClose: () => void;
   customerData: {
-    id: number;
+    id: string;
     full_name: string;
     referral_code: string;
   };

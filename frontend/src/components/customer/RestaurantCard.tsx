@@ -16,6 +16,7 @@ interface Restaurant {
   referral_code: string;
   total_visits?: number;
   first_visit_date?: string;
+  last_visit_date?: string;
   total_spent?: number;
   // Virtual currency fields (restaurant-specific)
   balance?: number;
@@ -44,9 +45,9 @@ export function RestaurantCard({ restaurant, getTimeAgo, onShare, language = 'en
             <h3 className="font-semibold text-foreground">
               {restaurant.restaurant.name}
             </h3>
-            {restaurant.total_visits && restaurant.first_visit_date && (
+            {restaurant.total_visits && restaurant.last_visit_date && (
               <p className="text-xs text-muted-foreground mt-0.5">
-                {restaurant.total_visits} {restaurant.total_visits === 1 ? t.restaurantCard.visit : t.restaurantCard.visits} • Last: {getTimeAgo(restaurant.first_visit_date)}
+                {restaurant.total_visits} {restaurant.total_visits === 1 ? t.restaurantCard.visit : t.restaurantCard.visits} • Last: {getTimeAgo(restaurant.last_visit_date)}
               </p>
             )}
           </div>
