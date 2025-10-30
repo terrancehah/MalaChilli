@@ -227,7 +227,6 @@ export default function DemoDashboard() {
       </div>
 
       <DashboardHeader
-        user={demoUser}
         title={demoUser.full_name}
         subtitle="Verified Customer"
         actions={

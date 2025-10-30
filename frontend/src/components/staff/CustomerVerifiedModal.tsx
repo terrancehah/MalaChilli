@@ -1,12 +1,11 @@
 import { Button } from '../ui/button';
-import { X, CheckCircle, Edit, Cake } from 'lucide-react';
+import { X, CheckCircle, Cake } from 'lucide-react';
 import { useState, useEffect } from 'react';
 
 interface CustomerVerifiedModalProps {
   isOpen: boolean;
   onClose: () => void;
   onContinue: () => void;
-  onEdit: () => void;
   customerName: string;
   referralCode: string;
   isBirthday?: boolean;
@@ -21,7 +20,6 @@ export function CustomerVerifiedModal({
   isOpen, 
   onClose, 
   onContinue,
-  onEdit,
   customerName,
   referralCode,
   isBirthday = false,
@@ -102,18 +100,9 @@ export function CustomerVerifiedModal({
               )}
             </div>
 
-            <div className="flex items-center justify-center gap-2 mb-1">
-              <p className="text-lg font-semibold text-foreground">
-                {customerName}
-              </p>
-              <button
-                onClick={onEdit}
-                className="h-7 w-7 rounded-lg hover:bg-muted flex items-center justify-center transition-colors"
-                title="Edit customer details"
-              >
-                <Edit className="h-4 w-4 text-muted-foreground" />
-              </button>
-            </div>
+            <p className="text-lg font-semibold text-foreground mb-1">
+              {customerName}
+            </p>
             <p className="text-sm text-muted-foreground font-mono">
               {referralCode}
             </p>

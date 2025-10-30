@@ -4,7 +4,7 @@ import { useAuth } from '../../contexts/AuthContext';
 import { supabase } from '../../lib/supabase';
 import { Button } from '../../components/ui/button';
 import { Alert, AlertDescription } from '../../components/ui/alert';
-import { Settings, Receipt, QrCode, AlertCircle, CheckCircle, Camera } from 'lucide-react';
+import { Settings, Receipt, QrCode, AlertCircle, CheckCircle, Camera, Edit } from 'lucide-react';
 import { 
   SettingsPanel, 
   QRScannerSheet, 
@@ -212,15 +212,30 @@ export default function StaffDashboard() {
         {/* Quick Actions */}
         <div>
           <h2 className="text-lg md:text-xl font-bold text-foreground mb-4">Quick Actions</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {/* Primary Action - Scan Customer QR */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            {/* Primary Action - Scan Customer QR for Checkout */}
             <Button
               onClick={() => setShowScanner(true)}
               className="h-32 md:h-36 bg-gradient-to-br from-primary to-primary-light hover:from-primary/90 hover:to-primary-light/90 shadow-lg hover:shadow-xl transition-all duration-300 rounded-2xl flex flex-col items-center justify-center gap-4 group"
               size="lg"
             >
               <QrCode className="!h-12 !w-12 md:!h-14 md:!w-14 text-white group-hover:scale-110 transition-transform duration-300" />
-              <span className="text-base md:text-lg font-semibold text-white">Scan Customer QR</span>
+              <span className="text-base md:text-lg font-semibold text-white">Scan for Checkout</span>
+            </Button>
+
+            {/* Secondary Action - Edit Customer */}
+            <Button
+              onClick={() => {
+                setShowScanner(false);
+                // Will implement customer lookup/edit flow
+                setError('Please scan customer QR to edit their details');
+              }}
+              variant="outline"
+              className="h-32 md:h-36 border-2 border-border hover:border-primary/50 hover:bg-primary/5 shadow-md hover:shadow-lg transition-all duration-300 rounded-2xl flex flex-col items-center justify-center gap-4 group"
+              size="lg"
+            >
+              <Edit className="!h-12 !w-12 md:!h-14 md:!w-14 text-muted-foreground group-hover:text-primary group-hover:scale-110 transition-all duration-300" />
+              <span className="text-base md:text-lg font-semibold text-foreground">Edit Customer</span>
             </Button>
 
             {/* Secondary Action - Scan Receipt */}
@@ -230,7 +245,7 @@ export default function StaffDashboard() {
               className="h-32 md:h-36 border-2 border-border hover:border-primary/50 hover:bg-primary/5 shadow-md hover:shadow-lg transition-all duration-300 rounded-2xl flex flex-col items-center justify-center gap-4 group"
               size="lg"
             >
-              <Camera className="!h-16 !w-16 md:!h-20 md:!w-20 text-muted-foreground group-hover:text-primary group-hover:scale-110 transition-all duration-300" />
+              <Camera className="!h-12 !w-12 md:!h-14 md:!w-14 text-muted-foreground group-hover:text-primary group-hover:scale-110 transition-all duration-300" />
               <span className="text-base md:text-lg font-semibold text-foreground">Scan Receipt</span>
             </Button>
 
@@ -241,7 +256,7 @@ export default function StaffDashboard() {
               className="h-32 md:h-36 border-2 border-border hover:border-primary/50 hover:bg-primary/5 shadow-md hover:shadow-lg transition-all duration-300 rounded-2xl flex flex-col items-center justify-center gap-4 group"
               size="lg"
             >
-              <Receipt className="!h-16 !w-16 md:!h-20 md:!w-20 text-muted-foreground group-hover:text-primary group-hover:scale-110 transition-all duration-300" />
+              <Receipt className="!h-12 !w-12 md:!h-14 md:!w-14 text-muted-foreground group-hover:text-primary group-hover:scale-110 transition-all duration-300" />
               <span className="text-base md:text-lg font-semibold text-foreground">View Transactions</span>
             </Button>
           </div>
@@ -268,24 +283,10 @@ export default function StaffDashboard() {
             isOpen={showVerified}
             onClose={() => setShowVerified(false)}
             onContinue={handleContinueToCheckout}
-            onEdit={() => {
-              setShowVerified(false);
-              setShowEditCustomer(true);
-            }}
             customerName={customerData.full_name}
             referralCode={customerData.referral_code}
             isBirthday={isBirthday}
             isFirstVisit={isFirstVisit}
-          />
-
-          <EditCustomerSheet
-            isOpen={showEditCustomer}
-            onClose={() => setShowEditCustomer(false)}
-            customerData={customerData}
-            onUpdate={() => {
-              // Refresh customer data after update
-              handleScanSuccess(customerData.id);
-            }}
           />
 
           <CheckoutSheet
@@ -297,6 +298,19 @@ export default function StaffDashboard() {
             onSubmit={handleCheckoutSubmit}
           />
         </>
+      )}
+
+      {/* Edit Customer Sheet - Separate from checkout flow */}
+      {customerData && (
+        <EditCustomerSheet
+          isOpen={showEditCustomer}
+          onClose={() => setShowEditCustomer(false)}
+          customerData={customerData}
+          onUpdate={() => {
+            // Refresh customer data after update
+            handleScanSuccess(customerData.id);
+          }}
+        />
       )}
     </div>
   );
