@@ -4,3 +4,4 @@ export { CustomerInfoCard } from './CustomerInfoCard';
 export { CustomerVerifiedModal } from './CustomerVerifiedModal';
 export { CheckoutSheet } from './CheckoutSheet';
 export { EditCustomerSheet } from './EditCustomerSheet';
+export { CustomerLookupSheet } from './CustomerLookupSheet';

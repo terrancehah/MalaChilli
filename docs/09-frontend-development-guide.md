@@ -149,19 +149,12 @@ CSS Grid: grid-template-rows: 0fr → 1fr (300ms)
 - Container: Ring border appears when editing
 
 **Structure:**
-```tsx
-<div className="p-3 flex items-start justify-between">
-  <div className="flex-1 min-w-0">
-    <p>Label</p>                    {/* Always visible */}
-    {!isEditing && <p>Value</p>}    {/* Conditional */}
-    <AnimatedGrid>                  {/* Only this animates */}
-      <input />
-      <Button>Save</Button>
-    </AnimatedGrid>
-  </div>
-  {!isEditing && <EditIcon />}      {/* Aligned with entire field */}
-</div>
-```
+- Label always visible
+- Value conditionally shown when not editing
+- AnimatedGrid wraps input and buttons (only this animates)
+- EditIcon aligned with entire field when not editing
+
+**Reference:** `/frontend/src/pages/customer/Dashboard.tsx` - Name field editing
 
 **Typography:**
 - Labels: `text-sm font-semibold`
@@ -187,11 +180,9 @@ CSS Grid: grid-template-rows: 0fr → 1fr (300ms)
 **Example:** Restaurant Promotion Info, Virtual Currency Info
 
 **Close Button Pattern:**
-```tsx
-<button className="absolute top-0 right-0 h-6 w-6">
-  <X className="h-5 w-5" />
-</button>
-```
+- Absolute positioned (top-0 right-0)
+- Size: h-6 w-6
+- Icon: h-5 w-5
 
 **Implementation:** `/frontend/src/pages/customer/Dashboard.tsx` - Info modals
 
@@ -282,7 +273,35 @@ Object Fit: cover - Fills container without distortion
 
 ---
 
-### 5. Staff Checkout Flow Pattern
+### 5. Staff Dashboard Action Buttons Pattern
+
+**Design Decision: Large Touch-Optimized Action Cards**
+
+**Visual Design:**
+- **Primary Action** (Scan for Checkout): Gradient background (primary to primary-light)
+- **Secondary Actions**: Outlined style with hover effects
+- Card height: `h-32 md:h-36` (128px mobile, 144px desktop)
+- Icon size: `!h-12 !w-12 md:!h-14 md:!w-14` with `!important` override
+- No background containers for icons - icons directly in buttons
+- Hover effects: scale transform (110%), color changes, shadow elevation
+- Smooth transitions: 300ms duration
+
+**Grid Layout:**
+- Mobile: 1 column (grid-cols-1)
+- Tablet: 2 columns (md:grid-cols-2)
+- Desktop: 4 columns (lg:grid-cols-4)
+
+**Action Buttons:**
+1. **Scan for Checkout** - Primary green gradient, checkout flow only
+2. **Edit Customer** - Opens customer lookup/search
+3. **Scan Receipt** - Placeholder for future OCR feature
+4. **View Transactions** - Navigate to transaction history
+
+**Implementation:** `/frontend/src/pages/staff/Dashboard.tsx`
+
+---
+
+### 6. Staff Checkout Flow Pattern
 
 **Design Decision: Streamlined Single-Screen Checkout**
 
@@ -293,10 +312,16 @@ Object Fit: cover - Fills container without distortion
 - Staff efficiency prioritized
 
 **Checkout Flow:**
-```
-1. Scan Customer QR → 2. Verify Customer → 3. Enter Bill & Redeem VC → 4. Submit
-   (QR Scanner Sheet)    (Verification Modal)   (Checkout Sheet)           (Done!)
-```
+1. Scan Customer QR (QR Scanner Sheet)
+2. Verify Customer (Verification Modal)
+3. Enter Bill & Redeem VC (Checkout Sheet)
+4. Submit (Done!)
+
+**Customer Verification Modal Features:**
+- **Birthday Detection**: Shows gradient badge if today is customer's birthday
+- **First Visit Badge**: Displays for new customers at this restaurant
+- Birthday check: Compares month and day (timezone-aware)
+- Clean, focused design - no edit functionality (edit is separate flow)
 
 **Key Design Decisions:**
 
@@ -321,6 +346,57 @@ Object Fit: cover - Fills container without distortion
 **Implementation:** 
 - `/frontend/src/pages/staff/Dashboard.tsx` - Main flow orchestration
 - `/frontend/src/components/staff/CheckoutSheet.tsx` - Transaction UI
+- `/frontend/src/components/staff/CustomerVerifiedModal.tsx` - Verification with badges
+
+---
+
+### 7. Customer Lookup & Edit Pattern
+
+**Design Decision: Dual Search Methods (QR + Manual Search)**
+
+**Why Both Methods:**
+- QR scanning: Fast for customers with QR ready
+- Manual search: Flexible when QR unavailable
+- Staff can find any customer quickly
+- Better counter experience
+
+**Customer Lookup Sheet Features:**
+- **QR Scan Button**: Large, prominent action to open QR scanner
+- **Manual Search**: Text input with real-time search
+- Search by: name, email, or referral code
+- Case-insensitive partial matching
+- Shows up to 10 results
+
+**Search Results Display:**
+- Avatar icon (primary colored)
+- Full name (bold, hover effect)
+- Email with icon
+- Referral code (monospace badge)
+- Birthday (if available) 🎂
+
+**Edit Customer Flow:**
+1. Click "Edit Customer" (Dashboard Button)
+2. Choose Method (Lookup Sheet)
+3. Find Customer (Search/Scan)
+4. Edit Details (Edit Sheet)
+
+**Edit Customer Sheet:**
+- Edit full name (required)
+- Edit birthday (optional, for birthday rewards)
+- Clean form with validation
+- Success feedback after save
+- Auto-refresh customer data
+
+**Separation from Checkout:**
+- Edit customer is completely separate from checkout flow
+- "Scan for Checkout" button only for transactions
+- "Edit Customer" button only for profile updates
+- No mixing of concerns
+
+**Implementation:**
+- `/frontend/src/components/staff/CustomerLookupSheet.tsx` - Search interface
+- `/frontend/src/components/staff/EditCustomerSheet.tsx` - Edit form
+- `/frontend/src/pages/staff/Dashboard.tsx` - Flow orchestration
 
 ---
 
@@ -331,26 +407,15 @@ Object Fit: cover - Fills container without distortion
 **Solution:** Use CSS Grid with `grid-template-rows`
 
 **How it works:**
-```
-0fr = "0 fractions of space" = 0px (collapsed)
-1fr = "1 fraction of space" = natural content height (expanded)
-```
-
-**CSS automatically calculates pixel values and animates smoothly**
+- 0fr = "0 fractions of space" = 0px (collapsed)
+- 1fr = "1 fraction of space" = natural content height (expanded)
+- CSS automatically calculates pixel values and animates smoothly
 
 **Structure:**
-```tsx
-<div className="grid transition-[grid-template-rows] duration-300" 
-     style={{ gridTemplateRows: isOpen ? '1fr' : '0fr' }}>
-  <div className="overflow-hidden">
-    <div className="px-0.5">  {/* Prevents focus ring clipping */}
-      Content here
-    </div>
-  </div>
-</div>
-```
-
-**Why `px-0.5`:** Prevents 2px focus ring from being clipped by `overflow-hidden`
+- Grid container with `transition-[grid-template-rows] duration-300`
+- Style: `gridTemplateRows: isOpen ? '1fr' : '0fr'`
+- Inner div with `overflow-hidden`
+- Content wrapper with `px-0.5` (prevents 2px focus ring from being clipped)
 
 **Implementation:** `/frontend/src/pages/customer/Dashboard.tsx` - Name field expansion
 
@@ -402,50 +467,40 @@ Object Fit: cover - Fills container without distortion
 ### Style Variants
 
 **Primary (Green):**
-```tsx
-<Button className="bg-primary text-white hover:bg-primary/90">
-```
+- `bg-primary text-white hover:bg-primary/90`
 
 **Outline:**
-```tsx
-<Button variant="outline" className="border-border hover:bg-muted">
-```
+- `variant="outline" border-border hover:bg-muted`
 
 **Ghost:**
-```tsx
-<Button variant="ghost" className="hover:bg-muted">
-```
+- `variant="ghost" hover:bg-muted`
 
 **Icon Button:**
-```tsx
-<Button className="h-8 w-8 p-0">
-  <Icon className="h-4 w-4" />
-</Button>
-```
+- Size: `h-8 w-8 p-0`
+- Icon: `h-4 w-4`
 
 ---
 
 ## Input Field Standards
 
 ### Text Input
-
-```tsx
-<input className="w-full px-3 py-2 text-sm bg-background border border-border 
-                 rounded-md focus:outline-none focus:ring-2 focus:ring-primary" />
-```
+- Full width: `w-full`
+- Padding: `px-3 py-2`
+- Text: `text-sm`
+- Background: `bg-background`
+- Border: `border border-border rounded-md`
+- Focus: `focus:outline-none focus:ring-2 focus:ring-primary`
 
 ### Validation States
 
 **Invalid:**
-```tsx
-<input className="border-red-500 focus:ring-red-500" />
-<p className="text-xs text-red-500 mt-1">Error message</p>
-```
+- Border: `border-red-500`
+- Focus ring: `focus:ring-red-500`
+- Error message: `text-xs text-red-500 mt-1`
 
 **Valid:**
-```tsx
-<input className="border-green-500 focus:ring-green-500" />
-```
+- Border: `border-green-500`
+- Focus ring: `focus:ring-green-500`
 
 ---
 
@@ -553,7 +608,55 @@ When creating a new component, ensure:
 
 ---
 
-## Recent Updates (2025-10-29)
+## Recent Updates
+
+### Staff Dashboard Enhancements (2025-10-30)
+
+**Component:** `/frontend/src/pages/staff/Dashboard.tsx`
+
+**New Features:**
+
+1. **Enhanced Action Buttons**
+   - Large touch-optimized cards (h-32 md:h-36)
+   - Primary gradient button for checkout
+   - Icons with !important size override (!h-12 !w-12 md:!h-14 md:!w-14)
+   - No background containers - clean icon display
+   - Smooth hover effects with scale and color transitions
+   - 4-column grid on desktop (lg:grid-cols-4)
+
+2. **Customer Lookup & Edit System**
+   - **CustomerLookupSheet**: Dual search methods (QR + manual)
+   - Search by name, email, or referral code
+   - Real-time search with up to 10 results
+   - Beautiful customer cards with all details
+   - **EditCustomerSheet**: Edit name and birthday
+   - Completely separate from checkout flow
+
+3. **Birthday & First Visit Detection**
+   - Automatic birthday detection on QR scan
+   - Birthday badge with gradient (pink-to-purple)
+   - First visit badge with gradient (green-to-emerald)
+   - Displayed in CustomerVerifiedModal
+   - Ready for birthday rewards implementation
+
+**Components Added:**
+- `/frontend/src/components/staff/CustomerLookupSheet.tsx`
+- `/frontend/src/components/staff/EditCustomerSheet.tsx`
+
+**Components Updated:**
+- `/frontend/src/components/staff/CustomerVerifiedModal.tsx` - Added badges
+- `/frontend/src/pages/staff/Dashboard.tsx` - Enhanced UI and flows
+
+**Design Improvements:**
+- Removed stats card from staff dashboard
+- Separated checkout and edit flows
+- Better visual hierarchy with gradients
+- Touch-optimized button sizes
+- Consistent 300ms transitions
+
+---
+
+### Previous Updates (2025-10-29)
 
 ### Transaction Detail Bottom Sheet
 **Component:** `/frontend/src/components/customer/TransactionDetailSheet.tsx`

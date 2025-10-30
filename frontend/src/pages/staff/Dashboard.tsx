@@ -10,7 +10,8 @@ import {
   QRScannerSheet, 
   CustomerVerifiedModal, 
   CheckoutSheet,
-  EditCustomerSheet
+  EditCustomerSheet,
+  CustomerLookupSheet
 } from '../../components/staff';
 import { DashboardHeader } from '../../components/shared/DashboardHeader';
 import { HeaderSkeleton } from '../../components/ui/skeleton';
@@ -30,6 +31,7 @@ export default function StaffDashboard() {
   // UI State
   const [showSettings, setShowSettings] = useState(false);
   const [showScanner, setShowScanner] = useState(false);
+  const [showCustomerLookup, setShowCustomerLookup] = useState(false);
   const [showVerified, setShowVerified] = useState(false);
   const [showCheckout, setShowCheckout] = useState(false);
   const [showEditCustomer, setShowEditCustomer] = useState(false);
@@ -225,11 +227,7 @@ export default function StaffDashboard() {
 
             {/* Secondary Action - Edit Customer */}
             <Button
-              onClick={() => {
-                setShowScanner(false);
-                // Will implement customer lookup/edit flow
-                setError('Please scan customer QR to edit their details');
-              }}
+              onClick={() => setShowCustomerLookup(true)}
               variant="outline"
               className="h-32 md:h-36 border-2 border-border hover:border-primary/50 hover:bg-primary/5 shadow-md hover:shadow-lg transition-all duration-300 rounded-2xl flex flex-col items-center justify-center gap-4 group"
               size="lg"
@@ -300,6 +298,20 @@ export default function StaffDashboard() {
         </>
       )}
 
+      {/* Customer Lookup Sheet - For editing customer details */}
+      <CustomerLookupSheet
+        isOpen={showCustomerLookup}
+        onClose={() => setShowCustomerLookup(false)}
+        onCustomerFound={(customer) => {
+          setCustomerData(customer);
+          setShowEditCustomer(true);
+        }}
+        onScanQR={() => {
+          setShowCustomerLookup(false);
+          setShowScanner(true);
+        }}
+      />
+
       {/* Edit Customer Sheet - Separate from checkout flow */}
       {customerData && (
         <EditCustomerSheet
@@ -307,8 +319,9 @@ export default function StaffDashboard() {
           onClose={() => setShowEditCustomer(false)}
           customerData={customerData}
           onUpdate={() => {
-            // Refresh customer data after update
-            handleScanSuccess(customerData.id);
+            setShowEditCustomer(false);
+            setSuccess('Customer details updated successfully!');
+            setTimeout(() => setSuccess(''), 3000);
           }}
         />
       )}
