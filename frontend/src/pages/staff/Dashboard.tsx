@@ -11,7 +11,10 @@ import {
   CustomerVerifiedModal, 
   CheckoutSheet,
   EditCustomerSheet,
-  CustomerLookupSheet
+  CustomerLookupSheet,
+  TransactionSuccessModal,
+  ErrorModal,
+  ReceiptOCRSheet
 } from '../../components/staff';
 import { DashboardHeader } from '../../components/shared/DashboardHeader';
 import { HeaderSkeleton } from '../../components/ui/skeleton';
@@ -35,9 +38,21 @@ export default function StaffDashboard() {
   const [showVerified, setShowVerified] = useState(false);
   const [showCheckout, setShowCheckout] = useState(false);
   const [showEditCustomer, setShowEditCustomer] = useState(false);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [showErrorModal, setShowErrorModal] = useState(false);
+  const [showReceiptOCR, setShowReceiptOCR] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string>('');
   const [success, setSuccess] = useState<string>('');
+  
+  // Transaction data for success modal
+  const [lastTransaction, setLastTransaction] = useState<{
+    id: string;
+    billAmount: number;
+    discountApplied: number;
+    vcRedeemed: number;
+    birthdayBonus?: number;
+  } | null>(null);
   
   // Customer Data
   const [customerData, setCustomerData] = useState<CustomerInfo | null>(null);
@@ -117,6 +132,8 @@ export default function StaffDashboard() {
       setShowVerified(true);
     } catch (err: any) {
       setError(err.message);
+      setShowErrorModal(true);
+      setShowScanner(false);
     } finally {
       setLoading(false);
     }
@@ -137,7 +154,7 @@ export default function StaffDashboard() {
 
     try {
       // Call the process_checkout_transaction function
-      const { data: transactionId, error: transactionError } = await supabase
+      const { data: transactionResult, error: transactionError } = await supabase
         .rpc('process_checkout_transaction', {
           p_customer_id: customerData.id,
           p_branch_id: user.branch_id,
@@ -150,19 +167,29 @@ export default function StaffDashboard() {
 
       if (transactionError) throw transactionError;
 
-      setSuccess(`Transaction completed successfully! ID: ${transactionId}`);
+      // Calculate discount applied (5% guaranteed discount always applied)
+      const discountApplied = data.billAmount * 0.05;
+
+      // Store transaction data and show success modal
+      setLastTransaction({
+        id: transactionResult.transaction_id,
+        billAmount: data.billAmount,
+        discountApplied: discountApplied,
+        vcRedeemed: data.redeemAmount,
+        birthdayBonus: transactionResult.birthday_bonus || 0
+      });
+      
       setShowCheckout(false);
+      setShowSuccessModal(true);
       
       // Reset customer data
       setCustomerData(null);
       setCustomerWalletBalance(0);
       setIsFirstVisit(false);
-
-      // Clear success message after 3 seconds
-      setTimeout(() => setSuccess(''), 3000);
+      setIsBirthday(false);
     } catch (err: any) {
-      setError(err.message);
-      throw err; // Re-throw to let CheckoutSheet handle it
+      setError(err.message || 'Failed to process transaction');
+      setShowErrorModal(true);
     }
   };
 
@@ -238,7 +265,7 @@ export default function StaffDashboard() {
 
             {/* Secondary Action - Scan Receipt */}
             <Button
-              onClick={() => setError('Receipt scanning feature coming soon!')}
+              onClick={() => setShowReceiptOCR(true)}
               variant="outline"
               className="h-32 md:h-36 border-2 border-border hover:border-primary/50 hover:bg-primary/5 shadow-md hover:shadow-lg transition-all duration-300 rounded-2xl flex flex-col items-center justify-center gap-4 group"
               size="lg"
@@ -325,6 +352,51 @@ export default function StaffDashboard() {
           }}
         />
       )}
+
+      {/* Transaction Success Modal */}
+      {lastTransaction && customerData && (
+        <TransactionSuccessModal
+          isOpen={showSuccessModal}
+          onClose={() => {
+            setShowSuccessModal(false);
+            setLastTransaction(null);
+          }}
+          transactionId={lastTransaction.id}
+          customerName={customerData.full_name}
+          billAmount={lastTransaction.billAmount}
+          discountApplied={lastTransaction.discountApplied}
+          vcRedeemed={lastTransaction.vcRedeemed}
+          birthdayBonus={lastTransaction.birthdayBonus}
+        />
+      )}
+
+      {/* Error Modal */}
+      <ErrorModal
+        isOpen={showErrorModal}
+        onClose={() => {
+          setShowErrorModal(false);
+          setError('');
+        }}
+        title="Transaction Failed"
+        message={error}
+      />
+
+      {/* Receipt OCR Sheet */}
+      <ReceiptOCRSheet
+        isOpen={showReceiptOCR}
+        onClose={() => setShowReceiptOCR(false)}
+        onExtracted={(data) => {
+          setShowReceiptOCR(false);
+          const itemsText = data.extraction.items.length > 0 
+            ? ` | ${data.extraction.items.length} items (${data.matchedItems.length} matched)`
+            : '';
+          setSuccess(`Receipt scanned! Amount: RM ${data.amount.toFixed(2)}${itemsText} | Confidence: ${data.extraction.confidence}%`);
+          setTimeout(() => setSuccess(''), 5000);
+          
+          // TODO: Save OCR data to database when creating transaction
+          console.log('OCR Data:', data);
+        }}
+      />
     </div>
   );
 }
