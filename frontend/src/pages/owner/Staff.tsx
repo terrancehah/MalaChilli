@@ -25,7 +25,7 @@ export default function StaffManagement() {
   const { user } = useAuth();
   const navigate = useNavigate();
   const [staff, setStaff] = useState<StaffMember[]>([]);
-  const [branches, setBranches] = useState<Branch[]>([]);
+  const [, setBranches] = useState<Branch[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
