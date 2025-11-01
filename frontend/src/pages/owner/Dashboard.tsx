@@ -5,65 +5,98 @@ import { supabase } from '../../lib/supabase';
 import { Button } from '../../components/ui/button';
 import { Card, CardContent } from '../../components/ui/card';
 import { Skeleton, HeaderSkeleton } from '../../components/ui/skeleton';
-import { LogOut, Receipt, Users, DollarSign, TrendingUp } from 'lucide-react';
+import { Settings, Share2, DollarSign, Users as UsersIcon } from 'lucide-react';
+import type { DashboardSummary } from '../../types/analytics.types';
+
+// Import tab components
+import { 
+  ViralPerformanceTab,
+  BusinessMetricsTab,
+  CustomerInsightsTab 
+} from '../../components/owner';
+import { OwnerSettingsPanel } from '../../components/owner/OwnerSettingsPanel';
+
+type TabType = 'viral' | 'business' | 'customers';
 
 export default function OwnerDashboard() {
   const { user, signOut } = useAuth();
   const navigate = useNavigate();
-  const [stats, setStats] = useState({
-    totalCustomers: 0,
-    totalTransactions: 0,
-    totalRevenue: 0,
-    todayRevenue: 0,
-  });
+  const [activeTab, setActiveTab] = useState<TabType>('viral');
+  const [summary, setSummary] = useState<DashboardSummary | null>(null);
   const [loading, setLoading] = useState(true);
+  const [restaurantId, setRestaurantId] = useState<string | null>(null);
+  const [restaurantName, setRestaurantName] = useState<string>('');
+  const [showSettings, setShowSettings] = useState(false);
 
+  // Get restaurant ID from user
   useEffect(() => {
-    const fetchStats = async () => {
-      if (!user?.restaurant_id) return;
+    const getRestaurantId = async () => {
+      if (!user) return;
 
       try {
-        // Fetch all transactions for this restaurant
-        const { data: allTransactions } = await supabase
-          .from('transactions')
-          .select('bill_amount, created_at, customer_id')
-          .eq('staff_id', user.id) // This should actually join through branches table
-          .order('created_at', { ascending: false });
-
-        // Fetch today's transactions
-        const today = new Date();
-        today.setHours(0, 0, 0, 0);
-        
-        const { data: todayTransactions } = await supabase
-          .from('transactions')
-          .select('bill_amount')
-          .eq('staff_id', user.id)
-          .gte('created_at', today.toISOString());
-
-        // Fetch unique customers (referral chains for this restaurant)
-        const { data: customers } = await supabase
-          .from('referrals')
-          .select('downline_id', { count: 'exact', head: true })
-          .eq('restaurant_id', user.restaurant_id);
-
-        const totalRevenue = allTransactions?.reduce((sum, t) => sum + parseFloat(t.bill_amount || '0'), 0) || 0;
-        const todayRev = todayTransactions?.reduce((sum, t) => sum + parseFloat(t.bill_amount || '0'), 0) || 0;
-
-        setStats({
-          totalCustomers: customers?.length || 0,
-          totalTransactions: allTransactions?.length || 0,
-          totalRevenue: totalRevenue,
-          todayRevenue: todayRev,
-        });
+        // Owner users should have restaurant_id directly
+        if (user.restaurant_id) {
+          setRestaurantId(user.restaurant_id);
+          
+          // Fetch restaurant name
+          const { data: restaurantData } = await supabase
+            .from('restaurants')
+            .select('name')
+            .eq('id', user.restaurant_id)
+            .single();
+          
+          if (restaurantData) {
+            setRestaurantName(restaurantData.name);
+          }
+        } else {
+          // Fallback: fetch from restaurants table
+          const { data } = await supabase
+            .from('restaurants')
+            .select('id, name')
+            .eq('owner_id', user.id)
+            .single();
+          
+          if (data) {
+            setRestaurantId(data.id);
+            setRestaurantName(data.name);
+          }
+        }
       } catch (error) {
-        console.error('Error fetching stats:', error);
+        console.error('Error fetching restaurant ID:', error);
+      }
+    };
+
+    getRestaurantId();
+  }, [user]);
+
+  // Fetch dashboard summary
+  useEffect(() => {
+    const fetchDashboardSummary = async () => {
+      if (!restaurantId) return;
+
+      try {
+        setLoading(true);
+        
+        // Call the get_dashboard_summary RPC function
+        const { data, error } = await supabase
+          .rpc('get_dashboard_summary', {
+            p_restaurant_id: restaurantId,
+            p_start_date: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString(), // Last 30 days
+            p_end_date: new Date().toISOString()
+          });
+
+        if (error) throw error;
+        
+        setSummary(data as DashboardSummary);
+      } catch (error) {
+        console.error('Error fetching dashboard summary:', error);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchStats();
-  }, [user]);
+    fetchDashboardSummary();
+  }, [restaurantId]);
 
   const handleSignOut = async () => {
     try {
@@ -103,7 +136,7 @@ export default function OwnerDashboard() {
     <div className="min-h-screen bg-background pb-6">
       {/* Header */}
       <div className="bg-gradient-to-br from-primary to-primary-light px-6 pt-10 pb-7 rounded-b-3xl">
-        <div className="flex items-center justify-between mb-5">
+        <div className="flex items-center justify-between">
           <div>
             <h1 className="text-xl sm:text-2xl font-bold text-primary-foreground mb-1">
               Owner Dashboard
@@ -115,109 +148,72 @@ export default function OwnerDashboard() {
           <Button
             variant="secondary"
             size="sm"
-            onClick={handleSignOut}
+            onClick={() => setShowSettings(true)}
             className="bg-white/20 hover:bg-white/30 text-primary-foreground border-0"
           >
-            <LogOut className="h-4 w-4" />
+            <Settings className="h-4 w-4" />
           </Button>
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-6 mt-6 space-y-6">
-        {/* Stats Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          <Card className="border-border/50">
-            <CardContent className="p-6">
-              <div className="flex items-center gap-4">
-                <div className="h-12 w-12 rounded-full bg-blue-100 dark:bg-blue-900/20 flex items-center justify-center flex-shrink-0">
-                  <Users className="h-6 w-6 text-blue-600 dark:text-blue-400" />
-                </div>
-                <div>
-                  <p className="text-sm text-muted-foreground">Total Customers</p>
-                  <p className="text-2xl font-bold text-foreground">{stats.totalCustomers}</p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card className="border-border/50">
-            <CardContent className="p-6">
-              <div className="flex items-center gap-4">
-                <div className="h-12 w-12 rounded-full bg-purple-100 dark:bg-purple-900/20 flex items-center justify-center flex-shrink-0">
-                  <Receipt className="h-6 w-6 text-purple-600 dark:text-purple-400" />
-                </div>
-                <div>
-                  <p className="text-sm text-muted-foreground">Total Transactions</p>
-                  <p className="text-2xl font-bold text-foreground">{stats.totalTransactions}</p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card className="border-border/50">
-            <CardContent className="p-6">
-              <div className="flex items-center gap-4">
-                <div className="h-12 w-12 rounded-full bg-green-100 dark:bg-green-900/20 flex items-center justify-center flex-shrink-0">
-                  <DollarSign className="h-6 w-6 text-green-600 dark:text-green-400" />
-                </div>
-                <div>
-                  <p className="text-sm text-muted-foreground">Total Revenue</p>
-                  <p className="text-2xl font-bold text-foreground">RM {stats.totalRevenue.toFixed(2)}</p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card className="border-border/50">
-            <CardContent className="p-6">
-              <div className="flex items-center gap-4">
-                <div className="h-12 w-12 rounded-full bg-orange-100 dark:bg-orange-900/20 flex items-center justify-center flex-shrink-0">
-                  <TrendingUp className="h-6 w-6 text-orange-600 dark:text-orange-400" />
-                </div>
-                <div>
-                  <p className="text-sm text-muted-foreground">Today's Revenue</p>
-                  <p className="text-2xl font-bold text-foreground">RM {stats.todayRevenue.toFixed(2)}</p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 mt-4 sm:mt-6 pb-6">
+        {/* Tab Navigation - Responsive */}
+        <div className="flex gap-2 overflow-x-auto pb-4 -mx-4 px-4 sm:mx-0 sm:px-0 scrollbar-hide">
+          <Button
+            onClick={() => setActiveTab('viral')}
+            variant={activeTab === 'viral' ? 'default' : 'outline'}
+            className="h-10 whitespace-nowrap flex-shrink-0"
+          >
+            <Share2 className="h-4 w-4 sm:mr-2" />
+            <span className="hidden sm:inline">Viral Performance</span>
+          </Button>
+          <Button
+            onClick={() => setActiveTab('business')}
+            variant={activeTab === 'business' ? 'default' : 'outline'}
+            className="h-10 whitespace-nowrap flex-shrink-0"
+          >
+            <DollarSign className="h-4 w-4 sm:mr-2" />
+            <span className="hidden sm:inline">Business Metrics</span>
+          </Button>
+          <Button
+            onClick={() => setActiveTab('customers')}
+            variant={activeTab === 'customers' ? 'default' : 'outline'}
+            className="h-10 whitespace-nowrap flex-shrink-0"
+          >
+            <UsersIcon className="h-4 w-4 sm:mr-2" />
+            <span className="hidden sm:inline">Customer Insights</span>
+          </Button>
         </div>
 
-        {/* Quick Actions */}
-        <div>
-          <h2 className="text-lg font-bold text-foreground mb-4">Quick Actions</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <Button
-              onClick={() => navigate('/owner/customers')}
-              variant="outline"
-              className="h-20 text-lg"
-              size="lg"
-            >
-              <Users className="h-6 w-6 mr-2" />
-              View Customers
-            </Button>
-
-            <Button
-              onClick={() => navigate('/owner/transactions')}
-              variant="outline"
-              className="h-20 text-lg"
-              size="lg"
-            >
-              <Receipt className="h-6 w-6 mr-2" />
-              View Transactions
-            </Button>
-          </div>
-        </div>
-
-        {/* Coming Soon */}
-        <Card className="border-border/50">
-          <CardContent className="p-6 text-center">
-            <p className="text-muted-foreground text-sm">
-              More analytics coming soon: Revenue charts, customer acquisition trends, referral network visualization
-            </p>
-          </CardContent>
-        </Card>
+        {/* Tab Content */}
+        {activeTab === 'viral' && (
+          <ViralPerformanceTab 
+            restaurantId={restaurantId!} 
+            summary={summary}
+          />
+        )}
+        {activeTab === 'business' && (
+          <BusinessMetricsTab 
+            restaurantId={restaurantId!} 
+            summary={summary}
+          />
+        )}
+        {activeTab === 'customers' && (
+          <CustomerInsightsTab 
+            restaurantId={restaurantId!} 
+            summary={summary}
+          />
+        )}
       </div>
+
+      {/* Settings Panel */}
+      <OwnerSettingsPanel
+        isOpen={showSettings}
+        onClose={() => setShowSettings(false)}
+        user={user}
+        onSignOut={handleSignOut}
+        restaurantName={restaurantName}
+      />
     </div>
   );
 }

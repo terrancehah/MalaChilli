@@ -7,6 +7,7 @@ import Login from './pages/customer/Login';
 import Register from './pages/customer/Register';
 import ForgotPassword from './pages/customer/ForgotPassword';
 import ResetPassword from './pages/customer/ResetPassword';
+import VerifyEmail from './pages/auth/VerifyEmail';
 
 // Customer pages
 import CustomerDashboard from './pages/customer/Dashboard';
@@ -20,6 +21,9 @@ import StaffTransactions from './pages/staff/Transactions';
 import OwnerDashboard from './pages/owner/Dashboard';
 import OwnerCustomers from './pages/owner/Customers';
 import OwnerTransactions from './pages/owner/Transactions';
+import OwnerStaff from './pages/owner/Staff';
+import OwnerBranches from './pages/owner/Branches';
+import OwnerSettings from './pages/owner/Settings';
 
 // Other pages
 import HomePage from './pages/HomePage';
@@ -40,6 +44,7 @@ function App() {
           <Route path="/join/:restaurantSlug/:referralCode" element={<Register />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/reset-password" element={<ResetPassword />} />
+          <Route path="/auth/verify-email" element={<VerifyEmail />} />
           
           {/* Legal pages */}
           <Route path="/privacy" element={<PrivacyPolicy />} />
@@ -95,6 +100,30 @@ function App() {
             element={
               <ProtectedRoute allowedRoles={['owner']}>
                 <OwnerTransactions />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/owner/staff" 
+            element={
+              <ProtectedRoute allowedRoles={['owner']}>
+                <OwnerStaff />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/owner/branches" 
+            element={
+              <ProtectedRoute allowedRoles={['owner']}>
+                <OwnerBranches />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/owner/settings" 
+            element={
+              <ProtectedRoute allowedRoles={['owner']}>
+                <OwnerSettings />
               </ProtectedRoute>
             } 
           />

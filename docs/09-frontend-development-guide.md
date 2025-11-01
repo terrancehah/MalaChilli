@@ -9,9 +9,9 @@ This guide defines the **UI/UX design patterns, visual standards, and component 
 - API integration → `05-api-specification.md`
 - Component code → `/frontend/src/` directory
 
-**Version:** 2.3  
-**Last Updated:** 2025-10-30  
-**Design System:** Tailwind CSS + Shadcn/UI
+**Version:** 2.4  
+**Last Updated:** 2025-11-01  
+**Design System:** Tailwind CSS + Shadcn/UI + Recharts
 
 ---
 
@@ -758,6 +758,76 @@ const t = getTranslation(language); // language: 'en' | 'ms' | 'zh'
 - Color customization per restaurant
 - Branded QR code styling
 - Haptic feedback (mobile)
+
+---
+
+## Data Visualization
+
+### Chart Components (Shadcn/UI + Recharts)
+
+**Implementation:** `/frontend/src/components/ui/chart.tsx`
+
+**Chart Types Used:**
+- **Bar Chart**: Categorical comparisons (saved codes pipeline, customer segmentation)
+- **Line Chart**: Time-series trends (revenue over time)
+- **Area Chart**: Cumulative trends with visual fill (network growth)
+- **Pie Chart**: Proportional data (acquisition sources, activity levels)
+
+**Design Guidelines:**
+- **Height**: 200-250px for optimal mobile viewing
+- **Colors**: Use CSS variables `--chart-1` through `--chart-5` for consistency
+- **Tooltips**: Always include for detailed values on hover
+- **Responsive**: Charts adapt to container width
+- **Grid**: Subtle `stroke-muted` with `strokeDasharray="3 3"`
+- **Axes**: No axis lines, minimal tick lines for clean appearance
+
+**Color Palette:**
+```css
+--chart-1: Forest Green (primary data)
+--chart-2: Lime Green (secondary data)
+--chart-3: Amber (warnings/pending)
+--chart-4: Blue (info/neutral)
+--chart-5: Red (alerts/negative)
+```
+
+**Examples:**
+- Owner Dashboard Viral Performance: `/frontend/src/components/owner/ViralPerformanceCharts.tsx`
+- Owner Dashboard Business Metrics: `/frontend/src/components/owner/BusinessMetricsCharts.tsx`
+- Owner Dashboard Customer Insights: `/frontend/src/components/owner/CustomerInsightsCharts.tsx`
+
+---
+
+## Owner Dashboard Pattern
+
+### Three-Tab Analytics Layout
+
+**Structure:**
+```
+Header (gradient, restaurant name, settings button)
+  ↓
+Tab Navigation (horizontal scroll on mobile, full width on desktop)
+  ↓
+Tab Content (charts + detailed metrics)
+```
+
+**Tab Navigation:**
+- Mobile: Icon-only buttons, horizontal scroll
+- Tablet+: Icon + text labels
+- Active tab: `variant="default"` (filled)
+- Inactive tabs: `variant="outline"`
+
+**Settings Panel:**
+- Bottom sheet on mobile
+- Slide-in from right on desktop
+- Menu items: Manage Staff, Manage Branches, Restaurant Settings
+- Sign out button at bottom
+
+**Responsive Breakpoints:**
+- Mobile: 1 column grids, stacked charts
+- Tablet (sm:): 2 column grids
+- Desktop (lg:): 3-4 column grids, side-by-side charts
+
+**Implementation:** `/frontend/src/pages/owner/Dashboard.tsx`
 
 ---
 
