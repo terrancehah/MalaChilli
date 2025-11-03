@@ -31,6 +31,9 @@ import HomePage from './pages/HomePage';
 // Legal pages
 import PrivacyPolicy from './pages/legal/PrivacyPolicy';
 import TermsOfService from './pages/legal/TermsOfService';
+import FAQ from './pages/legal/FAQ';
+import AboutUs from './pages/legal/AboutUs';
+import Contact from './pages/legal/Contact';
 
 function App() {
   return (
@@ -49,6 +52,9 @@ function App() {
           {/* Legal pages */}
           <Route path="/privacy" element={<PrivacyPolicy />} />
           <Route path="/terms" element={<TermsOfService />} />
+          <Route path="/faq" element={<FAQ />} />
+          <Route path="/about" element={<AboutUs />} />
+          <Route path="/contact" element={<Contact />} />
           
           {/* Customer Dashboard (protected) */}
           <Route 
