@@ -179,12 +179,20 @@ export function ViralPerformanceTab({ restaurantId, summary }: ViralPerformanceT
                 <p className="text-xs text-muted-foreground">Converted</p>
               </div>
               <div>
-                <p className="text-2xl font-bold text-blue-600">{savedCodesPipeline.conversion_rate.toFixed(1)}%</p>
+                <p className="text-2xl font-bold text-blue-600">
+                  {savedCodesPipeline.conversion_rate != null 
+                    ? `${savedCodesPipeline.conversion_rate.toFixed(1)}%`
+                    : '0.0%'}
+                </p>
                 <p className="text-xs text-muted-foreground">Conversion Rate</p>
               </div>
             </div>
             <p className="text-sm text-muted-foreground mt-4">
-              Avg time to first visit: <span className="font-semibold">{savedCodesPipeline.avg_days_to_first_visit.toFixed(1)} days</span>
+              Avg time to first visit: <span className="font-semibold">
+                {savedCodesPipeline.avg_days_to_first_visit != null 
+                  ? `${savedCodesPipeline.avg_days_to_first_visit.toFixed(1)} days`
+                  : 'N/A'}
+              </span>
             </p>
           </CardContent>
         </Card>
