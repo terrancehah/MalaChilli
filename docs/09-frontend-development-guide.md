@@ -829,6 +829,73 @@ Tab Content (charts + detailed metrics)
 
 **Implementation:** `/frontend/src/pages/owner/Dashboard.tsx`
 
+### Dashboard Design Principles
+
+**Information Hierarchy:**
+- Lead with hero metrics (largest, most important KPIs)
+- Follow F/Z reading patterns (top-left → top-right → bottom-left → bottom-right)
+- Progressive disclosure: Summary first, details on demand
+
+**Data-Ink Ratio:**
+- Minimize decorative elements (backgrounds, gridlines, excessive colors)
+- Every visual element should communicate data
+- Remove redundancy - don't show same data twice unless it adds value
+
+**Layout Guidelines:**
+- Use consistent grid system (3-4 columns on desktop)
+- Single screen view - avoid scrolling for critical information
+- White space for breathing room, but keep compact
+- Combine related metrics into single cards
+
+**Component Best Practices:**
+- **KPI Cards**: Large numbers (text-3xl/4xl), short labels, trend indicators
+- **Charts**: Bar for comparisons, Line/Area for trends, avoid pie charts unless 2-3 simple categories
+- **Tables**: For detailed data needing sorting/filtering
+- **Filters**: Minimal, contextual, with sensible defaults
+
+**Anti-Patterns to Avoid:**
+- Redundant visualizations (same data in card + chart)
+- Pie charts with many categories (use bar charts)
+- 3D charts (distort perception)
+- Too many colors (stick to 3-5 semantic colors)
+- Cluttered layouts without white space
+
+### Customer Segmentation - RFM Analysis
+
+**Method:** Use RFM (Recency, Frequency, Monetary) scoring instead of fixed thresholds
+
+**RFM Dimensions:**
+- **Recency (R)**: Days since last visit (lower is better)
+  - Score 4: 0-30 days (recent)
+  - Score 3: 31-60 days
+  - Score 2: 61-90 days
+  - Score 1: 90+ days (at risk)
+
+- **Frequency (F)**: Total visits (higher is better)
+  - Score 4: 10+ visits (super active)
+  - Score 3: 5-9 visits (active)
+  - Score 2: 2-4 visits (moderate)
+  - Score 1: 1 visit (one-time)
+
+- **Monetary (M)**: Total spent (higher is better)
+  - Score 4: RM 500+ (VIP)
+  - Score 3: RM 200-499 (high value)
+  - Score 2: RM 100-199 (medium value)
+  - Score 1: < RM 100 (low value)
+
+**Segment Labels:**
+- **Champions** (444): Best customers - recent, frequent, high spend
+- **Loyal Customers** (3-4 in F, 3-4 in M): Regular high-value customers
+- **Potential Loyalists** (4 in R, 2-3 in F/M): Recent customers showing promise
+- **At Risk** (1-2 in R, 3-4 in F/M): Previously good customers becoming inactive
+- **Can't Lose Them** (1 in R, 4 in F/M): High-value customers who haven't returned
+- **Hibernating** (1-2 in all): Inactive, low engagement
+- **New Customers** (4 in R, 1 in F): First-time visitors
+
+**Implementation Note:** RFM scores are dynamic and recalculated based on actual behavior, not fixed thresholds that become outdated as business grows.
+
+**Reference:** [Optimove RFM Segmentation Guide](https://www.optimove.com/resources/learning-center/rfm-segmentation)
+
 ---
 
 **Document Maintenance:**

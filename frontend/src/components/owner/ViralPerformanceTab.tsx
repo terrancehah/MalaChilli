@@ -4,7 +4,6 @@ import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import { Skeleton } from '../ui/skeleton';
 import { Target, Users, TrendingUp, TrendingDown, Link2, Share2 } from 'lucide-react';
 import type { DashboardSummary, CustomerSharingStats, SavedCodesPipeline } from '../../types/analytics.types';
-import { ViralPerformanceCharts } from './ViralPerformanceCharts';
 
 interface ViralPerformanceTabProps {
   restaurantId: string;
@@ -66,96 +65,81 @@ export function ViralPerformanceTab({ restaurantId, summary }: ViralPerformanceT
   }
 
   const viralMetrics = summary?.viral_performance;
-  const viralityCoefficient = viralMetrics?.virality_coefficient || 0;
-  const isHealthy = viralityCoefficient >= 2.0;
 
   return (
     <div className="space-y-4 sm:space-y-6">
-      {/* Hero Metrics */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
-        {/* Virality Coefficient */}
-        <Card className="border-border/50">
-          <CardHeader className="pb-3">
-            <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">
-              <Target className="h-4 w-4" />
-              Virality Coefficient
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
+      {/* Key Metrics Cards - Compact Layout */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        {/* Virality Coefficient - Hero Metric */}
+        <Card className="border-border/50 md:col-span-1">
+          <CardContent className="pt-6">
+            <div className="flex items-center gap-2 mb-2">
+              <Target className="h-4 w-4 text-muted-foreground" />
+              <span className="text-sm text-muted-foreground">Virality Coefficient</span>
+            </div>
             <div className="flex items-baseline gap-2">
-              <span className={`text-3xl font-bold ${
-                viralityCoefficient >= 2 ? 'text-green-600' :
-                viralityCoefficient >= 1.5 ? 'text-yellow-600' :
-                'text-red-600'
-              }`}>
-                {viralityCoefficient.toFixed(2)}
-              </span>
-              {isHealthy ? (
+              <p className="text-4xl font-bold text-foreground">
+                {viralMetrics?.virality_coefficient.toFixed(2) || '0.00'}
+              </p>
+              {viralMetrics && viralMetrics.virality_coefficient >= 1 ? (
                 <TrendingUp className="h-5 w-5 text-green-600" />
               ) : (
-                <TrendingDown className="h-5 w-5 text-red-600" />
+                <TrendingDown className="h-5 w-5 text-orange-600" />
               )}
             </div>
-            <p className="text-xs text-muted-foreground mt-2">
-              {isHealthy ? 'Exponential growth!' : 'Target: >2.0 for viral growth'}
+            <p className="text-xs text-muted-foreground mt-1">
+              {viralMetrics && viralMetrics.virality_coefficient >= 2 
+                ? 'Exponential growth!' 
+                : viralMetrics && viralMetrics.virality_coefficient >= 1
+                ? 'Steady growth'
+                : 'Below viral threshold'}
             </p>
           </CardContent>
         </Card>
 
-        {/* Network Size */}
-        <Card className="border-border/50">
-          <CardHeader className="pb-3">
-            <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">
-              <Users className="h-4 w-4" />
-              Network Size
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-2">
+        {/* Network Stats - Compact */}
+        <Card className="border-border/50 md:col-span-2">
+          <CardContent className="pt-6">
+            <div className="grid grid-cols-2 gap-6">
+              {/* Network Size */}
               <div>
-                <span className="text-3xl font-bold text-foreground">
-                  {viralMetrics?.total_downlines || 0}
-                </span>
-                <p className="text-xs text-muted-foreground">Total Customers</p>
-              </div>
-              <div className="flex items-center gap-4 text-sm">
-                <div>
-                  <span className="font-semibold text-foreground">{viralMetrics?.total_sharers || 0}</span>
-                  <span className="text-muted-foreground ml-1">Sharers</span>
+                <div className="flex items-center gap-2 mb-2">
+                  <Users className="h-4 w-4 text-muted-foreground" />
+                  <span className="text-sm text-muted-foreground">Network Size</span>
                 </div>
+                <p className="text-3xl font-bold text-foreground">{viralMetrics?.total_downlines || 0}</p>
+                <p className="text-xs text-muted-foreground mt-1">
+                  <span className="font-semibold text-foreground">{viralMetrics?.total_sharers || 0}</span> active sharers
+                </p>
               </div>
-            </div>
-          </CardContent>
-        </Card>
 
-        {/* Network Depth */}
-        <Card className="border-border/50">
-          <CardHeader className="pb-3">
-            <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">
-              <Share2 className="h-4 w-4" />
-              Network Depth
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-2">
-              <div className="flex justify-between text-sm">
-                <span className="text-muted-foreground">Level 1:</span>
-                <span className="font-semibold">{viralMetrics?.network_depth.level_1 || 0}</span>
-              </div>
-              <div className="flex justify-between text-sm">
-                <span className="text-muted-foreground">Level 2:</span>
-                <span className="font-semibold">{viralMetrics?.network_depth.level_2 || 0}</span>
-              </div>
-              <div className="flex justify-between text-sm">
-                <span className="text-muted-foreground">Level 3:</span>
-                <span className="font-semibold">{viralMetrics?.network_depth.level_3 || 0}</span>
+              {/* Network Depth */}
+              <div>
+                <div className="flex items-center gap-2 mb-2">
+                  <Share2 className="h-4 w-4 text-muted-foreground" />
+                  <span className="text-sm text-muted-foreground">Network Depth</span>
+                </div>
+                <div className="space-y-1">
+                  <div className="flex justify-between text-sm">
+                    <span className="text-muted-foreground">L1:</span>
+                    <span className="font-semibold">{viralMetrics?.network_depth.level_1 || 0}</span>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span className="text-muted-foreground">L2:</span>
+                    <span className="font-semibold">{viralMetrics?.network_depth.level_2 || 0}</span>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span className="text-muted-foreground">L3:</span>
+                    <span className="font-semibold">{viralMetrics?.network_depth.level_3 || 0}</span>
+                  </div>
+                </div>
               </div>
             </div>
           </CardContent>
         </Card>
       </div>
 
-      {/* Saved Codes Pipeline */}
+      {/* Saved Codes Pipeline - Combined Stats + Chart */}
       {savedCodesPipeline && (
         <Card className="border-border/50">
           <CardHeader>
@@ -165,43 +149,79 @@ export function ViralPerformanceTab({ restaurantId, summary }: ViralPerformanceT
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
-              <div>
-                <p className="text-2xl font-bold text-foreground">{savedCodesPipeline.total_saved_codes}</p>
-                <p className="text-xs text-muted-foreground">Total Saved</p>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+              {/* Key Metrics */}
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-muted-foreground">Total Saved</span>
+                  <span className="text-xl font-bold">{savedCodesPipeline.total_saved_codes}</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-muted-foreground">Awaiting Visit</span>
+                  <span className="text-xl font-bold text-orange-600">{savedCodesPipeline.unused_codes}</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-muted-foreground">Converted</span>
+                  <span className="text-xl font-bold text-green-600">{savedCodesPipeline.converted_codes}</span>
+                </div>
+                <div className="pt-2 border-t">
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm font-medium">Conversion Rate</span>
+                    <span className="text-2xl font-bold text-blue-600">
+                      {savedCodesPipeline.conversion_rate != null 
+                        ? `${savedCodesPipeline.conversion_rate.toFixed(1)}%`
+                        : '0.0%'}
+                    </span>
+                  </div>
+                  <p className="text-xs text-muted-foreground mt-1">
+                    Avg time: {savedCodesPipeline.avg_days_to_first_visit != null 
+                      ? `${savedCodesPipeline.avg_days_to_first_visit.toFixed(1)} days`
+                      : 'N/A'}
+                  </p>
+                </div>
               </div>
-              <div>
-                <p className="text-2xl font-bold text-orange-600">{savedCodesPipeline.unused_codes}</p>
-                <p className="text-xs text-muted-foreground">Awaiting Visit</p>
-              </div>
-              <div>
-                <p className="text-2xl font-bold text-green-600">{savedCodesPipeline.converted_codes}</p>
-                <p className="text-xs text-muted-foreground">Converted</p>
-              </div>
-              <div>
-                <p className="text-2xl font-bold text-blue-600">
-                  {savedCodesPipeline.conversion_rate != null 
-                    ? `${savedCodesPipeline.conversion_rate.toFixed(1)}%`
-                    : '0.0%'}
-                </p>
-                <p className="text-xs text-muted-foreground">Conversion Rate</p>
+
+              {/* Mini Bar Chart */}
+              <div className="flex items-center justify-center">
+                <div className="w-full max-w-[280px]">
+                  <div className="flex items-end justify-around h-32 gap-2">
+                    <div className="flex flex-col items-center gap-1 flex-1">
+                      <div 
+                        className="w-full bg-chart-1 rounded-t transition-all"
+                        style={{ 
+                          height: `${(savedCodesPipeline.total_saved_codes / Math.max(savedCodesPipeline.total_saved_codes, 1)) * 100}%`,
+                          minHeight: '20px'
+                        }}
+                      />
+                      <span className="text-xs text-muted-foreground">Saved</span>
+                    </div>
+                    <div className="flex flex-col items-center gap-1 flex-1">
+                      <div 
+                        className="w-full bg-orange-500 rounded-t transition-all"
+                        style={{ 
+                          height: `${(savedCodesPipeline.unused_codes / Math.max(savedCodesPipeline.total_saved_codes, 1)) * 100}%`,
+                          minHeight: '20px'
+                        }}
+                      />
+                      <span className="text-xs text-muted-foreground">Pending</span>
+                    </div>
+                    <div className="flex flex-col items-center gap-1 flex-1">
+                      <div 
+                        className="w-full bg-green-500 rounded-t transition-all"
+                        style={{ 
+                          height: `${(savedCodesPipeline.converted_codes / Math.max(savedCodesPipeline.total_saved_codes, 1)) * 100}%`,
+                          minHeight: '20px'
+                        }}
+                      />
+                      <span className="text-xs text-muted-foreground">Done</span>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
-            <p className="text-sm text-muted-foreground mt-4">
-              Avg time to first visit: <span className="font-semibold">
-                {savedCodesPipeline.avg_days_to_first_visit != null 
-                  ? `${savedCodesPipeline.avg_days_to_first_visit.toFixed(1)} days`
-                  : 'N/A'}
-              </span>
-            </p>
           </CardContent>
         </Card>
       )}
-
-      {/* Visual Charts */}
-      <ViralPerformanceCharts 
-        savedCodesPipeline={savedCodesPipeline || undefined}
-      />
 
       {/* Top Sharers Leaderboard */}
       <Card className="border-border/50">

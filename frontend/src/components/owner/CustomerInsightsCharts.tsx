@@ -109,7 +109,7 @@ export function CustomerInsightsCharts({
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <ChartContainer config={chartConfig} className="h-[200px] w-full">
+              <ChartContainer config={chartConfig} className="h-[180px] w-full">
                 <ResponsiveContainer width="100%" height="100%">
                   <PieChart>
                     <Pie
@@ -117,8 +117,7 @@ export function CustomerInsightsCharts({
                       cx="50%"
                       cy="50%"
                       labelLine={false}
-                      label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
-                      outerRadius={60}
+                      outerRadius={70}
                       dataKey="value"
                     >
                       {activityData.map((entry, index) => (
@@ -129,6 +128,16 @@ export function CustomerInsightsCharts({
                   </PieChart>
                 </ResponsiveContainer>
               </ChartContainer>
+              
+              {/* Legend */}
+              <div className="mt-3 grid grid-cols-2 gap-2 text-xs">
+                {activityData.map((entry, index) => (
+                  <div key={index} className="flex items-center gap-2">
+                    <div className="h-3 w-3 rounded-full flex-shrink-0" style={{ backgroundColor: entry.fill }} />
+                    <span className="text-muted-foreground truncate">{entry.name}</span>
+                  </div>
+                ))}
+              </div>
             </CardContent>
           </Card>
         )}
@@ -143,7 +152,7 @@ export function CustomerInsightsCharts({
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <ChartContainer config={chartConfig} className="h-[200px] w-full">
+              <ChartContainer config={chartConfig} className="h-[180px] w-full">
                 <ResponsiveContainer width="100%" height="100%">
                   <PieChart>
                     <Pie
@@ -151,7 +160,6 @@ export function CustomerInsightsCharts({
                       cx="50%"
                       cy="50%"
                       labelLine={false}
-                      label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(1)}%`}
                       outerRadius={70}
                       dataKey="value"
                     >
@@ -164,16 +172,16 @@ export function CustomerInsightsCharts({
                 </ResponsiveContainer>
               </ChartContainer>
               
-              {/* Summary */}
-              <div className="mt-4 flex items-center justify-center gap-4 text-sm">
+              {/* Legend with counts */}
+              <div className="mt-3 flex items-center justify-center gap-6 text-sm">
                 <div className="flex items-center gap-2">
                   <div className="h-3 w-3 rounded-full bg-[hsl(var(--chart-2))]" />
-                  <span className="text-muted-foreground">Referrals: </span>
+                  <span className="text-muted-foreground">Referrals:</span>
                   <span className="font-semibold">{acquisitionData.referral}</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <div className="h-3 w-3 rounded-full bg-[hsl(var(--chart-4))]" />
-                  <span className="text-muted-foreground">Walk-ins: </span>
+                  <span className="text-muted-foreground">Walk-ins:</span>
                   <span className="font-semibold">{acquisitionData.walk_in}</span>
                 </div>
               </div>
