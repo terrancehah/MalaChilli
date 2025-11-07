@@ -5,8 +5,9 @@ import { supabase } from '../../lib/supabase';
 import { Button } from '../../components/ui/button';
 import { Card, CardContent } from '../../components/ui/card';
 import { Skeleton, HeaderSkeleton } from '../../components/ui/skeleton';
-import { Settings, Share2, DollarSign, Users as UsersIcon } from 'lucide-react';
+import { Settings, Share2, DollarSign, Users as UsersIcon, Briefcase } from 'lucide-react';
 import type { DashboardSummary } from '../../types/analytics.types';
+import { getTranslation, type Language } from '../../translations';
 
 // Import tab components
 import { 
@@ -15,6 +16,7 @@ import {
   CustomerInsightsTab 
 } from '../../components/owner';
 import { OwnerSettingsPanel } from '../../components/owner/OwnerSettingsPanel';
+import { ManagementPanel } from '../../components/owner/ManagementPanel';
 
 type TabType = 'viral' | 'business' | 'customers';
 
@@ -27,6 +29,11 @@ export default function OwnerDashboard() {
   const [restaurantId, setRestaurantId] = useState<string | null>(null);
   const [restaurantName, setRestaurantName] = useState<string>('');
   const [showSettings, setShowSettings] = useState(false);
+  const [showManagement, setShowManagement] = useState(false);
+  const [language, setLanguage] = useState<Language>('en');
+  
+  // Get translations
+  const t = getTranslation(language);
 
   // Get restaurant ID from user
   useEffect(() => {
@@ -139,20 +146,32 @@ export default function OwnerDashboard() {
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-xl sm:text-2xl font-bold text-primary-foreground mb-1">
-              Owner Dashboard
+              {t.ownerDashboard.title}
             </h1>
             <p className="text-primary-foreground/80 text-sm">
               {user?.full_name || user?.email}
             </p>
           </div>
-          <Button
-            variant="secondary"
-            size="sm"
-            onClick={() => setShowSettings(true)}
-            className="bg-white/20 hover:bg-white/30 text-primary-foreground border-0"
-          >
-            <Settings className="h-4 w-4" />
-          </Button>
+          <div className="flex items-center gap-2">
+            <Button
+              variant="secondary"
+              size="icon"
+              onClick={() => setShowManagement(true)}
+              className="bg-white/20 hover:bg-white/30 text-primary-foreground border-0 h-10 w-10"
+              title={t.ownerDashboard.management.title}
+            >
+              <Briefcase className="h-5 w-5" />
+            </Button>
+            <Button
+              variant="secondary"
+              size="icon"
+              onClick={() => setShowSettings(true)}
+              className="bg-white/20 hover:bg-white/30 text-primary-foreground border-0 h-10 w-10"
+              title={t.ownerDashboard.settings}
+            >
+              <Settings className="h-5 w-5" />
+            </Button>
+          </div>
         </div>
       </div>
 
@@ -165,7 +184,7 @@ export default function OwnerDashboard() {
             className="h-10 whitespace-nowrap flex-shrink-0"
           >
             <Share2 className="h-4 w-4 sm:mr-2" />
-            <span className="hidden sm:inline">Viral Performance</span>
+            <span className="hidden sm:inline">{t.ownerDashboard.tabs.viralPerformance}</span>
           </Button>
           <Button
             onClick={() => setActiveTab('business')}
@@ -173,7 +192,7 @@ export default function OwnerDashboard() {
             className="h-10 whitespace-nowrap flex-shrink-0"
           >
             <DollarSign className="h-4 w-4 sm:mr-2" />
-            <span className="hidden sm:inline">Business Metrics</span>
+            <span className="hidden sm:inline">{t.ownerDashboard.tabs.businessMetrics}</span>
           </Button>
           <Button
             onClick={() => setActiveTab('customers')}
@@ -181,7 +200,7 @@ export default function OwnerDashboard() {
             className="h-10 whitespace-nowrap flex-shrink-0"
           >
             <UsersIcon className="h-4 w-4 sm:mr-2" />
-            <span className="hidden sm:inline">Customer Insights</span>
+            <span className="hidden sm:inline">{t.ownerDashboard.tabs.customerInsights}</span>
           </Button>
         </div>
 
@@ -190,21 +209,32 @@ export default function OwnerDashboard() {
           <ViralPerformanceTab 
             restaurantId={restaurantId!} 
             summary={summary}
+            language={language}
           />
         )}
         {activeTab === 'business' && (
           <BusinessMetricsTab 
             restaurantId={restaurantId!} 
             summary={summary}
+            language={language}
           />
         )}
         {activeTab === 'customers' && (
           <CustomerInsightsTab 
             restaurantId={restaurantId!} 
             summary={summary}
+            language={language}
           />
         )}
       </div>
+
+      {/* Management Panel */}
+      <ManagementPanel
+        isOpen={showManagement}
+        onClose={() => setShowManagement(false)}
+        restaurantName={restaurantName}
+        language={language}
+      />
 
       {/* Settings Panel */}
       <OwnerSettingsPanel
@@ -213,6 +243,8 @@ export default function OwnerDashboard() {
         user={user}
         onSignOut={handleSignOut}
         restaurantName={restaurantName}
+        language={language}
+        onLanguageChange={setLanguage}
       />
     </div>
   );

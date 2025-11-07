@@ -2,6 +2,8 @@ import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from '../ui/chart';
 import { Line, LineChart, Bar, BarChart, CartesianGrid, XAxis, YAxis, Legend } from 'recharts';
 import { TrendingUp, DollarSign, Percent } from 'lucide-react';
+import { getTranslation, type Language } from '../../translations';
+import { InfoButton } from '../common';
 
 interface BusinessMetricsChartsProps {
   revenueData?: Array<{
@@ -16,24 +18,27 @@ interface BusinessMetricsChartsProps {
     guaranteed_percentage: number;
     vc_percentage: number;
   };
+  language: Language;
 }
 
 export function BusinessMetricsCharts({ 
   revenueData = [],
-  discountBreakdown
+  discountBreakdown,
+  language
 }: BusinessMetricsChartsProps) {
+  const t = getTranslation(language);
   
   const chartConfig = {
     gross_revenue: {
-      label: "Gross Revenue",
+      label: t.ownerDashboard.businessMetrics.totalRevenue,
       color: "hsl(var(--chart-1))",
     },
     net_revenue: {
-      label: "Net Revenue",
+      label: t.ownerDashboard.businessMetrics.netRevenue,
       color: "hsl(var(--chart-2))",
     },
     discount_amount: {
-      label: "Discounts",
+      label: t.ownerDashboard.businessMetrics.totalDiscounts,
       color: "hsl(var(--chart-3))",
     },
   };
@@ -41,13 +46,13 @@ export function BusinessMetricsCharts({
   // Prepare discount breakdown data
   const discountData = discountBreakdown ? [
     { 
-      name: 'Guaranteed (5%)', 
+      name: t.ownerDashboard.businessMetrics.guaranteedDiscount, 
       amount: discountBreakdown.guaranteed_discount_total,
       percentage: discountBreakdown.guaranteed_percentage,
       fill: 'hsl(var(--chart-4))'
     },
     { 
-      name: 'VC Redemption', 
+      name: t.ownerDashboard.businessMetrics.vcRedeemed, 
       amount: discountBreakdown.vc_redemption_total,
       percentage: discountBreakdown.vc_percentage,
       fill: 'hsl(var(--chart-5))'
@@ -65,7 +70,11 @@ export function BusinessMetricsCharts({
           <CardHeader>
             <CardTitle className="text-sm sm:text-base flex items-center gap-2">
               <TrendingUp className="h-4 w-4 sm:h-5 sm:w-5" />
-              Revenue Trend (Last 14 Days)
+              {t.ownerDashboard.businessMetrics.revenueOverTime}
+              <InfoButton 
+                title={t.ownerDashboard.businessMetrics.revenueOverTime}
+                description={t.ownerDashboard.businessMetrics.revenueOverTimeInfo}
+              />
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -130,7 +139,11 @@ export function BusinessMetricsCharts({
           <CardHeader>
             <CardTitle className="text-sm sm:text-base flex items-center gap-2">
               <Percent className="h-4 w-4 sm:h-5 sm:w-5" />
-              Discount Breakdown
+              {t.ownerDashboard.businessMetrics.discountBreakdown}
+              <InfoButton 
+                title={t.ownerDashboard.businessMetrics.discountBreakdown}
+                description={t.ownerDashboard.businessMetrics.discountBreakdownInfo}
+              />
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -167,7 +180,7 @@ export function BusinessMetricsCharts({
             {/* Total Discounts Summary */}
             <div className="mt-4 flex items-center justify-center gap-2 text-sm">
               <DollarSign className="h-4 w-4 text-orange-600" />
-              <span className="text-muted-foreground">Total Discounts:</span>
+              <span className="text-muted-foreground">{t.ownerDashboard.businessMetrics.totalDiscounts}:</span>
               <span className="font-semibold text-foreground">
                 RM {(discountBreakdown.guaranteed_discount_total + discountBreakdown.vc_redemption_total).toLocaleString('en-MY', { minimumFractionDigits: 2 })}
               </span>

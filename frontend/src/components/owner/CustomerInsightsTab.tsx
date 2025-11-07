@@ -4,14 +4,17 @@ import { Skeleton } from '../ui/skeleton';
 import { supabase } from '../../lib/supabase';
 import type { DashboardSummary, CustomerSegmentation, CustomerAcquisitionSource } from '../../types/analytics.types';
 import { Users, UserPlus, TrendingUp, AlertTriangle, Award, Target, PieChart } from 'lucide-react';
-import { CustomerInsightsCharts } from './CustomerInsightsCharts';
+import { getTranslation, type Language } from '../../translations';
+import { InfoButton } from '../common';
 
 interface CustomerInsightsTabProps {
   restaurantId: string;
   summary: DashboardSummary | null;
+  language: Language;
 }
 
-export function CustomerInsightsTab({ restaurantId, summary }: CustomerInsightsTabProps) {
+export function CustomerInsightsTab({ restaurantId, summary, language }: CustomerInsightsTabProps) {
+  const t = getTranslation(language);
   const [loading, setLoading] = useState(true);
   const [customers, setCustomers] = useState<CustomerSegmentation[]>([]);
   const [acquisitionData, setAcquisitionData] = useState<CustomerAcquisitionSource[]>([]);
@@ -69,17 +72,16 @@ export function CustomerInsightsTab({ restaurantId, summary }: CustomerInsightsT
   const atRiskCustomers = customerInsights?.at_risk_customers || 0;
   const avgLifetimeValue = customerInsights?.avg_lifetime_value || 0;
 
-  // Calculate segmentation stats
-  const vipCustomers = customers.filter(c => c.spend_segment === 'vip').length;
-  const highSpenders = customers.filter(c => c.spend_segment === 'high').length;
-  const mediumSpenders = customers.filter(c => c.spend_segment === 'medium').length;
-  const lowSpenders = customers.filter(c => c.spend_segment === 'low').length;
-
-  // Calculate activity stats
-  const superActive = customers.filter(c => c.activity_segment === 'super_active').length;
-  const activeSegment = customers.filter(c => c.activity_segment === 'active').length;
-  const moderate = customers.filter(c => c.activity_segment === 'moderate').length;
-  const oneTime = customers.filter(c => c.activity_segment === 'one_time').length;
+  // Calculate RFM segmentation stats
+  const rfmSegments = customerInsights?.rfm_segmentation;
+  const champions = rfmSegments?.Champions || 0;
+  const loyalCustomers = rfmSegments?.['Loyal Customers'] || 0;
+  const potentialLoyalists = rfmSegments?.['Potential Loyalists'] || 0;
+  const atRiskSegment = rfmSegments?.['At Risk'] || 0;
+  const cantLoseThem = rfmSegments?.['Cant Lose Them'] || 0;
+  const hibernating = rfmSegments?.Hibernating || 0;
+  const newCustomers = rfmSegments?.['New Customers'] || 0;
+  const promising = rfmSegments?.Promising || 0;
 
   // Calculate acquisition stats
   const referralAcquired = acquisitionData.filter(a => a.acquisition_source === 'referral').length;
@@ -91,8 +93,12 @@ export function CustomerInsightsTab({ restaurantId, summary }: CustomerInsightsT
   // Top customers by spend
   const topCustomers = customers.slice(0, 10);
 
-  // At-risk customers
-  const atRiskList = customers.filter(c => c.churn_risk === 'high_risk' || c.churn_risk === 'at_risk').slice(0, 10);
+  // At-risk customers (based on RFM)
+  const atRiskList = customers.filter(c => 
+    c.rfm_segment === 'At Risk' || 
+    c.rfm_segment === 'Cant Lose Them' || 
+    c.rfm_segment === 'Hibernating'
+  ).slice(0, 10);
 
   return (
     <div className="space-y-4 sm:space-y-6">
@@ -103,14 +109,40 @@ export function CustomerInsightsTab({ restaurantId, summary }: CustomerInsightsT
           <CardHeader className="pb-3">
             <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">
               <Users className="h-4 w-4" />
-              Total Customers
+              {t.ownerDashboard.customerInsights.totalCustomers}
+              <InfoButton 
+                title={t.ownerDashboard.customerInsights.totalCustomers}
+                description={t.ownerDashboard.customerInsights.totalCustomersInfo}
+              />
             </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="space-y-1">
               <p className="text-3xl font-bold text-foreground">{totalCustomers}</p>
               <p className="text-xs text-muted-foreground">
-                {activeCustomers} active ({((activeCustomers / totalCustomers) * 100).toFixed(0)}%)
+                {activeCustomers} {t.ownerDashboard.customerInsights.active} ({((activeCustomers / totalCustomers) * 100).toFixed(0)}%)
+              </p>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Active Customers */}
+        <Card className="border-border/50">
+          <CardHeader className="pb-3">
+            <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">
+              <UserPlus className="h-4 w-4" />
+              {t.ownerDashboard.customerInsights.activeCustomers}
+              <InfoButton 
+                title={t.ownerDashboard.customerInsights.activeCustomers}
+                description={t.ownerDashboard.customerInsights.activeCustomersInfo}
+              />
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-1">
+              <p className="text-3xl font-bold text-green-600">{activeCustomers}</p>
+              <p className="text-xs text-muted-foreground">
+                ({((activeCustomers / totalCustomers) * 100).toFixed(0)}% {t.ownerDashboard.customerInsights.ofTotal})
               </p>
             </div>
           </CardContent>
@@ -121,25 +153,33 @@ export function CustomerInsightsTab({ restaurantId, summary }: CustomerInsightsT
           <CardHeader className="pb-3">
             <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">
               <UserPlus className="h-4 w-4" />
-              Acquisition
+              {t.ownerDashboard.customerInsights.acquisition}
+              <InfoButton 
+                title={t.ownerDashboard.customerInsights.acquisition}
+                description={t.ownerDashboard.customerInsights.fromReferrals}
+              />
             </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="space-y-1">
               <p className="text-3xl font-bold text-green-600">{referralPercentage}%</p>
               <p className="text-xs text-muted-foreground">
-                From referrals ({referralAcquired} customers)
+                {t.ownerDashboard.customerInsights.fromReferrals} ({referralAcquired} {t.ownerDashboard.customerInsights.customers})
               </p>
             </div>
           </CardContent>
         </Card>
 
-        {/* Average CLV */}
+        {/* Avg Lifetime Value */}
         <Card className="border-border/50">
           <CardHeader className="pb-3">
             <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">
               <TrendingUp className="h-4 w-4" />
-              Avg Lifetime Value
+              {t.ownerDashboard.customerInsights.avgLifetimeValue}
+              <InfoButton 
+                title={t.ownerDashboard.customerInsights.avgLifetimeValue}
+                description={t.ownerDashboard.customerInsights.avgLifetimeValueInfo}
+              />
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -147,155 +187,154 @@ export function CustomerInsightsTab({ restaurantId, summary }: CustomerInsightsT
               <p className="text-3xl font-bold text-blue-600">
                 RM {avgLifetimeValue.toFixed(2)}
               </p>
-              <p className="text-xs text-muted-foreground">Per customer</p>
+              <p className="text-xs text-muted-foreground">{t.ownerDashboard.customerInsights.perCustomer}</p>
             </div>
           </CardContent>
         </Card>
 
         {/* At Risk */}
-        <Card className="border-border/50">
+        <Card className="border-border/50 border-orange-200 dark:border-orange-900">
           <CardHeader className="pb-3">
             <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">
               <AlertTriangle className="h-4 w-4" />
-              At Risk
+              {t.ownerDashboard.customerInsights.atRiskCustomers}
+              <InfoButton 
+                title={t.ownerDashboard.customerInsights.atRiskCustomers}
+                description={t.ownerDashboard.customerInsights.atRiskCustomersInfo}
+              />
             </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="space-y-1">
               <p className="text-3xl font-bold text-orange-600">{atRiskCustomers}</p>
               <p className="text-xs text-muted-foreground">
-                {((atRiskCustomers / totalCustomers) * 100).toFixed(1)}% of total
+                {((atRiskCustomers / totalCustomers) * 100).toFixed(1)}% {t.ownerDashboard.customerInsights.ofTotal}
               </p>
             </div>
           </CardContent>
         </Card>
       </div>
 
-      {/* Visual Charts */}
-      <CustomerInsightsCharts 
-        segmentationBySpend={{
-          vip: vipCustomers,
-          high: highSpenders,
-          medium: mediumSpenders,
-          low: lowSpenders
-        }}
-        segmentationByActivity={{
-          super_active: superActive,
-          active: activeSegment,
-          moderate: moderate,
-          one_time: oneTime
-        }}
-        acquisitionData={{
-          referral: referralAcquired,
-          walk_in: walkInAcquired
-        }}
-      />
-
-      {/* Customer Segmentation */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 sm:gap-4">
-        {/* By Spend */}
-        <Card className="border-border/50">
-          <CardHeader>
-            <CardTitle className="text-sm sm:text-base flex items-center gap-2">
-              <Award className="h-5 w-5" />
-              Segmentation by Spend
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-3">
-              <div className="flex items-center justify-between p-3 rounded-lg bg-yellow-50 dark:bg-yellow-900/20">
-                <div>
-                  <p className="font-semibold text-foreground">VIP</p>
-                  <p className="text-xs text-muted-foreground">&gt;RM 500</p>
-                </div>
-                <p className="text-2xl font-bold text-yellow-600">{vipCustomers}</p>
-              </div>
-
-              <div className="flex items-center justify-between p-3 rounded-lg bg-blue-50 dark:bg-blue-900/20">
-                <div>
-                  <p className="font-semibold text-foreground">High</p>
-                  <p className="text-xs text-muted-foreground">RM 200-500</p>
-                </div>
-                <p className="text-2xl font-bold text-blue-600">{highSpenders}</p>
-              </div>
-
-              <div className="flex items-center justify-between p-3 rounded-lg bg-green-50 dark:bg-green-900/20">
-                <div>
-                  <p className="font-semibold text-foreground">Medium</p>
-                  <p className="text-xs text-muted-foreground">RM 100-200</p>
-                </div>
-                <p className="text-2xl font-bold text-green-600">{mediumSpenders}</p>
-              </div>
-
-              <div className="flex items-center justify-between p-3 rounded-lg bg-gray-50 dark:bg-gray-900/20">
-                <div>
-                  <p className="font-semibold text-foreground">Low</p>
-                  <p className="text-xs text-muted-foreground">&lt;RM 100</p>
-                </div>
-                <p className="text-2xl font-bold text-gray-600">{lowSpenders}</p>
-              </div>
+      {/* RFM Customer Segmentation */}
+      <Card className="border-border/50">
+        <CardHeader>
+          <CardTitle className="text-sm sm:text-base flex items-center gap-2">
+            <Target className="h-5 w-5" />
+            {t.ownerDashboard.customerInsights.rfmSegmentation}
+            <InfoButton 
+              title={t.ownerDashboard.customerInsights.rfmSegmentation}
+              description={t.ownerDashboard.customerInsights.rfmSegmentationInfo}
+            />
+          </CardTitle>
+          <p className="text-xs text-muted-foreground mt-1">
+            {t.ownerDashboard.customerInsights.rfmSegmentationSubtitle}
+          </p>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+            {/* Champions */}
+            <div className="p-3 rounded-lg bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800">
+              <p className="text-xs font-medium text-muted-foreground mb-1">{t.ownerDashboard.customerInsights.champions}</p>
+              <p className="text-2xl font-bold text-yellow-600">{champions}</p>
+              <p className="text-xs text-muted-foreground mt-1">{t.ownerDashboard.customerInsights.championsDesc}</p>
             </div>
-          </CardContent>
-        </Card>
 
-        {/* By Activity */}
-        <Card className="border-border/50">
-          <CardHeader>
-            <CardTitle className="text-sm sm:text-base flex items-center gap-2">
-              <Target className="h-5 w-5" />
-              Segmentation by Activity
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-3">
-              <div className="flex items-center justify-between p-3 rounded-lg bg-purple-50 dark:bg-purple-900/20">
-                <div>
-                  <p className="font-semibold text-foreground">Super Active</p>
-                  <p className="text-xs text-muted-foreground">&gt;10 visits</p>
-                </div>
-                <p className="text-2xl font-bold text-purple-600">{superActive}</p>
-              </div>
-
-              <div className="flex items-center justify-between p-3 rounded-lg bg-blue-50 dark:bg-blue-900/20">
-                <div>
-                  <p className="font-semibold text-foreground">Active</p>
-                  <p className="text-xs text-muted-foreground">5-10 visits</p>
-                </div>
-                <p className="text-2xl font-bold text-blue-600">{activeSegment}</p>
-              </div>
-
-              <div className="flex items-center justify-between p-3 rounded-lg bg-green-50 dark:bg-green-900/20">
-                <div>
-                  <p className="font-semibold text-foreground">Moderate</p>
-                  <p className="text-xs text-muted-foreground">2-4 visits</p>
-                </div>
-                <p className="text-2xl font-bold text-green-600">{moderate}</p>
-              </div>
-
-              <div className="flex items-center justify-between p-3 rounded-lg bg-gray-50 dark:bg-gray-900/20">
-                <div>
-                  <p className="font-semibold text-foreground">One-time</p>
-                  <p className="text-xs text-muted-foreground">1 visit</p>
-                </div>
-                <p className="text-2xl font-bold text-gray-600">{oneTime}</p>
-              </div>
+            {/* Loyal Customers */}
+            <div className="p-3 rounded-lg bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800">
+              <p className="text-xs font-medium text-muted-foreground mb-1">{t.ownerDashboard.customerInsights.loyal}</p>
+              <p className="text-2xl font-bold text-blue-600">{loyalCustomers}</p>
+              <p className="text-xs text-muted-foreground mt-1">{t.ownerDashboard.customerInsights.loyalDesc}</p>
             </div>
-          </CardContent>
-        </Card>
-      </div>
+
+            {/* Potential Loyalists */}
+            <div className="p-3 rounded-lg bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800">
+              <p className="text-xs font-medium text-muted-foreground mb-1">{t.ownerDashboard.customerInsights.potential}</p>
+              <p className="text-2xl font-bold text-green-600">{potentialLoyalists}</p>
+              <p className="text-xs text-muted-foreground mt-1">{t.ownerDashboard.customerInsights.potentialDesc}</p>
+            </div>
+
+            {/* New Customers */}
+            <div className="p-3 rounded-lg bg-purple-50 dark:bg-purple-900/20 border border-purple-200 dark:border-purple-800">
+              <p className="text-xs font-medium text-muted-foreground mb-1">{t.ownerDashboard.customerInsights.newCustomers}</p>
+              <p className="text-2xl font-bold text-purple-600">{newCustomers}</p>
+              <p className="text-xs text-muted-foreground mt-1">{t.ownerDashboard.customerInsights.newCustomersDesc}</p>
+            </div>
+
+            {/* At Risk */}
+            <div className="p-3 rounded-lg bg-orange-50 dark:bg-orange-900/20 border border-orange-200 dark:border-orange-800">
+              <p className="text-xs font-medium text-muted-foreground mb-1">{t.ownerDashboard.customerInsights.atRisk}</p>
+              <p className="text-2xl font-bold text-orange-600">{atRiskSegment}</p>
+              <p className="text-xs text-muted-foreground mt-1">{t.ownerDashboard.customerInsights.atRiskDesc}</p>
+            </div>
+
+            {/* Can't Lose Them */}
+            <div className="p-3 rounded-lg bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800">
+              <p className="text-xs font-medium text-muted-foreground mb-1">{t.ownerDashboard.customerInsights.cantLose}</p>
+              <p className="text-2xl font-bold text-red-600">{cantLoseThem}</p>
+              <p className="text-xs text-muted-foreground mt-1">{t.ownerDashboard.customerInsights.cantLoseDesc}</p>
+            </div>
+
+            {/* Hibernating */}
+            <div className="p-3 rounded-lg bg-gray-50 dark:bg-gray-900/20 border border-gray-200 dark:border-gray-800">
+              <p className="text-xs font-medium text-muted-foreground mb-1">{t.ownerDashboard.customerInsights.hibernating}</p>
+              <p className="text-2xl font-bold text-gray-600">{hibernating}</p>
+              <p className="text-xs text-muted-foreground mt-1">{t.ownerDashboard.customerInsights.hibernatingDesc}</p>
+            </div>
+
+            {/* Promising */}
+            <div className="p-3 rounded-lg bg-teal-50 dark:bg-teal-900/20 border border-teal-200 dark:border-teal-800">
+              <p className="text-xs font-medium text-muted-foreground mb-1">{t.ownerDashboard.customerInsights.promising}</p>
+              <p className="text-2xl font-bold text-teal-600">{promising}</p>
+              <p className="text-xs text-muted-foreground mt-1">{t.ownerDashboard.customerInsights.promisingDesc}</p>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Acquisition Sources */}
+      <Card className="border-border/50">
+        <CardHeader>
+          <CardTitle className="text-sm sm:text-base flex items-center gap-2">
+            <PieChart className="h-5 w-5" />
+            {t.ownerDashboard.customerInsights.customerAcquisitionSources}
+            <InfoButton 
+              title={t.ownerDashboard.customerInsights.customerAcquisitionSources}
+              description={t.ownerDashboard.customerInsights.fromReferrals}
+            />
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-2 gap-4">
+            <div className="p-4 rounded-lg bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800">
+              <p className="text-sm font-medium text-muted-foreground mb-2">{t.ownerDashboard.customerInsights.referrals}</p>
+              <p className="text-3xl font-bold text-green-600">{referralAcquired}</p>
+              <p className="text-xs text-muted-foreground mt-1">{referralPercentage}% {t.ownerDashboard.customerInsights.ofTotal}</p>
+            </div>
+            <div className="p-4 rounded-lg bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800">
+              <p className="text-sm font-medium text-muted-foreground mb-2">{t.ownerDashboard.customerInsights.walkIns}</p>
+              <p className="text-3xl font-bold text-blue-600">{walkInAcquired}</p>
+              <p className="text-xs text-muted-foreground mt-1">{(100 - parseFloat(referralPercentage)).toFixed(1)}% {t.ownerDashboard.customerInsights.ofTotal}</p>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
 
       {/* Top Customers */}
       <Card className="border-border/50">
         <CardHeader>
           <CardTitle className="text-sm sm:text-base flex items-center gap-2">
             <Award className="h-5 w-5" />
-            Top 10 Customers by Spend
+            {t.ownerDashboard.customerInsights.topCustomers}
+            <InfoButton 
+              title={t.ownerDashboard.customerInsights.topCustomers}
+              description={t.ownerDashboard.customerInsights.topCustomersInfo}
+            />
           </CardTitle>
         </CardHeader>
         <CardContent>
           {topCustomers.length === 0 ? (
             <p className="text-sm text-muted-foreground text-center py-8">
-              No customer data available yet.
+              {t.ownerDashboard.customerInsights.noCustomers}
             </p>
           ) : (
             <div className="space-y-2">
@@ -317,7 +356,7 @@ export function CustomerInsightsTab({ restaurantId, summary }: CustomerInsightsT
                     <div>
                       <p className="font-semibold text-sm">{customer.full_name}</p>
                       <p className="text-xs text-muted-foreground">
-                        {customer.total_visits} visits • {customer.activity_segment}
+                        {customer.total_visits} {t.ownerDashboard.customerInsights.visits}
                       </p>
                     </div>
                   </div>
@@ -326,7 +365,7 @@ export function CustomerInsightsTab({ restaurantId, summary }: CustomerInsightsT
                       RM {customer.total_spent.toFixed(2)}
                     </p>
                     <p className="text-xs text-muted-foreground">
-                      {customer.spend_segment}
+                      {customer.rfm_segment}
                     </p>
                   </div>
                 </div>
@@ -342,7 +381,11 @@ export function CustomerInsightsTab({ restaurantId, summary }: CustomerInsightsT
           <CardHeader>
             <CardTitle className="text-sm sm:text-base flex items-center gap-2 text-orange-600">
               <AlertTriangle className="h-5 w-5" />
-              At-Risk Customers (Need Re-engagement)
+              {t.ownerDashboard.customerInsights.atRiskList}
+              <InfoButton 
+                title={t.ownerDashboard.customerInsights.atRiskList}
+                description={t.ownerDashboard.customerInsights.atRiskListInfo}
+              />
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -355,8 +398,7 @@ export function CustomerInsightsTab({ restaurantId, summary }: CustomerInsightsT
                   <div>
                     <p className="font-semibold text-sm">{customer.full_name}</p>
                     <p className="text-xs text-muted-foreground">
-                      Last visit: {customer.days_since_last_visit} days ago • 
-                      {customer.churn_risk === 'high_risk' ? ' High risk' : ' At risk'}
+                      {t.ownerDashboard.customerInsights.lastVisit}: {customer.days_since_last_visit} {t.ownerDashboard.customerInsights.daysAgo} • {customer.rfm_segment}
                     </p>
                   </div>
                   <div className="text-right">
@@ -364,47 +406,18 @@ export function CustomerInsightsTab({ restaurantId, summary }: CustomerInsightsT
                       RM {customer.total_spent.toFixed(2)}
                     </p>
                     <p className="text-xs text-muted-foreground">
-                      {customer.total_visits} visits
+                      {customer.total_visits} {t.ownerDashboard.customerInsights.visits}
                     </p>
                   </div>
                 </div>
               ))}
             </div>
             <p className="text-sm text-orange-600 mt-4 p-3 bg-orange-50 dark:bg-orange-900/20 rounded-lg">
-              💡 Tip: Send these customers a special offer or bonus to re-engage them!
+              {t.ownerDashboard.customerInsights.reengagementTip}
             </p>
           </CardContent>
         </Card>
       )}
-
-      {/* Acquisition Breakdown */}
-      <Card className="border-border/50">
-        <CardHeader>
-          <CardTitle className="text-sm sm:text-base flex items-center gap-2">
-            <PieChart className="h-5 w-5" />
-            Customer Acquisition Sources
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
-            <div className="p-4 rounded-lg bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800">
-              <p className="text-sm text-muted-foreground mb-1">Referrals</p>
-              <p className="text-3xl font-bold text-green-600">{referralAcquired}</p>
-              <p className="text-xs text-muted-foreground mt-1">
-                {referralPercentage}% of total
-              </p>
-            </div>
-
-            <div className="p-4 rounded-lg bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800">
-              <p className="text-sm text-muted-foreground mb-1">Walk-ins</p>
-              <p className="text-3xl font-bold text-blue-600">{walkInAcquired}</p>
-              <p className="text-xs text-muted-foreground mt-1">
-                {(100 - parseFloat(referralPercentage)).toFixed(1)}% of total
-              </p>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
 
       {/* Coming Soon */}
       <Card className="border-border/50 bg-muted/30">

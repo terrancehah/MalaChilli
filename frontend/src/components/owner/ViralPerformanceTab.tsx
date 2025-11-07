@@ -4,13 +4,17 @@ import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import { Skeleton } from '../ui/skeleton';
 import { Target, Users, TrendingUp, TrendingDown, Link2, Share2 } from 'lucide-react';
 import type { DashboardSummary, CustomerSharingStats, SavedCodesPipeline } from '../../types/analytics.types';
+import { getTranslation, type Language } from '../../translations';
+import { InfoButton } from '../common';
 
 interface ViralPerformanceTabProps {
   restaurantId: string;
   summary: DashboardSummary | null;
+  language: Language;
 }
 
-export function ViralPerformanceTab({ restaurantId, summary }: ViralPerformanceTabProps) {
+export function ViralPerformanceTab({ restaurantId, summary, language }: ViralPerformanceTabProps) {
+  const t = getTranslation(language);
   const [loading, setLoading] = useState(true);
   const [topSharers, setTopSharers] = useState<CustomerSharingStats[]>([]);
   const [savedCodesPipeline, setSavedCodesPipeline] = useState<SavedCodesPipeline | null>(null);
@@ -75,7 +79,11 @@ export function ViralPerformanceTab({ restaurantId, summary }: ViralPerformanceT
           <CardContent className="pt-6">
             <div className="flex items-center gap-2 mb-2">
               <Target className="h-4 w-4 text-muted-foreground" />
-              <span className="text-sm text-muted-foreground">Virality Coefficient</span>
+              <span className="text-sm text-muted-foreground">{t.ownerDashboard.viralPerformance.viralityCoefficient}</span>
+              <InfoButton 
+                title={t.ownerDashboard.viralPerformance.viralityCoefficient}
+                description={t.ownerDashboard.viralPerformance.viralityCoefficientInfo}
+              />
             </div>
             <div className="flex items-baseline gap-2">
               <p className="text-4xl font-bold text-foreground">
@@ -89,10 +97,10 @@ export function ViralPerformanceTab({ restaurantId, summary }: ViralPerformanceT
             </div>
             <p className="text-xs text-muted-foreground mt-1">
               {viralMetrics && viralMetrics.virality_coefficient >= 2 
-                ? 'Exponential growth!' 
+                ? t.ownerDashboard.viralPerformance.exponentialGrowth
                 : viralMetrics && viralMetrics.virality_coefficient >= 1
-                ? 'Steady growth'
-                : 'Below viral threshold'}
+                ? t.ownerDashboard.viralPerformance.steadyGrowth
+                : t.ownerDashboard.viralPerformance.belowViralThreshold}
             </p>
           </CardContent>
         </Card>
@@ -105,11 +113,15 @@ export function ViralPerformanceTab({ restaurantId, summary }: ViralPerformanceT
               <div>
                 <div className="flex items-center gap-2 mb-2">
                   <Users className="h-4 w-4 text-muted-foreground" />
-                  <span className="text-sm text-muted-foreground">Network Size</span>
+                  <span className="text-sm text-muted-foreground">{t.ownerDashboard.viralPerformance.networkSize}</span>
+                  <InfoButton 
+                    title={t.ownerDashboard.viralPerformance.networkSize}
+                    description={t.ownerDashboard.viralPerformance.networkSizeInfo}
+                  />
                 </div>
                 <p className="text-3xl font-bold text-foreground">{viralMetrics?.total_downlines || 0}</p>
                 <p className="text-xs text-muted-foreground mt-1">
-                  <span className="font-semibold text-foreground">{viralMetrics?.total_sharers || 0}</span> active sharers
+                  <span className="font-semibold text-foreground">{viralMetrics?.total_sharers || 0}</span> {t.ownerDashboard.viralPerformance.activeSharersCount}
                 </p>
               </div>
 
@@ -117,7 +129,11 @@ export function ViralPerformanceTab({ restaurantId, summary }: ViralPerformanceT
               <div>
                 <div className="flex items-center gap-2 mb-2">
                   <Share2 className="h-4 w-4 text-muted-foreground" />
-                  <span className="text-sm text-muted-foreground">Network Depth</span>
+                  <span className="text-sm text-muted-foreground">{t.ownerDashboard.viralPerformance.networkDepth}</span>
+                  <InfoButton 
+                    title={t.ownerDashboard.viralPerformance.networkDepth}
+                    description={t.ownerDashboard.viralPerformance.networkDepthInfo}
+                  />
                 </div>
                 <div className="space-y-1">
                   <div className="flex justify-between text-sm">
@@ -145,7 +161,11 @@ export function ViralPerformanceTab({ restaurantId, summary }: ViralPerformanceT
           <CardHeader>
             <CardTitle className="text-sm sm:text-base flex items-center gap-2">
               <Link2 className="h-4 w-4 sm:h-5 sm:w-5" />
-              Saved Codes Pipeline
+              {t.ownerDashboard.viralPerformance.savedCodesPipeline}
+              <InfoButton 
+                title={t.ownerDashboard.viralPerformance.savedCodesPipeline}
+                description={t.ownerDashboard.viralPerformance.savedCodesPipelineInfo}
+              />
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -153,20 +173,20 @@ export function ViralPerformanceTab({ restaurantId, summary }: ViralPerformanceT
               {/* Key Metrics */}
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
-                  <span className="text-sm text-muted-foreground">Total Saved</span>
+                  <span className="text-sm text-muted-foreground">{t.ownerDashboard.viralPerformance.totalSaved}</span>
                   <span className="text-xl font-bold">{savedCodesPipeline.total_saved_codes}</span>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-sm text-muted-foreground">Awaiting Visit</span>
+                  <span className="text-sm text-muted-foreground">{t.ownerDashboard.viralPerformance.awaitingVisit}</span>
                   <span className="text-xl font-bold text-orange-600">{savedCodesPipeline.unused_codes}</span>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-sm text-muted-foreground">Converted</span>
+                  <span className="text-sm text-muted-foreground">{t.ownerDashboard.viralPerformance.converted}</span>
                   <span className="text-xl font-bold text-green-600">{savedCodesPipeline.converted_codes}</span>
                 </div>
                 <div className="pt-2 border-t">
                   <div className="flex items-center justify-between">
-                    <span className="text-sm font-medium">Conversion Rate</span>
+                    <span className="text-sm font-medium">{t.ownerDashboard.viralPerformance.conversionRate}</span>
                     <span className="text-2xl font-bold text-blue-600">
                       {savedCodesPipeline.conversion_rate != null 
                         ? `${savedCodesPipeline.conversion_rate.toFixed(1)}%`
@@ -174,8 +194,8 @@ export function ViralPerformanceTab({ restaurantId, summary }: ViralPerformanceT
                     </span>
                   </div>
                   <p className="text-xs text-muted-foreground mt-1">
-                    Avg time: {savedCodesPipeline.avg_days_to_first_visit != null 
-                      ? `${savedCodesPipeline.avg_days_to_first_visit.toFixed(1)} days`
+                    {t.ownerDashboard.viralPerformance.avgTime}: {savedCodesPipeline.avg_days_to_first_visit != null 
+                      ? `${savedCodesPipeline.avg_days_to_first_visit.toFixed(1)} ${t.ownerDashboard.viralPerformance.days}`
                       : 'N/A'}
                   </p>
                 </div>
@@ -193,7 +213,7 @@ export function ViralPerformanceTab({ restaurantId, summary }: ViralPerformanceT
                           minHeight: '20px'
                         }}
                       />
-                      <span className="text-xs text-muted-foreground">Saved</span>
+                      <span className="text-xs text-muted-foreground">{t.ownerDashboard.viralPerformance.saved}</span>
                     </div>
                     <div className="flex flex-col items-center gap-1 flex-1">
                       <div 
@@ -203,7 +223,7 @@ export function ViralPerformanceTab({ restaurantId, summary }: ViralPerformanceT
                           minHeight: '20px'
                         }}
                       />
-                      <span className="text-xs text-muted-foreground">Pending</span>
+                      <span className="text-xs text-muted-foreground">{t.ownerDashboard.viralPerformance.pending}</span>
                     </div>
                     <div className="flex flex-col items-center gap-1 flex-1">
                       <div 
@@ -213,7 +233,7 @@ export function ViralPerformanceTab({ restaurantId, summary }: ViralPerformanceT
                           minHeight: '20px'
                         }}
                       />
-                      <span className="text-xs text-muted-foreground">Done</span>
+                      <span className="text-xs text-muted-foreground">{t.ownerDashboard.viralPerformance.done}</span>
                     </div>
                   </div>
                 </div>
@@ -226,12 +246,18 @@ export function ViralPerformanceTab({ restaurantId, summary }: ViralPerformanceT
       {/* Top Sharers Leaderboard */}
       <Card className="border-border/50">
         <CardHeader>
-          <CardTitle className="text-sm sm:text-base">Top Sharers Leaderboard</CardTitle>
+          <CardTitle className="text-sm sm:text-base flex items-center gap-2">
+            {t.ownerDashboard.viralPerformance.topSharers}
+            <InfoButton 
+              title={t.ownerDashboard.viralPerformance.topSharers}
+              description={t.ownerDashboard.viralPerformance.topSharersInfo}
+            />
+          </CardTitle>
         </CardHeader>
         <CardContent>
           {topSharers.length === 0 ? (
             <p className="text-sm text-muted-foreground text-center py-8">
-              No sharing activity yet. Encourage customers to share their referral codes!
+              {t.ownerDashboard.viralPerformance.noSharers}
             </p>
           ) : (
             <div className="space-y-3">
@@ -256,8 +282,8 @@ export function ViralPerformanceTab({ restaurantId, summary }: ViralPerformanceT
                     </div>
                   </div>
                   <div className="text-right">
-                    <p className="font-bold text-foreground">{sharer.total_downlines} downlines</p>
-                    <p className="text-xs text-muted-foreground">RM {sharer.total_earned.toFixed(2)} earned</p>
+                    <p className="font-bold text-foreground">{sharer.total_downlines} {t.ownerDashboard.viralPerformance.downlines}</p>
+                    <p className="text-xs text-muted-foreground">RM {sharer.total_earned.toFixed(2)} {t.ownerDashboard.viralPerformance.earned}</p>
                   </div>
                 </div>
               ))}

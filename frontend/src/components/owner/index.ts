@@ -3,3 +3,4 @@ export { ViralPerformanceTab } from './ViralPerformanceTab';
 export { BusinessMetricsTab } from './BusinessMetricsTab';
 export { CustomerInsightsTab } from './CustomerInsightsTab';
 export { OwnerSettingsPanel } from './OwnerSettingsPanel';
+export { ManagementPanel } from './ManagementPanel';

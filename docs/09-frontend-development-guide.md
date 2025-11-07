@@ -862,37 +862,60 @@ Tab Content (charts + detailed metrics)
 
 ### Customer Segmentation - RFM Analysis
 
-**Method:** Use RFM (Recency, Frequency, Monetary) scoring instead of fixed thresholds
+**Method:** Use percentile-based RFM (Recency, Frequency, Monetary) scoring for dynamic, scalable segmentation
 
-**RFM Dimensions:**
+**Why Percentiles?**
+- Adapts automatically as business grows
+- Fair comparison regardless of customer base size
+- A customer with 5 visits is "frequent" for a new restaurant but "infrequent" for an established one
+- Avoids hardcoded thresholds that become outdated
+
+**RFM Dimensions (1-5 scale using NTILE):**
+
 - **Recency (R)**: Days since last visit (lower is better)
-  - Score 4: 0-30 days (recent)
-  - Score 3: 31-60 days
-  - Score 2: 61-90 days
-  - Score 1: 90+ days (at risk)
+  - Score 5: Top 20% most recent visitors (e.g., within 30 days)
+  - Score 4: 20-40% percentile (e.g., 31-60 days)
+  - Score 3: 40-60% percentile (e.g., 61-90 days)
+  - Score 2: 60-80% percentile (e.g., 91-180 days)
+  - Score 1: Bottom 20% least recent (e.g., >180 days)
 
-- **Frequency (F)**: Total visits (higher is better)
-  - Score 4: 10+ visits (super active)
-  - Score 3: 5-9 visits (active)
-  - Score 2: 2-4 visits (moderate)
-  - Score 1: 1 visit (one-time)
+- **Frequency (F)**: Total visits relative to customer base
+  - Score 5: Top 20% most frequent visitors
+  - Score 4: 20-40% percentile
+  - Score 3: 40-60% percentile
+  - Score 2: 60-80% percentile
+  - Score 1: Bottom 20% least frequent
+  - **Note:** Scores are relative, not absolute numbers
 
-- **Monetary (M)**: Total spent (higher is better)
-  - Score 4: RM 500+ (VIP)
-  - Score 3: RM 200-499 (high value)
-  - Score 2: RM 100-199 (medium value)
-  - Score 1: < RM 100 (low value)
+- **Monetary (M)**: Total spent relative to customer base
+  - Score 5: Top 20% highest spenders
+  - Score 4: 20-40% percentile
+  - Score 3: 40-60% percentile
+  - Score 2: 60-80% percentile
+  - Score 1: Bottom 20% lowest spenders
 
-**Segment Labels:**
-- **Champions** (444): Best customers - recent, frequent, high spend
-- **Loyal Customers** (3-4 in F, 3-4 in M): Regular high-value customers
-- **Potential Loyalists** (4 in R, 2-3 in F/M): Recent customers showing promise
-- **At Risk** (1-2 in R, 3-4 in F/M): Previously good customers becoming inactive
-- **Can't Lose Them** (1 in R, 4 in F/M): High-value customers who haven't returned
-- **Hibernating** (1-2 in all): Inactive, low engagement
-- **New Customers** (4 in R, 1 in F): First-time visitors
+**Segment Definitions:**
+- **Champions** (R:5, F:4-5, M:4-5): Best customers - recent, frequent, high spenders
+- **Loyal** (R:3-5, F:3-5, M:3-5): Regular customers with consistent behavior
+- **Potential Loyalists** (R:4-5, F:1-3, M:1-3): Recent customers showing promise
+- **New Customers** (R:5, F:1, M:1-2): First-time visitors, need nurturing
+- **At Risk** (R:2-3, F:2-5, M:2-5): Previously active but haven't visited recently
+- **Can't Lose Them** (R:1-2, F:4-5, M:4-5): High-value customers at risk of churning
+- **Hibernating** (R:1-2, F:1-2, M:1-2): Inactive low-value customers
+- **Promising** (R:3-4, F:1, M:1): Recent first-timers with potential
 
-**Implementation Note:** RFM scores are dynamic and recalculated based on actual behavior, not fixed thresholds that become outdated as business grows.
+**Database Implementation:**
+```sql
+-- Use NTILE(5) window function to create percentile-based scores
+WITH rfm_scores AS (
+  SELECT 
+    customer_id,
+    NTILE(5) OVER (PARTITION BY restaurant_id ORDER BY last_visit_date DESC) AS recency_score,
+    NTILE(5) OVER (PARTITION BY restaurant_id ORDER BY total_visits ASC) AS frequency_score,
+    NTILE(5) OVER (PARTITION BY restaurant_id ORDER BY total_spent ASC) AS monetary_score
+  FROM customer_restaurant_history
+)
+```
 
 **Reference:** [Optimove RFM Segmentation Guide](https://www.optimove.com/resources/learning-center/rfm-segmentation)
 

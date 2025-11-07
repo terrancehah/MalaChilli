@@ -104,9 +104,10 @@ export interface CustomerSegmentation {
   current_balance: number;
   total_downlines: number;
   total_earned: number;
-  spend_segment: 'vip' | 'high' | 'medium' | 'low';
-  activity_segment: 'super_active' | 'active' | 'moderate' | 'one_time';
-  churn_risk: 'high_risk' | 'at_risk' | 'moderate_risk' | 'active';
+  recency_score: number;
+  frequency_score: number;
+  monetary_score: number;
+  rfm_segment: 'Champions' | 'Loyal Customers' | 'Potential Loyalists' | 'At Risk' | 'Cant Lose Them' | 'Hibernating' | 'New Customers' | 'Promising';
 }
 
 export interface CustomerAcquisitionSource {
@@ -164,11 +165,15 @@ export interface DashboardSummary {
     active_customers: number;
     at_risk_customers: number;
     avg_lifetime_value: number;
-    segmentation: {
-      vip: number;
-      high: number;
-      medium: number;
-      low: number;
+    rfm_segmentation: {
+      Champions: number;
+      'Loyal Customers': number;
+      'Potential Loyalists': number;
+      'At Risk': number;
+      'Cant Lose Them': number;
+      Hibernating: number;
+      'New Customers': number;
+      Promising: number;
     };
   };
 }
