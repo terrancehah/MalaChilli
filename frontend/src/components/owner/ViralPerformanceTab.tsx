@@ -296,7 +296,7 @@ export function ViralPerformanceTab({ restaurantId, summary, language }: ViralPe
       <Card className="border-border/50 bg-muted/30">
         <CardContent className="p-6 text-center">
           <p className="text-sm text-muted-foreground">
-            📊 More viral analytics coming soon: Network visualization, sharing behavior analysis, K-factor tracking
+            {t.ownerDashboard.viralPerformance.comingSoon}
           </p>
         </CardContent>
       </Card>

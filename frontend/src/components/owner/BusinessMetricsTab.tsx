@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { supabase } from '../../lib/supabase';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import { Skeleton } from '../ui/skeleton';
-import { DollarSign, TrendingUp, Percent, PieChart, CreditCard, Award } from 'lucide-react';
+import { DollarSign, TrendingUp, PieChart, CreditCard, Award } from 'lucide-react';
 import type { DashboardSummary, RevenueAnalytics, UplineRewardsStats, DiscountBreakdown } from '../../types/analytics.types';
 import { BusinessMetricsCharts } from './BusinessMetricsCharts';
 import { getTranslation, type Language } from '../../translations';
@@ -91,7 +91,6 @@ export function BusinessMetricsTab({ restaurantId, summary, language }: Business
   const totalTransactions = businessMetrics?.total_transactions || 0;
   const totalDiscounts = businessMetrics?.total_discounts || 0;
   const avgBillAmount = businessMetrics?.avg_bill_amount || 0;
-  const discountPercentage = businessMetrics?.discount_percentage || 0;
 
   // Calculate ROI (simplified: revenue increase vs discount cost)
   const roi = totalDiscounts > 0 ? ((totalRevenue - totalDiscounts) / totalDiscounts).toFixed(1) : '0';
@@ -185,11 +184,11 @@ export function BusinessMetricsTab({ restaurantId, summary, language }: Business
         </Card>
       </div>
 
-      {/* Discount Analysis */}
+      {/* Discount Breakdown Card */}
       <Card className="border-border/50">
         <CardHeader>
           <CardTitle className="text-sm sm:text-base flex items-center gap-2">
-            <Percent className="h-5 w-5" />
+            <CreditCard className="h-5 w-5" />
             {t.ownerDashboard.businessMetrics.discountBreakdown}
             <InfoButton 
               title={t.ownerDashboard.businessMetrics.discountBreakdown}
@@ -199,17 +198,19 @@ export function BusinessMetricsTab({ restaurantId, summary, language }: Business
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
-            {/* Total Discounts */}
+            {/* Total Discounts Summary */}
             <div className="flex items-center justify-between p-4 rounded-lg bg-muted/50">
               <div>
                 <p className="text-sm text-muted-foreground">{t.ownerDashboard.businessMetrics.totalDiscounts}</p>
                 <p className="text-2xl font-bold text-foreground">
-                  RM {totalDiscounts.toLocaleString('en-MY', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                  RM {(discountBreakdown?.total_discount || totalDiscounts).toLocaleString('en-MY', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                 </p>
               </div>
               <div className="text-right">
                 <p className="text-sm text-muted-foreground">{t.ownerDashboard.businessMetrics.discountPercentage}</p>
-                <p className="text-2xl font-bold text-orange-600">{discountPercentage.toFixed(1)}%</p>
+                <p className="text-2xl font-bold text-orange-600">
+                  {totalRevenue > 0 ? (((discountBreakdown?.total_discount || totalDiscounts) / totalRevenue) * 100).toFixed(1) : '0.0'}%
+                </p>
               </div>
             </div>
 
@@ -262,7 +263,7 @@ export function BusinessMetricsTab({ restaurantId, summary, language }: Business
         <CardContent>
           {uplineRewards.length === 0 ? (
             <p className="text-sm text-muted-foreground text-center py-8">
-              No upline rewards distributed yet.
+              {t.ownerDashboard.businessMetrics.noRewardsYet}
             </p>
           ) : (
             <div className="space-y-3">
@@ -306,61 +307,14 @@ export function BusinessMetricsTab({ restaurantId, summary, language }: Business
           ...r,
           discount_amount: r.gross_revenue - r.net_revenue
         }))}
-        discountBreakdown={discountBreakdown ? {
-          guaranteed_discount_total: discountBreakdown.guaranteed_discount_total,
-          vc_redemption_total: discountBreakdown.vc_redeemed_total,
-          guaranteed_percentage: discountBreakdown.guaranteed_percentage,
-          vc_percentage: discountBreakdown.vc_percentage
-        } : undefined}
         language={language}
       />
-
-      {/* Revenue Trend (Simple Summary) */}
-      {revenueData.length > 0 && (
-        <Card className="border-border/50">
-          <CardHeader>
-            <CardTitle className="text-sm sm:text-base">Recent Revenue Trend</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-2">
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 text-center">
-                <div>
-                  <p className="text-sm text-muted-foreground">Last 7 Days</p>
-                  <p className="text-xl font-bold text-foreground">
-                    RM {revenueData
-                      .slice(0, 7)
-                      .reduce((sum, d) => sum + d.gross_revenue, 0)
-                      .toLocaleString('en-MY', { minimumFractionDigits: 2 })}
-                  </p>
-                </div>
-                <div>
-                  <p className="text-sm text-muted-foreground">Last 14 Days</p>
-                  <p className="text-xl font-bold text-foreground">
-                    RM {revenueData
-                      .slice(0, 14)
-                      .reduce((sum, d) => sum + d.gross_revenue, 0)
-                      .toLocaleString('en-MY', { minimumFractionDigits: 2 })}
-                  </p>
-                </div>
-                <div>
-                  <p className="text-sm text-muted-foreground">Last 30 Days</p>
-                  <p className="text-xl font-bold text-foreground">
-                    RM {revenueData
-                      .reduce((sum, d) => sum + d.gross_revenue, 0)
-                      .toLocaleString('en-MY', { minimumFractionDigits: 2 })}
-                  </p>
-                </div>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      )}
 
       {/* Coming Soon */}
       <Card className="border-border/50 bg-muted/30">
         <CardContent className="p-6 text-center">
           <p className="text-sm text-muted-foreground">
-            📈 More business analytics coming soon: Revenue charts, peak hours heatmap, branch comparison, staff performance
+            {t.ownerDashboard.businessMetrics.comingSoon}
           </p>
         </CardContent>
       </Card>

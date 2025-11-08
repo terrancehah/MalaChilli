@@ -273,7 +273,47 @@ Object Fit: cover - Fills container without distortion
 
 ---
 
-### 5. Staff Dashboard Action Buttons Pattern
+### 5. Interactive Element Standards
+
+**Clickable Cards/Buttons Shadow Behavior:**
+
+All interactive cards and buttons should follow this shadow elevation pattern to simulate physical button press:
+
+**Shadow States:**
+```tsx
+className="cursor-pointer shadow-md hover:shadow-sm active:shadow-none transition-shadow"
+```
+
+**Elevation Logic:**
+- **Default (`shadow-md`)**: Element appears elevated and clickable (resting state)
+- **Hover (`shadow-sm`)**: Simulates pressure - element moves down as cursor applies force
+- **Active (`shadow-none`)**: Full press - element is flush with surface (clicked state)
+
+**Physical Metaphor:**
+This mimics real-world button behavior where pressing down reduces elevation. The shadow progression creates tactile feedback:
+1. Resting button floats above surface (medium shadow)
+2. Hovering applies light pressure (small shadow)
+3. Clicking fully depresses button (no shadow)
+
+**When to Use:**
+- Dashboard metric cards that open modals
+- RFM customer segment cards
+- Action buttons with significant visual weight
+- Any card-based navigation element
+
+**When NOT to Use:**
+- Standard UI buttons (use default button styles)
+- Text links
+- Icon-only buttons
+- Minimal/ghost buttons
+
+**Implementation Examples:**
+- Customer Insights RFM segment cards (`CustomerInsightsTab.tsx`)
+- Dashboard action cards
+
+---
+
+### 6. Staff Dashboard Action Buttons Pattern
 
 **Design Decision: Large Touch-Optimized Action Cards**
 
@@ -918,6 +958,51 @@ WITH rfm_scores AS (
 ```
 
 **Reference:** [Optimove RFM Segmentation Guide](https://www.optimove.com/resources/learning-center/rfm-segmentation)
+
+### Interactive Customer Segmentation
+
+**Clickable Segment Cards:**
+- All 8 RFM segment cards are interactive with tactile feedback
+- **Shadow States**: `shadow-md` (default elevated) → `shadow-sm` (hover pressed) → `shadow-none` (active/click)
+- Click opens modal with filtered customer list for that segment
+- Provides drill-down from summary metrics to individual customers
+
+**Card Interaction Pattern:**
+```tsx
+className="cursor-pointer shadow-md hover:shadow-sm active:shadow-none transition-shadow"
+```
+
+**Shadow Elevation Logic:**
+- **Default (`shadow-md`)**: Card appears elevated and clickable
+- **Hover (`shadow-sm`)**: Simulates pressure - card moves down as cursor applies force
+- **Active (`shadow-none`)**: Full press - card is flush with surface
+- This mimics physical button behavior where pressing reduces elevation
+
+**Modal Design:**
+- **Close Button**: Absolutely positioned (top-right) - NOT in header container to avoid spacing issues
+- **Header**: Segment name + definition subheading with `pr-12` for close button clearance
+- **Content**: Scrollable customer list sorted by total spend
+- **Customer Cards**: Name, visits, days since last visit, total spent, segment
+- **States**: Loading (skeletons), empty (no customers message), populated
+- **Close Actions**: X button or click outside modal
+
+**Modal Header Pattern:**
+```tsx
+<div className="relative">
+  <Button className="absolute top-4 right-4 h-8 w-8 z-10" />
+  <div className="p-4 pr-12 border-b">
+    <h2>Title</h2>
+    <p className="mt-1">Description</p>
+  </div>
+</div>
+```
+
+**Translation Support:**
+- Segment names and definitions translated (EN/ZH/MS)
+- Chinese grammar: "占总数的 50%" (descriptor before percentage)
+- Natural segment names: "顶级客户" (top-tier) vs "冠军" (champion)
+
+**Implementation:** `/frontend/src/components/owner/CustomerInsightsTab.tsx`
 
 ---
 

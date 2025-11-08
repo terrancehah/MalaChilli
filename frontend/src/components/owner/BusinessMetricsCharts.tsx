@@ -1,7 +1,9 @@
+import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
+import { Button } from '../ui/button';
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from '../ui/chart';
-import { Line, LineChart, Bar, BarChart, CartesianGrid, XAxis, YAxis, Legend } from 'recharts';
-import { TrendingUp, DollarSign, Percent } from 'lucide-react';
+import { Line, LineChart, CartesianGrid, XAxis, YAxis, Legend } from 'recharts';
+import { TrendingUp } from 'lucide-react';
 import { getTranslation, type Language } from '../../translations';
 import { InfoButton } from '../common';
 
@@ -12,21 +14,15 @@ interface BusinessMetricsChartsProps {
     net_revenue: number;
     discount_amount: number;
   }>;
-  discountBreakdown?: {
-    guaranteed_discount_total: number;
-    vc_redemption_total: number;
-    guaranteed_percentage: number;
-    vc_percentage: number;
-  };
   language: Language;
 }
 
 export function BusinessMetricsCharts({ 
   revenueData = [],
-  discountBreakdown,
   language
 }: BusinessMetricsChartsProps) {
   const t = getTranslation(language);
+  const [revenuePeriod, setRevenuePeriod] = useState<7 | 14 | 30>(14);
   
   const chartConfig = {
     gross_revenue: {
@@ -43,39 +39,80 @@ export function BusinessMetricsCharts({
     },
   };
 
-  // Prepare discount breakdown data
-  const discountData = discountBreakdown ? [
-    { 
-      name: t.ownerDashboard.businessMetrics.guaranteedDiscount, 
-      amount: discountBreakdown.guaranteed_discount_total,
-      percentage: discountBreakdown.guaranteed_percentage,
-      fill: 'hsl(var(--chart-4))'
-    },
-    { 
-      name: t.ownerDashboard.businessMetrics.vcRedeemed, 
-      amount: discountBreakdown.vc_redemption_total,
-      percentage: discountBreakdown.vc_percentage,
-      fill: 'hsl(var(--chart-5))'
-    },
-  ] : [];
-
-  // Get last 14 days for better visualization
-  const recentRevenue = revenueData.slice(0, 14).reverse();
+  // Get revenue data based on selected period
+  const recentRevenue = revenueData.slice(0, revenuePeriod).reverse();
+  
+  // Calculate total revenue for each period
+  const revenue7d = revenueData.slice(0, 7).reduce((sum, d) => sum + d.gross_revenue, 0);
+  const revenue14d = revenueData.slice(0, 14).reduce((sum, d) => sum + d.gross_revenue, 0);
+  const revenue30d = revenueData.reduce((sum, d) => sum + d.gross_revenue, 0);
 
   return (
     <div className="space-y-4 sm:space-y-6">
-      {/* Revenue Trend Line Chart */}
+      {/* Revenue Trend Line Chart with Period Filter */}
       {recentRevenue.length > 0 && (
         <Card className="border-border/50">
-          <CardHeader>
-            <CardTitle className="text-sm sm:text-base flex items-center gap-2">
-              <TrendingUp className="h-4 w-4 sm:h-5 sm:w-5" />
-              {t.ownerDashboard.businessMetrics.revenueOverTime}
-              <InfoButton 
-                title={t.ownerDashboard.businessMetrics.revenueOverTime}
-                description={t.ownerDashboard.businessMetrics.revenueOverTimeInfo}
-              />
-            </CardTitle>
+          <CardHeader className="space-y-4">
+            <div className="flex items-center justify-between flex-wrap gap-2">
+              <CardTitle className="text-sm sm:text-base flex items-center gap-2">
+                <TrendingUp className="h-4 w-4 sm:h-5 sm:w-5" />
+                {t.ownerDashboard.businessMetrics.revenueOverTime}
+                <InfoButton 
+                  title={t.ownerDashboard.businessMetrics.revenueOverTime}
+                  description={t.ownerDashboard.businessMetrics.revenueOverTimeInfo}
+                />
+              </CardTitle>
+              
+              {/* Period Filter Buttons */}
+              <div className="flex gap-1">
+                <Button
+                  variant={revenuePeriod === 7 ? 'default' : 'outline'}
+                  size="sm"
+                  onClick={() => setRevenuePeriod(7)}
+                  className="h-8 px-3 text-xs"
+                >
+                  {t.ownerDashboard.businessMetrics.days7}
+                </Button>
+                <Button
+                  variant={revenuePeriod === 14 ? 'default' : 'outline'}
+                  size="sm"
+                  onClick={() => setRevenuePeriod(14)}
+                  className="h-8 px-3 text-xs"
+                >
+                  {t.ownerDashboard.businessMetrics.days14}
+                </Button>
+                <Button
+                  variant={revenuePeriod === 30 ? 'default' : 'outline'}
+                  size="sm"
+                  onClick={() => setRevenuePeriod(30)}
+                  className="h-8 px-3 text-xs"
+                >
+                  {t.ownerDashboard.businessMetrics.days30}
+                </Button>
+              </div>
+            </div>
+            
+            {/* Revenue Summary */}
+            <div className="grid grid-cols-3 gap-3 sm:gap-4 text-center">
+              <div className={`p-2 rounded-lg transition-colors ${revenuePeriod === 7 ? 'bg-primary/10' : 'bg-muted/30'}`}>
+                <p className="text-xs text-muted-foreground">{t.ownerDashboard.businessMetrics.last7Days}</p>
+                <p className="text-sm sm:text-lg font-bold text-foreground">
+                  RM {revenue7d.toLocaleString('en-MY', { minimumFractionDigits: 2 })}
+                </p>
+              </div>
+              <div className={`p-2 rounded-lg transition-colors ${revenuePeriod === 14 ? 'bg-primary/10' : 'bg-muted/30'}`}>
+                <p className="text-xs text-muted-foreground">{t.ownerDashboard.businessMetrics.last14Days}</p>
+                <p className="text-sm sm:text-lg font-bold text-foreground">
+                  RM {revenue14d.toLocaleString('en-MY', { minimumFractionDigits: 2 })}
+                </p>
+              </div>
+              <div className={`p-2 rounded-lg transition-colors ${revenuePeriod === 30 ? 'bg-primary/10' : 'bg-muted/30'}`}>
+                <p className="text-xs text-muted-foreground">{t.ownerDashboard.businessMetrics.last30Days}</p>
+                <p className="text-sm sm:text-lg font-bold text-foreground">
+                  RM {revenue30d.toLocaleString('en-MY', { minimumFractionDigits: 2 })}
+                </p>
+              </div>
+            </div>
           </CardHeader>
           <CardContent>
             <ChartContainer config={chartConfig} className="h-[250px] w-full">
@@ -133,61 +170,6 @@ export function BusinessMetricsCharts({
         </Card>
       )}
 
-      {/* Discount Breakdown Bar Chart */}
-      {discountBreakdown && (
-        <Card className="border-border/50">
-          <CardHeader>
-            <CardTitle className="text-sm sm:text-base flex items-center gap-2">
-              <Percent className="h-4 w-4 sm:h-5 sm:w-5" />
-              {t.ownerDashboard.businessMetrics.discountBreakdown}
-              <InfoButton 
-                title={t.ownerDashboard.businessMetrics.discountBreakdown}
-                description={t.ownerDashboard.businessMetrics.discountBreakdownInfo}
-              />
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <ChartContainer config={chartConfig} className="h-[200px] w-full">
-              <BarChart data={discountData} layout="vertical">
-                <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
-                <XAxis 
-                  type="number"
-                  tick={{ fontSize: 12 }}
-                  tickLine={false}
-                  axisLine={false}
-                  tickFormatter={(value) => `RM${value}`}
-                />
-                <YAxis 
-                  type="category"
-                  dataKey="name"
-                  tick={{ fontSize: 12 }}
-                  tickLine={false}
-                  axisLine={false}
-                  width={120}
-                />
-                <ChartTooltip 
-                  content={<ChartTooltipContent 
-                    formatter={(value, name, props) => [
-                      `RM ${Number(value).toLocaleString('en-MY', { minimumFractionDigits: 2 })} (${props.payload.percentage.toFixed(1)}%)`,
-                      name
-                    ]}
-                  />} 
-                />
-                <Bar dataKey="amount" radius={[0, 8, 8, 0]} />
-              </BarChart>
-            </ChartContainer>
-            
-            {/* Total Discounts Summary */}
-            <div className="mt-4 flex items-center justify-center gap-2 text-sm">
-              <DollarSign className="h-4 w-4 text-orange-600" />
-              <span className="text-muted-foreground">{t.ownerDashboard.businessMetrics.totalDiscounts}:</span>
-              <span className="font-semibold text-foreground">
-                RM {(discountBreakdown.guaranteed_discount_total + discountBreakdown.vc_redemption_total).toLocaleString('en-MY', { minimumFractionDigits: 2 })}
-              </span>
-            </div>
-          </CardContent>
-        </Card>
-      )}
     </div>
   );
 }

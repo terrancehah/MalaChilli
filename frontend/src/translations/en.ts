@@ -489,6 +489,7 @@ export const en = {
       pending: 'Pending',
       done: 'Done',
       avgTime: 'Avg time',
+      comingSoon: '📊 More viral analytics coming soon: Network visualization, sharing behavior analysis, K-factor tracking',
     },
     
     // Business Metrics Tab
@@ -528,11 +529,19 @@ export const en = {
       
       // Subheadings/descriptions
       last30Days: 'Last 30 days',
+      last14Days: 'Last 14 days',
+      last7Days: 'Last 7 days',
       ofGross: 'of gross',
       avg: 'Avg',
       revenueVsDiscount: 'Revenue vs Discount',
       firstTimeDiscount: 'First-time customer discount',
       virtualCurrencyRedeemed: 'Virtual currency redeemed',
+      recentRevenueTrend: 'Recent Revenue Trend',
+      days7: '7d',
+      days14: '14d',
+      days30: '30d',
+      noRewardsYet: 'No upline rewards distributed yet.',
+      comingSoon: '📈 More business analytics coming soon: Revenue charts, peak hours heatmap, branch comparison, staff performance',
     },
     
     // Customer Insights Tab
@@ -603,18 +612,36 @@ Why Percentiles? This ensures fair comparison as your business grows. A customer
   championsDesc: 'Best customers',
   loyal: 'Loyal',
   loyalDesc: 'Regular visitors',
-  potential: 'Potential',
-  potentialDesc: 'Showing promise',
+  potential: 'Rising Stars',
+  potentialDesc: 'Growing loyalty',
   newCustomers: 'New',
   newCustomersDesc: 'First-timers',
   atRisk: 'At Risk',
   atRiskDesc: 'Need attention',
-  cantLose: 'Can\'t Lose',
+  cantLose: 'VIP Alert',
   cantLoseDesc: 'High value',
-  hibernating: 'Hibernating',
+  hibernating: 'Dormant',
   hibernatingDesc: 'Inactive',
-  promising: 'Promising',
-  promisingDesc: 'Has potential',
+  promising: 'Explorers',
+  promisingDesc: 'Testing waters',
+  
+  // RFM Segment Full Names
+  segmentChampions: 'Champions',
+  segmentChampionsInfo: 'Your VIP customers - visit frequently, recently, and spend the most (R:5, F:5, M:5)',
+  segmentLoyal: 'Loyal Customers',
+  segmentLoyalInfo: 'Reliable regulars who visit often and spend consistently (R:4-5, F:4-5, M:4-5)',
+  segmentPotentialLoyalists: 'Rising Stars',
+  segmentPotentialLoyalistsInfo: 'Recent repeat customers building loyalty - nurture them (R:4-5, F:2-3, M:2-3)',
+  segmentNewCustomers: 'New Customers',
+  segmentNewCustomersInfo: 'Brand new visitors making their first impression (R:5, F:1, M:1-2)',
+  segmentPromising: 'Explorers',
+  segmentPromisingInfo: 'Curious newcomers testing your restaurant - convert them (R:3-4, F:1, M:1)',
+  segmentAtRisk: 'At Risk',
+  segmentAtRiskInfo: 'Fading regulars who used to visit often but slipping away (R:2-3, F:2-5, M:2-5)',
+  segmentCantLoseThem: 'VIP Alert',
+  segmentCantLoseThemInfo: 'High-spending loyalists who stopped visiting - win them back! (R:1-2, F:4-5, M:4-5)',
+  segmentHibernating: 'Dormant',
+  segmentHibernatingInfo: 'Long-gone low-spenders - likely lost to competitors (R:1-2, F:1-2, M:1-2)',
   
   acquisitionSources: 'Customer Acquisition Sources',
   acquisitionSourcesInfo: 'How customers discovered your restaurant: through referrals or as walk-ins',
@@ -630,6 +657,7 @@ Why Percentiles? This ensures fair comparison as your business grows. A customer
   lastVisit: 'Last visit',
   daysAgo: 'days ago',
   reengagementTip: '💡 Tip: Send these customers a special offer or bonus to re-engage them!',
+  comingSoon: '👥 More customer insights coming soon: Cohort retention analysis, CLV predictions, churn forecasting, visit frequency patterns',
 },
   
 // Common
