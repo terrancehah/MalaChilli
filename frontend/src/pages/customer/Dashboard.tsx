@@ -101,7 +101,6 @@ export default function CustomerDashboard() {
   const [totalRedeemed, setTotalRedeemed] = useState(0);
   const [totalReferred, setTotalReferred] = useState(0);
   const [recentTransactions, setRecentTransactions] = useState<any[]>([]);
-  const [loadingTransactions, setLoadingTransactions] = useState(true);
   const [sortBy, setSortBy] = useState<'recent' | 'balance'>('recent');
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
   const [selectedRestaurant, setSelectedRestaurant] = useState<{
@@ -142,7 +141,6 @@ export default function CustomerDashboard() {
       if (!user) return;
       
       setLoadingCodes(true);
-      setLoadingTransactions(true);
       try {
         // Fetch visited restaurants
         const { data: visitedData, error: visitedError } = await supabase
@@ -290,7 +288,6 @@ export default function CustomerDashboard() {
         console.error('Error fetching data:', error);
       } finally {
         setLoadingCodes(false);
-        setLoadingTransactions(false);
       }
     };
     
