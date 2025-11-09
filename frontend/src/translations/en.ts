@@ -47,12 +47,15 @@ export const en = {
   // Dashboard - Recent Transactions
   recentTransactions: {
     title: 'Recent Transactions',
-    noTransactions: 'No transactions yet. Start dining at our partner restaurants to earn rewards!',
+    noTransactions: 'No transactions yet',
     firstVisit: 'First Visit!',
-    discount: 'discount',
-    vcUsed: 'VC used',
-    vcEarned: 'VC earned',
-    unrealized: 'Unrealized Earning',
+    discount: 'Discount',
+    vcUsed: 'VC Used',
+    vcEarned: 'VC Earned',
+    unrealized: 'Unrealized Earnings',
+    unrealizedDesc: 'Share your code to unlock this potential earning',
+    viewDetails: 'View Full Details',
+    tapToView: 'Tap to view details',
   },
 
   // Dashboard - Restaurant Sorting
@@ -78,6 +81,9 @@ export const en = {
     visits: 'visits',
     visit: 'visit',
     active: 'Active',
+    earnUpTo: 'Earn up to',
+    unrealized: 'unrealized',
+    recentActivity: 'Recent Activity',
   },
 
   // Share Bottom Sheet

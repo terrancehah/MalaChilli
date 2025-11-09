@@ -47,12 +47,15 @@ export const zh = {
   // Dashboard - Recent Transactions
   recentTransactions: {
     title: '最近交易',
-    noTransactions: '还没有交易记录。开始在我们的合作餐厅用餐以赚取奖励！',
-    firstVisit: '首次光临！',
+    noTransactions: '还没有交易记录',
+    firstVisit: '首次光顾！',
     discount: '折扣',
-    vcUsed: '已使用 VC',
-    vcEarned: '已赚取 VC',
+    vcUsed: '已使用VC',
+    vcEarned: '赚取VC',
     unrealized: '未实现收益',
+    unrealizedDesc: '分享您的代码以解锁此潜在收益',
+    viewDetails: '查看完整详情',
+    tapToView: '点击查看详情',
   },
 
   // Dashboard - Restaurant Sorting
@@ -73,11 +76,14 @@ export const zh = {
   // Restaurant Card
   restaurantCard: {
     share: '分享餐厅',
-    vcBalance: 'VC 余额',
+    vcBalance: 'VC余额',
     totalSpent: '总消费',
     visits: '次访问',
     visit: '次访问',
     active: '活跃',
+    earnUpTo: '可赚取高达',
+    unrealized: '未实现收益',
+    recentActivity: '最近活动',
   },
 
   // Share Bottom Sheet

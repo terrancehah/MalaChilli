@@ -1006,6 +1006,106 @@ className="cursor-pointer shadow-md hover:shadow-sm active:shadow-none transitio
 
 ---
 
+### Customer Dashboard - Unified Restaurant & Transaction View
+
+**Design Decision: Combine Restaurant Sharing + Recent Transactions**
+
+**Why Combine:**
+- Reduces scrolling and information overload
+- Contextual grouping - transactions belong to restaurants
+- Cleaner visual hierarchy
+- Progressive disclosure - expand to see details
+
+**Implementation:**
+- Restaurant cards show balance, earning potential, and Share button
+- "Recent Activity" expandable section shows transactions per restaurant
+- Transactions display earnings and unrealized potential (subtle FOMO)
+- Click transaction to open detail sheet
+
+**Earning Potential Display (Subtle FOMO):**
+
+Restaurant cards show subtle earning potential to create urgency without being pushy:
+
+```tsx
+// Shows: "Earn up to RM 3.00 per visit"
+Potential = Average Transaction × 3% (3 referral levels)
+```
+
+**Design Principles:**
+- **Opportunity-focused**: Show what they CAN earn, not what they "missed"
+- **Contextual**: Based on their actual transaction history
+- **Subtle**: Small text below balance, not aggressive
+- **Actionable**: Paired with prominent Share button
+- **Progressive Disclosure**: Transactions collapsed by default, expand on demand
+
+**Psychology:**
+- Creates awareness of earning potential
+- Motivates sharing without guilt
+- Shows concrete value (RM amount, not percentages)
+- Reinforces the referral system benefit
+- Reduces cognitive load (one section instead of two)
+
+**Implementation:** `/frontend/src/components/customer/RestaurantCard.tsx`, `/frontend/src/pages/customer/Dashboard.tsx`
+
+---
+
+### Customer Dashboard - Information Delivery Hierarchy
+
+**3-Tier UX System:**
+
+**Tier 1: Quick Actions (Restaurant Card Level)**
+- **Purpose**: Immediate actions without leaving context
+- **Components**: Share button, Expandable transactions
+- **Interaction**: Tap to expand/collapse, minimal friction
+- **Visual**: Integrated into card, subtle animations
+
+**Tier 2: Detailed Information (Bottom Sheets)**
+- **Purpose**: Full details requiring focus
+- **Components**: Transaction details, Share options
+- **Interaction**: Slide up from bottom, swipe to dismiss
+- **Visual**: 85% height, backdrop overlay, smooth transitions
+
+**Tier 3: Educational Content (Centered Modals)**
+- **Purpose**: Explanatory content, help information
+- **Components**: Referral level explanations, How it works
+- **Interaction**: Tap info icon, click outside to dismiss
+- **Visual**: Centered, smaller size, higher z-index (z-60 vs z-50)
+
+**Interaction Patterns:**
+
+```
+Restaurant Card (Tier 1)
+├─ Click Share → Share Bottom Sheet (Tier 2)
+│  └─ Social media options, copy link
+└─ Click Transaction → Transaction Detail Sheet (Tier 2)
+   └─ Click Info icon → Referral Explanation Modal (Tier 3)
+```
+
+**Visual Feedback (Mobile-First):**
+- **Transaction cards**: `active:bg-muted/50` + `active:scale-[0.98]` (touch feedback)
+- **Expandable button**: `active:bg-muted/30` + `active:text-foreground` (highlight on tap)
+- **Bottom sheets**: Slide-up animation (300ms) + backdrop fade + swipe-to-dismiss
+- **Modals**: Fade-in + scale animation
+
+**Touch Optimization:**
+- Minimum 44px touch targets (buttons, expandable areas)
+- Active states instead of hover (mobile doesn't have hover)
+- Immediate visual feedback on tap (no delay)
+- Scale animations for tactile feel
+
+**Why This Hierarchy:**
+- **Progressive disclosure**: Show more detail as user drills down
+- **Context preservation**: Tier 1 keeps user in main view
+- **Clear separation**: Different visual treatments for different purposes
+- **Familiar patterns**: Matches iOS/Android conventions
+
+**Implementation:** 
+- `/frontend/src/components/customer/RestaurantCard.tsx` - Tier 1
+- `/frontend/src/components/customer/TransactionDetailSheet.tsx` - Tier 2
+- `/frontend/src/components/customer/ShareBottomSheet.tsx` - Tier 2
+
+---
+
 **Document Maintenance:**
 - Update when new UI patterns are established
 - Keep examples concise (link to code, don't duplicate)

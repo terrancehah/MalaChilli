@@ -8,7 +8,6 @@ import {
   Info,
   QrCode as QrCodeIcon,
   Settings,
-  Receipt,
   TrendingUp, 
   Users, 
   Gift,
@@ -256,13 +255,14 @@ export default function CustomerDashboard() {
               name,
               restaurants!inner (
                 name,
-                id
+                id,
+                slug
               )
             )
           `)
           .eq('customer_id', user.id)
           .order('created_at', { ascending: false })
-          .limit(5);
+          .limit(10);
         
         if (transactionsError) throw transactionsError;
         
@@ -377,7 +377,7 @@ export default function CustomerDashboard() {
       </DashboardHeader>
 
       <div className="px-6 mt-6 space-y-6">
-        {/* Restaurant-Specific Referral Codes */}
+        {/* My Restaurants - Combined Section */}
         <div>
           <div className="mb-4">
             <div className="flex items-start justify-between mb-3">
@@ -469,118 +469,27 @@ export default function CustomerDashboard() {
                   }
                   return sortOrder === 'desc' ? comparison : -comparison;
                 })
-                .map((code) => (
-                  <RestaurantCard
-                    key={code.id}
-                    restaurant={code}
-                    getTimeAgo={getTimeAgo}
-                    onShare={handleShare}
-                    language={language}
-                  />
-                ))}
-            </div>
-          )}
-        </div>
-
-        {/* Recent Transactions */}
-        <div>
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-bold text-foreground">{t.recentTransactions.title}</h2>
-          </div>
-          {loadingTransactions ? (
-            <ListSkeleton items={3} />
-          ) : recentTransactions.length === 0 ? (
-            <Card className="border-border/50">
-              <CardContent className="p-12 text-center">
-                <div className="h-16 w-16 rounded-full bg-muted mx-auto mb-4 flex items-center justify-center">
-                  <Receipt className="h-8 w-8 text-muted-foreground" />
-                </div>
-                <p className="text-muted-foreground text-sm">
-                  {t.recentTransactions.noTransactions}
-                </p>
-              </CardContent>
-            </Card>
-          ) : (
-            <div className="space-y-3">
-              {recentTransactions.map((transaction: any) => {
-                // Calculate potential earnings from all 3 referral levels (1% each)
-                const potentialEarningPerLevel = transaction.bill_amount * 0.01;
-                const totalPotentialEarning = potentialEarningPerLevel * 3; // 3 levels
-                const hasEarnings = transaction.vc_earned > 0;
-                
-                return (
-                  <Card 
-                    key={transaction.id} 
-                    className="border-border/50 cursor-pointer hover:border-primary/50 transition-colors"
-                    onClick={() => {
-                      setSelectedTransaction(transaction);
-                      setShowTransactionSheet(true);
-                    }}
-                  >
-                    <CardContent className="p-4">
-                      <div className="flex items-start justify-between mb-2">
-                        <div className="flex-1">
-                          <h3 className="font-semibold text-foreground">
-                            {transaction.branches.restaurants.name}
-                          </h3>
-                          <p className="text-xs text-muted-foreground mt-0.5">
-                            {(() => {
-                              const date = new Date(transaction.created_at);
-                              const malaysiaTime = new Date(date.getTime() + (8 * 60 * 60 * 1000));
-                              return malaysiaTime.toLocaleString('en-MY', {
-                                day: 'numeric',
-                                month: 'short',
-                                year: 'numeric',
-                                hour: '2-digit',
-                                minute: '2-digit'
-                              });
-                            })()}
-                          </p>
-                        </div>
-                        <div className="text-right">
-                          <p className="font-bold text-foreground">RM {transaction.bill_amount}</p>
-                          {transaction.is_first_transaction && (
-                            <p className="text-xs text-green-600 dark:text-green-400">{t.recentTransactions.firstVisit}</p>
-                          )}
-                        </div>
-                      </div>
-                      
-                      {/* Transaction Details */}
-                      <div className="space-y-2 pt-2 border-t border-border/50">
-                        <div className="flex items-center gap-3 text-xs text-muted-foreground">
-                          {transaction.guaranteed_discount_amount > 0 && (
-                            <span className="flex items-center gap-1">
-                              <span className="text-green-600 dark:text-green-400">-RM {transaction.guaranteed_discount_amount}</span>
-                              <span>{t.recentTransactions.discount}</span>
-                            </span>
-                          )}
-                          {transaction.virtual_currency_redeemed > 0 && (
-                            <span className="flex items-center gap-1">
-                              <span className="text-primary">-RM {transaction.virtual_currency_redeemed}</span>
-                              <span>{t.recentTransactions.vcUsed}</span>
-                            </span>
-                          )}
-                          {hasEarnings && (
-                            <span className="flex items-center gap-1">
-                              <span className="text-green-600 dark:text-green-400">+RM {transaction.vc_earned.toFixed(2)}</span>
-                              <span>{t.recentTransactions.vcEarned}</span>
-                            </span>
-                          )}
-                        </div>
-                        
-                        {/* Potential Earnings Banner */}
-                        {!hasEarnings && (
-                          <div className="bg-muted/30 rounded-md p-2.5 border border-dashed border-muted-foreground/30">
-                            <p className="text-xs text-muted-foreground">
-                              <span className="font-medium">{t.recentTransactions.unrealized}:</span> <span className="font-semibold text-foreground">RM {totalPotentialEarning.toFixed(2)}</span>
-                            </p>
-                          </div>
-                        )}
-                      </div>
-                    </CardContent>
-                  </Card>
-                );
-              })}
+                .map((code) => {
+                  // Filter transactions for this restaurant
+                  const restaurantTransactions = recentTransactions.filter(
+                    (t: any) => t.branches.restaurants.slug === code.restaurant.slug
+                  );
+                  
+                  return (
+                    <RestaurantCard
+                      key={code.id}
+                      restaurant={code}
+                      getTimeAgo={getTimeAgo}
+                      onShare={handleShare}
+                      language={language}
+                      transactions={restaurantTransactions}
+                      onTransactionClick={(transaction) => {
+                        setSelectedTransaction(transaction);
+                        setShowTransactionSheet(true);
+                      }}
+                    />
+                  );
+                })}
             </div>
           )}
         </div>

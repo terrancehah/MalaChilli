@@ -53,6 +53,9 @@ export const ms = {
     vcUsed: 'VC digunakan',
     vcEarned: 'VC diperoleh',
     unrealized: 'Pendapatan Belum Direalisasi',
+    unrealizedDesc: 'Kongsi kod anda untuk membuka kunci pendapatan berpotensi ini',
+    viewDetails: 'Lihat Butiran Penuh',
+    tapToView: 'Ketik untuk lihat butiran',
   },
 
   // Dashboard - Restaurant Sorting
@@ -78,6 +81,9 @@ export const ms = {
     visits: 'lawatan',
     visit: 'lawatan',
     active: 'Aktif',
+    earnUpTo: 'Peroleh sehingga',
+    unrealized: 'belum direalisasi',
+    recentActivity: 'Aktiviti Terkini',
   },
 
   // Share Bottom Sheet
