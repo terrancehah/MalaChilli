@@ -8,3 +8,5 @@ export { CustomerLookupSheet } from './CustomerLookupSheet';
 export { TransactionSuccessModal } from './TransactionSuccessModal';
 export { ErrorModal } from './ErrorModal';
 export { ReceiptOCRSheet } from './ReceiptOCRSheet';
+export { MenuItemManagement } from './MenuItemManagement';
+export { MenuItemForm } from './MenuItemForm';

@@ -88,11 +88,22 @@ export interface TransactionItemInsert {
  */
 export interface MenuItem {
   id: string;
+  restaurant_id?: string | null;
+  item_number?: number | null;
   name: string;
   category: string;
   price: number | null;
   unit: string | null;
+  calories_per_100g?: number | null;
+  protein_per_100g?: number | null;
+  fat_per_100g?: number | null;
+  stock_quantity?: number | null;
+  low_stock_threshold?: number | null;
   is_available: boolean;
+  is_active?: boolean;
+  notes?: string | null;
+  created_at?: string;
+  updated_at?: string;
 }
 
 /**

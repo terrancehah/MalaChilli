@@ -4,7 +4,7 @@ import { useAuth } from '../../contexts/AuthContext';
 import { supabase } from '../../lib/supabase';
 import { Button } from '../../components/ui/button';
 import { Alert, AlertDescription } from '../../components/ui/alert';
-import { Settings, Receipt, QrCode, AlertCircle, CheckCircle, Camera, Edit } from 'lucide-react';
+import { Settings, Receipt, QrCode, AlertCircle, CheckCircle, Camera, Edit, Package } from 'lucide-react';
 import { 
   SettingsPanel, 
   QRScannerSheet, 
@@ -78,6 +78,10 @@ export default function StaffDashboard() {
 
   const handleViewTransactions = () => {
     navigate('/staff/transactions');
+  };
+
+  const handleMenuManagement = () => {
+    navigate('/staff/menu');
   };
 
   // Handle QR scan success
@@ -241,7 +245,7 @@ export default function StaffDashboard() {
         {/* Quick Actions */}
         <div>
           <h2 className="text-lg md:text-xl font-bold text-foreground mb-4">Quick Actions</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
             {/* Primary Action - Scan Customer QR for Checkout */}
             <Button
               onClick={() => setShowScanner(true)}
@@ -250,6 +254,17 @@ export default function StaffDashboard() {
             >
               <QrCode className="!h-12 !w-12 md:!h-14 md:!w-14 text-white group-hover:scale-110 transition-transform duration-300" />
               <span className="text-base md:text-lg font-semibold text-white">Scan for Checkout</span>
+            </Button>
+
+            {/* Secondary Action - Menu Management */}
+            <Button
+              onClick={handleMenuManagement}
+              variant="outline"
+              className="h-32 md:h-36 border-2 border-border hover:border-primary/50 hover:bg-primary/5 shadow-md hover:shadow-lg transition-all duration-300 rounded-2xl flex flex-col items-center justify-center gap-4 group"
+              size="lg"
+            >
+              <Package className="!h-12 !w-12 md:!h-14 md:!w-14 text-muted-foreground group-hover:text-primary group-hover:scale-110 transition-all duration-300" />
+              <span className="text-base md:text-lg font-semibold text-foreground">Menu Items</span>
             </Button>
 
             {/* Secondary Action - Edit Customer */}

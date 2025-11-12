@@ -16,6 +16,7 @@ import DemoDashboard from './pages/DemoDashboard';
 // Staff pages
 import StaffDashboard from './pages/staff/Dashboard';
 import StaffTransactions from './pages/staff/Transactions';
+import { MenuManagement } from './pages/staff/MenuManagement';
 
 // Owner pages
 import OwnerDashboard from './pages/owner/Dashboard';
@@ -80,6 +81,14 @@ function App() {
             element={
               <ProtectedRoute allowedRoles={['staff']}>
                 <StaffTransactions />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/staff/menu" 
+            element={
+              <ProtectedRoute allowedRoles={['staff']}>
+                <MenuManagement />
               </ProtectedRoute>
             } 
           />
