@@ -13,7 +13,6 @@ import {
   EditCustomerSheet,
   CustomerLookupSheet,
   TransactionSuccessModal,
-  ErrorModal,
   ReceiptOCRSheet
 } from '../../components/staff';
 import { DashboardHeader } from '../../components/shared/DashboardHeader';
@@ -39,7 +38,6 @@ export default function StaffDashboard() {
   const [showCheckout, setShowCheckout] = useState(false);
   const [showEditCustomer, setShowEditCustomer] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
-  const [showErrorModal, setShowErrorModal] = useState(false);
   const [showReceiptOCR, setShowReceiptOCR] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string>('');
@@ -136,7 +134,7 @@ export default function StaffDashboard() {
       setShowVerified(true);
     } catch (err: any) {
       setError(err.message);
-      setShowErrorModal(true);
+      setTimeout(() => setError(''), 5000);
       setShowScanner(false);
     } finally {
       setLoading(false);
@@ -193,7 +191,7 @@ export default function StaffDashboard() {
       setIsBirthday(false);
     } catch (err: any) {
       setError(err.message || 'Failed to process transaction');
-      setShowErrorModal(true);
+      setTimeout(() => setError(''), 5000);
     }
   };
 
@@ -222,25 +220,29 @@ export default function StaffDashboard() {
         }
       />
 
-      <div className="max-w-7xl mx-auto px-6 mt-6 space-y-6">
-
-        {/* Success/Error Messages */}
-        {success && (
-          <Alert className="bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-800">
+      {/* Toast Notifications - Fixed Position */}
+      {success && (
+        <div className="fixed top-20 left-1/2 -translate-x-1/2 z-50 animate-in slide-in-from-top duration-300">
+          <Alert className="bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-800 shadow-lg min-w-[320px]">
             <CheckCircle className="h-4 w-4 text-green-600 dark:text-green-400" />
-            <AlertDescription className="text-green-800 dark:text-green-200">
+            <AlertDescription className="text-green-800 dark:text-green-200 font-medium">
               {success}
             </AlertDescription>
           </Alert>
-        )}
-        {error && (
-          <Alert className="bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-800">
+        </div>
+      )}
+      {error && (
+        <div className="fixed top-20 left-1/2 -translate-x-1/2 z-50 animate-in slide-in-from-top duration-300">
+          <Alert className="bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-800 shadow-lg min-w-[320px]">
             <AlertCircle className="h-4 w-4 text-red-600 dark:text-red-400" />
-            <AlertDescription className="text-red-800 dark:text-red-200">
+            <AlertDescription className="text-red-800 dark:text-red-200 font-medium">
               {error}
             </AlertDescription>
           </Alert>
-        )}
+        </div>
+      )}
+
+      <div className="max-w-7xl mx-auto px-6 mt-6 space-y-6">
 
         {/* Quick Actions */}
         <div>
@@ -360,10 +362,32 @@ export default function StaffDashboard() {
           isOpen={showEditCustomer}
           onClose={() => setShowEditCustomer(false)}
           customerData={customerData}
-          onUpdate={() => {
-            setShowEditCustomer(false);
-            setSuccess('Customer details updated successfully!');
-            setTimeout(() => setSuccess(''), 3000);
+          onUpdate={async () => {
+            // Refresh customer data from database
+            try {
+              const { data: updatedCustomer, error: fetchError } = await supabase
+                .from('users')
+                .select('id, full_name, email, referral_code, birthday')
+                .eq('id', customerData.id)
+                .single();
+              
+              if (fetchError) {
+                console.error('Failed to fetch updated customer:', fetchError);
+                setError('Failed to refresh customer data');
+                setTimeout(() => setError(''), 3000);
+                return;
+              }
+              
+              if (updatedCustomer) {
+                setCustomerData(updatedCustomer);
+                setSuccess('Customer details updated successfully!');
+                setTimeout(() => setSuccess(''), 3000);
+              }
+            } catch (err) {
+              console.error('Failed to refresh customer data:', err);
+              setError('Failed to refresh customer data');
+              setTimeout(() => setError(''), 3000);
+            }
           }}
         />
       )}
@@ -384,17 +408,6 @@ export default function StaffDashboard() {
           birthdayBonus={lastTransaction.birthdayBonus}
         />
       )}
-
-      {/* Error Modal */}
-      <ErrorModal
-        isOpen={showErrorModal}
-        onClose={() => {
-          setShowErrorModal(false);
-          setError('');
-        }}
-        title="Transaction Failed"
-        message={error}
-      />
 
       {/* Receipt OCR Sheet */}
       <ReceiptOCRSheet

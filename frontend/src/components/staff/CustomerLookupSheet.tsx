@@ -76,15 +76,15 @@ export function CustomerLookupSheet({ isOpen, onClose, onCustomerFound, onScanQR
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-end md:items-center md:justify-center">
+    <div className="fixed inset-0 z-50 flex items-end md:items-center md:justify-center animate-in fade-in duration-200">
       {/* Backdrop */}
       <div 
-        className="absolute inset-0 bg-black/50 backdrop-blur-sm"
+        className="absolute inset-0 bg-black/50 backdrop-blur-sm transition-opacity"
         onClick={onClose}
       />
 
       {/* Sheet */}
-      <div className="relative w-full md:max-w-2xl bg-background rounded-t-3xl md:rounded-2xl shadow-xl max-h-[85vh] overflow-y-auto animate-in slide-in-from-bottom md:slide-in-from-bottom-0 duration-300">
+      <div className="relative w-full md:max-w-2xl bg-background rounded-t-3xl md:rounded-2xl shadow-xl max-h-[85vh] overflow-y-auto animate-in slide-in-from-bottom md:zoom-in-95 duration-300">
         {/* Handle (mobile) */}
         <div className="md:hidden flex justify-center pt-3 pb-2">
           <div className="w-12 h-1 bg-muted rounded-full" />

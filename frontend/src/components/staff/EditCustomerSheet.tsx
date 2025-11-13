@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { X, User, Calendar, Cake } from 'lucide-react';
 import { Button } from '../ui/button';
 import { supabase } from '../../lib/supabase';
@@ -21,6 +21,12 @@ export function EditCustomerSheet({ isOpen, onClose, customerData, onUpdate }: E
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
 
+  // Update local state when customerData prop changes
+  useEffect(() => {
+    setFullName(customerData.full_name || '');
+    setBirthday(customerData.birthday || '');
+  }, [customerData]);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
@@ -35,12 +41,19 @@ export function EditCustomerSheet({ isOpen, onClose, customerData, onUpdate }: E
         })
         .eq('id', customerData.id);
 
-      if (updateError) throw updateError;
+      if (updateError) {
+        console.error('Update error:', updateError);
+        throw updateError;
+      }
 
-      onUpdate();
+      // Call onUpdate to refresh parent data
+      await onUpdate();
+      
+      // Close the sheet
       onClose();
     } catch (err: any) {
-      setError(err.message || 'Failed to update customer details');
+      console.error('Failed to update customer:', err);
+      setError(err.message || 'Failed to update customer details. You may not have permission to edit this customer.');
     } finally {
       setIsSubmitting(false);
     }
@@ -49,15 +62,15 @@ export function EditCustomerSheet({ isOpen, onClose, customerData, onUpdate }: E
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-end md:items-center md:justify-center">
+    <div className="fixed inset-0 z-50 flex items-end md:items-center md:justify-center animate-in fade-in duration-200">
       {/* Backdrop */}
       <div 
-        className="absolute inset-0 bg-black/50 backdrop-blur-sm"
+        className="absolute inset-0 bg-black/50 backdrop-blur-sm transition-opacity"
         onClick={onClose}
       />
 
       {/* Sheet */}
-      <div className="relative w-full md:max-w-lg bg-background rounded-t-3xl md:rounded-2xl shadow-xl max-h-[90vh] overflow-y-auto animate-in slide-in-from-bottom md:slide-in-from-bottom-0 duration-300">
+      <div className="relative w-full md:max-w-lg bg-background rounded-t-3xl md:rounded-2xl shadow-xl max-h-[90vh] overflow-y-auto animate-in slide-in-from-bottom md:zoom-in-95 duration-300">
         {/* Handle (mobile) */}
         <div className="md:hidden flex justify-center pt-3 pb-2">
           <div className="w-12 h-1 bg-muted rounded-full" />
