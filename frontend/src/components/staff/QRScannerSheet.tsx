@@ -4,14 +4,17 @@ import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 import { Label } from '../ui/label';
 import { X, Keyboard } from 'lucide-react';
+import { getTranslation, type Language } from '../../translations';
 
 interface QRScannerSheetProps {
   isOpen: boolean;
   onClose: () => void;
   onScanSuccess: (code: string) => void;
+  language?: Language;
 }
 
-export function QRScannerSheet({ isOpen, onClose, onScanSuccess }: QRScannerSheetProps) {
+export function QRScannerSheet({ isOpen, onClose, onScanSuccess, language = 'en' }: QRScannerSheetProps) {
+  const t = getTranslation(language);
   const [manualCode, setManualCode] = useState('');
   const [showManualInput, setShowManualInput] = useState(false);
   const [touchStart, setTouchStart] = useState(0);
@@ -127,10 +130,10 @@ export function QRScannerSheet({ isOpen, onClose, onScanSuccess }: QRScannerShee
             {/* Header */}
             <div className="mb-5">
               <h3 className="text-xl font-bold text-foreground mb-1">
-                Scan Customer QR
+                {t.staffDashboard.scanQR}
               </h3>
               <p className="text-sm text-muted-foreground">
-                {showManualInput ? 'Enter customer code manually' : 'Point camera at customer\'s QR code'}
+                {showManualInput ? 'Enter customer code manually' : 'Point your camera at the customer\'s QR code'}
               </p>
             </div>
 

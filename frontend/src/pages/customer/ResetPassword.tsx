@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { getCurrentSession, signOutUser } from '../../services/api';
 import { supabase } from '../../lib/supabase';
 import toast, { Toaster } from 'react-hot-toast';
 
@@ -12,13 +13,16 @@ export default function ResetPassword() {
 
   useEffect(() => {
     // Check if user has a valid recovery session
-    supabase.auth.getSession().then(({ data: { session } }) => {
+    getCurrentSession().then((session) => {
       if (session) {
         setValidSession(true);
       } else {
         toast.error('Invalid or expired reset link');
         setTimeout(() => navigate('/forgot-password'), 2000);
       }
+    }).catch(() => {
+      toast.error('Invalid or expired reset link');
+      setTimeout(() => navigate('/forgot-password'), 2000);
     });
   }, [navigate]);
 
@@ -56,7 +60,7 @@ export default function ResetPassword() {
       toast.success('Password updated successfully! Redirecting to login...');
       
       // Sign out and redirect to login
-      await supabase.auth.signOut();
+      await signOutUser();
       setTimeout(() => navigate('/login'), 2000);
       
     } catch (err: any) {

@@ -6,6 +6,8 @@ import { Button } from '../../components/ui/button';
 import { Card, CardContent } from '../../components/ui/card';
 import { Skeleton, CardSkeleton } from '../../components/ui/skeleton';
 import { ArrowLeft, Receipt, ArrowDown, ArrowUp, Calendar } from 'lucide-react';
+import { getTranslation, type Language } from '../../translations';
+import { LanguageSelector } from '../../components/common';
 
 interface Transaction {
   id: string;
@@ -22,6 +24,8 @@ interface Transaction {
 export default function StaffTransactions() {
   const { user } = useAuth();
   const navigate = useNavigate();
+  const [language, setLanguage] = useState<Language>('en');
+  const t = getTranslation(language);
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [loading, setLoading] = useState(true);
   const [dateRange, setDateRange] = useState<'1' | '7' | '30' | 'all'>('7');
@@ -156,12 +160,13 @@ export default function StaffTransactions() {
           </Button>
           <div className="flex-1">
             <h1 className="text-xl sm:text-2xl font-bold text-primary-foreground mb-1">
-              Transactions
+              {t.staffDashboard.transactions}
             </h1>
             <p className="text-primary-foreground/80 text-sm">
-              {transactions.length} transaction{transactions.length !== 1 ? 's' : ''}
+              {transactions.length} {t.staffDashboard.transaction}{transactions.length !== 1 ? 's' : ''}
             </p>
           </div>
+          <LanguageSelector language={language} onLanguageChange={setLanguage} />
         </div>
       </div>
 
@@ -172,13 +177,13 @@ export default function StaffTransactions() {
           <div className="flex flex-col sm:flex-row gap-3 items-start sm:items-center justify-between">
             <div className="flex items-center gap-2">
               <Calendar className="h-4 w-4 text-muted-foreground hidden sm:block" />
-              <span className="text-sm font-medium hidden sm:block">Period:</span>
+              <span className="text-sm font-medium hidden sm:block">{t.staffDashboard.period}:</span>
               <div className="flex gap-1 flex-wrap">
                 {[
-                  { value: '1', label: '1D', labelFull: '1 Day' },
-                  { value: '7', label: '7D', labelFull: '7 Days' },
-                  { value: '30', label: '30D', labelFull: '30 Days' },
-                  { value: 'all', label: 'All', labelFull: 'All' }
+                  { value: '1', label: '1D', labelFull: t.staffDashboard.oneDay },
+                  { value: '7', label: '7D', labelFull: t.staffDashboard.sevenDays },
+                  { value: '30', label: '30D', labelFull: t.staffDashboard.thirtyDays },
+                  { value: 'all', label: t.staffDashboard.all, labelFull: t.staffDashboard.all }
                 ].map((option) => (
                   <button
                     key={option.value}
@@ -198,11 +203,11 @@ export default function StaffTransactions() {
 
             {/* Sorting */}
             <div className="flex items-center gap-2">
-              <span className="text-sm font-medium hidden sm:block">Sort by:</span>
+              <span className="text-sm font-medium hidden sm:block">{t.staffDashboard.sortBy}:</span>
               <div className="flex gap-1">
                 {[
-                  { value: 'date', label: 'Date' },
-                  { value: 'amount', label: 'Amount' }
+                  { value: 'date', label: t.staffDashboard.date },
+                  { value: 'amount', label: t.staffDashboard.amount }
                 ].map((option) => (
                   <button
                     key={option.value}
@@ -240,7 +245,7 @@ export default function StaffTransactions() {
                 <Receipt className="h-8 w-8 text-muted-foreground" />
               </div>
               <p className="text-muted-foreground text-sm">
-                No transactions found for the selected period
+                {t.staffDashboard.noTransactions}
               </p>
             </CardContent>
           </Card>
@@ -261,12 +266,12 @@ export default function StaffTransactions() {
                     <div className="flex items-center gap-2 mt-2 text-xs">
                       {parseFloat(transaction.guaranteed_discount_amount) > 0 && (
                         <span className="text-green-600 dark:text-green-400">
-                          Discount: RM {parseFloat(transaction.guaranteed_discount_amount).toFixed(2)}
+                          {t.staffDashboard.discount}: RM {parseFloat(transaction.guaranteed_discount_amount).toFixed(2)}
                         </span>
                       )}
                       {parseFloat(transaction.virtual_currency_redeemed) > 0 && (
                         <span className="text-blue-600 dark:text-blue-400">
-                          VC: RM {parseFloat(transaction.virtual_currency_redeemed).toFixed(2)}
+                          {t.staffDashboard.vcRedeemed}: RM {parseFloat(transaction.virtual_currency_redeemed).toFixed(2)}
                         </span>
                       )}
                     </div>
@@ -276,7 +281,7 @@ export default function StaffTransactions() {
                       RM {parseFloat(transaction.bill_amount).toFixed(2)}
                     </p>
                     <p className="text-xs text-muted-foreground">
-                      Total Amount
+                      {t.staffDashboard.totalAmount}
                     </p>
                   </div>
                 </div>

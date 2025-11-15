@@ -1,6 +1,7 @@
 import { Button } from '../ui/button';
 import { CheckCircle, X } from 'lucide-react';
 import { useState, useEffect } from 'react';
+import { getTranslation, type Language } from '../../translations';
 
 interface TransactionSuccessModalProps {
   isOpen: boolean;
@@ -11,6 +12,7 @@ interface TransactionSuccessModalProps {
   discountApplied: number;
   vcRedeemed: number;
   birthdayBonus?: number;
+  language?: Language;
 }
 
 export function TransactionSuccessModal({
@@ -21,8 +23,10 @@ export function TransactionSuccessModal({
   billAmount,
   discountApplied,
   vcRedeemed,
-  birthdayBonus = 0
+  birthdayBonus = 0,
+  language = 'en'
 }: TransactionSuccessModalProps) {
+  const t = getTranslation(language);
   const [isAnimating, setIsAnimating] = useState(false);
   const [shouldRender, setShouldRender] = useState(false);
 
@@ -71,29 +75,29 @@ export function TransactionSuccessModal({
 
         {/* Title */}
         <h2 className="text-2xl font-bold text-center text-foreground mb-2">
-          Transaction Complete!
+          {t.staffDashboard.transactionSuccess}!
         </h2>
 
         {/* Transaction ID */}
         <p className="text-center text-sm text-muted-foreground mb-6">
-          Transaction ID: <span className="font-mono font-semibold">{transactionId}</span>
+          {t.staffDashboard.transactionId}: <span className="font-mono font-semibold">{transactionId}</span>
         </p>
 
         {/* Transaction Details */}
         <div className="space-y-3 mb-6 p-4 bg-muted/50 rounded-xl">
           <div className="flex justify-between items-center">
-            <span className="text-sm text-muted-foreground">Customer</span>
+            <span className="text-sm text-muted-foreground">{t.staffDashboard.customer}</span>
             <span className="text-sm font-semibold text-foreground">{customerName}</span>
           </div>
           
           <div className="flex justify-between items-center">
-            <span className="text-sm text-muted-foreground">Bill Amount</span>
+            <span className="text-sm text-muted-foreground">{t.staffDashboard.billAmount}</span>
             <span className="text-sm font-semibold text-foreground">RM {billAmount.toFixed(2)}</span>
           </div>
 
           {discountApplied > 0 && (
             <div className="flex justify-between items-center">
-              <span className="text-sm text-muted-foreground">Guaranteed Discount</span>
+              <span className="text-sm text-muted-foreground">{t.staffDashboard.discount}</span>
               <span className="text-sm font-semibold text-green-600 dark:text-green-400">
                 -RM {discountApplied.toFixed(2)}
               </span>
@@ -102,7 +106,7 @@ export function TransactionSuccessModal({
 
           {vcRedeemed > 0 && (
             <div className="flex justify-between items-center">
-              <span className="text-sm text-muted-foreground">VC Redeemed</span>
+              <span className="text-sm text-muted-foreground">{t.staffDashboard.vcRedeemed}</span>
               <span className="text-sm font-semibold text-green-600 dark:text-green-400">
                 -RM {vcRedeemed.toFixed(2)}
               </span>
@@ -112,7 +116,7 @@ export function TransactionSuccessModal({
           {birthdayBonus > 0 && (
             <div className="flex justify-between items-center bg-gradient-to-r from-pink-50 to-purple-50 dark:from-pink-900/20 dark:to-purple-900/20 -mx-4 px-4 py-2 rounded-lg">
               <span className="text-sm font-semibold text-pink-700 dark:text-pink-300 flex items-center gap-1">
-                🎂 Birthday Bonus
+                🎂 {t.staffDashboard.birthdayBonus}
               </span>
               <span className="text-sm font-bold text-pink-700 dark:text-pink-300">
                 +RM {birthdayBonus.toFixed(2)}
@@ -122,7 +126,7 @@ export function TransactionSuccessModal({
 
           <div className="pt-3 border-t border-border">
             <div className="flex justify-between items-center">
-              <span className="text-base font-semibold text-foreground">Final Amount</span>
+              <span className="text-base font-semibold text-foreground">{t.staffDashboard.finalAmount}</span>
               <span className="text-lg font-bold text-primary">
                 RM {(billAmount - discountApplied - vcRedeemed).toFixed(2)}
               </span>
@@ -135,7 +139,7 @@ export function TransactionSuccessModal({
           onClick={onClose}
           className="w-full h-12 bg-primary hover:bg-primary/90 text-white font-semibold rounded-xl"
         >
-          Done
+          {t.staffDashboard.done}
         </Button>
       </div>
     </div>

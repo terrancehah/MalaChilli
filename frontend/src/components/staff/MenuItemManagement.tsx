@@ -1,22 +1,30 @@
 import { useState, useEffect } from 'react';
 import { Button } from '../ui/button';
-import { Plus, Search, Edit2, Trash2, Package, Loader2, Grid3x3, List, Download, MoreVertical, AlertTriangle, CheckCircle2, Eye, EyeOff, Copy, ArrowUpDown, ArrowLeft } from 'lucide-react';
+import { Plus, Search, Edit2, Trash2, Package, Loader2, Grid3x3, List, Download, MoreVertical, AlertTriangle, CheckCircle2, Eye, EyeOff, Copy, ArrowUpDown, ArrowLeft, Upload } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
 import { MenuItemForm } from './MenuItemForm';
+import { MenuItemImport } from './MenuItemImport';
+import { LanguageSelector } from '../common';
+import { getTranslation, type Language } from '../../translations';
+import toast from 'react-hot-toast';
 import type { MenuItem } from '../../types/ocr.types';
 
 interface MenuItemManagementProps {
   restaurantId: string;
   onBack: () => void;
+  language: Language;
+  onLanguageChange: (lang: Language) => void;
 }
 
-export function MenuItemManagement({ restaurantId, onBack }: MenuItemManagementProps) {
+export function MenuItemManagement({ restaurantId, onBack, language, onLanguageChange }: MenuItemManagementProps) {
+  const t = getTranslation(language);
   const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
   const [filteredItems, setFilteredItems] = useState<MenuItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [isFormOpen, setIsFormOpen] = useState(false);
+  const [isImportOpen, setIsImportOpen] = useState(false);
   const [editingItem, setEditingItem] = useState<MenuItem | null>(null);
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('list');
   const [selectedItems, setSelectedItems] = useState<Set<string>>(new Set());
@@ -24,14 +32,14 @@ export function MenuItemManagement({ restaurantId, onBack }: MenuItemManagementP
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
 
   const categories = [
-    { value: 'all', label: 'All Items' },
-    { value: 'meat', label: 'Meat & Poultry' },
-    { value: 'seafood', label: 'Seafood' },
-    { value: 'vegetables', label: 'Vegetables' },
-    { value: 'processed', label: 'Processed' },
-    { value: 'noodles_rice', label: 'Noodles & Rice' },
-    { value: 'herbs', label: 'Herbs & Spices' },
-    { value: 'others', label: 'Others' }
+    { value: 'all', label: t.staffDashboard.allItems },
+    { value: 'meat', label: t.staffDashboard.meatPoultry },
+    { value: 'seafood', label: t.staffDashboard.seafood },
+    { value: 'vegetables', label: t.staffDashboard.vegetables },
+    { value: 'processed', label: t.staffDashboard.processed },
+    { value: 'noodles_rice', label: t.staffDashboard.noodlesRice },
+    { value: 'herbs', label: t.staffDashboard.herbsSpices },
+    { value: 'others', label: t.staffDashboard.others }
   ];
 
   useEffect(() => {
@@ -213,24 +221,51 @@ export function MenuItemManagement({ restaurantId, onBack }: MenuItemManagementP
   };
 
   const handleExport = () => {
-    const csv = [
-      ['Name', 'Category', 'Price', 'Unit', 'Stock', 'Available'].join(','),
-      ...menuItems.map(item => [
-        item.name,
-        item.category || '',
-        item.price || '',
-        item.unit || '',
-        item.stock_quantity || 0,
-        item.is_available ? 'Yes' : 'No'
-      ].join(','))
-    ].join('\n');
+    if (menuItems.length === 0) {
+      toast.error('No items to export');
+      return;
+    }
 
-    const blob = new Blob([csv], { type: 'text/csv' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `menu-items-${new Date().toISOString().split('T')[0]}.csv`;
-    a.click();
+    try {
+      // Export in the same format as import template for easy re-import
+      const csv = [
+        // Header row matching import format
+        ['name', 'category', 'price', 'unit', 'calories_per_100g', 'protein_per_100g', 'fat_per_100g', 'stock_quantity', 'low_stock_threshold', 'is_available', 'notes'].join(','),
+        
+        // Instruction row for reference
+        ['# REQUIRED: Item name', '# REQUIRED: meat/seafood/vegetables/processed/noodles_rice/herbs/others', '# Optional: Price in RM', '# Optional: e.g., Kg, Pack, Box', '# Optional: Calories per 100g', '# Optional: Protein per 100g', '# Optional: Fat per 100g', '# Optional: Current stock', '# Optional: Alert threshold', '# Optional: true/false', '# Optional: Additional notes'].join(','),
+        
+        // Data rows
+        ...menuItems.map(item => [
+          item.name,
+          item.category || '',
+          item.price || '',
+          item.unit || '',
+          item.calories_per_100g || '',
+          item.protein_per_100g || '',
+          item.fat_per_100g || '',
+          item.stock_quantity || '',
+          item.low_stock_threshold || '',
+          item.is_available ? 'true' : 'false',
+          item.notes || ''
+        ].join(','))
+      ].join('\n');
+
+      const blob = new Blob([csv], { type: 'text/csv' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      const filename = `menu-items-export-${new Date().toISOString().split('T')[0]}.csv`;
+      a.download = filename;
+      a.click();
+      URL.revokeObjectURL(url);
+
+      // Success notification
+      toast.success(`Exported ${menuItems.length} items to ${filename}`);
+    } catch (error) {
+      console.error('Export failed:', error);
+      toast.error('Failed to export items. Please try again.');
+    }
   };
 
   const getStockStatus = (item: MenuItem) => {
@@ -263,29 +298,42 @@ export function MenuItemManagement({ restaurantId, onBack }: MenuItemManagementP
           </Button>
           <div className="flex-1">
             <h1 className="text-xl sm:text-2xl font-bold text-primary-foreground mb-1">
-              Menu Management
+              {t.staffDashboard.menuManagement}
             </h1>
             <p className="text-primary-foreground/80 text-sm">
-              {stats.total} items • {stats.available} available
+              {stats.total} {t.staffDashboard.items} • {stats.available} {t.staffDashboard.available}
             </p>
           </div>
           <div className="flex items-center gap-2">
+            <LanguageSelector language={language} onLanguageChange={onLanguageChange} />
+            <Button
+              onClick={() => setIsImportOpen(true)}
+              variant="ghost"
+              size="sm"
+              className="hidden md:flex text-primary-foreground hover:bg-white/20"
+              title="Bulk import menu items from CSV file"
+            >
+              <Upload className="h-4 w-4 mr-2" />
+              {t.staffDashboard.import}
+            </Button>
             <Button
               onClick={handleExport}
               variant="ghost"
               size="sm"
               className="hidden md:flex text-primary-foreground hover:bg-white/20"
+              title="Export all menu items to CSV (can be re-imported)"
             >
               <Download className="h-4 w-4 mr-2" />
-              Export
+              {t.staffDashboard.export}
             </Button>
             <Button
               onClick={handleAdd}
               className="bg-white text-primary hover:bg-white/90 shadow-md"
               size="sm"
+              title="Add a single menu item"
             >
               <Plus className="h-4 w-4 mr-2" />
-              Add
+              {t.staffDashboard.add}
             </Button>
           </div>
         </div>
@@ -295,7 +343,7 @@ export function MenuItemManagement({ restaurantId, onBack }: MenuItemManagementP
             <div className="bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/20 rounded-xl p-3 border border-blue-200 dark:border-blue-800">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-xs font-medium text-blue-600 dark:text-blue-400 mb-1">Total Items</p>
+                  <p className="text-xs font-medium text-blue-600 dark:text-blue-400 mb-1">{t.staffDashboard.totalItems}</p>
                   <p className="text-2xl font-bold text-blue-900 dark:text-blue-100">{stats.total}</p>
                 </div>
                 <Package className="h-8 w-8 text-blue-500 opacity-50" />
@@ -304,7 +352,7 @@ export function MenuItemManagement({ restaurantId, onBack }: MenuItemManagementP
             <div className="bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900/20 dark:to-green-800/20 rounded-xl p-3 border border-green-200 dark:border-green-800">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-xs font-medium text-green-600 dark:text-green-400 mb-1">Available</p>
+                  <p className="text-xs font-medium text-green-600 dark:text-green-400 mb-1">{t.staffDashboard.availableItems}</p>
                   <p className="text-2xl font-bold text-green-900 dark:text-green-100">{stats.available}</p>
                 </div>
                 <CheckCircle2 className="h-8 w-8 text-green-500 opacity-50" />
@@ -313,7 +361,7 @@ export function MenuItemManagement({ restaurantId, onBack }: MenuItemManagementP
             <div className="bg-gradient-to-br from-amber-50 to-amber-100 dark:from-amber-900/20 dark:to-amber-800/20 rounded-xl p-3 border border-amber-200 dark:border-amber-800">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-xs font-medium text-amber-600 dark:text-amber-400 mb-1">Low Stock</p>
+                  <p className="text-xs font-medium text-amber-600 dark:text-amber-400 mb-1">{t.staffDashboard.lowStock}</p>
                   <p className="text-2xl font-bold text-amber-900 dark:text-amber-100">{stats.lowStock}</p>
                 </div>
                 <AlertTriangle className="h-8 w-8 text-amber-500 opacity-50" />
@@ -322,7 +370,7 @@ export function MenuItemManagement({ restaurantId, onBack }: MenuItemManagementP
             <div className="bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-900/20 dark:to-purple-800/20 rounded-xl p-3 border border-purple-200 dark:border-purple-800">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-xs font-medium text-purple-600 dark:text-purple-400 mb-1">Categories</p>
+                  <p className="text-xs font-medium text-purple-600 dark:text-purple-400 mb-1">{t.staffDashboard.categories}</p>
                   <p className="text-2xl font-bold text-purple-900 dark:text-purple-100">{stats.categories}</p>
                 </div>
                 <Grid3x3 className="h-8 w-8 text-purple-500 opacity-50" />
@@ -340,7 +388,7 @@ export function MenuItemManagement({ restaurantId, onBack }: MenuItemManagementP
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <input
                 type="text"
-                placeholder="Search by name or category..."
+                placeholder={t.staffDashboard.searchPlaceholder}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="w-full pl-10 pr-4 py-2.5 bg-muted border border-border rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary transition-all"
@@ -362,10 +410,10 @@ export function MenuItemManagement({ restaurantId, onBack }: MenuItemManagementP
                 onChange={(e) => setSortBy(e.target.value as any)}
                 className="h-10 px-3 rounded-xl border border-border bg-background hover:bg-muted transition-colors text-sm font-medium"
               >
-                <option value="name">Name</option>
-                <option value="category">Category</option>
-                <option value="price">Price</option>
-                <option value="stock">Stock</option>
+                <option value="name">{t.staffDashboard.name}</option>
+                <option value="category">{t.staffDashboard.category}</option>
+                <option value="price">{t.staffDashboard.price}</option>
+                <option value="stock">{t.staffDashboard.stock}</option>
               </select>
               <button
                 onClick={() => setViewMode(viewMode === 'list' ? 'grid' : 'list')}
@@ -411,7 +459,7 @@ export function MenuItemManagement({ restaurantId, onBack }: MenuItemManagementP
                 className="h-5 w-5 rounded border-2 border-primary"
               />
               <span className="text-sm font-semibold text-foreground">
-                {selectedItems.size} selected
+                {selectedItems.size} {t.staffDashboard.selected}
               </span>
             </div>
             <div className="flex items-center gap-2">
@@ -422,7 +470,7 @@ export function MenuItemManagement({ restaurantId, onBack }: MenuItemManagementP
                 className="bg-background"
               >
                 <Eye className="h-4 w-4 mr-2" />
-                Make Available
+                {t.staffDashboard.toggleAvailability}
               </Button>
               <Button
                 onClick={() => handleBulkToggleAvailability(false)}
@@ -431,7 +479,7 @@ export function MenuItemManagement({ restaurantId, onBack }: MenuItemManagementP
                 className="bg-background"
               >
                 <EyeOff className="h-4 w-4 mr-2" />
-                Hide
+                {t.staffDashboard.toggleAvailability}
               </Button>
               <Button
                 onClick={handleBulkDelete}
@@ -440,7 +488,7 @@ export function MenuItemManagement({ restaurantId, onBack }: MenuItemManagementP
                 className="bg-background text-red-600 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-900/20"
               >
                 <Trash2 className="h-4 w-4 mr-2" />
-                Delete
+                {t.staffDashboard.delete}
               </Button>
             </div>
           </div>
@@ -675,8 +723,22 @@ export function MenuItemManagement({ restaurantId, onBack }: MenuItemManagementP
           item={editingItem}
           onClose={handleFormClose}
           onSuccess={handleFormSuccess}
+          language={language}
         />
       )}
+
+      {/* Import Modal */}
+      <MenuItemImport
+        isOpen={isImportOpen}
+        onClose={() => setIsImportOpen(false)}
+        restaurantId={restaurantId}
+        language={language}
+        onSuccess={() => {
+          setIsImportOpen(false);
+          loadMenuItems();
+          toast.success('Menu items imported successfully');
+        }}
+      />
     </div>
   );
 }

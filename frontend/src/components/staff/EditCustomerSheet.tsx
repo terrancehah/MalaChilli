@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { X, User, Calendar, Cake } from 'lucide-react';
 import { Button } from '../ui/button';
+import { getTranslation, type Language } from '../../translations';
 import { supabase } from '../../lib/supabase';
 
 interface EditCustomerSheetProps {
@@ -13,9 +14,11 @@ interface EditCustomerSheetProps {
     birthday?: string;
   };
   onUpdate: () => void;
+  language?: Language;
 }
 
-export function EditCustomerSheet({ isOpen, onClose, customerData, onUpdate }: EditCustomerSheetProps) {
+export function EditCustomerSheet({ isOpen, onClose, customerData, onUpdate, language = 'en' }: EditCustomerSheetProps) {
+  const t = getTranslation(language);
   const [fullName, setFullName] = useState(customerData.full_name || '');
   const [birthday, setBirthday] = useState(customerData.birthday || '');
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -83,7 +86,7 @@ export function EditCustomerSheet({ isOpen, onClose, customerData, onUpdate }: E
               <User className="h-5 w-5 text-primary" />
             </div>
             <div>
-              <h2 className="text-xl font-bold text-foreground">Edit Customer</h2>
+              <h2 className="text-xl font-bold text-foreground">{t.staffDashboard.editCustomer}</h2>
               <p className="text-sm text-muted-foreground">{customerData.email}</p>
             </div>
           </div>
@@ -109,14 +112,14 @@ export function EditCustomerSheet({ isOpen, onClose, customerData, onUpdate }: E
           <div className="space-y-2">
             <label className="text-sm font-semibold text-foreground flex items-center gap-2">
               <User className="h-4 w-4 text-muted-foreground" />
-              Full Name
+              {t.staffDashboard.fullName}
             </label>
             <input
               type="text"
               value={fullName}
               onChange={(e) => setFullName(e.target.value)}
               className="w-full px-4 py-3 text-sm bg-background border-2 border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
-              placeholder="Enter customer name"
+              placeholder={t.staffDashboard.fullName}
               required
             />
           </div>
@@ -125,7 +128,7 @@ export function EditCustomerSheet({ isOpen, onClose, customerData, onUpdate }: E
           <div className="space-y-2">
             <label className="text-sm font-semibold text-foreground flex items-center gap-2">
               <Cake className="h-4 w-4 text-muted-foreground" />
-              Birthday (Optional)
+              {t.staffDashboard.birthday} (Optional)
             </label>
             <div className="relative">
               <input
@@ -137,7 +140,7 @@ export function EditCustomerSheet({ isOpen, onClose, customerData, onUpdate }: E
               <Calendar className="absolute right-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
             </div>
             <p className="text-xs text-muted-foreground">
-              Used for birthday rewards and special offers
+              Birthday helps us send special rewards
             </p>
           </div>
 

@@ -6,6 +6,7 @@ import { supabase } from '../../lib/supabase';
 import { extractReceiptData } from '../../lib/ocrExtraction';
 import { batchMatchItems } from '../../lib/fuzzyMatch';
 import type { OCRExtractionResult, MenuItem, MatchedMenuItem } from '../../types/ocr.types';
+import { getTranslation, type Language } from '../../translations';
 
 interface ReceiptOCRSheetProps {
   isOpen: boolean;
@@ -15,13 +16,16 @@ interface ReceiptOCRSheetProps {
     extraction: OCRExtractionResult;
     matchedItems: MatchedMenuItem[];
   }) => void;
+  language?: Language;
 }
 
 export function ReceiptOCRSheet({
   isOpen,
   onClose,
-  onExtracted
+  onExtracted,
+  language = 'en'
 }: ReceiptOCRSheetProps) {
+  const t = getTranslation(language);
   const [isProcessing, setIsProcessing] = useState(false);
   const [extractedText, setExtractedText] = useState('');
   const [extraction, setExtraction] = useState<OCRExtractionResult | null>(null);
@@ -161,7 +165,7 @@ export function ReceiptOCRSheet({
       <div className="relative bg-background w-full sm:max-w-lg sm:rounded-2xl rounded-t-3xl shadow-2xl max-h-[90vh] overflow-y-auto animate-in slide-in-from-bottom sm:zoom-in-95 duration-300">
         {/* Header */}
         <div className="sticky top-0 bg-background border-b border-border px-6 py-4 flex items-center justify-between">
-          <h2 className="text-xl font-bold text-foreground">Scan Receipt</h2>
+          <h2 className="text-xl font-bold text-foreground">{t.staffDashboard.scanReceipt}</h2>
           <button
             onClick={handleClose}
             className="h-8 w-8 rounded-lg hover:bg-muted flex items-center justify-center transition-colors"
@@ -174,7 +178,7 @@ export function ReceiptOCRSheet({
         <div className="p-6 space-y-6">
           {/* Instructions */}
           <div className="text-center text-sm text-muted-foreground">
-            Upload or take a photo of the receipt to automatically extract the total amount
+            Upload or take a photo of the receipt
           </div>
 
           {/* Upload Buttons */}
@@ -186,7 +190,7 @@ export function ReceiptOCRSheet({
                 className="h-32 flex-col gap-3 border-2 hover:border-primary/50 hover:bg-primary/5"
               >
                 <Upload className="h-8 w-8 text-muted-foreground" />
-                <span className="text-sm font-semibold">Upload Photo</span>
+                <span className="text-sm font-semibold">{t.staffDashboard.uploadReceipt}</span>
               </Button>
 
               <Button
@@ -195,7 +199,7 @@ export function ReceiptOCRSheet({
                 className="h-32 flex-col gap-3 border-2 hover:border-primary/50 hover:bg-primary/5"
               >
                 <Camera className="h-8 w-8 text-muted-foreground" />
-                <span className="text-sm font-semibold">Take Photo</span>
+                <span className="text-sm font-semibold">{t.staffDashboard.takePhoto}</span>
               </Button>
             </div>
           )}
@@ -223,7 +227,7 @@ export function ReceiptOCRSheet({
               <Loader2 className="h-12 w-12 text-primary animate-spin" />
               <div className="text-center">
                 <p className="text-sm font-semibold text-foreground mb-2">
-                  Processing receipt...
+                  {t.staffDashboard.processing}
                 </p>
                 <p className="text-xs text-muted-foreground">
                   {progress}% complete

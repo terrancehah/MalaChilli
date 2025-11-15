@@ -6,6 +6,7 @@ import { Separator } from '../ui/separator';
 import { X, Plus, Minus, Loader2, CheckCircle } from 'lucide-react';
 import { CustomerInfoCard } from './CustomerInfoCard';
 import { formatCurrency } from '../../lib/utils';
+import { getTranslation, type Language } from '../../translations';
 
 interface CheckoutSheetProps {
   isOpen: boolean;
@@ -17,6 +18,7 @@ interface CheckoutSheetProps {
   };
   walletBalance: number;
   isFirstVisit: boolean;
+  language?: Language;
   onSubmit: (data: {
     billAmount: number;
     redeemAmount: number;
@@ -29,8 +31,10 @@ export function CheckoutSheet({
   customerData, 
   walletBalance, 
   isFirstVisit,
+  language = 'en',
   onSubmit 
 }: CheckoutSheetProps) {
+  const t = getTranslation(language);
   const [billAmount, setBillAmount] = useState('');
   const [redeemAmount, setRedeemAmount] = useState(0);
   const [loading, setLoading] = useState(false);
@@ -206,10 +210,10 @@ export function CheckoutSheet({
             {/* Header */}
             <div className="mb-5">
               <h3 className="text-xl font-bold text-foreground mb-1">
-                Process Transaction
+                {t.staffDashboard.checkout}
               </h3>
               <p className="text-sm text-muted-foreground">
-                Enter bill details and complete checkout
+                {t.staffDashboard.enterBillAmount}
               </p>
             </div>
 
@@ -220,13 +224,14 @@ export function CheckoutSheet({
                 referralCode={customerData.referral_code}
                 walletBalance={walletBalance}
                 isFirstVisit={isFirstVisit}
+                language={language}
               />
             </div>
 
             {/* Bill Amount */}
             <div className="mb-5">
               <Label htmlFor="bill-amount" className="text-sm font-semibold mb-2 block">
-                Bill Amount
+                {t.staffDashboard.billAmount}
               </Label>
               <div className="relative">
                 <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">
@@ -236,7 +241,7 @@ export function CheckoutSheet({
                   id="bill-amount"
                   type="number"
                   inputMode="decimal"
-                  placeholder="0.00"
+                  placeholder={t.staffDashboard.enterBillAmount}
                   value={billAmount}
                   onChange={(e) => setBillAmount(e.target.value)}
                   className="pl-12 text-lg h-12"
@@ -251,10 +256,10 @@ export function CheckoutSheet({
               <div className="mb-5">
                 <div className="flex items-center justify-between mb-2">
                   <Label className="text-sm font-semibold">
-                    Redeem Virtual Currency
+                    {t.staffDashboard.redeemAmount}
                   </Label>
                   <span className="text-xs text-muted-foreground">
-                    Max: {formatCurrency(maxRedeemable)}
+                    {t.staffDashboard.maxRedeemable}: {formatCurrency(maxRedeemable)}
                   </span>
                 </div>
                 
@@ -303,11 +308,11 @@ export function CheckoutSheet({
             {/* Discount Summary */}
             {parseFloat(billAmount) > 0 && (
               <div className="mb-5 p-4 bg-muted/50 rounded-lg">
-                <h4 className="text-sm font-semibold mb-3">Discount Summary</h4>
+                <h4 className="text-sm font-semibold mb-3">{t.staffDashboard.summary}</h4>
                 <div className="space-y-2 text-sm">
                   {isFirstVisit && (
                     <div className="flex justify-between">
-                      <span className="text-muted-foreground">First Visit Bonus (5%)</span>
+                      <span className="text-muted-foreground">{t.staffDashboard.discount}</span>
                       <span className="font-semibold text-green-600">
                         -{formatCurrency(guaranteedDiscount)}
                       </span>
@@ -315,7 +320,7 @@ export function CheckoutSheet({
                   )}
                   {redeemAmount > 0 && (
                     <div className="flex justify-between">
-                      <span className="text-muted-foreground">VC Redeemed</span>
+                      <span className="text-muted-foreground">{t.staffDashboard.vcRedeemed}</span>
                       <span className="font-semibold text-primary">
                         -{formatCurrency(redeemAmount)}
                       </span>
@@ -323,13 +328,19 @@ export function CheckoutSheet({
                   )}
                   <Separator className="my-2" />
                   <div className="flex justify-between">
-                    <span className="text-muted-foreground">Total Discount</span>
+                    <span className="text-muted-foreground">{t.staffDashboard.originalAmount}</span>
+                    <span className="font-semibold">
+                      {formatCurrency(parseFloat(billAmount))}
+                    </span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground">{t.staffDashboard.discount}</span>
                     <span className="font-semibold">
                       -{formatCurrency(totalDiscount)}
                     </span>
                   </div>
                   <div className="flex justify-between text-base">
-                    <span className="font-bold">Final Amount</span>
+                    <span className="font-bold">{t.staffDashboard.finalAmount}</span>
                     <span className="font-bold text-primary text-lg">
                       {formatCurrency(finalAmount)}
                     </span>
@@ -348,13 +359,13 @@ export function CheckoutSheet({
             >
               {loading ? (
                 <>
-                  <Loader2 className="h-5 w-5 mr-2 animate-spin" />
-                  Processing...
+                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                  {t.staffDashboard.processing}
                 </>
               ) : (
                 <>
                   <CheckCircle className="h-5 w-5 mr-2" />
-                  Complete Transaction
+                  {t.staffDashboard.processCheckout}
                 </>
               )}
             </Button>

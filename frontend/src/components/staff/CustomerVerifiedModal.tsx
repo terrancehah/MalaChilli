@@ -1,6 +1,7 @@
 import { Button } from '../ui/button';
 import { X, CheckCircle, Cake } from 'lucide-react';
 import { useState, useEffect } from 'react';
+import { getTranslation, type Language } from '../../translations';
 
 interface CustomerVerifiedModalProps {
   isOpen: boolean;
@@ -8,23 +9,26 @@ interface CustomerVerifiedModalProps {
   onContinue: () => void;
   customerName: string;
   referralCode: string;
-  isBirthday?: boolean;
-  isFirstVisit?: boolean;
+  isBirthday: boolean;
+  isFirstVisit: boolean;
+  language?: Language;
 }
 
 /**
  * Quick confirmation modal after successful QR scan
  * Shows customer info and allows proceeding to checkout
  */
-export function CustomerVerifiedModal({ 
-  isOpen, 
-  onClose, 
+export function CustomerVerifiedModal({
+  isOpen,
+  onClose,
   onContinue,
   customerName,
   referralCode,
-  isBirthday = false,
-  isFirstVisit = false
+  isBirthday,
+  isFirstVisit,
+  language = 'en'
 }: CustomerVerifiedModalProps) {
+  const t = getTranslation(language);
   const [isAnimating, setIsAnimating] = useState(false);
   const [shouldRender, setShouldRender] = useState(false);
 
@@ -82,7 +86,7 @@ export function CustomerVerifiedModal({
           {/* Content */}
           <div className="text-center mb-6">
             <h3 className="text-xl font-bold text-foreground mb-3">
-              Customer Verified
+              {t.staffDashboard.customerVerified}
             </h3>
             
             {/* Badges */}
@@ -90,18 +94,18 @@ export function CustomerVerifiedModal({
               {isBirthday && (
                 <div className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-gradient-to-r from-pink-500 to-purple-500 text-white rounded-full text-xs font-semibold shadow-lg">
                   <Cake className="h-3.5 w-3.5" />
-                  Birthday Today! 🎉
+                  {t.staffDashboard.birthdayBonus} 🎉
                 </div>
               )}
               {isFirstVisit && (
                 <div className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-gradient-to-r from-green-500 to-emerald-500 text-white rounded-full text-xs font-semibold shadow-lg">
-                  ✨ First Visit
+                  {t.staffDashboard.firstVisit}
                 </div>
               )}
             </div>
 
             <p className="text-lg font-semibold text-foreground mb-1">
-              {customerName}
+              {t.staffDashboard.welcomeBack}, {customerName}!
             </p>
             <p className="text-sm text-muted-foreground font-mono">
               {referralCode}
@@ -115,7 +119,7 @@ export function CustomerVerifiedModal({
               className="w-full bg-primary hover:bg-primary/90 h-11"
               size="lg"
             >
-              Continue to Checkout
+              {t.staffDashboard.continueToCheckout}
             </Button>
           </div>
         </div>

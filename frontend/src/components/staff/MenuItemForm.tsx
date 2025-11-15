@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import { Button } from '../ui/button';
 import { X, Loader2 } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
+import { getTranslation, type Language } from '../../translations';
+import toast from 'react-hot-toast';
 import type { MenuItem } from '../../types/ocr.types';
 
 interface MenuItemFormProps {
@@ -9,9 +11,11 @@ interface MenuItemFormProps {
   item: MenuItem | null;
   onClose: () => void;
   onSuccess: () => void;
+  language?: Language;
 }
 
-export function MenuItemForm({ restaurantId, item, onClose, onSuccess }: MenuItemFormProps) {
+export function MenuItemForm({ restaurantId, item, onClose, onSuccess, language = 'en' }: MenuItemFormProps) {
+  const t = getTranslation(language);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
@@ -28,13 +32,13 @@ export function MenuItemForm({ restaurantId, item, onClose, onSuccess }: MenuIte
   });
 
   const categories = [
-    { value: 'meat', label: 'Meat & Poultry' },
-    { value: 'seafood', label: 'Seafood' },
-    { value: 'vegetables', label: 'Vegetables' },
-    { value: 'processed', label: 'Processed' },
-    { value: 'noodles_rice', label: 'Noodles & Rice' },
-    { value: 'herbs', label: 'Herbs & Spices' },
-    { value: 'others', label: 'Others' }
+    { value: 'meat', label: t.staffDashboard.meatPoultry },
+    { value: 'seafood', label: t.staffDashboard.seafood },
+    { value: 'vegetables', label: t.staffDashboard.vegetables },
+    { value: 'processed', label: t.staffDashboard.processed },
+    { value: 'noodles_rice', label: t.staffDashboard.noodlesRice },
+    { value: 'herbs', label: t.staffDashboard.herbsSpices },
+    { value: 'others', label: t.staffDashboard.others }
   ];
 
   useEffect(() => {
@@ -92,10 +96,11 @@ export function MenuItemForm({ restaurantId, item, onClose, onSuccess }: MenuIte
         if (error) throw error;
       }
 
+      toast.success(item ? 'Menu item updated successfully' : 'Menu item added successfully');
       onSuccess();
     } catch (err: any) {
       console.error('Failed to save menu item:', err);
-      alert(`Failed to save item: ${err.message}`);
+      toast.error(`Failed to save item: ${err.message || 'Please try again'}`);
     } finally {
       setIsSubmitting(false);
     }
@@ -118,7 +123,7 @@ export function MenuItemForm({ restaurantId, item, onClose, onSuccess }: MenuIte
         {/* Header */}
         <div className="sticky top-0 bg-background border-b border-border px-6 py-4 flex items-center justify-between">
           <h2 className="text-xl font-bold text-foreground">
-            {item ? 'Edit Menu Item' : 'Add Menu Item'}
+            {item ? t.staffDashboard.editMenuItem : t.staffDashboard.addMenuItem}
           </h2>
           <button
             onClick={onClose}
@@ -133,25 +138,25 @@ export function MenuItemForm({ restaurantId, item, onClose, onSuccess }: MenuIte
           {/* Item Name */}
           <div>
             <label className="block text-sm font-semibold text-foreground mb-2">
-              Item Name <span className="text-red-500">*</span>
+              {t.staffDashboard.itemName} <span className="text-red-500">*</span>
             </label>
             <input
               type="text"
               required
               value={formData.name}
               onChange={(e) => handleChange('name', e.target.value)}
-              placeholder="e.g., Chicken Breast, Tiger Prawns"
+              placeholder={t.staffDashboard.itemNamePlaceholder}
               className="w-full px-4 py-2 bg-muted border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary"
             />
             <p className="text-xs text-muted-foreground mt-1">
-              Use the exact name as it appears on receipts for better OCR matching
+              {t.staffDashboard.itemNameHint}
             </p>
           </div>
 
           {/* Category */}
           <div>
             <label className="block text-sm font-semibold text-foreground mb-2">
-              Category <span className="text-red-500">*</span>
+              {t.staffDashboard.category} <span className="text-red-500">*</span>
             </label>
             <select
               required
@@ -171,7 +176,7 @@ export function MenuItemForm({ restaurantId, item, onClose, onSuccess }: MenuIte
           <div className="grid grid-cols-2 gap-3">
             <div>
               <label className="block text-sm font-semibold text-foreground mb-2">
-                Price (RM)
+                {t.staffDashboard.priceRM}
               </label>
               <input
                 type="number"
@@ -185,13 +190,13 @@ export function MenuItemForm({ restaurantId, item, onClose, onSuccess }: MenuIte
             </div>
             <div>
               <label className="block text-sm font-semibold text-foreground mb-2">
-                Unit
+                {t.staffDashboard.unit}
               </label>
               <input
                 type="text"
                 value={formData.unit}
                 onChange={(e) => handleChange('unit', e.target.value)}
-                placeholder="Kg, Pack, Box"
+                placeholder={t.staffDashboard.unitPlaceholder}
                 className="w-full px-4 py-2 bg-muted border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary"
               />
             </div>
@@ -200,12 +205,12 @@ export function MenuItemForm({ restaurantId, item, onClose, onSuccess }: MenuIte
           {/* Nutritional Info */}
           <div className="border-t border-border pt-4">
             <h3 className="text-sm font-semibold text-foreground mb-3">
-              Nutritional Info (per 100g) - Optional
+              {t.staffDashboard.nutritionalInfo} - {t.staffDashboard.optional}
             </h3>
             <div className="grid grid-cols-3 gap-3">
               <div>
                 <label className="block text-xs text-muted-foreground mb-1">
-                  Calories
+                  {t.staffDashboard.calories}
                 </label>
                 <input
                   type="number"
@@ -218,7 +223,7 @@ export function MenuItemForm({ restaurantId, item, onClose, onSuccess }: MenuIte
               </div>
               <div>
                 <label className="block text-xs text-muted-foreground mb-1">
-                  Protein (g)
+                  {t.staffDashboard.protein}
                 </label>
                 <input
                   type="number"
@@ -232,7 +237,7 @@ export function MenuItemForm({ restaurantId, item, onClose, onSuccess }: MenuIte
               </div>
               <div>
                 <label className="block text-xs text-muted-foreground mb-1">
-                  Fat (g)
+                  {t.staffDashboard.fat}
                 </label>
                 <input
                   type="number"
@@ -250,12 +255,12 @@ export function MenuItemForm({ restaurantId, item, onClose, onSuccess }: MenuIte
           {/* Inventory */}
           <div className="border-t border-border pt-4">
             <h3 className="text-sm font-semibold text-foreground mb-3">
-              Inventory - Optional
+              {t.staffDashboard.inventory} - {t.staffDashboard.optional}
             </h3>
             <div className="grid grid-cols-2 gap-3">
               <div>
                 <label className="block text-xs text-muted-foreground mb-1">
-                  Stock Quantity
+                  {t.staffDashboard.stockQuantity}
                 </label>
                 <input
                   type="number"
@@ -269,7 +274,7 @@ export function MenuItemForm({ restaurantId, item, onClose, onSuccess }: MenuIte
               </div>
               <div>
                 <label className="block text-xs text-muted-foreground mb-1">
-                  Low Stock Alert
+                  {t.staffDashboard.lowStockAlert}
                 </label>
                 <input
                   type="number"
@@ -287,9 +292,9 @@ export function MenuItemForm({ restaurantId, item, onClose, onSuccess }: MenuIte
           {/* Availability Toggle */}
           <div className="flex items-center justify-between p-3 bg-muted/50 rounded-lg">
             <div>
-              <p className="text-sm font-semibold text-foreground">Available for Sale</p>
+              <p className="text-sm font-semibold text-foreground">{t.staffDashboard.availableForSale}</p>
               <p className="text-xs text-muted-foreground">
-                Toggle to mark item as unavailable
+                {t.staffDashboard.toggleUnavailable}
               </p>
             </div>
             <button
@@ -310,12 +315,12 @@ export function MenuItemForm({ restaurantId, item, onClose, onSuccess }: MenuIte
           {/* Notes */}
           <div>
             <label className="block text-sm font-semibold text-foreground mb-2">
-              Notes
+              {t.staffDashboard.notes}
             </label>
             <textarea
               value={formData.notes}
               onChange={(e) => handleChange('notes', e.target.value)}
-              placeholder="Additional notes or descriptions..."
+              placeholder={t.staffDashboard.notesPlaceholder}
               rows={3}
               className="w-full px-4 py-2 bg-muted border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary resize-none"
             />
@@ -340,10 +345,10 @@ export function MenuItemForm({ restaurantId, item, onClose, onSuccess }: MenuIte
               {isSubmitting ? (
                 <>
                   <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                  Saving...
+                  {t.staffDashboard.saving}
                 </>
               ) : (
-                <>{item ? 'Update Item' : 'Add Item'}</>
+                <>{item ? t.staffDashboard.updateItem : t.staffDashboard.addItem}</>
               )}
             </Button>
           </div>

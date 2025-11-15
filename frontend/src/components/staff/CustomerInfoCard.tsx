@@ -2,12 +2,14 @@ import { Card, CardContent } from '../ui/card';
 import { Badge } from '../ui/badge';
 import { User, Wallet, Gift } from 'lucide-react';
 import { formatCurrency } from '../../lib/utils';
+import { getTranslation, type Language } from '../../translations';
 
 interface CustomerInfoCardProps {
   customerName: string;
   referralCode: string;
   walletBalance: number;
   isFirstVisit: boolean;
+  language?: Language;
 }
 
 /**
@@ -18,8 +20,10 @@ export function CustomerInfoCard({
   customerName, 
   referralCode, 
   walletBalance, 
-  isFirstVisit 
+  isFirstVisit,
+  language = 'en'
 }: CustomerInfoCardProps) {
+  const t = getTranslation(language);
   return (
     <Card className="bg-gradient-to-br from-primary/5 to-primary-light/10 dark:from-primary/10 dark:to-primary-light/5 border-primary/20 shadow-sm">
       <CardContent className="p-5">
@@ -28,7 +32,7 @@ export function CustomerInfoCard({
           <div className="flex-1">
             <div className="flex items-center gap-2 mb-1">
               <User className="h-4 w-4 text-muted-foreground" />
-              <p className="text-sm text-muted-foreground">Customer</p>
+              <p className="text-sm text-muted-foreground">{t.staffDashboard.customer}</p>
             </div>
             <h3 className="text-xl font-bold text-foreground mb-1">
               {customerName}
@@ -40,7 +44,7 @@ export function CustomerInfoCard({
           {isFirstVisit && (
             <Badge className="bg-green-100 text-green-800 dark:bg-green-800/40 dark:text-green-300 border-0">
               <Gift className="h-3 w-3 mr-1" />
-              First Visit
+              {t.staffDashboard.firstVisit}
             </Badge>
           )}
         </div>
@@ -51,7 +55,7 @@ export function CustomerInfoCard({
             <Wallet className="h-5 w-5 text-primary" />
           </div>
           <div className="flex-1">
-            <p className="text-xs text-muted-foreground mb-0.5">VC Balance</p>
+            <p className="text-xs text-muted-foreground mb-0.5">Virtual Currency Balance</p>
             <p className="text-2xl font-bold text-foreground">
               {formatCurrency(walletBalance)}
             </p>

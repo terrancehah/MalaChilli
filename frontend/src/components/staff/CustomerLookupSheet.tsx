@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { X, Search, QrCode, User, Mail, Loader2 } from 'lucide-react';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
+import { getTranslation, type Language } from '../../translations';
 import { supabase } from '../../lib/supabase';
 
 interface CustomerLookupSheetProps {
@@ -15,9 +16,11 @@ interface CustomerLookupSheetProps {
     birthday?: string;
   }) => void;
   onScanQR: () => void;
+  language?: Language;
 }
 
-export function CustomerLookupSheet({ isOpen, onClose, onCustomerFound, onScanQR }: CustomerLookupSheetProps) {
+export function CustomerLookupSheet({ isOpen, onClose, onCustomerFound, onScanQR, language = 'en' }: CustomerLookupSheetProps) {
+  const t = getTranslation(language);
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState<any[]>([]);
   const [isSearching, setIsSearching] = useState(false);
@@ -47,7 +50,7 @@ export function CustomerLookupSheet({ isOpen, onClose, onCustomerFound, onScanQR
       if (searchError) throw searchError;
 
       if (!data || data.length === 0) {
-        setError('No customers found. Try a different search term.');
+        setError(t.staffDashboard.noCustomerFound);
       } else {
         setSearchResults(data);
       }
@@ -97,8 +100,8 @@ export function CustomerLookupSheet({ isOpen, onClose, onCustomerFound, onScanQR
               <Search className="h-5 w-5 text-primary" />
             </div>
             <div>
-              <h2 className="text-xl font-bold text-foreground">Find Customer</h2>
-              <p className="text-sm text-muted-foreground">Search or scan QR code</p>
+              <h2 className="text-xl font-bold text-foreground">{t.staffDashboard.lookupCustomer}</h2>
+              <p className="text-sm text-muted-foreground">{t.staffDashboard.searchByEmail}</p>
             </div>
           </div>
           <Button
@@ -123,7 +126,7 @@ export function CustomerLookupSheet({ isOpen, onClose, onCustomerFound, onScanQR
               className="h-16 bg-gradient-to-br from-primary to-primary-light hover:from-primary/90 hover:to-primary-light/90 shadow-md hover:shadow-lg transition-all duration-300 rounded-xl flex items-center justify-center gap-3"
             >
               <QrCode className="!h-6 !w-6 text-white" />
-              <span className="text-base font-semibold text-white">Scan Customer QR Code</span>
+              <span className="text-base font-semibold text-white">{t.staffDashboard.scanQR}</span>
             </Button>
           </div>
 
@@ -143,7 +146,7 @@ export function CustomerLookupSheet({ isOpen, onClose, onCustomerFound, onScanQR
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 <Input
                   type="text"
-                  placeholder="Search by name, email, or referral code..."
+                  placeholder={t.staffDashboard.searchByEmail}
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   onKeyPress={handleKeyPress}
@@ -158,7 +161,7 @@ export function CustomerLookupSheet({ isOpen, onClose, onCustomerFound, onScanQR
                 {isSearching ? (
                   <Loader2 className="h-4 w-4 animate-spin" />
                 ) : (
-                  'Search'
+                  t.staffDashboard.search
                 )}
               </Button>
             </div>
@@ -174,7 +177,7 @@ export function CustomerLookupSheet({ isOpen, onClose, onCustomerFound, onScanQR
           {searchResults.length > 0 && (
             <div className="space-y-2">
               <p className="text-sm font-semibold text-foreground">
-                Found {searchResults.length} customer{searchResults.length !== 1 ? 's' : ''}
+                Found {searchResults.length} {t.staffDashboard.customer}{searchResults.length !== 1 ? 's' : ''}
               </p>
               <div className="space-y-2 max-h-96 overflow-y-auto">
                 {searchResults.map((customer) => (

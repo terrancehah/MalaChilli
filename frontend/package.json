@@ -21,6 +21,7 @@
     "clsx": "^2.1.1",
     "date-fns": "^3.0.6",
     "lucide-react": "^0.460.0",
+    "papaparse": "^5.5.3",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-hot-toast": "^2.6.0",
@@ -34,6 +35,7 @@
   "devDependencies": {
     "@eslint/js": "^9.36.0",
     "@types/node": "^24.6.0",
+    "@types/papaparse": "^5.5.0",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
     "@vitejs/plugin-react": "^5.0.4",

@@ -17,6 +17,8 @@ import {
 } from '../../components/staff';
 import { DashboardHeader } from '../../components/shared/DashboardHeader';
 import { HeaderSkeleton } from '../../components/ui/skeleton';
+import { getTranslation, type Language } from '../../translations';
+import { LanguageSelector } from '../../components/common';
 
 interface CustomerInfo {
   id: string;
@@ -29,6 +31,10 @@ interface CustomerInfo {
 export default function StaffDashboard() {
   const { user, signOut } = useAuth();
   const navigate = useNavigate();
+  
+  // Language state
+  const [language, setLanguage] = useState<Language>('en');
+  const t = getTranslation(language);
   
   // UI State
   const [showSettings, setShowSettings] = useState(false);
@@ -64,15 +70,6 @@ export default function StaffDashboard() {
       setLoading(false);
     }
   }, [user]);
-
-  const handleSignOut = async () => {
-    try {
-      await signOut();
-      navigate('/login');
-    } catch (error) {
-      console.error('Error signing out:', error);
-    }
-  };
 
   const handleViewTransactions = () => {
     navigate('/staff/transactions');
@@ -206,17 +203,20 @@ export default function StaffDashboard() {
   return (
     <div className="min-h-screen bg-background pb-6">
       <DashboardHeader
-        title={user?.full_name || user?.email || 'Staff'}
-        subtitle="Staff Portal"
+        title={user?.full_name || user?.email || t.staffDashboard.title}
+        subtitle={t.staffDashboard.subtitle}
         actions={
-          <Button
-            variant="secondary"
-            size="icon"
-            className="h-12 w-12 rounded-xl bg-white/95 hover:bg-white shadow-lg"
-            onClick={() => setShowSettings(true)}
-          >
-            <Settings className="h-6 w-6 text-primary" />
-          </Button>
+          <>
+            <LanguageSelector language={language} onLanguageChange={setLanguage} />
+            <Button
+              variant="secondary"
+              size="icon"
+              className="h-12 w-12 rounded-xl bg-white/95 hover:bg-white shadow-lg"
+              onClick={() => setShowSettings(true)}
+            >
+              <Settings className="h-6 w-6 text-primary" />
+            </Button>
+          </>
         }
       />
 
@@ -246,7 +246,7 @@ export default function StaffDashboard() {
 
         {/* Quick Actions */}
         <div>
-          <h2 className="text-lg md:text-xl font-bold text-foreground mb-4">Quick Actions</h2>
+          <h2 className="text-lg md:text-xl font-bold text-foreground mb-4">{t.staffDashboard.quickActions}</h2>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
             {/* Primary Action - Scan Customer QR for Checkout */}
             <Button
@@ -255,7 +255,7 @@ export default function StaffDashboard() {
               size="lg"
             >
               <QrCode className="!h-12 !w-12 md:!h-14 md:!w-14 text-white group-hover:scale-110 transition-transform duration-300" />
-              <span className="text-base md:text-lg font-semibold text-white">Scan for Checkout</span>
+              <span className="text-base md:text-lg font-semibold text-white">{t.staffDashboard.scanForCheckout}</span>
             </Button>
 
             {/* Secondary Action - Menu Management */}
@@ -266,7 +266,7 @@ export default function StaffDashboard() {
               size="lg"
             >
               <Package className="!h-12 !w-12 md:!h-14 md:!w-14 text-muted-foreground group-hover:text-primary group-hover:scale-110 transition-all duration-300" />
-              <span className="text-base md:text-lg font-semibold text-foreground">Menu Items</span>
+              <span className="text-base md:text-lg font-semibold text-foreground">{t.staffDashboard.menuItems}</span>
             </Button>
 
             {/* Secondary Action - Edit Customer */}
@@ -277,7 +277,7 @@ export default function StaffDashboard() {
               size="lg"
             >
               <Edit className="!h-12 !w-12 md:!h-14 md:!w-14 text-muted-foreground group-hover:text-primary group-hover:scale-110 transition-all duration-300" />
-              <span className="text-base md:text-lg font-semibold text-foreground">Edit Customer</span>
+              <span className="text-base md:text-lg font-semibold text-foreground">{t.staffDashboard.editCustomer}</span>
             </Button>
 
             {/* Secondary Action - Scan Receipt */}
@@ -288,7 +288,7 @@ export default function StaffDashboard() {
               size="lg"
             >
               <Camera className="!h-12 !w-12 md:!h-14 md:!w-14 text-muted-foreground group-hover:text-primary group-hover:scale-110 transition-all duration-300" />
-              <span className="text-base md:text-lg font-semibold text-foreground">Scan Receipt</span>
+              <span className="text-base md:text-lg font-semibold text-foreground">{t.staffDashboard.scanReceipt}</span>
             </Button>
 
             {/* Secondary Action - View Transactions */}
@@ -299,7 +299,7 @@ export default function StaffDashboard() {
               size="lg"
             >
               <Receipt className="!h-12 !w-12 md:!h-14 md:!w-14 text-muted-foreground group-hover:text-primary group-hover:scale-110 transition-all duration-300" />
-              <span className="text-base md:text-lg font-semibold text-foreground">View Transactions</span>
+              <span className="text-base md:text-lg font-semibold text-foreground">{t.staffDashboard.viewTransactions}</span>
             </Button>
           </div>
         </div>
@@ -310,13 +310,15 @@ export default function StaffDashboard() {
         isOpen={showSettings}
         onClose={() => setShowSettings(false)}
         user={user}
-        onSignOut={handleSignOut}
+        onSignOut={signOut}
+        language={language}
       />
 
       <QRScannerSheet
         isOpen={showScanner}
         onClose={() => setShowScanner(false)}
         onScanSuccess={handleScanSuccess}
+        language={language}
       />
 
       {customerData && (
@@ -329,6 +331,7 @@ export default function StaffDashboard() {
             referralCode={customerData.referral_code}
             isBirthday={isBirthday}
             isFirstVisit={isFirstVisit}
+            language={language}
           />
 
           <CheckoutSheet
@@ -337,6 +340,7 @@ export default function StaffDashboard() {
             customerData={customerData}
             walletBalance={customerWalletBalance}
             isFirstVisit={isFirstVisit}
+            language={language}
             onSubmit={handleCheckoutSubmit}
           />
         </>
@@ -354,6 +358,7 @@ export default function StaffDashboard() {
           setShowCustomerLookup(false);
           setShowScanner(true);
         }}
+        language={language}
       />
 
       {/* Edit Customer Sheet - Separate from checkout flow */}
@@ -362,6 +367,7 @@ export default function StaffDashboard() {
           isOpen={showEditCustomer}
           onClose={() => setShowEditCustomer(false)}
           customerData={customerData}
+          language={language}
           onUpdate={async () => {
             // Refresh customer data from database
             try {
@@ -406,6 +412,7 @@ export default function StaffDashboard() {
           discountApplied={lastTransaction.discountApplied}
           vcRedeemed={lastTransaction.vcRedeemed}
           birthdayBonus={lastTransaction.birthdayBonus}
+          language={language}
         />
       )}
 
@@ -413,6 +420,7 @@ export default function StaffDashboard() {
       <ReceiptOCRSheet
         isOpen={showReceiptOCR}
         onClose={() => setShowReceiptOCR(false)}
+        language={language}
         onExtracted={(data) => {
           setShowReceiptOCR(false);
           const itemsText = data.extraction.items.length > 0 
