@@ -5,7 +5,7 @@ import { Skeleton } from '../ui/skeleton';
 import { Target, Users, TrendingUp, TrendingDown, Link2, Share2 } from 'lucide-react';
 import type { DashboardSummary, CustomerSharingStats, SavedCodesPipeline } from '../../types/analytics.types';
 import { getTranslation, type Language } from '../../translations';
-import { InfoButton } from '../common';
+import { InfoButton } from '../shared';
 
 interface ViralPerformanceTabProps {
   restaurantId: string;

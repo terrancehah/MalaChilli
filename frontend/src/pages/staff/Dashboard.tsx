@@ -18,7 +18,7 @@ import {
 import { DashboardHeader } from '../../components/shared/DashboardHeader';
 import { HeaderSkeleton } from '../../components/ui/skeleton';
 import { getTranslation, type Language } from '../../translations';
-import { LanguageSelector } from '../../components/common';
+import { LanguageSelector } from '../../components/shared';
 
 interface CustomerInfo {
   id: string;
@@ -306,13 +306,16 @@ export default function StaffDashboard() {
       </div>
 
       {/* Modals and Sheets */}
-      <SettingsPanel
-        isOpen={showSettings}
-        onClose={() => setShowSettings(false)}
-        user={user}
-        onSignOut={signOut}
-        language={language}
-      />
+      {user && (
+        <SettingsPanel
+          isOpen={showSettings}
+          onClose={() => setShowSettings(false)}
+          user={user}
+          onSignOut={signOut}
+          language={language}
+          onLanguageChange={setLanguage}
+        />
+      )}
 
       <QRScannerSheet
         isOpen={showScanner}

@@ -5,7 +5,7 @@ import { ChartContainer, ChartTooltip, ChartTooltipContent } from '../ui/chart';
 import { Line, LineChart, CartesianGrid, XAxis, YAxis, Legend } from 'recharts';
 import { TrendingUp } from 'lucide-react';
 import { getTranslation, type Language } from '../../translations';
-import { InfoButton } from '../common';
+import { InfoButton } from '../shared';
 
 interface BusinessMetricsChartsProps {
   revenueData?: Array<{

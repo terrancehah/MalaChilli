@@ -6,7 +6,7 @@ import { supabase } from '../../lib/supabase';
 import type { DashboardSummary, CustomerSegmentation, CustomerAcquisitionSource } from '../../types/analytics.types';
 import { Users, UserPlus, TrendingUp, AlertTriangle, Award, Target, PieChart, X } from 'lucide-react';
 import { getTranslation, type Language } from '../../translations';
-import { InfoButton } from '../common';
+import { InfoButton } from '../shared';
 
 interface CustomerInsightsTabProps {
   restaurantId: string;

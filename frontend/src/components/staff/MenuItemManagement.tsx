@@ -4,7 +4,7 @@ import { Plus, Search, Edit2, Trash2, Package, Loader2, Grid3x3, List, Download,
 import { supabase } from '../../lib/supabase';
 import { MenuItemForm } from './MenuItemForm';
 import { MenuItemImport } from './MenuItemImport';
-import { LanguageSelector } from '../common';
+import { LanguageSelector } from '../shared';
 import { getTranslation, type Language } from '../../translations';
 import toast from 'react-hot-toast';
 import type { MenuItem } from '../../types/ocr.types';

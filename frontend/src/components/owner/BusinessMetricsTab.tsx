@@ -6,7 +6,7 @@ import { DollarSign, TrendingUp, PieChart, CreditCard, Award } from 'lucide-reac
 import type { DashboardSummary, RevenueAnalytics, UplineRewardsStats, DiscountBreakdown } from '../../types/analytics.types';
 import { BusinessMetricsCharts } from './BusinessMetricsCharts';
 import { getTranslation, type Language } from '../../translations';
-import { InfoButton } from '../common';
+import { InfoButton } from '../shared';
 
 interface BusinessMetricsTabProps {
   restaurantId: string;

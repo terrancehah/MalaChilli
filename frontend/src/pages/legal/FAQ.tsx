@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import { ChevronDown, ChevronUp } from 'lucide-react';
 import { useState } from 'react';
 import { getTranslation, type Language } from '../../translations';
-import { LanguageSelector } from '../../components/common';
+import { LanguageSelector } from '../../components/shared';
 
 interface FAQItem {
   question: string;

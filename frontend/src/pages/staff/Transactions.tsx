@@ -7,7 +7,7 @@ import { Card, CardContent } from '../../components/ui/card';
 import { Skeleton, CardSkeleton } from '../../components/ui/skeleton';
 import { ArrowLeft, Receipt, ArrowDown, ArrowUp, Calendar } from 'lucide-react';
 import { getTranslation, type Language } from '../../translations';
-import { LanguageSelector } from '../../components/common';
+import { LanguageSelector } from '../../components/shared';
 
 interface Transaction {
   id: string;

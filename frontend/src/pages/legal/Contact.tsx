@@ -3,7 +3,7 @@ import { Mail, MessageSquare, Phone, MapPin } from 'lucide-react';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
 import { getTranslation, type Language } from '../../translations';
-import { LanguageSelector } from '../../components/common';
+import { LanguageSelector } from '../../components/shared';
 
 export default function Contact() {
   const [language, setLanguage] = useState<Language>('en');
