@@ -6,9 +6,10 @@ import { Button } from '../../components/ui/button';
 import { Card, CardContent } from '../../components/ui/card';
 import { Skeleton, CardSkeleton } from '../../components/ui/skeleton';
 import { ArrowLeft, Receipt, ArrowDown, ArrowUp, Calendar } from 'lucide-react';
-import { getTranslation, type Language } from '../../translations';
+import { getTranslation } from '../../translations';
 import { LanguageSelector } from '../../components/shared';
 import { TransactionDetailSheet } from '../../components/staff';
+import { useLanguagePreference } from '../../hooks/useLanguagePreference';
 
 interface Transaction {
   id: string;
@@ -30,7 +31,7 @@ interface Transaction {
 export default function StaffTransactions() {
   const { user } = useAuth();
   const navigate = useNavigate();
-  const [language, setLanguage] = useState<Language>('en');
+  const { language, setLanguage } = useLanguagePreference(user?.id);
   const t = getTranslation(language);
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [loading, setLoading] = useState(true);

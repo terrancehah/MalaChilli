@@ -3,22 +3,23 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { supabase } from '../../lib/supabase';
 import { Button } from '../../components/ui/button';
+import { HeaderSkeleton } from '../../components/ui/skeleton';
 import { Alert, AlertDescription } from '../../components/ui/alert';
-import { Settings, Receipt, QrCode, AlertCircle, CheckCircle, Camera, Edit, Package } from 'lucide-react';
-import { 
-  SettingsPanel, 
-  QRScannerSheet, 
-  CustomerVerifiedModal, 
+import { getTranslation } from '../../translations';
+import { LanguageSelector } from '../../components/shared';
+import { useLanguagePreference } from '../../hooks/useLanguagePreference';
+import {
+  SettingsPanel,
+  QRScannerSheet,
+  CustomerVerifiedModal,
   CheckoutSheet,
-  EditCustomerSheet,
-  CustomerLookupSheet,
   TransactionSuccessModal,
+  CustomerLookupSheet,
+  EditCustomerSheet,
   ReceiptOCRSheet
 } from '../../components/staff';
+import { Settings, QrCode, Receipt, CheckCircle, AlertCircle, Package, Edit, Camera } from 'lucide-react';
 import { DashboardHeader } from '../../components/shared/DashboardHeader';
-import { HeaderSkeleton } from '../../components/ui/skeleton';
-import { getTranslation, type Language } from '../../translations';
-import { LanguageSelector } from '../../components/shared';
 
 interface CustomerInfo {
   id: string;
@@ -32,8 +33,8 @@ export default function StaffDashboard() {
   const { user, signOut } = useAuth();
   const navigate = useNavigate();
   
-  // Language state
-  const [language, setLanguage] = useState<Language>('en');
+  // Language preference with database persistence
+  const { language, setLanguage, isLoading: isLoadingLanguage } = useLanguagePreference(user?.id);
   const t = getTranslation(language);
   
   // UI State
