@@ -16,6 +16,7 @@ interface ReceiptOCRSheetProps {
     extraction: OCRExtractionResult;
     matchedItems: MatchedMenuItem[];
   }) => void;
+  restaurantId: string | null;  // Staff's restaurant ID for filtering menu items
   language?: Language;
 }
 
@@ -23,6 +24,7 @@ export function ReceiptOCRSheet({
   isOpen,
   onClose,
   onExtracted,
+  restaurantId,
   language = 'en'
 }: ReceiptOCRSheetProps) {
   const t = getTranslation(language);
@@ -36,24 +38,31 @@ export function ReceiptOCRSheet({
   const fileInputRef = useRef<HTMLInputElement>(null);
   const cameraInputRef = useRef<HTMLInputElement>(null);
 
-  // Load menu items on mount
+  // Load menu items on mount or when restaurant changes
   useEffect(() => {
-    if (isOpen) {
+    if (isOpen && restaurantId) {
       loadMenuItems();
     }
-  }, [isOpen]);
+  }, [isOpen, restaurantId]);
 
-  // Load available menu items from database
+  // Load available menu items from database (restaurant-specific)
   const loadMenuItems = async () => {
     try {
+      if (!restaurantId) {
+        console.warn('No restaurant ID provided - OCR matching disabled');
+        return;
+      }
+
       const { data, error: fetchError } = await supabase
         .from('menu_items')
         .select('id, name, category, price, unit, is_available')
+        .eq('restaurant_id', restaurantId)  // Filter by staff's restaurant
         .eq('is_available', true)
         .eq('is_active', true);
 
       if (fetchError) throw fetchError;
       setMenuItems(data || []);
+      console.log(`Loaded ${data?.length || 0} menu items for restaurant ${restaurantId}`);
     } catch (err) {
       console.error('Failed to load menu items:', err);
     }

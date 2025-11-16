@@ -420,6 +420,7 @@ export default function StaffDashboard() {
       <ReceiptOCRSheet
         isOpen={showReceiptOCR}
         onClose={() => setShowReceiptOCR(false)}
+        restaurantId={user?.restaurant_id || null}
         language={language}
         onExtracted={(data) => {
           setShowReceiptOCR(false);
