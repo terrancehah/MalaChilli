@@ -8,7 +8,7 @@
 
 ## 🛠️ Tech Stack
 
-**Frontend:** React 18 • TypeScript • Tailwind CSS • shadcn/ui • Vite  
+**Frontend:** React 18 • TypeScript • Tailwind CSS • shadcn/ui • Vite • i18n (EN/MS/ZH)  
 **Backend:** Supabase • PostgreSQL • Row-Level Security • Edge Functions  
 **Tools:** ESLint • Prettier • Git • Vercel
 
@@ -19,6 +19,7 @@
 ### Full-Stack Development
 - Type-safe React components with TypeScript
 - Responsive mobile-first UI with Tailwind CSS
+- Multi-language support (English, Bahasa Malaysia, Simplified Chinese)
 - Context API for global state management
 - RESTful API integration with Supabase client
 
@@ -39,6 +40,7 @@
 ## ✨ Core Features
 
 **Authentication System** - JWT tokens, role-based access control, email verification  
+**Multi-Language Support** - Full internationalization in English, Bahasa Malaysia, and Simplified Chinese  
 **Customer Dashboard** - Restaurant-specific virtual currency tracking, referral management, QR codes  
 **Social Sharing** - One-click WhatsApp/Facebook sharing with pre-filled messages  
 **Transaction Processing** - QR scanning, receipt uploads, real-time calculations  

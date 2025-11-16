@@ -9,9 +9,9 @@ This guide defines the **UI/UX design patterns, visual standards, and component 
 - API integration → `05-api-specification.md`
 - Component code → `/frontend/src/` directory
 
-**Version:** 2.4  
-**Last Updated:** 2025-11-01  
-**Design System:** Tailwind CSS + Shadcn/UI + Recharts
+**Version:** 2.5  
+**Last Updated:** 2025-11-16  
+**Design System:** Tailwind CSS + Shadcn/UI + Recharts + i18n (EN/MS/ZH)
 
 ---
 
@@ -1117,3 +1117,4 @@ Restaurant Card (Tier 1)
 - Database schema: `03-database-schema-design.md`
 - Technical architecture: `04-technical-architecture.md`
 - Implementation timeline: `06-project-timeline-sprints.md`
+- Internationalization: See `/frontend/src/translations/` for translation implementation
