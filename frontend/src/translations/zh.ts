@@ -625,6 +625,15 @@ export const zh = {
     tryAgain: '请重试',
     loadingError: '加载数据失败',
     noRestaurant: '您的账户未分配餐厅',
+    
+    // 交易详情表
+    detailSheetTitle: '交易详情',
+    detailCustomer: '顾客',
+    detailBreakdown: '明细',
+    detailReceiptItems: '收据项目',
+    detailNoItems: '未提取项目',
+    detailFirstVisit: '首次光临',
+    detailReceiptScanned: '收据已扫描',
   },
 
   // 业主仪表板

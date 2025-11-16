@@ -622,6 +622,15 @@ export const en = {
     tryAgain: 'Please try again',
     loadingError: 'Failed to load data',
     noRestaurant: 'No restaurant assigned to your account',
+    
+    // Transaction Detail Sheet
+    detailSheetTitle: 'Transaction Details',
+    detailCustomer: 'Customer',
+    detailBreakdown: 'Breakdown',
+    detailReceiptItems: 'Receipt Items',
+    detailNoItems: 'No items extracted',
+    detailFirstVisit: 'First Visit',
+    detailReceiptScanned: 'Receipt Scanned',
   },
 
   // Owner Dashboard

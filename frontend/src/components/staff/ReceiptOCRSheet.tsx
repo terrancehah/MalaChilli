@@ -1,9 +1,8 @@
 import { useState, useRef, useEffect } from 'react';
 import { Button } from '../ui/button';
 import { X, Upload, Camera, Loader2, CheckCircle, AlertCircle, Package } from 'lucide-react';
-import { createWorker } from 'tesseract.js';
 import { supabase } from '../../lib/supabase';
-import { extractReceiptData } from '../../lib/ocrExtraction';
+import { extractReceiptWithGemini } from '../../lib/geminiOCR';
 import { batchMatchItems } from '../../lib/fuzzyMatch';
 import type { OCRExtractionResult, MenuItem, MatchedMenuItem } from '../../types/ocr.types';
 import { getTranslation, type Language } from '../../translations';
@@ -15,6 +14,13 @@ interface ReceiptOCRSheetProps {
     amount: number;
     extraction: OCRExtractionResult;
     matchedItems: MatchedMenuItem[];
+    matchedTransaction?: {
+      id: string;
+      customer_name: string;
+      bill_amount: number;
+      transaction_date: string;
+      time_diff_minutes: number;
+    };
   }) => void;
   restaurantId: string | null;  // Staff's restaurant ID for filtering menu items
   language?: Language;
@@ -68,7 +74,7 @@ export function ReceiptOCRSheet({
     }
   };
 
-  // Process image with Tesseract OCR
+  // Process image with Gemini Vision API
   const processImage = async (file: File) => {
     setIsProcessing(true);
     setError('');
@@ -78,22 +84,12 @@ export function ReceiptOCRSheet({
     setProgress(0);
 
     try {
-      // Create Tesseract worker
-      const worker = await createWorker('eng', 1, {
-        logger: (m) => {
-          if (m.status === 'recognizing text') {
-            setProgress(Math.round(m.progress * 100));
-          }
-        }
+      // Extract receipt data using Gemini
+      const extractionResult = await extractReceiptWithGemini(file, (progress) => {
+        setProgress(progress);
       });
-
-      // Recognize text from image
-      const { data: { text } } = await worker.recognize(file);
       
-      setExtractedText(text);
-
-      // Extract structured data from text
-      const extractionResult = extractReceiptData(text);
+      setExtractedText(extractionResult.rawText);
       setExtraction(extractionResult);
       
       // Match items with menu database
@@ -116,14 +112,42 @@ export function ReceiptOCRSheet({
         setMatchedItems(matchedItemsList);
       }
       
+      // Find matching transaction by date/time and amount
+      if (extractionResult.dateTime && extractionResult.totals.total > 0 && restaurantId) {
+        try {
+          const transactionDateTime = `${extractionResult.dateTime.date} ${extractionResult.dateTime.time}`;
+          
+          const { data: matchingTransactions, error: searchError } = await supabase
+            .rpc('find_transaction_by_receipt', {
+              p_restaurant_id: restaurantId,
+              p_transaction_date: transactionDateTime,
+              p_total_amount: extractionResult.totals.subtotal, // Use subtotal for matching
+              p_time_tolerance_minutes: 30
+            });
+
+          if (!searchError && matchingTransactions && matchingTransactions.length > 0) {
+            // Use the closest match (first result)
+            const match = matchingTransactions[0];
+            console.log('Found matching transaction:', match);
+            // Store matched transaction for confirmation
+            setExtraction({
+              ...extractionResult,
+              matchedTransaction: match
+            } as any);
+          }
+        } catch (err) {
+          console.error('Error finding matching transaction:', err);
+          // Continue anyway - not critical
+        }
+      }
+      
       if (extractionResult.totals.total === 0 && extractionResult.items.length === 0) {
         setError('Could not extract receipt data. Please try again with a clearer image.');
       }
 
-      await worker.terminate();
     } catch (err: any) {
-      console.error('OCR Error:', err);
-      setError('Failed to process receipt. Please try again or enter amount manually.');
+      console.error('Gemini OCR Error:', err);
+      setError(err.message || 'Failed to process receipt. Please try again or enter amount manually.');
     } finally {
       setIsProcessing(false);
       setProgress(0);
@@ -144,7 +168,8 @@ export function ReceiptOCRSheet({
       onExtracted({
         amount: extraction.totals.total,
         extraction,
-        matchedItems
+        matchedItems,
+        matchedTransaction: (extraction as any).matchedTransaction
       });
       handleClose();
     }
@@ -190,13 +215,14 @@ export function ReceiptOCRSheet({
             Upload or take a photo of the receipt
           </div>
 
-          {/* Upload Buttons */}
-          {!isProcessing && !extraction && (
+          {/* Upload Buttons - Show when not processing OR when there's an error */}
+          {(!isProcessing || error) && !extraction && (
             <div className="grid grid-cols-2 gap-4">
               <Button
                 onClick={() => fileInputRef.current?.click()}
                 variant="outline"
                 className="h-32 flex-col gap-3 border-2 hover:border-primary/50 hover:bg-primary/5"
+                disabled={isProcessing}
               >
                 <Upload className="h-8 w-8 text-muted-foreground" />
                 <span className="text-sm font-semibold">{t.staffDashboard.uploadReceipt}</span>
@@ -206,6 +232,7 @@ export function ReceiptOCRSheet({
                 onClick={() => cameraInputRef.current?.click()}
                 variant="outline"
                 className="h-32 flex-col gap-3 border-2 hover:border-primary/50 hover:bg-primary/5"
+                disabled={isProcessing}
               >
                 <Camera className="h-8 w-8 text-muted-foreground" />
                 <span className="text-sm font-semibold">{t.staffDashboard.takePhoto}</span>
@@ -343,16 +370,25 @@ export function ReceiptOCRSheet({
 
           {/* Error State */}
           {error && !isProcessing && (
-            <div className="flex items-start gap-3 p-4 bg-red-50 dark:bg-red-900/20 rounded-xl border border-red-200 dark:border-red-800">
-              <AlertCircle className="h-5 w-5 text-red-600 dark:text-red-400 flex-shrink-0 mt-0.5" />
-              <div className="flex-1">
-                <p className="text-sm font-semibold text-red-800 dark:text-red-200 mb-1">
-                  Detection Failed
-                </p>
-                <p className="text-xs text-red-700 dark:text-red-300">
-                  {error}
-                </p>
+            <div className="space-y-3">
+              <div className="flex items-start gap-3 p-4 bg-red-50 dark:bg-red-900/20 rounded-xl border border-red-200 dark:border-red-800">
+                <AlertCircle className="h-5 w-5 text-red-600 dark:text-red-400 flex-shrink-0 mt-0.5" />
+                <div className="flex-1">
+                  <p className="text-sm font-semibold text-red-800 dark:text-red-200 mb-1">
+                    Detection Failed
+                  </p>
+                  <p className="text-xs text-red-700 dark:text-red-300">
+                    {error}
+                  </p>
+                </div>
               </div>
+              <Button
+                onClick={() => setError('')}
+                variant="outline"
+                className="w-full"
+              >
+                Try Again
+              </Button>
             </div>
           )}
 

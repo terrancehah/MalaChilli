@@ -425,16 +425,48 @@ export default function StaffDashboard() {
         onClose={() => setShowReceiptOCR(false)}
         restaurantId={user?.restaurant_id || null}
         language={language}
-        onExtracted={(data) => {
+        onExtracted={async (data) => {
           setShowReceiptOCR(false);
-          const itemsText = data.extraction.items.length > 0 
-            ? ` | ${data.extraction.items.length} items (${data.matchedItems.length} matched)`
-            : '';
-          setSuccess(`Receipt scanned! Amount: RM ${data.amount.toFixed(2)}${itemsText} | Confidence: ${data.extraction.confidence}%`);
-          setTimeout(() => setSuccess(''), 5000);
           
-          // TODO: Save OCR data to database when creating transaction
-          console.log('OCR Data:', data);
+          // If matched transaction found, update it with OCR data
+          if (data.matchedTransaction) {
+            try {
+              const { error: updateError } = await supabase
+                .rpc('update_transaction_with_receipt', {
+                  p_transaction_id: data.matchedTransaction.id,
+                  p_receipt_photo_url: null, // TODO: Upload photo to storage first
+                  p_ocr_data: {
+                    extraction: data.extraction,
+                    matched_items: data.matchedItems,
+                    extraction_timestamp: new Date().toISOString(),
+                    ocr_version: 'gemini-2.5-flash'
+                  }
+                });
+
+              if (updateError) throw updateError;
+
+              const timeDiff = Math.abs(data.matchedTransaction.time_diff_minutes);
+              setSuccess(
+                `Receipt linked to ${data.matchedTransaction.customer_name}'s transaction! ` +
+                `(${timeDiff < 1 ? '<1 min' : `${Math.round(timeDiff)} mins`} difference) | ` +
+                `${data.extraction.items.length} items | Confidence: ${data.extraction.confidence}%`
+              );
+            } catch (err: any) {
+              setError(`Receipt scanned but failed to link: ${err.message}`);
+              setTimeout(() => setError(''), 5000);
+            }
+          } else {
+            // No matching transaction found
+            const itemsText = data.extraction.items.length > 0 
+              ? ` | ${data.extraction.items.length} items (${data.matchedItems.length} matched)`
+              : '';
+            setSuccess(
+              `Receipt scanned! Amount: RM ${data.amount.toFixed(2)}${itemsText} | Confidence: ${data.extraction.confidence}% | ` +
+              `⚠️ No matching transaction found - create transaction first`
+            );
+          }
+          
+          setTimeout(() => setSuccess(''), 8000);
         }}
       />
     </div>

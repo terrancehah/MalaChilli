@@ -11,3 +11,4 @@ export { ReceiptOCRSheet } from './ReceiptOCRSheet';
 export { MenuItemManagement } from './MenuItemManagement';
 export { MenuItemForm } from './MenuItemForm';
 export { MenuItemImport } from './MenuItemImport';
+export { TransactionDetailSheet } from './TransactionDetailSheet';

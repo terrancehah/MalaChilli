@@ -625,6 +625,15 @@ export const ms = {
     tryAgain: 'Sila cuba lagi',
     loadingError: 'Gagal memuatkan data',
     noRestaurant: 'Tiada restoran ditetapkan ke akaun anda',
+    
+    // Helaian Butiran Transaksi
+    detailSheetTitle: 'Butiran Transaksi',
+    detailCustomer: 'Pelanggan',
+    detailBreakdown: 'Pecahan',
+    detailReceiptItems: 'Item Resit',
+    detailNoItems: 'Tiada item diekstrak',
+    detailFirstVisit: 'Lawatan Pertama',
+    detailReceiptScanned: 'Resit Diimbas',
   },
 
   // Papan Pemuka Pemilik

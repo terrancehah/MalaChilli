@@ -8,13 +8,19 @@ import { Skeleton, CardSkeleton } from '../../components/ui/skeleton';
 import { ArrowLeft, Receipt, ArrowDown, ArrowUp, Calendar } from 'lucide-react';
 import { getTranslation, type Language } from '../../translations';
 import { LanguageSelector } from '../../components/shared';
+import { TransactionDetailSheet } from '../../components/staff';
 
 interface Transaction {
   id: string;
   created_at: string;
+  transaction_date: string;
   bill_amount: string;
+  final_amount: string;
   guaranteed_discount_amount: string;
   virtual_currency_redeemed: string;
+  is_first_transaction: boolean;
+  ocr_processed: boolean;
+  ocr_data: any;
   customer: {
     full_name: string;
     email: string;
@@ -31,6 +37,8 @@ export default function StaffTransactions() {
   const [dateRange, setDateRange] = useState<'1' | '7' | '30' | 'all'>('7');
   const [sortBy, setSortBy] = useState<'date' | 'amount'>('date');
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
+  const [selectedTransaction, setSelectedTransaction] = useState<Transaction | null>(null);
+  const [showDetailSheet, setShowDetailSheet] = useState(false);
 
   useEffect(() => {
     const fetchTransactions = async () => {
@@ -51,9 +59,14 @@ export default function StaffTransactions() {
           .select(`
             id,
             created_at,
+            transaction_date,
             bill_amount,
+            final_amount,
             guaranteed_discount_amount,
             virtual_currency_redeemed,
+            is_first_transaction,
+            ocr_processed,
+            ocr_data,
             customer:users!transactions_customer_id_fkey (
               full_name,
               email
@@ -251,7 +264,14 @@ export default function StaffTransactions() {
           </Card>
         ) : (
           transactions.map((transaction) => (
-            <Card key={transaction.id} className="border-border/50">
+            <Card 
+              key={transaction.id} 
+              className="border-border/50 cursor-pointer hover:border-primary/50 transition-colors active:scale-[0.98]"
+              onClick={() => {
+                setSelectedTransaction(transaction);
+                setShowDetailSheet(true);
+              }}
+            >
               <CardContent className="p-5">
                 <div className="flex items-start justify-between">
                   <div className="flex-1">
@@ -290,6 +310,17 @@ export default function StaffTransactions() {
           ))
         )}
       </div>
+
+      {/* Transaction Detail Sheet */}
+      <TransactionDetailSheet
+        isOpen={showDetailSheet}
+        onClose={() => {
+          setShowDetailSheet(false);
+          setSelectedTransaction(null);
+        }}
+        transaction={selectedTransaction}
+        language={language}
+      />
     </div>
   );
 }

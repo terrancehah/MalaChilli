@@ -119,10 +119,18 @@ export function extractLineItems(text: string): OCRLineItem[] {
   // "2 Chicken Wing 35.80"
   // "1x Beef Chuck 24.90"
   // "Enoki Mushroom x3 9.90"
+  // "Adult RM71 80" (space in price due to OCR error)
   const itemPatterns = [
-    /^(\d+\.?\d*)\s*x?\s*(.+?)\s+(?:rm\s*)?(\d+\.?\d{0,2})$/i,
-    /^(.+?)\s*x?\s*(\d+\.?\d*)\s+(?:rm\s*)?(\d+\.?\d{0,2})$/i,
-    /^(\d+\.?\d*)\s+(.+?)\s+(?:@|at)?\s*(?:rm\s*)?(\d+\.?\d{0,2})\s+(?:rm\s*)?(\d+\.?\d{0,2})$/i
+    // Pattern for "Name RM## ##" (OCR space in price)
+    /^(.+?)\s+rm\s*(\d+)\s+(\d{2})$/i,
+    // Pattern for quantity with 'x': "2x Item Name RM12.34"
+    /^(\d+\.?\d*)\s*x\s+(.+?)\s+(?:rm\s*)?(\d+\.?\d{0,2})$/i,
+    // Pattern for name with quantity: "Item Name x2 RM12.34"
+    /^(.+?)\s+x\s*(\d+\.?\d*)\s+(?:rm\s*)?(\d+\.?\d{0,2})$/i,
+    // Pattern for quantity first: "2 Item Name 12.34"
+    /^(\d+\.?\d*)\s+(.+?)\s+(?:rm\s*)?(\d+\.?\d{0,2})$/i,
+    // Pattern with @ separator: "2 Item @ RM12.34 RM24.68"
+    /^(\d+\.?\d*)\s+(.+?)\s+(?:@|at)\s*(?:rm\s*)?(\d+\.?\d{0,2})\s+(?:rm\s*)?(\d+\.?\d{0,2})$/i
   ];
   
   for (const line of lines) {
@@ -136,18 +144,24 @@ export function extractLineItems(text: string): OCRLineItem[] {
     }
     
     // Try each pattern
-    for (const pattern of itemPatterns) {
+    for (let i = 0; i < itemPatterns.length; i++) {
+      const pattern = itemPatterns[i];
       const match = trimmed.match(pattern);
       if (match) {
         let quantity: number, name: string, price: number;
         
-        if (pattern.source.startsWith('^(\\d+')) {
-          // Pattern 1 & 3: quantity first
+        if (i === 0) {
+          // Pattern 0: "Name RM## ##" (OCR space in price)
+          name = match[1].trim();
+          quantity = 1;
+          price = parseFloat(`${match[2]}.${match[3]}`);
+        } else if (i === 1 || i === 3 || i === 4) {
+          // Patterns with quantity first
           quantity = parseFloat(match[1]);
           name = match[2].trim();
           price = parseFloat(match[match.length - 1]);
         } else {
-          // Pattern 2: name first
+          // Patterns with name first (i === 2)
           name = match[1].trim();
           quantity = parseFloat(match[2]);
           price = parseFloat(match[3]);
