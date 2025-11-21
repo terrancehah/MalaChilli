@@ -25,6 +25,37 @@ export const ms = {
     info: 'Maklumat',
   },
 
+  // Time Ago
+  timeAgo: {
+    today: 'hari ini',
+    yesterday: 'semalam',
+    daysAgo: '{count} hari lalu',
+    weekAgo: '1 minggu lalu',
+    weeksAgo: '{count} minggu lalu',
+    monthAgo: '1 bulan lalu',
+    monthsAgo: '{count} bulan lalu',
+  },
+
+  // Dashboard Info Modals
+  dashboardInfo: {
+    restaurantInfo: {
+      title: 'Bagaimana Ia Berfungsi',
+      item1: 'Lawati restoran dan buat transaksi untuk membuka kunci promosi restoran tersebut',
+      item2: 'Kod rujukan unik anda dicipta secara automatik apabila anda membuat lawatan pertama',
+      item3: 'Kongsi pautan rujukan anda dengan rakan melalui WhatsApp, Facebook, atau salin pautan',
+      item4: 'Apabila seseorang menggunakan pautan anda dan membuat transaksi pertama di restoran tersebut, anda berdua memperoleh mata wang maya',
+    },
+    currencyInfo: {
+      title: 'Mata Wang Maya Khusus Restoran',
+      item1: '<strong>Khusus Restoran:</strong> Setiap restoran mempunyai baki mata wang maya yang berasingan',
+      item2: 'Peroleh mata wang maya dengan merujuk rakan ke restoran tertentu',
+      item3: 'Mata wang yang diperoleh daripada satu restoran hanya boleh ditebus di restoran yang sama',
+      item4: 'Ini memastikan pengagihan yang adil dan mencegah penyalahgunaan merentas restoran yang berbeza',
+      item5: '<strong>Diperoleh:</strong> Jumlah mata wang maya yang anda peroleh daripada rujukan di restoran ini',
+      item6: '<strong>Ditebus:</strong> Jumlah yang telah anda gunakan untuk diskaun di restoran ini',
+    },
+  },
+
   // Dashboard Header & Profile
   profile: {
     welcome: 'Selamat kembali',
@@ -613,6 +644,14 @@ export const ms = {
     receiptScanned: 'Resit diimbas!',
     itemsMatched: 'item dipadankan',
     confidence: 'Keyakinan',
+
+    ocr: {
+      linkSuccess: 'Resit dipautkan ke transaksi {customer}! (Perbezaan {timeDiff}) | {items} item | Keyakinan: {confidence}%',
+      scanSuccess: 'Resit diimbas! Jumlah: RM {amount}{itemsText} | Keyakinan: {confidence}% | ⚠️ Tiada transaksi sepadan ditemui - buat transaksi dahulu',
+      linkError: 'Resit diimbas tetapi gagal dipautkan: {error}',
+      refreshError: 'Gagal memuat semula data pelanggan',
+    },
+
     noItemsToExport: 'Tiada item untuk dieksport',
     exportedItems: 'Dieksport',
     exportFailed: 'Gagal mengeksport item. Sila cuba lagi.',

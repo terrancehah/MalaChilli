@@ -25,6 +25,37 @@ export const zh = {
     info: '信息',
   },
 
+  // Time Ago
+  timeAgo: {
+    today: '今天',
+    yesterday: '昨天',
+    daysAgo: '{count} 天前',
+    weekAgo: '1 周前',
+    weeksAgo: '{count} 周前',
+    monthAgo: '1 个月前',
+    monthsAgo: '{count} 个月前',
+  },
+
+  // Dashboard Info Modals
+  dashboardInfo: {
+    restaurantInfo: {
+      title: '如何运作',
+      item1: '光顾餐厅并完成交易即可解锁该餐厅的推广资格',
+      item2: '首次光顾时会自动生成您的专属推荐码',
+      item3: '通过 WhatsApp、Facebook 分享链接，或直接复制链接分享给朋友',
+      item4: '当有人使用您的链接并在该餐厅完成首次交易时，你们双方都能获得虚拟货币奖励',
+    },
+    currencyInfo: {
+      title: '餐厅专属虚拟货币',
+      item1: '<strong>餐厅专属：</strong> 每家餐厅都有独立的虚拟货币余额',
+      item2: '通过推荐朋友到特定餐厅赚取虚拟货币',
+      item3: '从某家餐厅赚取的货币只能在该餐厅兑换使用',
+      item4: '这确保了公平分配，防止跨餐厅滥用',
+      item5: '<strong>已赚取：</strong> 您在该餐厅通过推荐赚取的虚拟货币总额',
+      item6: '<strong>已兑换：</strong> 您在该餐厅已使用的折扣总额',
+    },
+  },
+
   // Dashboard Header & Profile
   profile: {
     welcome: '欢迎回来',
@@ -611,9 +642,17 @@ export const zh = {
     transactionFailed: '处理交易失败',
     customerUpdated: '顾客详情更新成功！',
     receiptScanned: '收据已扫描！',
-    itemsMatched: '项匹配',
+    itemsMatched: '项已匹配',
     confidence: '置信度',
-    noItemsToExport: '没有要导出的项目',
+
+    ocr: {
+      linkSuccess: '收据已关联到 {customer} 的交易！(相差 {timeDiff}) | {items} 项 | 置信度: {confidence}%',
+      scanSuccess: '收据已扫描！金额: RM {amount}{itemsText} | 置信度: {confidence}% | ⚠️ 未找到匹配交易 - 请先创建交易',
+      linkError: '收据已扫描但关联失败: {error}',
+      refreshError: '刷新客户数据失败',
+    },
+
+    noItemsToExport: '没有可导出的项目',
     exportedItems: '已导出',
     exportFailed: '导出项目失败。请重试。',
     menuItemAdded: '菜单项目添加成功',

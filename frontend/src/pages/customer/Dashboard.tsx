@@ -46,42 +46,8 @@ interface RestaurantCode {
   redeemed?: number;
 }
 
-// Helper function to calculate time ago (Malaysia timezone)
-const getTimeAgo = (dateString: string): string => {
-  const date = new Date(dateString);
-  // Convert to Malaysia timezone (UTC+8)
-  const malaysiaDate = new Date(date.getTime() + (8 * 60 * 60 * 1000));
-  const malaysiaNow = new Date(new Date().getTime() + (8 * 60 * 60 * 1000));
-  const diffInMs = malaysiaNow.getTime() - malaysiaDate.getTime();
-  const diffInDays = Math.floor(diffInMs / (1000 * 60 * 60 * 24));
-  
-  if (diffInDays === 0) return 'today';
-  if (diffInDays === 1) return 'yesterday';
-  if (diffInDays < 7) return `${diffInDays} days ago`;
-  if (diffInDays < 30) {
-    const weeks = Math.floor(diffInDays / 7);
-    return weeks === 1 ? '1 week ago' : `${weeks} weeks ago`;
-  }
-  const months = Math.floor(diffInDays / 30);
-  return months === 1 ? '1 month ago' : `${months} months ago`;
-};
+// Helper function to calculate time ago (Malaysia timezone) moved inside component
 
-// Info modal content
-const RESTAURANT_INFO = [
-  { text: 'Visit a restaurant and make a transaction to unlock promotion for that restaurant' },
-  { text: 'Your unique referral code is automatically created when you make your first visit' },
-  { text: 'Share your referral link with friends via WhatsApp, Facebook, or copy the link' },
-  { text: 'When someone uses your link and makes their first transaction at that restaurant, you both earn virtual currency' }
-] as const;
-
-const CURRENCY_INFO = [
-  { text: '<strong>Restaurant-Specific:</strong> Each restaurant has its own separate virtual currency balance' },
-  { text: 'Earn virtual currency by referring friends to specific restaurants' },
-  { text: 'Currency earned from one restaurant can only be redeemed at that same restaurant' },
-  { text: 'This ensures fair distribution and prevents exploitation across different restaurants' },
-  { text: '<strong>Earned:</strong> Total virtual currency you\'ve earned from referrals at this restaurant', color: 'green' as const },
-  { text: '<strong>Redeemed:</strong> Total amount you\'ve used for discounts at this restaurant', color: 'primary' as const }
-];
 
 export default function CustomerDashboard() {
   const { user, signOut, loading, updateProfile } = useAuth();
@@ -116,6 +82,42 @@ export default function CustomerDashboard() {
   
   // Get translations based on current language
   const t = getTranslation(language);
+
+  // Helper function to calculate time ago (Malaysia timezone)
+  const getTimeAgo = (dateString: string): string => {
+    const date = new Date(dateString);
+    const malaysiaDate = new Date(date.getTime() + (8 * 60 * 60 * 1000));
+    const malaysiaNow = new Date(new Date().getTime() + (8 * 60 * 60 * 1000));
+    const diffInMs = malaysiaNow.getTime() - malaysiaDate.getTime();
+    const diffInDays = Math.floor(diffInMs / (1000 * 60 * 60 * 24));
+    
+    if (diffInDays === 0) return t.timeAgo.today;
+    if (diffInDays === 1) return t.timeAgo.yesterday;
+    if (diffInDays < 7) return t.timeAgo.daysAgo.replace('{count}', diffInDays.toString());
+    if (diffInDays < 30) {
+      const weeks = Math.floor(diffInDays / 7);
+      return weeks === 1 ? t.timeAgo.weekAgo : t.timeAgo.weeksAgo.replace('{count}', weeks.toString());
+    }
+    const months = Math.floor(diffInDays / 30);
+    return months === 1 ? t.timeAgo.monthAgo : t.timeAgo.monthsAgo.replace('{count}', months.toString());
+  };
+
+  // Info modal content constructed from translations
+  const restaurantInfoItems = [
+    { text: t.dashboardInfo.restaurantInfo.item1 },
+    { text: t.dashboardInfo.restaurantInfo.item2 },
+    { text: t.dashboardInfo.restaurantInfo.item3 },
+    { text: t.dashboardInfo.restaurantInfo.item4 }
+  ];
+
+  const currencyInfoItems = [
+    { text: t.dashboardInfo.currencyInfo.item1 },
+    { text: t.dashboardInfo.currencyInfo.item2 },
+    { text: t.dashboardInfo.currencyInfo.item3 },
+    { text: t.dashboardInfo.currencyInfo.item4 },
+    { text: t.dashboardInfo.currencyInfo.item5, color: 'green' as const },
+    { text: t.dashboardInfo.currencyInfo.item6, color: 'primary' as const }
+  ];
 
   useEffect(() => {
     if (!loading && !user) {
@@ -317,7 +319,7 @@ export default function CustomerDashboard() {
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
-        <div className="text-gray-600 dark:text-gray-400">Loading...</div>
+        <div className="text-gray-600 dark:text-gray-400">{t.common.loading}</div>
       </div>
     );
   }
@@ -386,7 +388,7 @@ export default function CustomerDashboard() {
                     size="sm"
                     onClick={() => setShowInfoModal(true)}
                     className="h-6 w-6 p-0"
-                    title="How it works"
+                    title={t.dashboardInfo.restaurantInfo.title}
                   >
                     <Info className="h-4 w-4 text-muted-foreground" />
                   </Button>
@@ -504,15 +506,15 @@ export default function CustomerDashboard() {
       <InfoModal
         isOpen={showInfoModal}
         onClose={() => setShowInfoModal(false)}
-        title="How It Works"
-        items={RESTAURANT_INFO}
+        title={t.dashboardInfo.restaurantInfo.title}
+        items={restaurantInfoItems}
       />
 
       <InfoModal
         isOpen={showCurrencyInfoModal}
         onClose={() => setShowCurrencyInfoModal(false)}
-        title="Restaurant-Specific Virtual Currency"
-        items={CURRENCY_INFO}
+        title={t.dashboardInfo.currencyInfo.title}
+        items={currencyInfoItems}
       />
 
       <SettingsPanel

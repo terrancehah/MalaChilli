@@ -25,6 +25,37 @@ export const en = {
     info: 'Info',
   },
 
+  // Time Ago
+  timeAgo: {
+    today: 'today',
+    yesterday: 'yesterday',
+    daysAgo: '{count} days ago',
+    weekAgo: '1 week ago',
+    weeksAgo: '{count} weeks ago',
+    monthAgo: '1 month ago',
+    monthsAgo: '{count} months ago',
+  },
+
+  // Dashboard Info Modals
+  dashboardInfo: {
+    restaurantInfo: {
+      title: 'How It Works',
+      item1: 'Visit a restaurant and make a transaction to unlock promotion for that restaurant',
+      item2: 'Your unique referral code is automatically created when you make your first visit',
+      item3: 'Share your referral link with friends via WhatsApp, Facebook, or copy the link',
+      item4: 'When someone uses your link and makes their first transaction at that restaurant, you both earn virtual currency',
+    },
+    currencyInfo: {
+      title: 'Restaurant-Specific Virtual Currency',
+      item1: '<strong>Restaurant-Specific:</strong> Each restaurant has its own separate virtual currency balance',
+      item2: 'Earn virtual currency by referring friends to specific restaurants',
+      item3: 'Currency earned from one restaurant can only be redeemed at that same restaurant',
+      item4: 'This ensures fair distribution and prevents exploitation across different restaurants',
+      item5: '<strong>Earned:</strong> Total virtual currency you\'ve earned from referrals at this restaurant',
+      item6: '<strong>Redeemed:</strong> Total amount you\'ve used for discounts at this restaurant',
+    },
+  },
+
   // Dashboard Header & Profile
   profile: {
     welcome: 'Welcome back',
@@ -610,6 +641,14 @@ export const en = {
     receiptScanned: 'Receipt scanned!',
     itemsMatched: 'items matched',
     confidence: 'Confidence',
+    
+    ocr: {
+      linkSuccess: 'Receipt linked to {customer}\'s transaction! ({timeDiff} difference) | {items} items | Confidence: {confidence}%',
+      scanSuccess: 'Receipt scanned! Amount: RM {amount}{itemsText} | Confidence: {confidence}% | ⚠️ No matching transaction found - create transaction first',
+      linkError: 'Receipt scanned but failed to link: {error}',
+      refreshError: 'Failed to refresh customer data',
+    },
+
     noItemsToExport: 'No items to export',
     exportedItems: 'Exported',
     exportFailed: 'Failed to export items. Please try again.',

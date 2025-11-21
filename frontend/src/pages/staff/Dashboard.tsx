@@ -34,7 +34,7 @@ export default function StaffDashboard() {
   const navigate = useNavigate();
   
   // Language preference with database persistence
-  const { language, setLanguage, isLoading: isLoadingLanguage } = useLanguagePreference(user?.id);
+  const { language, setLanguage } = useLanguagePreference(user?.id);
   const t = getTranslation(language);
   
   // UI State
@@ -98,7 +98,7 @@ export default function StaffDashboard() {
         .single();
 
       if (customerError || !customer) {
-        throw new Error('Customer not found. Please check the QR code and try again.');
+        throw new Error(t.staffDashboard.customerNotFound);
       }
 
       // Check if today is customer's birthday
@@ -188,7 +188,7 @@ export default function StaffDashboard() {
       setIsFirstVisit(false);
       setIsBirthday(false);
     } catch (err: any) {
-      setError(err.message || 'Failed to process transaction');
+      setError(err.message || t.staffDashboard.transactionFailed);
       setTimeout(() => setError(''), 5000);
     }
   };
@@ -383,19 +383,19 @@ export default function StaffDashboard() {
               
               if (fetchError) {
                 console.error('Failed to fetch updated customer:', fetchError);
-                setError('Failed to refresh customer data');
+                setError(t.staffDashboard.ocr.refreshError);
                 setTimeout(() => setError(''), 3000);
                 return;
               }
               
               if (updatedCustomer) {
                 setCustomerData(updatedCustomer);
-                setSuccess('Customer details updated successfully!');
+                setSuccess(t.staffDashboard.customerUpdated);
                 setTimeout(() => setSuccess(''), 3000);
               }
             } catch (err) {
               console.error('Failed to refresh customer data:', err);
-              setError('Failed to refresh customer data');
+              setError(t.staffDashboard.ocr.refreshError);
               setTimeout(() => setError(''), 3000);
             }
           }}
@@ -447,23 +447,30 @@ export default function StaffDashboard() {
               if (updateError) throw updateError;
 
               const timeDiff = Math.abs(data.matchedTransaction.time_diff_minutes);
+              const timeDiffText = timeDiff < 1 ? '<1 min' : `${Math.round(timeDiff)} mins`;
+              
               setSuccess(
-                `Receipt linked to ${data.matchedTransaction.customer_name}'s transaction! ` +
-                `(${timeDiff < 1 ? '<1 min' : `${Math.round(timeDiff)} mins`} difference) | ` +
-                `${data.extraction.items.length} items | Confidence: ${data.extraction.confidence}%`
+                t.staffDashboard.ocr.linkSuccess
+                  .replace('{customer}', data.matchedTransaction.customer_name)
+                  .replace('{timeDiff}', timeDiffText)
+                  .replace('{items}', data.extraction.items.length.toString())
+                  .replace('{confidence}', data.extraction.confidence.toString())
               );
             } catch (err: any) {
-              setError(`Receipt scanned but failed to link: ${err.message}`);
+              setError(t.staffDashboard.ocr.linkError.replace('{error}', err.message));
               setTimeout(() => setError(''), 5000);
             }
           } else {
             // No matching transaction found
             const itemsText = data.extraction.items.length > 0 
-              ? ` | ${data.extraction.items.length} items (${data.matchedItems.length} matched)`
+              ? ` | ${data.extraction.items.length} ${t.staffDashboard.items} (${data.matchedItems.length} ${t.staffDashboard.itemsMatched})`
               : '';
+            
             setSuccess(
-              `Receipt scanned! Amount: RM ${data.amount.toFixed(2)}${itemsText} | Confidence: ${data.extraction.confidence}% | ` +
-              `⚠️ No matching transaction found - create transaction first`
+              t.staffDashboard.ocr.scanSuccess
+                .replace('{amount}', data.amount.toFixed(2))
+                .replace('{itemsText}', itemsText)
+                .replace('{confidence}', data.extraction.confidence.toString())
             );
           }
           
