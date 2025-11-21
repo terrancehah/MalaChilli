@@ -50,7 +50,7 @@ interface RestaurantCode {
 
 
 export default function CustomerDashboard() {
-  const { user, signOut, loading, updateProfile } = useAuth();
+  const { user, signOut, loading, updateProfile, deleteAccount } = useAuth();
   const navigate = useNavigate();
   
   // Modal states
@@ -522,6 +522,7 @@ export default function CustomerDashboard() {
         onClose={() => setShowSettings(false)}
         user={user}
         onSaveName={handleSaveName}
+        onDeleteAccount={deleteAccount}
         onSignOut={handleSignOut}
         language={language}
         onLanguageChange={setLanguage}

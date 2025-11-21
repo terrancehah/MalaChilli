@@ -10,6 +10,7 @@ import {
   resetPasswordForEmail,
   fetchUserProfile as fetchUserProfileAPI,
   updateUserProfile,
+  deleteUser,
 } from '../services/api';
 
 interface AuthContextType {
@@ -21,6 +22,7 @@ interface AuthContextType {
   signOut: () => Promise<void>;
   resetPassword: (email: string) => Promise<void>;
   updateProfile: (userId: string, updates: Partial<User>) => Promise<void>;
+  deleteAccount: (userId: string) => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -103,6 +105,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     await fetchUserProfile(userId);
   };
 
+  const deleteAccount = async (userId: string) => {
+    await deleteUser(userId);
+    setUser(null);
+    setSession(null);
+  };
+
   const value = {
     user,
     session,
@@ -112,6 +120,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     signOut,
     resetPassword,
     updateProfile,
+    deleteAccount,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

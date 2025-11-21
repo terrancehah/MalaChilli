@@ -215,4 +215,13 @@ export const staffDashboard = {
   detailNoItems: 'No items extracted',
   detailFirstVisit: 'First Visit',
   detailReceiptScanned: 'Receipt Scanned',
+  detailVoided: 'Voided',
+  voidTransaction: 'Void Transaction',
+  voidReason: 'Reason for voiding',
+  voidReasonPlaceholder: 'e.g., Wrong amount entered',
+  confirmVoid: 'Confirm Void',
+  cancelVoid: 'Cancel',
+  voidConfirmTitle: 'Void Transaction?',
+  voidConfirmDesc: 'This action cannot be undone. The transaction amount will be deducted from revenue and points will be reversed.',
+  voidSuccess: 'Transaction voided successfully',
 };

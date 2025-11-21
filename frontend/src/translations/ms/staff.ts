@@ -215,4 +215,13 @@ export const staffDashboard = {
   detailNoItems: 'Tiada item diekstrak',
   detailFirstVisit: 'Lawatan Pertama',
   detailReceiptScanned: 'Resit Diimbas',
+  detailVoided: 'Dibatal',
+  voidTransaction: 'Batal Transaksi',
+  voidReason: 'Sebab pembatalan',
+  voidReasonPlaceholder: 'cth., Jumlah salah dimasukkan',
+  confirmVoid: 'Sahkan Batal',
+  cancelVoid: 'Batal',
+  voidConfirmTitle: 'Batalkan Transaksi?',
+  voidConfirmDesc: 'Tindakan ini tidak boleh dibuat asal. Jumlah transaksi akan ditolak daripada hasil dan mata akan ditarik balik.',
+  voidSuccess: 'Transaksi berjaya dibatalkan',
 };

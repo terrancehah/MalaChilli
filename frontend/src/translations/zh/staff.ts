@@ -215,4 +215,13 @@ export const staffDashboard = {
   detailNoItems: '未提取项目',
   detailFirstVisit: '首次光临',
   detailReceiptScanned: '收据已扫描',
+  detailVoided: '已作废',
+  voidTransaction: '作废交易',
+  voidReason: '作废原因',
+  voidReasonPlaceholder: '例如：输入金额错误',
+  confirmVoid: '确认作废',
+  cancelVoid: '取消',
+  voidConfirmTitle: '确认作废交易？',
+  voidConfirmDesc: '此操作无法撤销。交易金额将从收入中扣除，积分将被收回。',
+  voidSuccess: '交易已成功作废',
 };

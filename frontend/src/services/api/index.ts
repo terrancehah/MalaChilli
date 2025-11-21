@@ -27,6 +27,7 @@ export {
   getCurrentSession,
   fetchUserProfile,
   updateUserProfile,
+  deleteUser,
 } from './auth';
 
 // Customer operations

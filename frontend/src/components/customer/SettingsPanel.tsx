@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Button } from '../ui/button';
-import { Edit2, Save } from 'lucide-react';
+import { Edit2, Save, AlertTriangle } from 'lucide-react';
 import { getTranslation, type Language } from '../../translations';
 import { BaseSettingsPanel } from '../shared';
 
@@ -14,16 +14,28 @@ interface SettingsPanelProps {
     created_at: string;
   };
   onSaveName: (name: string) => Promise<void>;
+  onDeleteAccount?: (userId: string) => Promise<void>;
   onSignOut: () => void;
   language?: Language;
   onLanguageChange?: (lang: Language) => void;
 }
 
-export function SettingsPanel({ isOpen, onClose, user, onSaveName, onSignOut, language = 'en', onLanguageChange }: SettingsPanelProps) {
+export function SettingsPanel({ 
+  isOpen, 
+  onClose, 
+  user, 
+  onSaveName, 
+  onDeleteAccount,
+  onSignOut, 
+  language = 'en', 
+  onLanguageChange 
+}: SettingsPanelProps) {
   const t = getTranslation(language);
   const [isEditingName, setIsEditingName] = useState(false);
   const [editedName, setEditedName] = useState('');
   const [isSaving, setIsSaving] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [message, setMessage] = useState<{type: 'success' | 'error', text: string} | null>(null);
 
   const memberSince = new Date(user.created_at).toLocaleDateString('en-US', {
@@ -34,6 +46,21 @@ export function SettingsPanel({ isOpen, onClose, user, onSaveName, onSignOut, la
   const handleEditName = () => {
     setEditedName(user.full_name || '');
     setIsEditingName(true);
+  };
+
+  const handleDeleteAccount = async () => {
+    if (!onDeleteAccount) return;
+    
+    setIsDeleting(true);
+    try {
+      await onDeleteAccount(user.id);
+      onClose();
+    } catch (error) {
+      console.error('Failed to delete account:', error);
+      setMessage({ type: 'error', text: t.settings.deleteFailed || 'Failed to delete account' });
+      setIsDeleting(false);
+      setShowDeleteConfirm(false);
+    }
   };
 
   const handleSaveName = async () => {
@@ -174,6 +201,55 @@ export function SettingsPanel({ isOpen, onClose, user, onSaveName, onSignOut, la
               </div>
             </div>
           </div>
+
+          {/* Danger Zone */}
+          {onDeleteAccount && (
+            <div className="mt-8 pt-6 border-t border-border">
+              {!showDeleteConfirm ? (
+                <Button
+                  variant="destructive"
+                  className="w-full flex items-center gap-2 bg-destructive/10 text-destructive hover:bg-destructive/20 border border-destructive/20 shadow-none"
+                  onClick={() => setShowDeleteConfirm(true)}
+                >
+                  <AlertTriangle className="h-4 w-4" />
+                  {t.settings.deleteAccount}
+                </Button>
+              ) : (
+                <div className="bg-destructive/5 border border-destructive/20 rounded-lg p-4 animate-in fade-in zoom-in-95 duration-200">
+                  <div className="flex items-start gap-3 mb-3">
+                    <div className="p-2 bg-destructive/10 rounded-full shrink-0">
+                      <AlertTriangle className="h-5 w-5 text-destructive" />
+                    </div>
+                    <div>
+                      <h4 className="font-bold text-destructive text-sm">{t.settings.deleteConfirmTitle}</h4>
+                      <p className="text-xs text-muted-foreground mt-1 leading-relaxed">
+                        {t.settings.deleteConfirmDesc}
+                      </p>
+                    </div>
+                  </div>
+                  
+                  <div className="flex gap-2 mt-3">
+                    <Button
+                      variant="outline"
+                      className="flex-1 h-9 text-xs"
+                      onClick={() => setShowDeleteConfirm(false)}
+                      disabled={isDeleting}
+                    >
+                      {t.settings.cancel}
+                    </Button>
+                    <Button
+                      variant="destructive"
+                      className="flex-1 h-9 text-xs"
+                      onClick={handleDeleteAccount}
+                      disabled={isDeleting}
+                    >
+                      {isDeleting ? t.settings.saving : t.settings.confirmDelete}
+                    </Button>
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
 
     </BaseSettingsPanel>
   );

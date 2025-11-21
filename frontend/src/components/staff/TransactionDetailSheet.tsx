@@ -1,11 +1,14 @@
 import { useState, useEffect } from 'react';
-import { X, Clock, Receipt, DollarSign, User, Package, CheckCircle, AlertCircle } from 'lucide-react';
+import { X, Clock, Receipt, DollarSign, User, Package, CheckCircle, AlertCircle, AlertTriangle } from 'lucide-react';
 import { Button } from '../ui/button';
+import { supabase } from '../../lib/supabase';
+import { toast } from 'react-hot-toast';
 import { getTranslation, type Language } from '../../translations';
 
 interface TransactionDetailSheetProps {
   isOpen: boolean;
   onClose: () => void;
+  onVoidSuccess?: () => void;
   transaction: any | null;
   language?: Language;
 }
@@ -13,6 +16,7 @@ interface TransactionDetailSheetProps {
 export function TransactionDetailSheet({ 
   isOpen, 
   onClose, 
+  onVoidSuccess,
   transaction,
   language = 'en'
 }: TransactionDetailSheetProps) {
@@ -22,10 +26,17 @@ export function TransactionDetailSheet({
   const [isDragging, setIsDragging] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false);
   const [shouldRender, setShouldRender] = useState(false);
+  
+  // Void State
+  const [showVoidConfirm, setShowVoidConfirm] = useState(false);
+  const [voidReason, setVoidReason] = useState('');
+  const [isVoiding, setIsVoiding] = useState(false);
 
   useEffect(() => {
     if (isOpen) {
       setShouldRender(true);
+      setShowVoidConfirm(false);
+      setVoidReason('');
       // Prevent body scroll
       document.body.style.overflow = 'hidden';
       requestAnimationFrame(() => {
@@ -45,7 +56,34 @@ export function TransactionDetailSheet({
     };
   }, [isOpen]);
 
+  const handleVoidTransaction = async () => {
+    if (!voidReason.trim()) {
+      toast.error(t.staffDashboard.voidReasonPlaceholder);
+      return;
+    }
+
+    try {
+      setIsVoiding(true);
+      const { error } = await supabase.rpc('void_transaction', {
+        p_transaction_id: transaction.id,
+        p_reason: voidReason
+      });
+
+      if (error) throw error;
+
+      toast.success(t.staffDashboard.voidSuccess);
+      if (onVoidSuccess) onVoidSuccess();
+      else onClose();
+    } catch (error) {
+      console.error('Error voiding transaction:', error);
+      toast.error(t.common.error);
+    } finally {
+      setIsVoiding(false);
+    }
+  };
+
   const handleTouchStart = (e: React.TouchEvent) => {
+    if (showVoidConfirm) return; // Disable drag when showing confirmation
     setTouchStart(e.touches[0].clientY);
     setIsDragging(true);
   };
@@ -74,6 +112,7 @@ export function TransactionDetailSheet({
   const hasOCR = transaction.ocr_processed && ocrData;
   const ocrItems = hasOCR ? ocrData.extraction?.items || [] : [];
   const ocrConfidence = hasOCR ? ocrData.extraction?.confidence || 0 : 0;
+  const isVoided = transaction.status === 'voided';
 
   return (
     <>
@@ -92,18 +131,20 @@ export function TransactionDetailSheet({
         }`}
         style={{
           transform: `translateY(${isAnimating ? translateY : '100%'}px)`,
-          maxHeight: '85vh',
+          maxHeight: '90vh',
         }}
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
       >
-        <div className="overflow-y-auto max-h-[85vh] pb-safe">
+        <div className="overflow-y-auto max-h-[90vh] pb-safe">
           <div className="p-6">
             {/* Drag Handle */}
-            <div className="flex justify-center mb-4">
-              <div className="w-12 h-1.5 bg-muted rounded-full" />
-            </div>
+            {!showVoidConfirm && (
+              <div className="flex justify-center mb-4">
+                <div className="w-12 h-1.5 bg-muted rounded-full" />
+              </div>
+            )}
 
             {/* Close Button */}
             <button
@@ -118,8 +159,13 @@ export function TransactionDetailSheet({
               <div className="flex items-center gap-2 text-muted-foreground mb-2">
                 <Receipt className="h-4 w-4" />
                 <span className="text-sm font-medium">{t.staffDashboard.detailSheetTitle}</span>
+                {isVoided && (
+                  <span className="bg-destructive/10 text-destructive text-xs font-bold px-2 py-0.5 rounded uppercase">
+                    {t.staffDashboard.detailVoided}
+                  </span>
+                )}
               </div>
-              <h2 className="text-2xl font-bold text-foreground">
+              <h2 className={`text-2xl font-bold text-foreground ${isVoided ? 'line-through text-muted-foreground' : ''}`}>
                 RM {parseFloat(transaction.final_amount || transaction.bill_amount).toFixed(2)}
               </h2>
               <div className="flex items-center gap-2 mt-1 text-sm text-muted-foreground">
@@ -153,29 +199,29 @@ export function TransactionDetailSheet({
               <div className="space-y-2">
                 <div className="flex justify-between text-sm">
                   <span className="text-muted-foreground">{t.staffDashboard.billAmount}</span>
-                  <span className="font-medium text-foreground">
+                  <span className={`font-medium text-foreground ${isVoided ? 'line-through' : ''}`}>
                     RM {parseFloat(transaction.bill_amount).toFixed(2)}
                   </span>
                 </div>
                 {parseFloat(transaction.guaranteed_discount_amount || 0) > 0 && (
                   <div className="flex justify-between text-sm">
-                    <span className="text-muted-foreground">{t.transactionDetail.guaranteedDiscount}</span>
-                    <span className="font-medium text-green-600">
+                    <span className="text-muted-foreground">{t.transactionDetail?.guaranteedDiscount || 'Discount'}</span>
+                    <span className={`font-medium text-green-600 ${isVoided ? 'line-through text-green-600/50' : ''}`}>
                       -RM {parseFloat(transaction.guaranteed_discount_amount).toFixed(2)}
                     </span>
                   </div>
                 )}
                 {parseFloat(transaction.virtual_currency_redeemed || 0) > 0 && (
                   <div className="flex justify-between text-sm">
-                    <span className="text-muted-foreground">{t.transactionDetail.vcRedeemed}</span>
-                    <span className="font-medium text-green-600">
+                    <span className="text-muted-foreground">{t.transactionDetail?.vcRedeemed || 'VC Redeemed'}</span>
+                    <span className={`font-medium text-green-600 ${isVoided ? 'line-through text-green-600/50' : ''}`}>
                       -RM {parseFloat(transaction.virtual_currency_redeemed).toFixed(2)}
                     </span>
                   </div>
                 )}
                 <div className="pt-2 border-t border-border flex justify-between">
                   <span className="text-sm font-semibold text-foreground">{t.staffDashboard.finalAmount}</span>
-                  <span className="text-sm font-bold text-foreground">
+                  <span className={`text-sm font-bold text-foreground ${isVoided ? 'line-through text-muted-foreground' : ''}`}>
                     RM {parseFloat(transaction.final_amount || transaction.bill_amount).toFixed(2)}
                   </span>
                 </div>
@@ -238,14 +284,77 @@ export function TransactionDetailSheet({
               )}
             </div>
 
-            {/* Close Button */}
-            <Button
-              onClick={onClose}
-              variant="outline"
-              className="w-full"
-            >
-              {t.common.close}
-            </Button>
+            {/* Void Confirmation UI */}
+            {showVoidConfirm ? (
+              <div className="bg-destructive/5 rounded-xl p-4 mb-4 border border-destructive/20 animate-in fade-in zoom-in-95 duration-200">
+                <div className="flex items-start gap-3 mb-3">
+                  <div className="p-2 bg-destructive/10 rounded-full">
+                    <AlertTriangle className="h-5 w-5 text-destructive" />
+                  </div>
+                  <div>
+                    <h3 className="text-sm font-bold text-destructive">{t.staffDashboard.voidConfirmTitle}</h3>
+                    <p className="text-xs text-muted-foreground mt-1">
+                      {t.staffDashboard.voidConfirmDesc}
+                    </p>
+                  </div>
+                </div>
+                
+                <div className="space-y-3">
+                  <div>
+                    <label className="text-xs font-medium text-foreground mb-1 block">
+                      {t.staffDashboard.voidReason}
+                    </label>
+                    <input
+                      type="text"
+                      value={voidReason}
+                      onChange={(e) => setVoidReason(e.target.value)}
+                      placeholder={t.staffDashboard.voidReasonPlaceholder}
+                      className="w-full px-3 py-2 rounded-md border border-input bg-background text-sm focus:outline-none focus:ring-2 focus:ring-destructive/20"
+                      autoFocus
+                    />
+                  </div>
+                  
+                  <div className="flex gap-2">
+                    <Button 
+                      variant="outline" 
+                      className="flex-1"
+                      onClick={() => setShowVoidConfirm(false)}
+                      disabled={isVoiding}
+                    >
+                      {t.staffDashboard.cancelVoid}
+                    </Button>
+                    <Button 
+                      variant="destructive" 
+                      className="flex-1"
+                      onClick={handleVoidTransaction}
+                      disabled={isVoiding || !voidReason.trim()}
+                    >
+                      {isVoiding ? t.common.loading : t.staffDashboard.confirmVoid}
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              /* Actions */
+              <div className="space-y-3">
+                {!isVoided && (
+                  <Button
+                    variant="destructive"
+                    className="w-full bg-destructive/10 text-destructive hover:bg-destructive/20 border border-destructive/20 shadow-none"
+                    onClick={() => setShowVoidConfirm(true)}
+                  >
+                    {t.staffDashboard.voidTransaction}
+                  </Button>
+                )}
+                <Button
+                  onClick={onClose}
+                  variant="outline"
+                  className="w-full"
+                >
+                  {t.common.close}
+                </Button>
+              </div>
+            )}
           </div>
         </div>
       </div>

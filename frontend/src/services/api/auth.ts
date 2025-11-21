@@ -171,3 +171,18 @@ export async function updateUserProfile(
 
   if (error) throw error;
 }
+
+/**
+ * Delete (anonymize) the current user's account.
+ * This calls the server-side function to soft-delete and cleanup.
+ */
+export async function deleteUser(userId: string): Promise<void> {
+  const { error } = await supabase.rpc('anonymize_user', {
+    p_user_id: userId
+  });
+
+  if (error) throw error;
+  
+  // Sign out after successful deletion
+  await signOutUser();
+}

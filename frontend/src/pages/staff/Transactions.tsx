@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { supabase } from '../../lib/supabase';
@@ -22,6 +22,7 @@ interface Transaction {
   is_first_transaction: boolean;
   ocr_processed: boolean;
   ocr_data: any;
+  status: 'completed' | 'voided';
   customer: {
     full_name: string;
     email: string;
@@ -41,82 +42,83 @@ export default function StaffTransactions() {
   const [selectedTransaction, setSelectedTransaction] = useState<Transaction | null>(null);
   const [showDetailSheet, setShowDetailSheet] = useState(false);
 
-  useEffect(() => {
-    const fetchTransactions = async () => {
-      if (!user?.branch_id) return;
+  const fetchTransactions = useCallback(async () => {
+    if (!user?.branch_id) return;
 
-      try {
-        let startDate: Date | undefined;
-        
-        if (dateRange !== 'all') {
-          startDate = new Date();
-          const days = parseInt(dateRange);
-          startDate.setDate(startDate.getDate() - days);
-          startDate.setHours(0, 0, 0, 0);
-        }
-
-        let query = supabase
-          .from('transactions')
-          .select(`
-            id,
-            created_at,
-            transaction_date,
-            bill_amount,
-            final_amount,
-            guaranteed_discount_amount,
-            virtual_currency_redeemed,
-            is_first_transaction,
-            ocr_processed,
-            ocr_data,
-            customer:users!transactions_customer_id_fkey (
-              full_name,
-              email
-            )
-          `)
-          .eq('branch_id', user.branch_id);
-
-        if (startDate) {
-          query = query.gte('created_at', startDate.toISOString());
-        }
-
-        const { data, error } = await query.order('created_at', { ascending: false });
-
-        if (error) throw error;
-        
-        // Transform data: Supabase returns customer as array, extract first element
-        let transformedData = (data || []).map((transaction: any) => ({
-          ...transaction,
-          customer: Array.isArray(transaction.customer) 
-            ? transaction.customer[0] || null 
-            : transaction.customer
-        }));
-        
-        // Apply sorting
-        transformedData.sort((a, b) => {
-          let comparison = 0;
-          
-          switch (sortBy) {
-            case 'date':
-              comparison = new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
-              break;
-            case 'amount':
-              comparison = parseFloat(b.bill_amount) - parseFloat(a.bill_amount);
-              break;
-          }
-          
-          return sortOrder === 'desc' ? comparison : -comparison;
-        });
-        
-        setTransactions(transformedData);
-      } catch (error) {
-        console.error('Error fetching transactions:', error);
-      } finally {
-        setLoading(false);
+    try {
+      let startDate: Date | undefined;
+      
+      if (dateRange !== 'all') {
+        startDate = new Date();
+        const days = parseInt(dateRange);
+        startDate.setDate(startDate.getDate() - days);
+        startDate.setHours(0, 0, 0, 0);
       }
-    };
 
-    fetchTransactions();
+      let query = supabase
+        .from('transactions')
+        .select(`
+          id,
+          created_at,
+          transaction_date,
+          bill_amount,
+          final_amount,
+          guaranteed_discount_amount,
+          virtual_currency_redeemed,
+          is_first_transaction,
+          ocr_processed,
+          ocr_data,
+          status,
+          customer:users!transactions_customer_id_fkey (
+            full_name,
+            email
+          )
+        `)
+        .eq('branch_id', user.branch_id);
+
+      if (startDate) {
+        query = query.gte('created_at', startDate.toISOString());
+      }
+
+      const { data, error } = await query.order('created_at', { ascending: false });
+
+      if (error) throw error;
+      
+      // Transform data
+      let transformedData = (data || []).map((transaction: any) => ({
+        ...transaction,
+        customer: Array.isArray(transaction.customer) 
+          ? transaction.customer[0] || null 
+          : transaction.customer
+      }));
+      
+      // Apply sorting
+      transformedData.sort((a: Transaction, b: Transaction) => {
+        let comparison = 0;
+        
+        switch (sortBy) {
+          case 'date':
+            comparison = new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+            break;
+          case 'amount':
+            comparison = parseFloat(b.bill_amount) - parseFloat(a.bill_amount);
+            break;
+        }
+        
+        return sortOrder === 'desc' ? comparison : -comparison;
+      });
+      
+      setTransactions(transformedData);
+    } catch (error) {
+      console.error('Error fetching transactions:', error);
+    } finally {
+      setLoading(false);
+    }
   }, [user, dateRange, sortBy, sortOrder]);
+
+  useEffect(() => {
+    fetchTransactions();
+  }, [fetchTransactions]);
 
   const formatDateTime = (timestamp: string) => {
     const date = new Date(timestamp);
@@ -267,7 +269,9 @@ export default function StaffTransactions() {
           transactions.map((transaction) => (
             <Card 
               key={transaction.id} 
-              className="border-border/50 cursor-pointer hover:border-primary/50 transition-colors active:scale-[0.98]"
+              className={`border-border/50 cursor-pointer hover:border-primary/50 transition-colors active:scale-[0.98] ${
+                transaction.status === 'voided' ? 'opacity-60 bg-muted/20' : ''
+              }`}
               onClick={() => {
                 setSelectedTransaction(transaction);
                 setShowDetailSheet(true);
@@ -276,9 +280,16 @@ export default function StaffTransactions() {
               <CardContent className="p-5">
                 <div className="flex items-start justify-between">
                   <div className="flex-1">
-                    <p className="font-semibold text-foreground mb-1">
-                      {transaction.customer?.full_name || transaction.customer?.email}
-                    </p>
+                    <div className="flex items-center gap-2 mb-1">
+                      <p className={`font-semibold text-foreground ${transaction.status === 'voided' ? 'line-through decoration-destructive' : ''}`}>
+                        {transaction.customer?.full_name || transaction.customer?.email}
+                      </p>
+                      {transaction.status === 'voided' && (
+                        <span className="text-[10px] font-bold uppercase bg-destructive/10 text-destructive px-1.5 py-0.5 rounded">
+                          {t.staffDashboard.detailVoided}
+                        </span>
+                      )}
+                    </div>
                     <div className="flex items-center gap-2 text-xs text-muted-foreground">
                       <span>{formatDateTime(transaction.created_at).date}</span>
                       <span>•</span>
@@ -298,7 +309,7 @@ export default function StaffTransactions() {
                     </div>
                   </div>
                   <div className="text-right">
-                    <p className="font-bold text-foreground text-lg">
+                    <p className={`font-bold text-foreground text-lg ${transaction.status === 'voided' ? 'line-through text-muted-foreground' : ''}`}>
                       RM {parseFloat(transaction.bill_amount).toFixed(2)}
                     </p>
                     <p className="text-xs text-muted-foreground">
@@ -318,6 +329,11 @@ export default function StaffTransactions() {
         onClose={() => {
           setShowDetailSheet(false);
           setSelectedTransaction(null);
+        }}
+        onVoidSuccess={() => {
+          setShowDetailSheet(false);
+          setSelectedTransaction(null);
+          fetchTransactions(); // Refresh list
         }}
         transaction={selectedTransaction}
         language={language}
