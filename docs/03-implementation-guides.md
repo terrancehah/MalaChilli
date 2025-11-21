@@ -7,7 +7,38 @@
 
 ---
 
-# PART A: Design System
+# PART A: Development Setup
+
+## 1. Prerequisites
+*   **Node.js:** Version 20 (enforced by `.nvmrc`)
+*   **Supabase:** Account and project created.
+
+## 2. Installation
+```bash
+cd frontend
+npm install
+```
+
+## 3. Environment Configuration
+1.  Create `.env` file in `frontend/` directory:
+    ```bash
+    cp .env.example .env
+    ```
+2.  Add Supabase credentials:
+    ```env
+    VITE_SUPABASE_URL=your_supabase_url
+    VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
+    ```
+
+## 4. Running Locally
+```bash
+npm run dev
+# App available at http://localhost:5173
+```
+
+---
+
+# PART B: Design System
 
 ## 1. Core Principles
 *   **Mobile-First:** All designs start with mobile viewport.
@@ -37,7 +68,7 @@
 
 ---
 
-# PART B: Frontend Architecture
+# PART C: Frontend Architecture
 
 ## 1. Directory Structure
 ```
@@ -66,7 +97,7 @@
 
 ---
 
-# PART C: Feature Deep Dives
+# PART D: Feature Deep Dives
 
 ## 1. Referral System Implementation
 

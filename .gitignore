@@ -14,9 +14,11 @@ pnpm-debug.log*
 
 # Build outputs
 dist/
+dist-ssr/
 build/
 .next/
 out/
+*.local
 
 # IDE and editor files
 .vscode/
@@ -25,6 +27,11 @@ out/
 *.swo
 *~
 .DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+
 
 # Testing
 coverage/
