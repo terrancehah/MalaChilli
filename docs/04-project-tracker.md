@@ -1,4 +1,5 @@
 # Project Tracker & Changelog
+
 ## MalaChilli - Development Status
 
 **Document Type:** Project Management  
@@ -12,56 +13,67 @@
 ### 📅 Nov 2025 Updates
 
 **VC Expiry Cron Job Deployed** ✅
-*   **Edge Function:** `expire-vc` deployed to Supabase.
-*   **Automation:** Runs daily at 2:00 AM MYT via `pg_cron`.
-*   **Logic:** Expires virtual currency older than 30 days.
+
+* **Edge Function:** `expire-vc` deployed to Supabase.
+* **Automation:** Runs daily at 2:00 AM MYT via `pg_cron`.
+* **Logic:** Expires virtual currency older than 30 days.
 
 **Production Ready - Legal & Security** ✅
-*   **PDPA:** Privacy Policy (`/privacy`) and Terms (`/terms`) published.
-*   **Consent:** Checkbox added to registration.
-*   **Auth:** Password recovery flow implemented (`/forgot-password`).
-*   **Validation:** Age verification (18+) enforced.
+
+* **PDPA:** Privacy Policy (`/privacy`) and Terms (`/terms`) published.
+* **Consent:** Checkbox added to registration.
+* **Auth:** Password recovery flow implemented (`/forgot-password`).
+* **Validation:** Age verification (18+) enforced.
 
 **Staff Dashboard Redesign** ✅
-*   **Streamlined Checkout:** Single-screen flow (Scan -> Verify -> Redeem -> Pay).
-*   **QR Scanner:** Replaced `html5-qrcode` with `@yudiel/react-qr-scanner` (Faster, lighter).
-*   **Responsive:** Split-view for iPad landscape mode.
+
+* **Streamlined Checkout:** Single-screen flow (Scan -> Verify -> Redeem -> Pay).
+* **QR Scanner:** Replaced `html5-qrcode` with `@yudiel/react-qr-scanner` (Faster, lighter).
+* **Responsive:** Split-view for iPad landscape mode.
 
 **Owner Dashboard Analytics** ✅
-*   **Three Tabs:** Customer Insights, Business Metrics, Viral Performance.
-*   **RFM Analysis:** Customer segmentation (Champions, At Risk, etc.) using percentile scoring.
-*   **Charts:** Visualized revenue trends and network growth.
+
+* **Three Tabs:** Customer Insights, Business Metrics, Viral Performance.
+* **RFM Analysis:** Customer segmentation (Champions, At Risk, etc.) using percentile scoring.
+* **Charts:** Visualized revenue trends and network growth.
 
 ---
 
 ## 2. Phase Roadmap
 
 ### ✅ PHASE 1: Foundation (Customer Portal)
+
 **Goal:** Core identity, Referral logic, and Wallet.
-*   [x] **Auth:** Register, Login, Profile Management.
-*   [x] **Wallet:** VC Balance, Transaction History.
-*   [x] **Referrals:** Auto-generate restaurant-specific codes.
-*   [x] **Sharing:** Social share buttons, Link copying.
+
+* [x] **Auth:** Register, Login, Profile Management.
+* [x] **Wallet:** VC Balance, Transaction History.
+* [x] **Referrals:** Auto-generate restaurant-specific codes.
+* [x] **Sharing:** Social share buttons, Link copying.
 
 ### ✅ PHASE 2: Operations (Staff Portal)
+
 **Goal:** Efficient point-of-sale interaction.
-*   [x] **QR Scanner:** Camera integration.
-*   [x] **Verification:** Detect "First Visit" & "Birthday".
-*   [x] **Transactions:** Manual bill entry + VC Redemption logic.
-*   [x] **Receipts:** Photo upload (OCR skeleton ready).
+
+* [x] **QR Scanner:** Camera integration.
+* [x] **Verification:** Detect "First Visit" & "Birthday".
+* [x] **Transactions:** Manual bill entry + VC Redemption logic.
+* [x] **Receipts:** Photo upload (OCR skeleton ready).
 
 ### 🚧 PHASE 3: Scale & Analytics (Owner Portal)
+
 **Goal:** Data visibility and automation.
-*   [x] **Analytics Dashboard:** Revenue & ROI charts.
-*   [x] **Management:** Staff & Branch CRUD.
-*   [ ] **Automated OCR:** Full Gemini AI integration (Partially implemented).
-*   [ ] **Email Automation:** SendGrid integration for "Earning" notifications.
+
+* [x] **Analytics Dashboard:** Revenue & ROI charts.
+* [x] **Management:** Staff & Branch CRUD.
+* [ ] **Automated OCR:** Full Gemini AI integration (Partially implemented).
+* [ ] **Email Automation:** SendGrid integration for "Earning" notifications.
 
 ---
 
 ## 3. User Stories Status (Epics)
 
 ### Customer Features
+
 | ID | Feature | Status |
 | :--- | :--- | :--- |
 | US-C01 | Register with Referral Code | ✅ Done |
@@ -70,6 +82,7 @@
 | US-C08 | View Referral Network | ✅ Done (List view) |
 
 ### Staff Features
+
 | ID | Feature | Status |
 | :--- | :--- | :--- |
 | US-S01 | Scan Customer QR | ✅ Done |
@@ -78,6 +91,7 @@
 | US-S06 | Upload Receipt Photo | ✅ Done |
 
 ### System Features
+
 | ID | Feature | Status |
 | :--- | :--- | :--- |
 | US-T04 | Create Referral Chain (3 Levels) | ✅ Done |

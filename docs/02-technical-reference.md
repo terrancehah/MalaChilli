@@ -1,36 +1,41 @@
 # Technical Reference
+
 ## MalaChilli - System Architecture & Data Model
 
 **Document Type:** Technical Reference  
 **Last Updated:** 2025-11-21 (Consolidated)  
 **Source of Truth:**  
-*   **Database Schema:** `/supabase/migrations/`
-*   **Frontend Types:** `/frontend/src/types/`
-*   **API Client:** `/frontend/src/lib/supabase.ts`
+
+* **Database Schema:** `/supabase/migrations/`
+* **Frontend Types:** `/frontend/src/types/`
+* **API Client:** `/frontend/src/lib/supabase.ts`
 
 ---
 
 ## 1. Technology Stack
 
 ### Frontend
-*   **Framework:** React 18+ (Vite)
-*   **Language:** TypeScript
-*   **Styling:** Tailwind CSS + Shadcn/UI
-*   **State:** React Context + Hooks
-*   **Internationalization:** Custom i18n (EN/MS/ZH)
-*   **Key Libraries:** `react-qr-code` (Gen), `@yudiel/react-qr-scanner` (Scan), `recharts` (Analytics)
+
+* **Framework:** React 18+ (Vite)
+* **Language:** TypeScript
+* **Styling:** Tailwind CSS + Shadcn/UI
+* **State:** React Context + Hooks
+* **Internationalization:** Custom i18n (EN/MS/ZH)
+* **Key Libraries:** `react-qr-code` (Gen), `@yudiel/react-qr-scanner` (Scan), `recharts` (Analytics)
 
 ### Backend (Supabase BaaS)
-*   **Database:** PostgreSQL 15
-*   **Auth:** Supabase Auth (Email/Password + Magic Link)
-*   **API:** Auto-generated REST API + Edge Functions
-*   **Realtime:** Supabase Realtime (Wallet updates)
-*   **Storage:** Supabase Storage (Receipt photos)
+
+* **Database:** PostgreSQL 15
+* **Auth:** Supabase Auth (Email/Password + Magic Link)
+* **API:** Auto-generated REST API + Edge Functions
+* **Realtime:** Supabase Realtime (Wallet updates)
+* **Storage:** Supabase Storage (Receipt photos)
 
 ### Infrastructure
-*   **Frontend Hosting:** Vercel
-*   **Backend Hosting:** Supabase Cloud
-*   **Email:** SendGrid (via Edge Functions)
+
+* **Frontend Hosting:** Vercel
+* **Backend Hosting:** Supabase Cloud
+* **Email:** SendGrid (via Edge Functions)
 
 ---
 
@@ -40,7 +45,7 @@
 
 ### Core Entity Relationship Diagram (ERD)
 
-```
+``
 [Restaurants] 1 -- * [Branches]
       |
       1
@@ -53,7 +58,7 @@
    +-- 1 -- * [VirtualCurrencyLedger]
    |
    +-- 1 -- * [UserRestaurantReferralCodes]
-```
+``
 
 ### Key Tables
 
@@ -74,23 +79,26 @@
 ## 3. Security Architecture
 
 ### Authentication & Authorization
-*   **JWT:** All API requests are authenticated via Supabase JWT.
-*   **RBAC:** Users have a `role` column (`customer`, `staff`, `owner`).
-*   **RLS (Row Level Security):** Database policies enforce access control at the SQL level.
-    *   *Customers* can only see their own data.
-    *   *Staff* can see data for their assigned branch.
-    *   *Owners* can see data for their restaurant.
+
+* **JWT:** All API requests are authenticated via Supabase JWT.
+* **RBAC:** Users have a `role` column (`customer`, `staff`, `owner`).
+* **RLS (Row Level Security):** Database policies enforce access control at the SQL level.
+  * *Customers* can only see their own data.
+  * *Staff* can see data for their assigned branch.
+  * *Owners* can see data for their restaurant.
 
 ### Data Compliance (PDPA)
-*   **Consent:** Explicit checkbox during registration.
-*   **Right to Erasure:** Soft-delete mechanism implemented (`is_deleted` flag).
-*   **Minimal Collection:** Only Email, Birthday (for age verification), and Name required.
+
+* **Consent:** Explicit checkbox during registration.
+* **Right to Erasure:** Soft-delete mechanism implemented (`is_deleted` flag).
+* **Minimal Collection:** Only Email, Birthday (for age verification), and Name required.
 
 ---
 
 ## 4. API & Business Logic
 
 ### Key Edge Functions / RPCs
+
 Instead of exposing raw table access for complex logic, we use **PostgreSQL Stored Procedures** (RPCs) or **Edge Functions**.
 
 | Function Name | Type | Purpose |
@@ -102,5 +110,6 @@ Instead of exposing raw table access for complex logic, we use **PostgreSQL Stor
 | `send-earning-notification` | Edge | Sends email via SendGrid when a user earns VC. |
 
 ### API Patterns
-*   **REST:** Used for standard CRUD (e.g., fetching transaction history, updating profile).
-*   **Realtime:** Used for immediate wallet balance updates on the dashboard.
+
+* **REST:** Used for standard CRUD (e.g., fetching transaction history, updating profile).
+* **Realtime:** Used for immediate wallet balance updates on the dashboard.
