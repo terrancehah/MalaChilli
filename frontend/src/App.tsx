@@ -26,6 +26,10 @@ import OwnerStaff from './pages/owner/Staff';
 import OwnerBranches from './pages/owner/Branches';
 import OwnerSettings from './pages/owner/Settings';
 
+// Admin pages
+import AdminDashboard from './pages/admin/Dashboard';
+import AdminUsers from './pages/admin/Users';
+
 // Other pages
 import HomePage from './pages/HomePage';
 
@@ -139,6 +143,24 @@ function App() {
             element={
               <ProtectedRoute allowedRoles={['owner']}>
                 <OwnerSettings />
+              </ProtectedRoute>
+            } 
+          />
+
+          {/* Admin Portal (protected) */}
+          <Route 
+            path="/admin/dashboard" 
+            element={
+              <ProtectedRoute allowedRoles={['admin']}>
+                <AdminDashboard />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/admin/users" 
+            element={
+              <ProtectedRoute allowedRoles={['admin']}>
+                <AdminUsers />
               </ProtectedRoute>
             } 
           />

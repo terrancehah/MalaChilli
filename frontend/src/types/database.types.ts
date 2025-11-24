@@ -1,6 +1,6 @@
 // Database types based on our schema design
 
-export type UserRole = 'customer' | 'staff' | 'owner';
+export type UserRole = 'customer' | 'staff' | 'owner' | 'admin';
 
 export type TransactionType = 'earn' | 'redeem' | 'expire' | 'adjust';
 
