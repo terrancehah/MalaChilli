@@ -78,42 +78,9 @@ Thumbs.db
 # proprietary algorithms, and competitive advantages.
 # They are excluded to protect business IP while
 # maintaining the repository as a technical portfolio.
-#
-# NOTE FOR AI/DEVELOPMENT:
-# These files are excluded from Git tracking but still exist
-# locally and can be accessed/modified for development work.
-# The .gitignore prevents them from being committed to GitHub,
-# but does NOT prevent reading/writing them on the local machine.
 
-# Business-sensitive documentation
-docs/00-executive-summary.md
-docs/01-product-requirements-document.md
-docs/02-mvp-scope-moscow.md
-docs/03-database-schema-design.md
-docs/04-technical-architecture.md
-docs/05-api-specification.md
-docs/06-project-timeline-sprints.md
-docs/07-user-stories-acceptance-criteria.md
-docs/08-referral-sharing-implementation-guide.md
-docs/10-frontend-implementation-guide.md
+# Business-sensitive documentation (exclude entire folder)
+docs/
 
-# Supabase migrations (contains proprietary business logic)
-supabase/migrations/20251009000001_initial_schema.sql
-supabase/migrations/20251009000002_views.sql
-supabase/migrations/20251009000003_functions.sql
-supabase/migrations/20251009000004_rls_policies.sql
-supabase/migrations/20251009000005_seed_data.sql
-supabase/migrations/20251010000006_menu_items.sql
-supabase/migrations/20251010000007_schema_updates_scenario_b.sql
-supabase/migrations/20251012000008_fix_user_insert_policy.sql
-supabase/migrations/20251012000009_improve_user_policies.sql
-supabase/migrations/20251013000010_fix_password_hash.sql
-supabase/migrations/20251013000011_fix_recursive_policies.sql
-supabase/migrations/20251013000012_fix_signup_insert_policy.sql
-supabase/migrations/20251013000013_add_restaurant_specific_codes.sql
-supabase/migrations/20251016000014_sync_email_verification.sql
-supabase/migrations/20251022000015_auto_generate_referral_codes.sql
-supabase/migrations/README.md
-
-# Keep all other Supabase configuration private
+# Supabase configuration and migrations (contains proprietary business logic)
 supabase/
