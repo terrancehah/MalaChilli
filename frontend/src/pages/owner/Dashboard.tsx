@@ -11,9 +11,10 @@ import {
   DollarSign,
   Users as UsersIcon,
   Briefcase,
+  Loader2,
 } from "lucide-react";
 import type { DashboardSummary } from "../../types/analytics.types";
-import { getTranslation, type Language } from "../../translations";
+import { getTranslation } from "../../translations";
 
 // Import tab components
 import {
@@ -23,6 +24,10 @@ import {
 } from "../../components/owner";
 import { OwnerSettingsPanel } from "../../components/owner/OwnerSettingsPanel";
 import { ManagementPanel } from "../../components/owner/ManagementPanel";
+import { DashboardHeader } from "../../components/shared/DashboardHeader";
+import { LanguageSelector } from "../../components/shared";
+import { useLanguagePreference } from "../../hooks/useLanguagePreference";
+import PullToRefresh from "react-simple-pull-to-refresh";
 
 type TabType = "viral" | "business" | "customers";
 
@@ -36,7 +41,9 @@ export default function OwnerDashboard() {
   const [restaurantName, setRestaurantName] = useState<string>("");
   const [showSettings, setShowSettings] = useState(false);
   const [showManagement, setShowManagement] = useState(false);
-  const [language, setLanguage] = useState<Language>("en");
+
+  // Language preference with database persistence
+  const { language, setLanguage } = useLanguagePreference(user?.id);
 
   // Get translations
   const t = getTranslation(language);
@@ -146,119 +153,155 @@ export default function OwnerDashboard() {
     );
   }
 
+  const handleRefresh = async () => {
+    if (!restaurantId) return;
+
+    // Refresh the summary data
+    const { data, error } = await supabase.rpc("get_dashboard_summary", {
+      p_restaurant_id: restaurantId,
+      p_start_date: new Date(
+        Date.now() - 30 * 24 * 60 * 60 * 1000
+      ).toISOString(), // Last 30 days
+      p_end_date: new Date().toISOString(),
+    });
+
+    if (error) {
+      console.error("Error fetching summary:", error);
+    } else if (data) {
+      setSummary(data as DashboardSummary);
+    }
+  };
+
   return (
-    <div className="min-h-screen pb-6">
-      {/* Header */}
-      <div className="bg-gradient-to-br from-primary to-primary-light px-6 pt-10 pb-7 rounded-b-3xl">
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-2xl md:text-3xl font-display font-bold text-primary-foreground mb-1">
-              {t.ownerDashboard.title}
-            </h1>
-            <p className="text-primary-foreground/80 text-sm font-medium">
-              {user?.full_name || user?.email}
-            </p>
-          </div>
-          <div className="flex items-center gap-2">
-            <Button
-              variant="secondary"
-              size="icon"
-              onClick={() => setShowManagement(true)}
-              className="bg-white/20 hover:bg-white/30 text-primary-foreground border-0 h-10 w-10 rounded-xl"
-              title={t.ownerDashboard.management.title}
-            >
-              <Briefcase className="h-5 w-5" />
-            </Button>
-            <Button
-              variant="secondary"
-              size="icon"
-              onClick={() => setShowSettings(true)}
-              className="bg-white/20 hover:bg-white/30 text-primary-foreground border-0 h-10 w-10 rounded-xl"
-              title={t.ownerDashboard.settings}
-            >
-              <Settings className="h-5 w-5" />
-            </Button>
+    <PullToRefresh
+      onRefresh={handleRefresh}
+      pullingContent={
+        <div className="flex justify-center py-4">
+          <div className="text-gray-600 text-sm flex items-center gap-2">
+            <Loader2 className="h-5 w-5 animate-spin text-primary" />
+            Pull to refresh
           </div>
         </div>
-      </div>
+      }
+      refreshingContent={
+        <div className="flex justify-center py-4">
+          <div className="text-gray-900 flex items-center gap-2">
+            <Loader2 className="h-5 w-5 animate-spin text-primary" />
+            Refreshing...
+          </div>
+        </div>
+      }
+    >
+      <div className="min-h-screen pb-6">
+        <DashboardHeader
+          title={t.ownerDashboard.title}
+          subtitle={user?.full_name || user?.email || ""}
+          actions={
+            <>
+              <LanguageSelector
+                language={language}
+                onLanguageChange={setLanguage}
+              />
+              <Button
+                variant="secondary"
+                size="icon"
+                onClick={() => setShowManagement(true)}
+                className="bg-white/20 hover:bg-white/30 backdrop-blur-sm text-primary-foreground border-0 h-12 w-12 rounded-xl shadow-lg"
+                title={t.ownerDashboard.management.title}
+              >
+                <Briefcase className="h-6 w-6" />
+              </Button>
+              <Button
+                variant="secondary"
+                size="icon"
+                onClick={() => setShowSettings(true)}
+                className="bg-white/20 hover:bg-white/30 backdrop-blur-sm text-primary-foreground border-0 h-12 w-12 rounded-xl shadow-lg"
+                title={t.ownerDashboard.settings}
+              >
+                <Settings className="h-6 w-6" />
+              </Button>
+            </>
+          }
+        />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 mt-4 sm:mt-6 pb-6">
-        {/* Tab Navigation - Responsive */}
-        <div className="flex gap-2 overflow-x-auto pb-4 -mx-4 px-4 sm:mx-0 sm:px-0 scrollbar-hide">
-          <Button
-            onClick={() => setActiveTab("viral")}
-            variant={activeTab === "viral" ? "default" : "outline"}
-            className="h-10 whitespace-nowrap flex-shrink-0"
-          >
-            <Share2 className="h-4 w-4 sm:mr-2" />
-            <span className="hidden sm:inline">
-              {t.ownerDashboard.tabs.viralPerformance}
-            </span>
-          </Button>
-          <Button
-            onClick={() => setActiveTab("business")}
-            variant={activeTab === "business" ? "default" : "outline"}
-            className="h-10 whitespace-nowrap flex-shrink-0"
-          >
-            <DollarSign className="h-4 w-4 sm:mr-2" />
-            <span className="hidden sm:inline">
-              {t.ownerDashboard.tabs.businessMetrics}
-            </span>
-          </Button>
-          <Button
-            onClick={() => setActiveTab("customers")}
-            variant={activeTab === "customers" ? "default" : "outline"}
-            className="h-10 whitespace-nowrap flex-shrink-0"
-          >
-            <UsersIcon className="h-4 w-4 sm:mr-2" />
-            <span className="hidden sm:inline">
-              {t.ownerDashboard.tabs.customerInsights}
-            </span>
-          </Button>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 mt-4 sm:mt-6 pb-6">
+          {/* Tab Navigation - Responsive */}
+          <div className="flex gap-2 overflow-x-auto pb-4 -mx-4 px-4 sm:mx-0 sm:px-0 scrollbar-hide">
+            <Button
+              onClick={() => setActiveTab("viral")}
+              variant={activeTab === "viral" ? "default" : "outline"}
+              className="h-10 whitespace-nowrap flex-shrink-0"
+            >
+              <Share2 className="h-4 w-4 sm:mr-2" />
+              <span className="hidden sm:inline">
+                {t.ownerDashboard.tabs.viralPerformance}
+              </span>
+            </Button>
+            <Button
+              onClick={() => setActiveTab("business")}
+              variant={activeTab === "business" ? "default" : "outline"}
+              className="h-10 whitespace-nowrap flex-shrink-0"
+            >
+              <DollarSign className="h-4 w-4 sm:mr-2" />
+              <span className="hidden sm:inline">
+                {t.ownerDashboard.tabs.businessMetrics}
+              </span>
+            </Button>
+            <Button
+              onClick={() => setActiveTab("customers")}
+              variant={activeTab === "customers" ? "default" : "outline"}
+              className="h-10 whitespace-nowrap flex-shrink-0"
+            >
+              <UsersIcon className="h-4 w-4 sm:mr-2" />
+              <span className="hidden sm:inline">
+                {t.ownerDashboard.tabs.customerInsights}
+              </span>
+            </Button>
+          </div>
+
+          {/* Tab Content */}
+          {activeTab === "viral" && (
+            <ViralPerformanceTab
+              restaurantId={restaurantId!}
+              summary={summary}
+              language={language}
+            />
+          )}
+          {activeTab === "business" && (
+            <BusinessMetricsTab
+              restaurantId={restaurantId!}
+              summary={summary}
+              language={language}
+            />
+          )}
+          {activeTab === "customers" && (
+            <CustomerInsightsTab
+              restaurantId={restaurantId!}
+              summary={summary}
+              language={language}
+            />
+          )}
         </div>
 
-        {/* Tab Content */}
-        {activeTab === "viral" && (
-          <ViralPerformanceTab
-            restaurantId={restaurantId!}
-            summary={summary}
-            language={language}
-          />
-        )}
-        {activeTab === "business" && (
-          <BusinessMetricsTab
-            restaurantId={restaurantId!}
-            summary={summary}
-            language={language}
-          />
-        )}
-        {activeTab === "customers" && (
-          <CustomerInsightsTab
-            restaurantId={restaurantId!}
-            summary={summary}
-            language={language}
-          />
-        )}
+        {/* Management Panel */}
+        <ManagementPanel
+          isOpen={showManagement}
+          onClose={() => setShowManagement(false)}
+          restaurantName={restaurantName}
+          language={language}
+        />
+
+        {/* Settings Panel */}
+        <OwnerSettingsPanel
+          isOpen={showSettings}
+          onClose={() => setShowSettings(false)}
+          user={user}
+          onSignOut={handleSignOut}
+          restaurantName={restaurantName}
+          language={language}
+          onLanguageChange={setLanguage}
+        />
       </div>
-
-      {/* Management Panel */}
-      <ManagementPanel
-        isOpen={showManagement}
-        onClose={() => setShowManagement(false)}
-        restaurantName={restaurantName}
-        language={language}
-      />
-
-      {/* Settings Panel */}
-      <OwnerSettingsPanel
-        isOpen={showSettings}
-        onClose={() => setShowSettings(false)}
-        user={user}
-        onSignOut={handleSignOut}
-        restaurantName={restaurantName}
-        language={language}
-        onLanguageChange={setLanguage}
-      />
-    </div>
+    </PullToRefresh>
   );
 }

@@ -15,7 +15,6 @@ import {
   ArrowUp,
 } from "lucide-react";
 import { getTranslation } from "../../translations";
-import type { Language } from "../../translations";
 import {
   QRCodeModal,
   InfoModal,
@@ -27,6 +26,10 @@ import { TransactionDetailSheet } from "../../components/customer/TransactionDet
 import { DashboardHeader } from "../../components/shared/DashboardHeader";
 import { StatsCard } from "../../components/shared/StatsCard";
 import { ListSkeleton } from "../../components/ui/skeleton";
+import { LanguageSelector } from "../../components/shared";
+import { useLanguagePreference } from "../../hooks/useLanguagePreference";
+import PullToRefresh from "react-simple-pull-to-refresh";
+import { Loader2 } from "lucide-react";
 
 // TypeScript interfaces
 interface RestaurantCode {
@@ -79,7 +82,9 @@ export default function CustomerDashboard() {
     null
   );
   const [showTransactionSheet, setShowTransactionSheet] = useState(false);
-  const [language, setLanguage] = useState<Language>("en");
+
+  // Language preference with database persistence
+  const { language, setLanguage } = useLanguagePreference(user?.id);
 
   // Get translations based on current language
   const t = getTranslation(language);
@@ -385,213 +390,242 @@ export default function CustomerDashboard() {
     },
   ];
 
-  return (
-    <div className="min-h-screen pb-6">
-      <DashboardHeader
-        title={user.full_name || user.email}
-        subtitle={t.profile.welcome}
-        actions={
-          <>
-            <Button
-              variant="secondary"
-              size="icon"
-              className="h-12 w-12 rounded-xl bg-white/95 hover:bg-white shadow-lg"
-              onClick={() => setShowQR(true)}
-            >
-              <QrCodeIcon className="h-6 w-6 text-primary" />
-            </Button>
-            <Button
-              variant="secondary"
-              size="icon"
-              className="h-12 w-12 rounded-xl bg-white/95 hover:bg-white shadow-lg"
-              onClick={() => setShowSettings(true)}
-            >
-              <Settings className="h-6 w-6 text-primary" />
-            </Button>
-          </>
-        }
-      >
-        <StatsCard stats={customerStats} />
-      </DashboardHeader>
+  const handleRefresh = async () => {
+    // Reload all data
+    window.location.reload();
+  };
 
-      <div className="px-6 mt-6 space-y-6">
-        {/* My Restaurants - Combined Section */}
-        <div>
-          <div className="mb-4">
-            <div className="flex items-start justify-between mb-3">
-              <div>
-                <div className="flex items-center gap-1 mb-1">
-                  <h2 className="text-xl font-bold text-foreground">
-                    {t.promoteRestaurants.title}
-                  </h2>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => setShowInfoModal(true)}
-                    className="h-6 w-6 p-0"
-                    title={t.dashboardInfo.restaurantInfo.title}
-                  >
-                    <Info className="h-4 w-4 text-muted-foreground" />
-                  </Button>
+  return (
+    <PullToRefresh
+      onRefresh={handleRefresh}
+      pullingContent={
+        <div className="flex justify-center py-4">
+          <div className="text-gray-600 text-sm flex items-center gap-2">
+            <Loader2 className="h-5 w-5 animate-spin text-primary" />
+            Pull to refresh
+          </div>
+        </div>
+      }
+      refreshingContent={
+        <div className="flex justify-center py-4">
+          <div className="text-gray-900 flex items-center gap-2">
+            <Loader2 className="h-5 w-5 animate-spin text-primary" />
+            Refreshing...
+          </div>
+        </div>
+      }
+    >
+      <div className="min-h-screen pb-6">
+        <DashboardHeader
+          title={user.full_name || user.email}
+          subtitle={t.profile.welcome}
+          actions={
+            <>
+              <LanguageSelector
+                language={language}
+                onLanguageChange={setLanguage}
+              />
+              <Button
+                variant="secondary"
+                size="icon"
+                className="h-12 w-12 rounded-xl bg-white/20 hover:bg-white/30 backdrop-blur-sm text-primary-foreground border-0 shadow-lg"
+                onClick={() => setShowQR(true)}
+              >
+                <QrCodeIcon className="h-6 w-6" />
+              </Button>
+              <Button
+                variant="secondary"
+                size="icon"
+                className="h-12 w-12 rounded-xl bg-white/20 hover:bg-white/30 backdrop-blur-sm text-primary-foreground border-0 shadow-lg"
+                onClick={() => setShowSettings(true)}
+              >
+                <Settings className="h-6 w-6" />
+              </Button>
+            </>
+          }
+        >
+          <StatsCard stats={customerStats} />
+        </DashboardHeader>
+
+        <div className="px-6 mt-6 space-y-6">
+          {/* My Restaurants - Combined Section */}
+          <div>
+            <div className="mb-4">
+              <div className="flex items-start justify-between mb-3">
+                <div>
+                  <div className="flex items-center gap-1 mb-1">
+                    <h2 className="text-xl font-bold text-foreground">
+                      {t.promoteRestaurants.title}
+                    </h2>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => setShowInfoModal(true)}
+                      className="h-6 w-6 p-0"
+                      title={t.dashboardInfo.restaurantInfo.title}
+                    >
+                      <Info className="h-4 w-4 text-muted-foreground" />
+                    </Button>
+                  </div>
+                  <p className="text-sm text-muted-foreground">
+                    {t.promoteRestaurants.subtitle}
+                  </p>
                 </div>
-                <p className="text-sm text-muted-foreground">
-                  {t.promoteRestaurants.subtitle}
-                </p>
+              </div>
+              <div className="flex w-fit ml-auto gap-1 bg-muted p-1 rounded-lg">
+                <button
+                  onClick={() => {
+                    if (sortBy === "recent") {
+                      setSortOrder(sortOrder === "desc" ? "asc" : "desc");
+                    } else {
+                      setSortBy("recent");
+                      setSortOrder("desc");
+                    }
+                  }}
+                  className={`px-3 py-1.5 text-xs font-medium rounded-md transition-colors flex items-center gap-1.5 ${
+                    sortBy === "recent"
+                      ? "bg-background text-foreground shadow-sm"
+                      : "text-muted-foreground hover:text-foreground"
+                  }`}
+                >
+                  <span>{t.restaurantSorting.recent}</span>
+                  {sortBy === "recent" &&
+                    (sortOrder === "desc" ? (
+                      <ArrowDown className="h-3 w-3" />
+                    ) : (
+                      <ArrowUp className="h-3 w-3" />
+                    ))}
+                </button>
+                <button
+                  onClick={() => {
+                    if (sortBy === "balance") {
+                      setSortOrder(sortOrder === "desc" ? "asc" : "desc");
+                    } else {
+                      setSortBy("balance");
+                      setSortOrder("desc");
+                    }
+                  }}
+                  className={`px-3 py-1.5 text-xs font-medium rounded-md transition-colors flex items-center gap-1.5 ${
+                    sortBy === "balance"
+                      ? "bg-background text-foreground shadow-sm"
+                      : "text-muted-foreground hover:text-foreground"
+                  }`}
+                >
+                  <span>{t.restaurantSorting.balance}</span>
+                  {sortBy === "balance" &&
+                    (sortOrder === "desc" ? (
+                      <ArrowDown className="h-3 w-3" />
+                    ) : (
+                      <ArrowUp className="h-3 w-3" />
+                    ))}
+                </button>
               </div>
             </div>
-            <div className="flex w-fit ml-auto gap-1 bg-muted p-1 rounded-lg">
-              <button
-                onClick={() => {
-                  if (sortBy === "recent") {
-                    setSortOrder(sortOrder === "desc" ? "asc" : "desc");
-                  } else {
-                    setSortBy("recent");
-                    setSortOrder("desc");
-                  }
-                }}
-                className={`px-3 py-1.5 text-xs font-medium rounded-md transition-colors flex items-center gap-1.5 ${
-                  sortBy === "recent"
-                    ? "bg-background text-foreground shadow-sm"
-                    : "text-muted-foreground hover:text-foreground"
-                }`}
-              >
-                <span>{t.restaurantSorting.recent}</span>
-                {sortBy === "recent" &&
-                  (sortOrder === "desc" ? (
-                    <ArrowDown className="h-3 w-3" />
-                  ) : (
-                    <ArrowUp className="h-3 w-3" />
-                  ))}
-              </button>
-              <button
-                onClick={() => {
-                  if (sortBy === "balance") {
-                    setSortOrder(sortOrder === "desc" ? "asc" : "desc");
-                  } else {
-                    setSortBy("balance");
-                    setSortOrder("desc");
-                  }
-                }}
-                className={`px-3 py-1.5 text-xs font-medium rounded-md transition-colors flex items-center gap-1.5 ${
-                  sortBy === "balance"
-                    ? "bg-background text-foreground shadow-sm"
-                    : "text-muted-foreground hover:text-foreground"
-                }`}
-              >
-                <span>{t.restaurantSorting.balance}</span>
-                {sortBy === "balance" &&
-                  (sortOrder === "desc" ? (
-                    <ArrowDown className="h-3 w-3" />
-                  ) : (
-                    <ArrowUp className="h-3 w-3" />
-                  ))}
-              </button>
-            </div>
+
+            {loadingCodes ? (
+              <ListSkeleton items={3} />
+            ) : restaurantCodes.length === 0 ? (
+              <Card className="glass-card border-0">
+                <CardContent className="p-12 text-center">
+                  <p className="text-lg font-semibold text-muted-foreground mb-2">
+                    {t.promoteRestaurants.noRestaurants}
+                  </p>
+                  <p className="text-xs text-muted-foreground">
+                    {t.promoteRestaurants.noRestaurantsDesc}
+                  </p>
+                </CardContent>
+              </Card>
+            ) : (
+              <div className="space-y-3">
+                {/* Restaurants with codes (auto-generated on first visit) */}
+                {[...restaurantCodes]
+                  .sort((a, b) => {
+                    let comparison = 0;
+                    if (sortBy === "balance") {
+                      comparison = (b.balance || 0) - (a.balance || 0);
+                    } else {
+                      // Sort by recent (last_visit_date)
+                      comparison =
+                        new Date(b.last_visit_date || 0).getTime() -
+                        new Date(a.last_visit_date || 0).getTime();
+                    }
+                    return sortOrder === "desc" ? comparison : -comparison;
+                  })
+                  .map((code) => {
+                    // Filter transactions for this restaurant
+                    const restaurantTransactions = recentTransactions.filter(
+                      (t: any) =>
+                        t.branches.restaurants.slug === code.restaurant.slug
+                    );
+
+                    return (
+                      <RestaurantCard
+                        key={code.id}
+                        restaurant={code}
+                        getTimeAgo={getTimeAgo}
+                        onShare={handleShare}
+                        language={language}
+                        transactions={restaurantTransactions}
+                        onTransactionClick={(transaction) => {
+                          setSelectedTransaction(transaction);
+                          setShowTransactionSheet(true);
+                        }}
+                      />
+                    );
+                  })}
+              </div>
+            )}
           </div>
-
-          {loadingCodes ? (
-            <ListSkeleton items={3} />
-          ) : restaurantCodes.length === 0 ? (
-            <Card className="glass-card border-0">
-              <CardContent className="p-12 text-center">
-                <p className="text-lg font-semibold text-muted-foreground mb-2">
-                  {t.promoteRestaurants.noRestaurants}
-                </p>
-                <p className="text-xs text-muted-foreground">
-                  {t.promoteRestaurants.noRestaurantsDesc}
-                </p>
-              </CardContent>
-            </Card>
-          ) : (
-            <div className="space-y-3">
-              {/* Restaurants with codes (auto-generated on first visit) */}
-              {[...restaurantCodes]
-                .sort((a, b) => {
-                  let comparison = 0;
-                  if (sortBy === "balance") {
-                    comparison = (b.balance || 0) - (a.balance || 0);
-                  } else {
-                    // Sort by recent (last_visit_date)
-                    comparison =
-                      new Date(b.last_visit_date || 0).getTime() -
-                      new Date(a.last_visit_date || 0).getTime();
-                  }
-                  return sortOrder === "desc" ? comparison : -comparison;
-                })
-                .map((code) => {
-                  // Filter transactions for this restaurant
-                  const restaurantTransactions = recentTransactions.filter(
-                    (t: any) =>
-                      t.branches.restaurants.slug === code.restaurant.slug
-                  );
-
-                  return (
-                    <RestaurantCard
-                      key={code.id}
-                      restaurant={code}
-                      getTimeAgo={getTimeAgo}
-                      onShare={handleShare}
-                      language={language}
-                      transactions={restaurantTransactions}
-                      onTransactionClick={(transaction) => {
-                        setSelectedTransaction(transaction);
-                        setShowTransactionSheet(true);
-                      }}
-                    />
-                  );
-                })}
-            </div>
-          )}
         </div>
+
+        {/* Modals and Panels */}
+        <QRCodeModal
+          isOpen={showQR}
+          onClose={() => setShowQR(false)}
+          userId={user.id}
+          userName={user.full_name || user.email}
+          language={language}
+        />
+
+        <InfoModal
+          isOpen={showInfoModal}
+          onClose={() => setShowInfoModal(false)}
+          title={t.dashboardInfo.restaurantInfo.title}
+          items={restaurantInfoItems}
+        />
+
+        <InfoModal
+          isOpen={showCurrencyInfoModal}
+          onClose={() => setShowCurrencyInfoModal(false)}
+          title={t.dashboardInfo.currencyInfo.title}
+          items={currencyInfoItems}
+        />
+
+        <SettingsPanel
+          isOpen={showSettings}
+          onClose={() => setShowSettings(false)}
+          user={user}
+          onSaveName={handleSaveName}
+          onDeleteAccount={deleteAccount}
+          onSignOut={handleSignOut}
+          language={language}
+          onLanguageChange={setLanguage}
+        />
+
+        <ShareBottomSheet
+          isOpen={showShareSheet}
+          onClose={() => setShowShareSheet(false)}
+          restaurant={selectedRestaurant}
+          language={language}
+        />
+
+        <TransactionDetailSheet
+          isOpen={showTransactionSheet}
+          onClose={() => setShowTransactionSheet(false)}
+          transaction={selectedTransaction}
+          language={language}
+        />
       </div>
-
-      {/* Modals and Panels */}
-      <QRCodeModal
-        isOpen={showQR}
-        onClose={() => setShowQR(false)}
-        userId={user.id}
-        userName={user.full_name || user.email}
-        language={language}
-      />
-
-      <InfoModal
-        isOpen={showInfoModal}
-        onClose={() => setShowInfoModal(false)}
-        title={t.dashboardInfo.restaurantInfo.title}
-        items={restaurantInfoItems}
-      />
-
-      <InfoModal
-        isOpen={showCurrencyInfoModal}
-        onClose={() => setShowCurrencyInfoModal(false)}
-        title={t.dashboardInfo.currencyInfo.title}
-        items={currencyInfoItems}
-      />
-
-      <SettingsPanel
-        isOpen={showSettings}
-        onClose={() => setShowSettings(false)}
-        user={user}
-        onSaveName={handleSaveName}
-        onDeleteAccount={deleteAccount}
-        onSignOut={handleSignOut}
-        language={language}
-        onLanguageChange={setLanguage}
-      />
-
-      <ShareBottomSheet
-        isOpen={showShareSheet}
-        onClose={() => setShowShareSheet(false)}
-        restaurant={selectedRestaurant}
-        language={language}
-      />
-
-      <TransactionDetailSheet
-        isOpen={showTransactionSheet}
-        onClose={() => setShowTransactionSheet(false)}
-        transaction={selectedTransaction}
-        language={language}
-      />
-    </div>
+    </PullToRefresh>
   );
 }

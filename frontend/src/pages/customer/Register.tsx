@@ -8,7 +8,7 @@ export default function Register() {
 
   // Support both URL param (backward compat) and location state (from future Join page)
   const referralCode = location.state?.referralCode || urlReferralCode;
-  const reward = location.state?.reward; // Future feature - not used yet
+//   const reward = location.state?.reward; // Future feature - not used yet
 
   return (
     <>
