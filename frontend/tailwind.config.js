@@ -8,34 +8,48 @@ export default {
   theme: {
   	extend: {
   		colors: {
-  			// MalaChilli Brand Colors (Malaysian Green Food Theme)
+  			// MalaChilli Brand Colors (Green Food Theme)
   			primary: {
-  				DEFAULT: '#0A5F0A', // Forest Green
-  				dark: '#004D00',     // Deep Green
-  				light: '#7CB342',    // Lime Green
+  				DEFAULT: '#2E7D32', // Fresh Forest Green
+  				dark: '#1B5E20',     // Deep Green
+  				light: '#4CAF50',    // Vibrant Green
   				foreground: '#FFFFFF'
   			},
   			secondary: {
-  				DEFAULT: '#F9FAFB',  // Off-White
-  				foreground: '#111827'
+  				DEFAULT: '#81C784',  // Soft Green
+  				foreground: '#003300'
   			},
+            accent: {
+                DEFAULT: '#FF9800', // Orange for CTAs
+                foreground: '#FFFFFF'
+            },
+  			background: {
+                DEFAULT: '#F1F8E9', // Very light green tint
+                paper: '#FFFFFF'
+            },
   			// Semantic Colors
-  			success: '#10B981',
-  			warning: '#F59E0B',
-  			error: '#EF4444',
-  			info: '#3B82F6',
-  			// Gray Scale
+  			success: '#2E7D32',
+  			warning: '#ED6C02',
+  			error: '#D32F2F',
+  			info: '#0288D1',
+  			// Gray Scale - Neutral
   			gray: {
-  				50: '#F9FAFB',
-  				100: '#E5E7EB',
-  				600: '#6B7280',
-  				900: '#111827'
+  				50: '#FAFAFA',
+  				100: '#F5F5F5',
+  				200: '#EEEEEE',
+  				300: '#E0E0E0',
+  				400: '#BDBDBD',
+  				500: '#9E9E9E',
+  				600: '#757575',
+  				700: '#616161',
+  				800: '#424242',
+  				900: '#212121'
   			},
-  			// Original shadcn colors for compatibility
+  			// Shadcn compatibility
   			border: 'hsl(var(--border))',
   			input: 'hsl(var(--input))',
   			ring: 'hsl(var(--ring))',
-  			background: 'hsl(var(--background))',
+  			// background: 'hsl(var(--background))', // Overridden above
   			foreground: 'hsl(var(--foreground))',
   			destructive: {
   				DEFAULT: 'hsl(var(--destructive))',
@@ -44,10 +58,6 @@ export default {
   			muted: {
   				DEFAULT: 'hsl(var(--muted))',
   				foreground: 'hsl(var(--muted-foreground))'
-  			},
-  			accent: {
-  				DEFAULT: 'hsl(var(--accent))',
-  				foreground: 'hsl(var(--accent-foreground))'
   			},
   			popover: {
   				DEFAULT: 'hsl(var(--popover))',
@@ -59,26 +69,21 @@ export default {
   			}
   		},
   		fontFamily: {
-  			sans: ['Inter', 'Segoe UI', 'system-ui', '-apple-system', 'sans-serif'],
-  			display: ['Pacifico', 'Brush Script MT', 'cursive']
+  			sans: ['Inter', 'sans-serif'],
+  			display: ['Quicksand', 'sans-serif'], // Friendly, rounded headings
+            cursive: ['Pacifico', 'cursive']
   		},
   		borderRadius: {
   			lg: 'var(--radius)',
   			md: 'calc(var(--radius) - 2px)',
   			sm: 'calc(var(--radius) - 4px)',
-  			pill: '50px',  // Full pill shape for buttons
-  			card: '24px'   // Card border radius
+  			pill: '9999px',  // Full pill shape
+  			card: '1rem'     // 16px Card border radius
   		},
-  		spacing: {
-  			'1': '4px',
-  			'2': '8px',
-  			'3': '12px',
-  			'4': '16px',
-  			'5': '24px',
-  			'6': '32px',
-  			'7': '48px',
-  			'8': '64px'
-  		}
+        boxShadow: {
+            'soft': '0 4px 20px -2px rgba(46, 125, 50, 0.1)',
+            'glow': '0 0 15px rgba(76, 175, 80, 0.3)',
+        }
   	}
   },
   plugins: [require("tailwindcss-animate")],

@@ -1,12 +1,25 @@
-import { useState, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
-import { Skeleton } from '../ui/skeleton';
-import { Button } from '../ui/button';
-import { supabase } from '../../lib/supabase';
-import type { DashboardSummary, CustomerSegmentation, CustomerAcquisitionSource } from '../../types/analytics.types';
-import { Users, UserPlus, TrendingUp, AlertTriangle, Award, Target, PieChart, X } from 'lucide-react';
-import { getTranslation, type Language } from '../../translations';
-import { InfoButton } from '../shared';
+import { useState, useEffect } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
+import { Skeleton } from "../ui/skeleton";
+import { Button } from "../ui/button";
+import { supabase } from "../../lib/supabase";
+import type {
+  DashboardSummary,
+  CustomerSegmentation,
+  CustomerAcquisitionSource,
+} from "../../types/analytics.types";
+import {
+  Users,
+  UserPlus,
+  TrendingUp,
+  AlertTriangle,
+  Award,
+  Target,
+  PieChart,
+  X,
+} from "lucide-react";
+import { getTranslation, type Language } from "../../translations";
+import { InfoButton } from "../shared";
 
 interface CustomerInsightsTabProps {
   restaurantId: string;
@@ -23,27 +36,36 @@ interface CustomerDetail {
   days_since_last_visit: number;
 }
 
-export function CustomerInsightsTab({ restaurantId, summary, language }: CustomerInsightsTabProps) {
+export function CustomerInsightsTab({
+  restaurantId,
+  summary,
+  language,
+}: CustomerInsightsTabProps) {
   const t = getTranslation(language);
   const [loading, setLoading] = useState(true);
   const [customers, setCustomers] = useState<CustomerSegmentation[]>([]);
-  const [acquisitionData, setAcquisitionData] = useState<CustomerAcquisitionSource[]>([]);
+  const [acquisitionData, setAcquisitionData] = useState<
+    CustomerAcquisitionSource[]
+  >([]);
   const [showModal, setShowModal] = useState(false);
-  const [selectedSegment, setSelectedSegment] = useState<string>('');
-  const [filteredCustomers, setFilteredCustomers] = useState<CustomerDetail[]>([]);
+  const [selectedSegment, setSelectedSegment] = useState<string>("");
+  const [filteredCustomers, setFilteredCustomers] = useState<CustomerDetail[]>(
+    []
+  );
   const [loadingCustomers, setLoadingCustomers] = useState(false);
 
   // Helper function to translate RFM segment names
   const translateSegment = (segment: string): string => {
     const segmentMap: Record<string, string> = {
-      'Champions': t.ownerDashboard.customerInsights.segmentChampions,
-      'Loyal Customers': t.ownerDashboard.customerInsights.segmentLoyal,
-      'Potential Loyalists': t.ownerDashboard.customerInsights.segmentPotentialLoyalists,
-      'New Customers': t.ownerDashboard.customerInsights.segmentNewCustomers,
-      'Promising': t.ownerDashboard.customerInsights.segmentPromising,
-      'At Risk': t.ownerDashboard.customerInsights.segmentAtRisk,
-      'Cant Lose Them': t.ownerDashboard.customerInsights.segmentCantLoseThem,
-      'Hibernating': t.ownerDashboard.customerInsights.segmentHibernating,
+      Champions: t.ownerDashboard.customerInsights.segmentChampions,
+      "Loyal Customers": t.ownerDashboard.customerInsights.segmentLoyal,
+      "Potential Loyalists":
+        t.ownerDashboard.customerInsights.segmentPotentialLoyalists,
+      "New Customers": t.ownerDashboard.customerInsights.segmentNewCustomers,
+      Promising: t.ownerDashboard.customerInsights.segmentPromising,
+      "At Risk": t.ownerDashboard.customerInsights.segmentAtRisk,
+      "Cant Lose Them": t.ownerDashboard.customerInsights.segmentCantLoseThem,
+      Hibernating: t.ownerDashboard.customerInsights.segmentHibernating,
     };
     return segmentMap[segment] || segment;
   };
@@ -51,16 +73,19 @@ export function CustomerInsightsTab({ restaurantId, summary, language }: Custome
   // Helper function to get segment info/description
   const getSegmentInfo = (segment: string): string => {
     const segmentInfoMap: Record<string, string> = {
-      'Champions': t.ownerDashboard.customerInsights.segmentChampionsInfo,
-      'Loyal Customers': t.ownerDashboard.customerInsights.segmentLoyalInfo,
-      'Potential Loyalists': t.ownerDashboard.customerInsights.segmentPotentialLoyalistsInfo,
-      'New Customers': t.ownerDashboard.customerInsights.segmentNewCustomersInfo,
-      'Promising': t.ownerDashboard.customerInsights.segmentPromisingInfo,
-      'At Risk': t.ownerDashboard.customerInsights.segmentAtRiskInfo,
-      'Cant Lose Them': t.ownerDashboard.customerInsights.segmentCantLoseThemInfo,
-      'Hibernating': t.ownerDashboard.customerInsights.segmentHibernatingInfo,
+      Champions: t.ownerDashboard.customerInsights.segmentChampionsInfo,
+      "Loyal Customers": t.ownerDashboard.customerInsights.segmentLoyalInfo,
+      "Potential Loyalists":
+        t.ownerDashboard.customerInsights.segmentPotentialLoyalistsInfo,
+      "New Customers":
+        t.ownerDashboard.customerInsights.segmentNewCustomersInfo,
+      Promising: t.ownerDashboard.customerInsights.segmentPromisingInfo,
+      "At Risk": t.ownerDashboard.customerInsights.segmentAtRiskInfo,
+      "Cant Lose Them":
+        t.ownerDashboard.customerInsights.segmentCantLoseThemInfo,
+      Hibernating: t.ownerDashboard.customerInsights.segmentHibernatingInfo,
     };
-    return segmentInfoMap[segment] || '';
+    return segmentInfoMap[segment] || "";
   };
 
   // Function to fetch customers by segment
@@ -68,16 +93,18 @@ export function CustomerInsightsTab({ restaurantId, summary, language }: Custome
     setLoadingCustomers(true);
     try {
       const { data, error } = await supabase
-        .from('customer_segmentation')
-        .select('customer_id, full_name, total_visits, total_spent, rfm_segment, days_since_last_visit')
-        .eq('restaurant_id', restaurantId)
-        .eq('rfm_segment', segment)
-        .order('total_spent', { ascending: false });
+        .from("customer_segmentation")
+        .select(
+          "customer_id, full_name, total_visits, total_spent, rfm_segment, days_since_last_visit"
+        )
+        .eq("restaurant_id", restaurantId)
+        .eq("rfm_segment", segment)
+        .order("total_spent", { ascending: false });
 
       if (error) throw error;
       setFilteredCustomers(data || []);
     } catch (error) {
-      console.error('Error fetching customers:', error);
+      console.error("Error fetching customers:", error);
       setFilteredCustomers([]);
     } finally {
       setLoadingCustomers(false);
@@ -98,10 +125,10 @@ export function CustomerInsightsTab({ restaurantId, summary, language }: Custome
 
         // Fetch customer segmentation data
         const { data: customerData } = await supabase
-          .from('customer_segmentation')
-          .select('*')
-          .eq('restaurant_id', restaurantId)
-          .order('total_spent', { ascending: false });
+          .from("customer_segmentation")
+          .select("*")
+          .eq("restaurant_id", restaurantId)
+          .order("total_spent", { ascending: false });
 
         if (customerData) {
           setCustomers(customerData);
@@ -109,15 +136,15 @@ export function CustomerInsightsTab({ restaurantId, summary, language }: Custome
 
         // Fetch acquisition source data
         const { data: acquisitionData } = await supabase
-          .from('customer_acquisition_source')
-          .select('*')
-          .eq('restaurant_id', restaurantId);
+          .from("customer_acquisition_source")
+          .select("*")
+          .eq("restaurant_id", restaurantId);
 
         if (acquisitionData) {
           setAcquisitionData(acquisitionData);
         }
       } catch (error) {
-        console.error('Error fetching customer data:', error);
+        console.error("Error fetching customer data:", error);
       } finally {
         setLoading(false);
       }
@@ -147,30 +174,38 @@ export function CustomerInsightsTab({ restaurantId, summary, language }: Custome
   // Calculate RFM segmentation stats
   const rfmSegments = customerInsights?.rfm_segmentation;
   const champions = rfmSegments?.Champions || 0;
-  const loyalCustomers = rfmSegments?.['Loyal Customers'] || 0;
-  const potentialLoyalists = rfmSegments?.['Potential Loyalists'] || 0;
-  const atRiskSegment = rfmSegments?.['At Risk'] || 0;
-  const cantLoseThem = rfmSegments?.['Cant Lose Them'] || 0;
+  const loyalCustomers = rfmSegments?.["Loyal Customers"] || 0;
+  const potentialLoyalists = rfmSegments?.["Potential Loyalists"] || 0;
+  const atRiskSegment = rfmSegments?.["At Risk"] || 0;
+  const cantLoseThem = rfmSegments?.["Cant Lose Them"] || 0;
   const hibernating = rfmSegments?.Hibernating || 0;
-  const newCustomers = rfmSegments?.['New Customers'] || 0;
+  const newCustomers = rfmSegments?.["New Customers"] || 0;
   const promising = rfmSegments?.Promising || 0;
 
   // Calculate acquisition stats
-  const referralAcquired = acquisitionData.filter(a => a.acquisition_source === 'referral').length;
-  const walkInAcquired = acquisitionData.filter(a => a.acquisition_source === 'walk_in').length;
-  const referralPercentage = acquisitionData.length > 0 
-    ? ((referralAcquired / acquisitionData.length) * 100).toFixed(1) 
-    : '0';
+  const referralAcquired = acquisitionData.filter(
+    (a) => a.acquisition_source === "referral"
+  ).length;
+  const walkInAcquired = acquisitionData.filter(
+    (a) => a.acquisition_source === "walk_in"
+  ).length;
+  const referralPercentage =
+    acquisitionData.length > 0
+      ? ((referralAcquired / acquisitionData.length) * 100).toFixed(1)
+      : "0";
 
   // Top customers by spend
   const topCustomers = customers.slice(0, 10);
 
   // At-risk customers (based on RFM)
-  const atRiskList = customers.filter(c => 
-    c.rfm_segment === 'At Risk' || 
-    c.rfm_segment === 'Cant Lose Them' || 
-    c.rfm_segment === 'Hibernating'
-  ).slice(0, 10);
+  const atRiskList = customers
+    .filter(
+      (c) =>
+        c.rfm_segment === "At Risk" ||
+        c.rfm_segment === "Cant Lose Them" ||
+        c.rfm_segment === "Hibernating"
+    )
+    .slice(0, 10);
 
   return (
     <div className="space-y-4 sm:space-y-6">
@@ -182,17 +217,22 @@ export function CustomerInsightsTab({ restaurantId, summary, language }: Custome
             <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">
               <Users className="h-4 w-4" />
               {t.ownerDashboard.customerInsights.totalCustomers}
-              <InfoButton 
+              <InfoButton
                 title={t.ownerDashboard.customerInsights.totalCustomers}
-                description={t.ownerDashboard.customerInsights.totalCustomersInfo}
+                description={
+                  t.ownerDashboard.customerInsights.totalCustomersInfo
+                }
               />
             </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="space-y-1">
-              <p className="text-3xl font-bold text-foreground">{totalCustomers}</p>
+              <p className="text-2xl md:text-3xl font-bold text-foreground">
+                {totalCustomers}
+              </p>
               <p className="text-xs text-muted-foreground">
-                {activeCustomers} {t.ownerDashboard.customerInsights.active} ({((activeCustomers / totalCustomers) * 100).toFixed(0)}%)
+                {activeCustomers} {t.ownerDashboard.customerInsights.active} (
+                {((activeCustomers / totalCustomers) * 100).toFixed(0)}%)
               </p>
             </div>
           </CardContent>
@@ -204,20 +244,28 @@ export function CustomerInsightsTab({ restaurantId, summary, language }: Custome
             <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">
               <UserPlus className="h-4 w-4" />
               {t.ownerDashboard.customerInsights.activeCustomers}
-              <InfoButton 
+              <InfoButton
                 title={t.ownerDashboard.customerInsights.activeCustomers}
-                description={t.ownerDashboard.customerInsights.activeCustomersInfo}
+                description={
+                  t.ownerDashboard.customerInsights.activeCustomersInfo
+                }
               />
             </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="space-y-1">
-              <p className="text-3xl font-bold text-green-600">{activeCustomers}</p>
+              <p className="text-2xl md:text-3xl font-bold text-green-600">
+                {activeCustomers}
+              </p>
               <p className="text-xs text-muted-foreground">
-                {language === 'zh' 
-                  ? `(${t.ownerDashboard.customerInsights.ofTotal} ${((activeCustomers / totalCustomers) * 100).toFixed(0)}%)`
-                  : `(${((activeCustomers / totalCustomers) * 100).toFixed(0)}% ${t.ownerDashboard.customerInsights.ofTotal})`
-                }
+                {language === "zh"
+                  ? `(${t.ownerDashboard.customerInsights.ofTotal} ${(
+                      (activeCustomers / totalCustomers) *
+                      100
+                    ).toFixed(0)}%)`
+                  : `(${((activeCustomers / totalCustomers) * 100).toFixed(
+                      0
+                    )}% ${t.ownerDashboard.customerInsights.ofTotal})`}
               </p>
             </div>
           </CardContent>
@@ -229,7 +277,7 @@ export function CustomerInsightsTab({ restaurantId, summary, language }: Custome
             <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">
               <UserPlus className="h-4 w-4" />
               {t.ownerDashboard.customerInsights.acquisition}
-              <InfoButton 
+              <InfoButton
                 title={t.ownerDashboard.customerInsights.acquisition}
                 description={t.ownerDashboard.customerInsights.fromReferrals}
               />
@@ -237,9 +285,13 @@ export function CustomerInsightsTab({ restaurantId, summary, language }: Custome
           </CardHeader>
           <CardContent>
             <div className="space-y-1">
-              <p className="text-3xl font-bold text-green-600">{referralPercentage}%</p>
+              <p className="text-2xl md:text-3xl font-bold text-green-600">
+                {referralPercentage}%
+              </p>
               <p className="text-xs text-muted-foreground">
-                {t.ownerDashboard.customerInsights.fromReferrals} ({referralAcquired} {t.ownerDashboard.customerInsights.customers})
+                {t.ownerDashboard.customerInsights.fromReferrals} (
+                {referralAcquired} {t.ownerDashboard.customerInsights.customers}
+                )
               </p>
             </div>
           </CardContent>
@@ -251,18 +303,22 @@ export function CustomerInsightsTab({ restaurantId, summary, language }: Custome
             <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">
               <TrendingUp className="h-4 w-4" />
               {t.ownerDashboard.customerInsights.avgLifetimeValue}
-              <InfoButton 
+              <InfoButton
                 title={t.ownerDashboard.customerInsights.avgLifetimeValue}
-                description={t.ownerDashboard.customerInsights.avgLifetimeValueInfo}
+                description={
+                  t.ownerDashboard.customerInsights.avgLifetimeValueInfo
+                }
               />
             </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="space-y-1">
-              <p className="text-3xl font-bold text-blue-600">
+              <p className="text-2xl md:text-3xl font-bold text-blue-600">
                 RM {avgLifetimeValue.toFixed(2)}
               </p>
-              <p className="text-xs text-muted-foreground">{t.ownerDashboard.customerInsights.perCustomer}</p>
+              <p className="text-xs text-muted-foreground">
+                {t.ownerDashboard.customerInsights.perCustomer}
+              </p>
             </div>
           </CardContent>
         </Card>
@@ -273,20 +329,28 @@ export function CustomerInsightsTab({ restaurantId, summary, language }: Custome
             <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">
               <AlertTriangle className="h-4 w-4" />
               {t.ownerDashboard.customerInsights.atRiskCustomers}
-              <InfoButton 
+              <InfoButton
                 title={t.ownerDashboard.customerInsights.atRiskCustomers}
-                description={t.ownerDashboard.customerInsights.atRiskCustomersInfo}
+                description={
+                  t.ownerDashboard.customerInsights.atRiskCustomersInfo
+                }
               />
             </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="space-y-1">
-              <p className="text-3xl font-bold text-orange-600">{atRiskCustomers}</p>
+              <p className="text-2xl md:text-3xl font-bold text-orange-600">
+                {atRiskCustomers}
+              </p>
               <p className="text-xs text-muted-foreground">
-                {language === 'zh'
-                  ? `${t.ownerDashboard.customerInsights.ofTotal} ${((atRiskCustomers / totalCustomers) * 100).toFixed(1)}%`
-                  : `${((atRiskCustomers / totalCustomers) * 100).toFixed(1)}% ${t.ownerDashboard.customerInsights.ofTotal}`
-                }
+                {language === "zh"
+                  ? `${t.ownerDashboard.customerInsights.ofTotal} ${(
+                      (atRiskCustomers / totalCustomers) *
+                      100
+                    ).toFixed(1)}%`
+                  : `${((atRiskCustomers / totalCustomers) * 100).toFixed(
+                      1
+                    )}% ${t.ownerDashboard.customerInsights.ofTotal}`}
               </p>
             </div>
           </CardContent>
@@ -296,12 +360,14 @@ export function CustomerInsightsTab({ restaurantId, summary, language }: Custome
       {/* RFM Customer Segmentation */}
       <Card className="border-border/50">
         <CardHeader>
-          <CardTitle className="text-sm sm:text-base flex items-center gap-2">
+          <CardTitle className="text-base font-semibold flex items-center gap-2">
             <Target className="h-5 w-5" />
             {t.ownerDashboard.customerInsights.rfmSegmentation}
-            <InfoButton 
+            <InfoButton
               title={t.ownerDashboard.customerInsights.rfmSegmentation}
-              description={t.ownerDashboard.customerInsights.rfmSegmentationInfo}
+              description={
+                t.ownerDashboard.customerInsights.rfmSegmentationInfo
+              }
             />
           </CardTitle>
           <p className="text-xs text-muted-foreground mt-1">
@@ -311,83 +377,123 @@ export function CustomerInsightsTab({ restaurantId, summary, language }: Custome
         <CardContent>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
             {/* Champions */}
-            <div 
-              onClick={() => handleSegmentClick('Champions')}
+            <div
+              onClick={() => handleSegmentClick("Champions")}
               className="p-3 rounded-lg bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 cursor-pointer shadow-md hover:shadow-sm active:shadow-none transition-shadow"
             >
-              <p className="text-xs font-medium text-muted-foreground mb-1">{t.ownerDashboard.customerInsights.champions}</p>
+              <p className="text-xs font-medium text-muted-foreground mb-1">
+                {t.ownerDashboard.customerInsights.champions}
+              </p>
               <p className="text-2xl font-bold text-yellow-600">{champions}</p>
-              <p className="text-xs text-muted-foreground mt-1">{t.ownerDashboard.customerInsights.championsDesc}</p>
+              <p className="text-xs text-muted-foreground mt-1">
+                {t.ownerDashboard.customerInsights.championsDesc}
+              </p>
             </div>
 
             {/* Loyal Customers */}
-            <div 
-              onClick={() => handleSegmentClick('Loyal Customers')}
+            <div
+              onClick={() => handleSegmentClick("Loyal Customers")}
               className="p-3 rounded-lg bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 cursor-pointer shadow-md hover:shadow-sm active:shadow-none transition-shadow"
             >
-              <p className="text-xs font-medium text-muted-foreground mb-1">{t.ownerDashboard.customerInsights.loyal}</p>
-              <p className="text-2xl font-bold text-blue-600">{loyalCustomers}</p>
-              <p className="text-xs text-muted-foreground mt-1">{t.ownerDashboard.customerInsights.loyalDesc}</p>
+              <p className="text-xs font-medium text-muted-foreground mb-1">
+                {t.ownerDashboard.customerInsights.loyal}
+              </p>
+              <p className="text-2xl font-bold text-blue-600">
+                {loyalCustomers}
+              </p>
+              <p className="text-xs text-muted-foreground mt-1">
+                {t.ownerDashboard.customerInsights.loyalDesc}
+              </p>
             </div>
 
             {/* Potential Loyalists */}
-            <div 
-              onClick={() => handleSegmentClick('Potential Loyalists')}
+            <div
+              onClick={() => handleSegmentClick("Potential Loyalists")}
               className="p-3 rounded-lg bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 cursor-pointer shadow-md hover:shadow-sm active:shadow-none transition-shadow"
             >
-              <p className="text-xs font-medium text-muted-foreground mb-1">{t.ownerDashboard.customerInsights.potential}</p>
-              <p className="text-2xl font-bold text-green-600">{potentialLoyalists}</p>
-              <p className="text-xs text-muted-foreground mt-1">{t.ownerDashboard.customerInsights.potentialDesc}</p>
+              <p className="text-xs font-medium text-muted-foreground mb-1">
+                {t.ownerDashboard.customerInsights.potential}
+              </p>
+              <p className="text-2xl font-bold text-green-600">
+                {potentialLoyalists}
+              </p>
+              <p className="text-xs text-muted-foreground mt-1">
+                {t.ownerDashboard.customerInsights.potentialDesc}
+              </p>
             </div>
 
             {/* New Customers */}
-            <div 
-              onClick={() => handleSegmentClick('New Customers')}
+            <div
+              onClick={() => handleSegmentClick("New Customers")}
               className="p-3 rounded-lg bg-purple-50 dark:bg-purple-900/20 border border-purple-200 dark:border-purple-800 cursor-pointer shadow-md hover:shadow-sm active:shadow-none transition-shadow"
             >
-              <p className="text-xs font-medium text-muted-foreground mb-1">{t.ownerDashboard.customerInsights.newCustomers}</p>
-              <p className="text-2xl font-bold text-purple-600">{newCustomers}</p>
-              <p className="text-xs text-muted-foreground mt-1">{t.ownerDashboard.customerInsights.newCustomersDesc}</p>
+              <p className="text-xs font-medium text-muted-foreground mb-1">
+                {t.ownerDashboard.customerInsights.newCustomers}
+              </p>
+              <p className="text-2xl font-bold text-purple-600">
+                {newCustomers}
+              </p>
+              <p className="text-xs text-muted-foreground mt-1">
+                {t.ownerDashboard.customerInsights.newCustomersDesc}
+              </p>
             </div>
 
             {/* At Risk */}
-            <div 
-              onClick={() => handleSegmentClick('At Risk')}
+            <div
+              onClick={() => handleSegmentClick("At Risk")}
               className="p-3 rounded-lg bg-orange-50 dark:bg-orange-900/20 border border-orange-200 dark:border-orange-800 cursor-pointer shadow-md hover:shadow-sm active:shadow-none transition-shadow"
             >
-              <p className="text-xs font-medium text-muted-foreground mb-1">{t.ownerDashboard.customerInsights.atRisk}</p>
-              <p className="text-2xl font-bold text-orange-600">{atRiskSegment}</p>
-              <p className="text-xs text-muted-foreground mt-1">{t.ownerDashboard.customerInsights.atRiskDesc}</p>
+              <p className="text-xs font-medium text-muted-foreground mb-1">
+                {t.ownerDashboard.customerInsights.atRisk}
+              </p>
+              <p className="text-2xl font-bold text-orange-600">
+                {atRiskSegment}
+              </p>
+              <p className="text-xs text-muted-foreground mt-1">
+                {t.ownerDashboard.customerInsights.atRiskDesc}
+              </p>
             </div>
 
             {/* Can't Lose Them */}
-            <div 
-              onClick={() => handleSegmentClick('Cant Lose Them')}
+            <div
+              onClick={() => handleSegmentClick("Cant Lose Them")}
               className="p-3 rounded-lg bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 cursor-pointer shadow-md hover:shadow-sm active:shadow-none transition-shadow"
             >
-              <p className="text-xs font-medium text-muted-foreground mb-1">{t.ownerDashboard.customerInsights.cantLose}</p>
+              <p className="text-xs font-medium text-muted-foreground mb-1">
+                {t.ownerDashboard.customerInsights.cantLose}
+              </p>
               <p className="text-2xl font-bold text-red-600">{cantLoseThem}</p>
-              <p className="text-xs text-muted-foreground mt-1">{t.ownerDashboard.customerInsights.cantLoseDesc}</p>
+              <p className="text-xs text-muted-foreground mt-1">
+                {t.ownerDashboard.customerInsights.cantLoseDesc}
+              </p>
             </div>
 
             {/* Hibernating */}
-            <div 
-              onClick={() => handleSegmentClick('Hibernating')}
+            <div
+              onClick={() => handleSegmentClick("Hibernating")}
               className="p-3 rounded-lg bg-gray-50 dark:bg-gray-900/20 border border-gray-200 dark:border-gray-800 cursor-pointer shadow-md hover:shadow-sm active:shadow-none transition-shadow"
             >
-              <p className="text-xs font-medium text-muted-foreground mb-1">{t.ownerDashboard.customerInsights.hibernating}</p>
+              <p className="text-xs font-medium text-muted-foreground mb-1">
+                {t.ownerDashboard.customerInsights.hibernating}
+              </p>
               <p className="text-2xl font-bold text-gray-600">{hibernating}</p>
-              <p className="text-xs text-muted-foreground mt-1">{t.ownerDashboard.customerInsights.hibernatingDesc}</p>
+              <p className="text-xs text-muted-foreground mt-1">
+                {t.ownerDashboard.customerInsights.hibernatingDesc}
+              </p>
             </div>
 
             {/* Promising */}
-            <div 
-              onClick={() => handleSegmentClick('Promising')}
+            <div
+              onClick={() => handleSegmentClick("Promising")}
               className="p-3 rounded-lg bg-teal-50 dark:bg-teal-900/20 border border-teal-200 dark:border-teal-800 cursor-pointer shadow-md hover:shadow-sm active:shadow-none transition-shadow"
             >
-              <p className="text-xs font-medium text-muted-foreground mb-1">{t.ownerDashboard.customerInsights.promising}</p>
+              <p className="text-xs font-medium text-muted-foreground mb-1">
+                {t.ownerDashboard.customerInsights.promising}
+              </p>
               <p className="text-2xl font-bold text-teal-600">{promising}</p>
-              <p className="text-xs text-muted-foreground mt-1">{t.ownerDashboard.customerInsights.promisingDesc}</p>
+              <p className="text-xs text-muted-foreground mt-1">
+                {t.ownerDashboard.customerInsights.promisingDesc}
+              </p>
             </div>
           </div>
         </CardContent>
@@ -396,11 +502,13 @@ export function CustomerInsightsTab({ restaurantId, summary, language }: Custome
       {/* Acquisition Sources */}
       <Card className="border-border/50">
         <CardHeader>
-          <CardTitle className="text-sm sm:text-base flex items-center gap-2">
+          <CardTitle className="text-base font-semibold flex items-center gap-2">
             <PieChart className="h-5 w-5" />
             {t.ownerDashboard.customerInsights.customerAcquisitionSources}
-            <InfoButton 
-              title={t.ownerDashboard.customerInsights.customerAcquisitionSources}
+            <InfoButton
+              title={
+                t.ownerDashboard.customerInsights.customerAcquisitionSources
+              }
               description={t.ownerDashboard.customerInsights.fromReferrals}
             />
           </CardTitle>
@@ -408,23 +516,33 @@ export function CustomerInsightsTab({ restaurantId, summary, language }: Custome
         <CardContent>
           <div className="grid grid-cols-2 gap-4">
             <div className="p-4 rounded-lg bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800">
-              <p className="text-sm font-medium text-muted-foreground mb-2">{t.ownerDashboard.customerInsights.referrals}</p>
-              <p className="text-3xl font-bold text-green-600">{referralAcquired}</p>
+              <p className="text-sm font-medium text-muted-foreground mb-2">
+                {t.ownerDashboard.customerInsights.referrals}
+              </p>
+              <p className="text-3xl font-bold text-green-600">
+                {referralAcquired}
+              </p>
               <p className="text-xs text-muted-foreground mt-1">
-                {language === 'zh'
+                {language === "zh"
                   ? `${t.ownerDashboard.customerInsights.ofTotal} ${referralPercentage}%`
-                  : `${referralPercentage}% ${t.ownerDashboard.customerInsights.ofTotal}`
-                }
+                  : `${referralPercentage}% ${t.ownerDashboard.customerInsights.ofTotal}`}
               </p>
             </div>
             <div className="p-4 rounded-lg bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800">
-              <p className="text-sm font-medium text-muted-foreground mb-2">{t.ownerDashboard.customerInsights.walkIns}</p>
-              <p className="text-3xl font-bold text-blue-600">{walkInAcquired}</p>
+              <p className="text-sm font-medium text-muted-foreground mb-2">
+                {t.ownerDashboard.customerInsights.walkIns}
+              </p>
+              <p className="text-3xl font-bold text-blue-600">
+                {walkInAcquired}
+              </p>
               <p className="text-xs text-muted-foreground mt-1">
-                {language === 'zh'
-                  ? `${t.ownerDashboard.customerInsights.ofTotal} ${(100 - parseFloat(referralPercentage)).toFixed(1)}%`
-                  : `${(100 - parseFloat(referralPercentage)).toFixed(1)}% ${t.ownerDashboard.customerInsights.ofTotal}`
-                }
+                {language === "zh"
+                  ? `${t.ownerDashboard.customerInsights.ofTotal} ${(
+                      100 - parseFloat(referralPercentage)
+                    ).toFixed(1)}%`
+                  : `${(100 - parseFloat(referralPercentage)).toFixed(1)}% ${
+                      t.ownerDashboard.customerInsights.ofTotal
+                    }`}
               </p>
             </div>
           </div>
@@ -434,10 +552,10 @@ export function CustomerInsightsTab({ restaurantId, summary, language }: Custome
       {/* Top Customers */}
       <Card className="border-border/50">
         <CardHeader>
-          <CardTitle className="text-sm sm:text-base flex items-center gap-2">
+          <CardTitle className="text-base font-semibold flex items-center gap-2">
             <Award className="h-5 w-5" />
             {t.ownerDashboard.customerInsights.topCustomers}
-            <InfoButton 
+            <InfoButton
               title={t.ownerDashboard.customerInsights.topCustomers}
               description={t.ownerDashboard.customerInsights.topCustomersInfo}
             />
@@ -456,19 +574,29 @@ export function CustomerInsightsTab({ restaurantId, summary, language }: Custome
                   className="flex items-center justify-between p-3 rounded-lg bg-muted/50 hover:bg-muted transition-colors"
                 >
                   <div className="flex items-center gap-3">
-                    <div className={`
+                    <div
+                      className={`
                       w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm
-                      ${index === 0 ? 'bg-yellow-100 text-yellow-700' :
-                        index === 1 ? 'bg-gray-100 text-gray-700' :
-                        index === 2 ? 'bg-orange-100 text-orange-700' :
-                        'bg-muted text-muted-foreground'}
-                    `}>
+                      ${
+                        index === 0
+                          ? "bg-yellow-100 text-yellow-700"
+                          : index === 1
+                          ? "bg-gray-100 text-gray-700"
+                          : index === 2
+                          ? "bg-orange-100 text-orange-700"
+                          : "bg-muted text-muted-foreground"
+                      }
+                    `}
+                    >
                       {index + 1}
                     </div>
                     <div>
-                      <p className="font-semibold text-sm">{customer.full_name}</p>
+                      <p className="font-semibold text-sm">
+                        {customer.full_name}
+                      </p>
                       <p className="text-xs text-muted-foreground">
-                        {customer.total_visits} {t.ownerDashboard.customerInsights.visits}
+                        {customer.total_visits}{" "}
+                        {t.ownerDashboard.customerInsights.visits}
                       </p>
                     </div>
                   </div>
@@ -491,10 +619,10 @@ export function CustomerInsightsTab({ restaurantId, summary, language }: Custome
       {atRiskList.length > 0 && (
         <Card className="border-border/50 border-orange-200 dark:border-orange-900">
           <CardHeader>
-            <CardTitle className="text-sm sm:text-base flex items-center gap-2 text-orange-600">
+            <CardTitle className="text-base font-semibold flex items-center gap-2 text-orange-600">
               <AlertTriangle className="h-5 w-5" />
               {t.ownerDashboard.customerInsights.atRiskList}
-              <InfoButton 
+              <InfoButton
                 title={t.ownerDashboard.customerInsights.atRiskList}
                 description={t.ownerDashboard.customerInsights.atRiskListInfo}
               />
@@ -508,9 +636,14 @@ export function CustomerInsightsTab({ restaurantId, summary, language }: Custome
                   className="flex items-center justify-between p-3 rounded-lg bg-orange-50 dark:bg-orange-900/20 border border-orange-200 dark:border-orange-800"
                 >
                   <div>
-                    <p className="font-semibold text-sm">{customer.full_name}</p>
+                    <p className="font-semibold text-sm">
+                      {customer.full_name}
+                    </p>
                     <p className="text-xs text-muted-foreground">
-                      {t.ownerDashboard.customerInsights.lastVisit}: {customer.days_since_last_visit} {t.ownerDashboard.customerInsights.daysAgo} • {translateSegment(customer.rfm_segment)}
+                      {t.ownerDashboard.customerInsights.lastVisit}:{" "}
+                      {customer.days_since_last_visit}{" "}
+                      {t.ownerDashboard.customerInsights.daysAgo} •{" "}
+                      {translateSegment(customer.rfm_segment)}
                     </p>
                   </div>
                   <div className="text-right">
@@ -518,7 +651,8 @@ export function CustomerInsightsTab({ restaurantId, summary, language }: Custome
                       RM {customer.total_spent.toFixed(2)}
                     </p>
                     <p className="text-xs text-muted-foreground">
-                      {customer.total_visits} {t.ownerDashboard.customerInsights.visits}
+                      {customer.total_visits}{" "}
+                      {t.ownerDashboard.customerInsights.visits}
                     </p>
                   </div>
                 </div>
@@ -542,8 +676,14 @@ export function CustomerInsightsTab({ restaurantId, summary, language }: Custome
 
       {/* Customer List Modal */}
       {showModal && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" onClick={() => setShowModal(false)}>
-          <div className="bg-background rounded-lg shadow-xl max-w-2xl w-full max-h-[80vh] overflow-hidden relative" onClick={(e) => e.stopPropagation()}>
+        <div
+          className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4"
+          onClick={() => setShowModal(false)}
+        >
+          <div
+            className="bg-background rounded-lg shadow-xl max-w-2xl w-full max-h-[80vh] overflow-hidden relative"
+            onClick={(e) => e.stopPropagation()}
+          >
             {/* Close Button - Positioned Absolutely */}
             <Button
               variant="ghost"
@@ -556,8 +696,12 @@ export function CustomerInsightsTab({ restaurantId, summary, language }: Custome
 
             {/* Modal Header */}
             <div className="p-4 pr-12 border-b border-border">
-              <h2 className="text-lg font-semibold">{translateSegment(selectedSegment)}</h2>
-              <p className="text-sm text-muted-foreground mt-1">{getSegmentInfo(selectedSegment)}</p>
+              <h2 className="text-lg font-semibold">
+                {translateSegment(selectedSegment)}
+              </h2>
+              <p className="text-sm text-muted-foreground mt-1">
+                {getSegmentInfo(selectedSegment)}
+              </p>
             </div>
 
             {/* Modal Content */}
@@ -580,10 +724,15 @@ export function CustomerInsightsTab({ restaurantId, summary, language }: Custome
                       className="flex items-center justify-between p-4 rounded-lg bg-muted/50 hover:bg-muted transition-colors"
                     >
                       <div>
-                        <p className="font-semibold text-sm">{customer.full_name}</p>
+                        <p className="font-semibold text-sm">
+                          {customer.full_name}
+                        </p>
                         <p className="text-xs text-muted-foreground">
-                          {customer.total_visits} {t.ownerDashboard.customerInsights.visits} • 
-                          {t.ownerDashboard.customerInsights.lastVisit}: {customer.days_since_last_visit} {t.ownerDashboard.customerInsights.daysAgo}
+                          {customer.total_visits}{" "}
+                          {t.ownerDashboard.customerInsights.visits} •
+                          {t.ownerDashboard.customerInsights.lastVisit}:{" "}
+                          {customer.days_since_last_visit}{" "}
+                          {t.ownerDashboard.customerInsights.daysAgo}
                         </p>
                       </div>
                       <div className="text-right">

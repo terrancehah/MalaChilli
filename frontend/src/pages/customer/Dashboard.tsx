@@ -1,32 +1,32 @@
-import { useState, useEffect } from 'react';
-import { useAuth } from '../../contexts/AuthContext';
-import { useNavigate } from 'react-router-dom';
-import { supabase } from '../../lib/supabase';
-import { Card, CardContent } from '../../components/ui/card';
-import { Button } from '../../components/ui/button';
+import { useState, useEffect } from "react";
+import { useAuth } from "../../contexts/AuthContext";
+import { useNavigate } from "react-router-dom";
+import { supabase } from "../../lib/supabase";
+import { Card, CardContent } from "../../components/ui/card";
+import { Button } from "../../components/ui/button";
 import {
   Info,
   QrCode as QrCodeIcon,
   Settings,
-  TrendingUp, 
-  Users, 
+  TrendingUp,
+  Users,
   Gift,
   ArrowDown,
   ArrowUp,
-} from 'lucide-react';
-import { getTranslation } from '../../translations';
-import type { Language } from '../../translations';
+} from "lucide-react";
+import { getTranslation } from "../../translations";
+import type { Language } from "../../translations";
 import {
   QRCodeModal,
   InfoModal,
   SettingsPanel,
   ShareBottomSheet,
   RestaurantCard,
-} from '../../components/customer';
-import { TransactionDetailSheet } from '../../components/customer/TransactionDetailSheet';
-import { DashboardHeader } from '../../components/shared/DashboardHeader';
-import { StatsCard } from '../../components/shared/StatsCard';
-import { ListSkeleton } from '../../components/ui/skeleton';
+} from "../../components/customer";
+import { TransactionDetailSheet } from "../../components/customer/TransactionDetailSheet";
+import { DashboardHeader } from "../../components/shared/DashboardHeader";
+import { StatsCard } from "../../components/shared/StatsCard";
+import { ListSkeleton } from "../../components/ui/skeleton";
 
 // TypeScript interfaces
 interface RestaurantCode {
@@ -48,18 +48,17 @@ interface RestaurantCode {
 
 // Helper function to calculate time ago (Malaysia timezone) moved inside component
 
-
 export default function CustomerDashboard() {
   const { user, signOut, loading, updateProfile, deleteAccount } = useAuth();
   const navigate = useNavigate();
-  
+
   // Modal states
   const [showQR, setShowQR] = useState(false);
   const [showInfoModal, setShowInfoModal] = useState(false);
   const [showCurrencyInfoModal, setShowCurrencyInfoModal] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const [showShareSheet, setShowShareSheet] = useState(false);
-  
+
   // Data states
   const [restaurantCodes, setRestaurantCodes] = useState<RestaurantCode[]>([]);
   const [loadingCodes, setLoadingCodes] = useState(true);
@@ -67,8 +66,8 @@ export default function CustomerDashboard() {
   const [totalRedeemed, setTotalRedeemed] = useState(0);
   const [totalReferred, setTotalReferred] = useState(0);
   const [recentTransactions, setRecentTransactions] = useState<any[]>([]);
-  const [sortBy, setSortBy] = useState<'recent' | 'balance'>('recent');
-  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
+  const [sortBy, setSortBy] = useState<"recent" | "balance">("recent");
+  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
   const [selectedRestaurant, setSelectedRestaurant] = useState<{
     name: string;
     slug: string;
@@ -76,30 +75,37 @@ export default function CustomerDashboard() {
     balance: number;
     totalSpent?: number;
   } | null>(null);
-  const [selectedTransaction, setSelectedTransaction] = useState<any | null>(null);
+  const [selectedTransaction, setSelectedTransaction] = useState<any | null>(
+    null
+  );
   const [showTransactionSheet, setShowTransactionSheet] = useState(false);
-  const [language, setLanguage] = useState<Language>('en');
-  
+  const [language, setLanguage] = useState<Language>("en");
+
   // Get translations based on current language
   const t = getTranslation(language);
 
   // Helper function to calculate time ago (Malaysia timezone)
   const getTimeAgo = (dateString: string): string => {
     const date = new Date(dateString);
-    const malaysiaDate = new Date(date.getTime() + (8 * 60 * 60 * 1000));
-    const malaysiaNow = new Date(new Date().getTime() + (8 * 60 * 60 * 1000));
+    const malaysiaDate = new Date(date.getTime() + 8 * 60 * 60 * 1000);
+    const malaysiaNow = new Date(new Date().getTime() + 8 * 60 * 60 * 1000);
     const diffInMs = malaysiaNow.getTime() - malaysiaDate.getTime();
     const diffInDays = Math.floor(diffInMs / (1000 * 60 * 60 * 24));
-    
+
     if (diffInDays === 0) return t.timeAgo.today;
     if (diffInDays === 1) return t.timeAgo.yesterday;
-    if (diffInDays < 7) return t.timeAgo.daysAgo.replace('{count}', diffInDays.toString());
+    if (diffInDays < 7)
+      return t.timeAgo.daysAgo.replace("{count}", diffInDays.toString());
     if (diffInDays < 30) {
       const weeks = Math.floor(diffInDays / 7);
-      return weeks === 1 ? t.timeAgo.weekAgo : t.timeAgo.weeksAgo.replace('{count}', weeks.toString());
+      return weeks === 1
+        ? t.timeAgo.weekAgo
+        : t.timeAgo.weeksAgo.replace("{count}", weeks.toString());
     }
     const months = Math.floor(diffInDays / 30);
-    return months === 1 ? t.timeAgo.monthAgo : t.timeAgo.monthsAgo.replace('{count}', months.toString());
+    return months === 1
+      ? t.timeAgo.monthAgo
+      : t.timeAgo.monthsAgo.replace("{count}", months.toString());
   };
 
   // Info modal content constructed from translations
@@ -107,7 +113,7 @@ export default function CustomerDashboard() {
     { text: t.dashboardInfo.restaurantInfo.item1 },
     { text: t.dashboardInfo.restaurantInfo.item2 },
     { text: t.dashboardInfo.restaurantInfo.item3 },
-    { text: t.dashboardInfo.restaurantInfo.item4 }
+    { text: t.dashboardInfo.restaurantInfo.item4 },
   ];
 
   const currencyInfoItems = [
@@ -115,25 +121,25 @@ export default function CustomerDashboard() {
     { text: t.dashboardInfo.currencyInfo.item2 },
     { text: t.dashboardInfo.currencyInfo.item3 },
     { text: t.dashboardInfo.currencyInfo.item4 },
-    { text: t.dashboardInfo.currencyInfo.item5, color: 'green' as const },
-    { text: t.dashboardInfo.currencyInfo.item6, color: 'primary' as const }
+    { text: t.dashboardInfo.currencyInfo.item5, color: "green" as const },
+    { text: t.dashboardInfo.currencyInfo.item6, color: "primary" as const },
   ];
 
   useEffect(() => {
     if (!loading && !user) {
-      navigate('/login');
+      navigate("/login");
     }
   }, [loading, user, navigate]);
 
   // Prevent body scroll when bottom sheet is open
   useEffect(() => {
     if (showShareSheet || showTransactionSheet) {
-      document.body.style.overflow = 'hidden';
+      document.body.style.overflow = "hidden";
     } else {
-      document.body.style.overflow = 'unset';
+      document.body.style.overflow = "unset";
     }
     return () => {
-      document.body.style.overflow = 'unset';
+      document.body.style.overflow = "unset";
     };
   }, [showShareSheet, showTransactionSheet]);
 
@@ -141,42 +147,46 @@ export default function CustomerDashboard() {
   useEffect(() => {
     const fetchData = async () => {
       if (!user) return;
-      
+
       setLoadingCodes(true);
       try {
         // Fetch visited restaurants
         const { data: visitedData, error: visitedError } = await supabase
-          .from('customer_restaurant_history')
-          .select(`
+          .from("customer_restaurant_history")
+          .select(
+            `
             restaurant_id,
             first_visit_date,
             last_visit_date,
             total_visits,
             total_spent,
             restaurants (name, slug)
-          `)
-          .eq('customer_id', user.id);
-        
+          `
+          )
+          .eq("customer_id", user.id);
+
         if (visitedError) throw visitedError;
-        
+
         // Fetch restaurant-specific virtual currency balances
         const { data: walletData, error: walletError } = await supabase
-          .from('customer_wallet_balance_by_restaurant')
-          .select('*')
-          .eq('user_id', user.id);
-        
+          .from("customer_wallet_balance_by_restaurant")
+          .select("*")
+          .eq("user_id", user.id);
+
         if (walletError) throw walletError;
-        
+
         // Fetch total referred count (count unique downlines where user is upline)
         const { data: referralData, error: referralError } = await supabase
-          .from('referrals')
-          .select('downline_id')
-          .eq('upline_id', user.id);
-        
+          .from("referrals")
+          .select("downline_id")
+          .eq("upline_id", user.id);
+
         if (referralError) throw referralError;
-        const uniqueReferrals = new Set((referralData || []).map(r => r.downline_id)).size;
+        const uniqueReferrals = new Set(
+          (referralData || []).map((r) => r.downline_id)
+        ).size;
         setTotalReferred(uniqueReferrals);
-        
+
         // Create wallet balance map by restaurant_id (restaurant-specific VC)
         const walletMap = new Map();
         (walletData || []).forEach((wallet: any) => {
@@ -186,7 +196,7 @@ export default function CustomerDashboard() {
             redeemed: parseFloat(wallet.total_redeemed) || 0,
           });
         });
-        
+
         // Create visit history map
         const visitHistoryMap = new Map();
         (visitedData || []).forEach((item: any) => {
@@ -197,54 +207,69 @@ export default function CustomerDashboard() {
             total_spent: item.total_spent,
           });
         });
-        
+
         // Fetch existing referral codes
         const { data: codesData, error: codesError } = await supabase
-          .from('user_restaurant_referral_codes')
-          .select(`
+          .from("user_restaurant_referral_codes")
+          .select(
+            `
             id,
             restaurant_id,
             referral_code,
             restaurants (name, slug)
-          `)
-          .eq('user_id', user.id)
-          .eq('is_active', true);
-        
+          `
+          )
+          .eq("user_id", user.id)
+          .eq("is_active", true);
+
         if (codesError) throw codesError;
-        
+
         // Transform and merge data with VC balances
-        const transformedCodes: RestaurantCode[] = (codesData || []).map((item: any) => {
-          const visitInfo = visitHistoryMap.get(item.restaurant_id);
-          const walletInfo = walletMap.get(item.restaurant_id);
-          return {
-            id: item.id,
-            restaurant_id: item.restaurant_id,
-            referral_code: item.referral_code,
-            restaurant: item.restaurants || { name: 'Unknown', slug: 'unknown' },
-            total_visits: visitInfo?.total_visits,
-            first_visit_date: visitInfo?.first_visit_date,
-            last_visit_date: visitInfo?.last_visit_date,
-            balance: walletInfo?.balance,
-            earned: walletInfo?.earned,
-            redeemed: walletInfo?.redeemed,
-          };
-        });
-        
+        const transformedCodes: RestaurantCode[] = (codesData || []).map(
+          (item: any) => {
+            const visitInfo = visitHistoryMap.get(item.restaurant_id);
+            const walletInfo = walletMap.get(item.restaurant_id);
+            return {
+              id: item.id,
+              restaurant_id: item.restaurant_id,
+              referral_code: item.referral_code,
+              restaurant: item.restaurants || {
+                name: "Unknown",
+                slug: "unknown",
+              },
+              total_visits: visitInfo?.total_visits,
+              first_visit_date: visitInfo?.first_visit_date,
+              last_visit_date: visitInfo?.last_visit_date,
+              balance: walletInfo?.balance,
+              earned: walletInfo?.earned,
+              redeemed: walletInfo?.redeemed,
+            };
+          }
+        );
+
         setRestaurantCodes(transformedCodes);
-        
+
         // Calculate totals across all restaurants
-        const totalEarnedAmount = (walletData || []).reduce((sum: number, wallet: any) => 
-          sum + (parseFloat(wallet.total_earned) || 0), 0);
-        const totalRedeemedAmount = (walletData || []).reduce((sum: number, wallet: any) => 
-          sum + (parseFloat(wallet.total_redeemed) || 0), 0);
-        
+        const totalEarnedAmount = (walletData || []).reduce(
+          (sum: number, wallet: any) =>
+            sum + (parseFloat(wallet.total_earned) || 0),
+          0
+        );
+        const totalRedeemedAmount = (walletData || []).reduce(
+          (sum: number, wallet: any) =>
+            sum + (parseFloat(wallet.total_redeemed) || 0),
+          0
+        );
+
         setTotalEarned(totalEarnedAmount);
         setTotalRedeemed(totalRedeemedAmount);
-        
+
         // Fetch recent transactions with VC earned
-        const { data: transactionsData, error: transactionsError } = await supabase
-          .from('transactions')
-          .select(`
+        const { data: transactionsData, error: transactionsError } =
+          await supabase
+            .from("transactions")
+            .select(
+              `
             id,
             bill_amount,
             guaranteed_discount_amount,
@@ -259,49 +284,53 @@ export default function CustomerDashboard() {
                 slug
               )
             )
-          `)
-          .eq('customer_id', user.id)
-          .order('created_at', { ascending: false })
-          .limit(10);
-        
+          `
+            )
+            .eq("customer_id", user.id)
+            .order("created_at", { ascending: false })
+            .limit(10);
+
         if (transactionsError) throw transactionsError;
-        
+
         // Fetch VC earned from each transaction (from downlines)
         const transactionsWithVC = await Promise.all(
           (transactionsData || []).map(async (transaction: any) => {
             const { data: vcEarned } = await supabase
-              .from('virtual_currency_ledger')
-              .select('amount')
-              .eq('user_id', user.id)
-              .eq('related_transaction_id', transaction.id)
-              .eq('transaction_type', 'earn');
-            
-            const totalVCEarned = (vcEarned || []).reduce((sum, vc) => sum + parseFloat(vc.amount), 0);
-            
+              .from("virtual_currency_ledger")
+              .select("amount")
+              .eq("user_id", user.id)
+              .eq("related_transaction_id", transaction.id)
+              .eq("transaction_type", "earn");
+
+            const totalVCEarned = (vcEarned || []).reduce(
+              (sum, vc) => sum + parseFloat(vc.amount),
+              0
+            );
+
             return {
               ...transaction,
-              vc_earned: totalVCEarned
+              vc_earned: totalVCEarned,
             };
           })
         );
-        
+
         setRecentTransactions(transactionsWithVC);
       } catch (error) {
-        console.error('Error fetching data:', error);
+        console.error("Error fetching data:", error);
       } finally {
         setLoadingCodes(false);
       }
     };
-    
+
     fetchData();
   }, [user]);
 
   const handleSignOut = async () => {
     try {
       await signOut();
-      navigate('/login');
+      navigate("/login");
     } catch (error) {
-      console.error('Error signing out:', error);
+      console.error("Error signing out:", error);
     }
   };
 
@@ -311,7 +340,13 @@ export default function CustomerDashboard() {
     }
   };
 
-  const handleShare = (name: string, slug: string, code: string, balance: number = 0, totalSpent: number = 0) => {
+  const handleShare = (
+    name: string,
+    slug: string,
+    code: string,
+    balance: number = 0,
+    totalSpent: number = 0
+  ) => {
     setSelectedRestaurant({ name, slug, code, balance, totalSpent });
     setShowShareSheet(true);
   };
@@ -319,7 +354,9 @@ export default function CustomerDashboard() {
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
-        <div className="text-gray-600 dark:text-gray-400">{t.common.loading}</div>
+        <div className="text-gray-600 dark:text-gray-400">
+          {t.common.loading}
+        </div>
       </div>
     );
   }
@@ -332,7 +369,9 @@ export default function CustomerDashboard() {
     {
       label: t.stats.totalEarned,
       value: `RM ${totalEarned.toFixed(2)}`,
-      icon: <TrendingUp className="h-5 w-5 text-green-600 dark:text-green-400" />,
+      icon: (
+        <TrendingUp className="h-5 w-5 text-green-600 dark:text-green-400" />
+      ),
     },
     {
       label: t.stats.totalReferred,
@@ -347,7 +386,7 @@ export default function CustomerDashboard() {
   ];
 
   return (
-    <div className="min-h-screen bg-background pb-6">
+    <div className="min-h-screen pb-6">
       <DashboardHeader
         title={user.full_name || user.email}
         subtitle={t.profile.welcome}
@@ -382,7 +421,9 @@ export default function CustomerDashboard() {
             <div className="flex items-start justify-between mb-3">
               <div>
                 <div className="flex items-center gap-1 mb-1">
-                  <h2 className="text-lg font-bold text-foreground">{t.promoteRestaurants.title}</h2>
+                  <h2 className="text-xl font-bold text-foreground">
+                    {t.promoteRestaurants.title}
+                  </h2>
                   <Button
                     variant="ghost"
                     size="sm"
@@ -393,58 +434,65 @@ export default function CustomerDashboard() {
                     <Info className="h-4 w-4 text-muted-foreground" />
                   </Button>
                 </div>
-                <p className="text-sm text-muted-foreground">{t.promoteRestaurants.subtitle}</p>
+                <p className="text-sm text-muted-foreground">
+                  {t.promoteRestaurants.subtitle}
+                </p>
               </div>
-              
             </div>
             <div className="flex w-fit ml-auto gap-1 bg-muted p-1 rounded-lg">
               <button
                 onClick={() => {
-                  if (sortBy === 'recent') {
-                    setSortOrder(sortOrder === 'desc' ? 'asc' : 'desc');
+                  if (sortBy === "recent") {
+                    setSortOrder(sortOrder === "desc" ? "asc" : "desc");
                   } else {
-                    setSortBy('recent');
-                    setSortOrder('desc');
+                    setSortBy("recent");
+                    setSortOrder("desc");
                   }
                 }}
                 className={`px-3 py-1.5 text-xs font-medium rounded-md transition-colors flex items-center gap-1.5 ${
-                  sortBy === 'recent'
-                    ? 'bg-background text-foreground shadow-sm'
-                    : 'text-muted-foreground hover:text-foreground'
+                  sortBy === "recent"
+                    ? "bg-background text-foreground shadow-sm"
+                    : "text-muted-foreground hover:text-foreground"
                 }`}
               >
                 <span>{t.restaurantSorting.recent}</span>
-                {sortBy === 'recent' && (
-                  sortOrder === 'desc' ? <ArrowDown className="h-3 w-3" /> : <ArrowUp className="h-3 w-3" />
-                )}
+                {sortBy === "recent" &&
+                  (sortOrder === "desc" ? (
+                    <ArrowDown className="h-3 w-3" />
+                  ) : (
+                    <ArrowUp className="h-3 w-3" />
+                  ))}
               </button>
               <button
                 onClick={() => {
-                  if (sortBy === 'balance') {
-                    setSortOrder(sortOrder === 'desc' ? 'asc' : 'desc');
+                  if (sortBy === "balance") {
+                    setSortOrder(sortOrder === "desc" ? "asc" : "desc");
                   } else {
-                    setSortBy('balance');
-                    setSortOrder('desc');
+                    setSortBy("balance");
+                    setSortOrder("desc");
                   }
                 }}
                 className={`px-3 py-1.5 text-xs font-medium rounded-md transition-colors flex items-center gap-1.5 ${
-                  sortBy === 'balance'
-                    ? 'bg-background text-foreground shadow-sm'
-                    : 'text-muted-foreground hover:text-foreground'
+                  sortBy === "balance"
+                    ? "bg-background text-foreground shadow-sm"
+                    : "text-muted-foreground hover:text-foreground"
                 }`}
               >
                 <span>{t.restaurantSorting.balance}</span>
-                {sortBy === 'balance' && (
-                  sortOrder === 'desc' ? <ArrowDown className="h-3 w-3" /> : <ArrowUp className="h-3 w-3" />
-                )}
+                {sortBy === "balance" &&
+                  (sortOrder === "desc" ? (
+                    <ArrowDown className="h-3 w-3" />
+                  ) : (
+                    <ArrowUp className="h-3 w-3" />
+                  ))}
               </button>
-              </div>
+            </div>
           </div>
 
           {loadingCodes ? (
             <ListSkeleton items={3} />
           ) : restaurantCodes.length === 0 ? (
-            <Card className="border-border/50">
+            <Card className="glass-card border-0">
               <CardContent className="p-12 text-center">
                 <p className="text-lg font-semibold text-muted-foreground mb-2">
                   {t.promoteRestaurants.noRestaurants}
@@ -460,20 +508,23 @@ export default function CustomerDashboard() {
               {[...restaurantCodes]
                 .sort((a, b) => {
                   let comparison = 0;
-                  if (sortBy === 'balance') {
+                  if (sortBy === "balance") {
                     comparison = (b.balance || 0) - (a.balance || 0);
                   } else {
                     // Sort by recent (last_visit_date)
-                    comparison = new Date(b.last_visit_date || 0).getTime() - new Date(a.last_visit_date || 0).getTime();
+                    comparison =
+                      new Date(b.last_visit_date || 0).getTime() -
+                      new Date(a.last_visit_date || 0).getTime();
                   }
-                  return sortOrder === 'desc' ? comparison : -comparison;
+                  return sortOrder === "desc" ? comparison : -comparison;
                 })
                 .map((code) => {
                   // Filter transactions for this restaurant
                   const restaurantTransactions = recentTransactions.filter(
-                    (t: any) => t.branches.restaurants.slug === code.restaurant.slug
+                    (t: any) =>
+                      t.branches.restaurants.slug === code.restaurant.slug
                   );
-                  
+
                   return (
                     <RestaurantCard
                       key={code.id}
