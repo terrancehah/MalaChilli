@@ -1,7 +1,8 @@
-import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { useAuth } from '../../contexts/AuthContext';
-import toast from 'react-hot-toast';
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../../contexts/AuthContext";
+// import { supabase } from '../../lib/supabase'; // TODO: Uncomment when voucher claim is active
+import toast from "react-hot-toast";
 
 interface RegisterFormProps {
   onSuccess?: () => void;
@@ -14,105 +15,114 @@ interface RegisterFormProps {
  * Reusable registration form component
  * Can be used in both modal and standalone page contexts
  */
-export function RegisterForm({ 
-  onSuccess, 
-  showLoginLink = true, 
+export function RegisterForm({
+  onSuccess,
+  showLoginLink = true,
   onSwitchToLogin,
-  referralCode 
+  referralCode,
 }: RegisterFormProps) {
   const [formData, setFormData] = useState({
-    fullName: '',
-    email: '',
-    password: '',
-    birthday: '',
-    agreedToTerms: false
+    fullName: "",
+    email: "",
+    password: "",
+    birthday: "",
+    agreedToTerms: false,
   });
   const [errors, setErrors] = useState({
-    fullName: '',
-    email: '',
-    password: '',
-    birthday: '',
-    agreedToTerms: ''
+    fullName: "",
+    email: "",
+    password: "",
+    birthday: "",
+    agreedToTerms: "",
   });
   const [touched, setTouched] = useState({
     fullName: false,
     email: false,
     password: false,
     birthday: false,
-    agreedToTerms: false
+    agreedToTerms: false,
   });
   const [loading, setLoading] = useState(false);
-  
+
   const { signUp } = useAuth();
   const navigate = useNavigate();
 
   const validateField = (name: string, value: string): string => {
     switch (name) {
-      case 'fullName':
-        if (!value.trim()) return 'Full name is required';
-        if (value.trim().length < 2) return 'Full name must be at least 2 characters';
-        return '';
-      
-      case 'email':
-        if (!value.trim()) return 'Email is required';
+      case "fullName":
+        if (!value.trim()) return "Full name is required";
+        if (value.trim().length < 2)
+          return "Full name must be at least 2 characters";
+        return "";
+
+      case "email":
+        if (!value.trim()) return "Email is required";
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(value)) return 'Please enter a valid email address';
-        return '';
-      
-      case 'password':
-        if (!value) return 'Password is required';
-        if (value.length < 8) return 'Password must be at least 8 characters';
-        return '';
-      
-      case 'birthday':
-        if (!value) return 'Birthday is required';
+        if (!emailRegex.test(value))
+          return "Please enter a valid email address";
+        return "";
+
+      case "password":
+        if (!value) return "Password is required";
+        if (value.length < 8) return "Password must be at least 8 characters";
+        return "";
+
+      case "birthday":
+        if (!value) return "Birthday is required";
         const birthDate = new Date(value);
         const today = new Date();
         let age = today.getFullYear() - birthDate.getFullYear();
         const monthDiff = today.getMonth() - birthDate.getMonth();
-        if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+        if (
+          monthDiff < 0 ||
+          (monthDiff === 0 && today.getDate() < birthDate.getDate())
+        ) {
           age--;
         }
-        if (age < 18) return 'You must be at least 18 years old';
-        if (age > 120) return 'Please enter a valid birthday';
-        return '';
-      
-      case 'agreedToTerms':
-        if (!value || value === 'false') return 'You must agree to the Terms and Privacy Policy';
-        return '';
-      
+        if (age < 18) return "You must be at least 18 years old";
+        if (age > 120) return "Please enter a valid birthday";
+        return "";
+
+      case "agreedToTerms":
+        if (!value || value === "false")
+          return "You must agree to the Terms and Privacy Policy";
+        return "";
+
       default:
-        return '';
+        return "";
     }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     // Mark all fields as touched
     setTouched({
       fullName: true,
       email: true,
       password: true,
       birthday: true,
-      agreedToTerms: true
+      agreedToTerms: true,
     });
 
     // Validate all fields
     const newErrors = {
-      fullName: validateField('fullName', formData.fullName),
-      email: validateField('email', formData.email),
-      password: validateField('password', formData.password),
-      birthday: validateField('birthday', formData.birthday),
-      agreedToTerms: validateField('agreedToTerms', String(formData.agreedToTerms))
+      fullName: validateField("fullName", formData.fullName),
+      email: validateField("email", formData.email),
+      password: validateField("password", formData.password),
+      birthday: validateField("birthday", formData.birthday),
+      agreedToTerms: validateField(
+        "agreedToTerms",
+        String(formData.agreedToTerms)
+      ),
     };
 
     setErrors(newErrors);
 
     // Check if any errors exist
-    const hasErrors = Object.values(newErrors).some(error => error !== '');
+    const hasErrors = Object.values(newErrors).some((error) => error !== "");
     if (hasErrors) {
-      toast.error('Please fix all errors before submitting');
+      toast.error("Please fix all errors before submitting");
       return;
     }
 
@@ -122,35 +132,63 @@ export function RegisterForm({
       await signUp(formData.email, formData.password, {
         full_name: formData.fullName,
         birthday: formData.birthday,
-        role: 'customer',
+        role: "customer",
       });
-      
-      toast.success('Account created successfully! Redirecting...');
-      
+
+      // FUTURE FEATURE: Voucher Reward Claim (Dormant)
+      // TODO: Uncomment when voucher redemption flow is finalized
+      /*
+      if (referralCode && userId) {
+        try {
+          const { data: rewardData, error: rewardError } = await supabase.rpc(
+            "give_signup_reward",
+            {
+              p_user_id: userId,
+              p_referral_code: referralCode,
+            }
+          );
+
+          if (!rewardError && rewardData?.success) {
+            toast.success(
+              `🎉 ${rewardData.voucher.title} claimed! Check your dashboard.`
+            );
+          }
+        } catch (rewardErr) {
+          console.error("Reward claim error:", rewardErr);
+          // Don't block registration if reward fails
+        }
+      }
+      */
+
+      toast.success("Account created successfully! Redirecting...");
+
       // Call onSuccess callback if provided (for modal close)
       if (onSuccess) {
         onSuccess();
       }
-      
+
       // Redirect after short delay
       setTimeout(() => {
-        navigate('/dashboard');
+        navigate("/dashboard");
       }, 1500);
-      
     } catch (err: any) {
       // Handle specific error cases
-      let errorMessage = 'Failed to create account. Please try again.';
-      
-      if (err.message?.includes('already registered') || err.message?.includes('already exists')) {
-        errorMessage = 'This email is already registered. Please login or use a different email.';
-      } else if (err.message?.includes('Invalid email')) {
-        errorMessage = 'Please enter a valid email address.';
-      } else if (err.message?.includes('Password')) {
-        errorMessage = 'Password must be at least 8 characters.';
+      let errorMessage = "Failed to create account. Please try again.";
+
+      if (
+        err.message?.includes("already registered") ||
+        err.message?.includes("already exists")
+      ) {
+        errorMessage =
+          "This email is already registered. Please login or use a different email.";
+      } else if (err.message?.includes("Invalid email")) {
+        errorMessage = "Please enter a valid email address.";
+      } else if (err.message?.includes("Password")) {
+        errorMessage = "Password must be at least 8 characters.";
       } else if (err.message) {
         errorMessage = err.message;
       }
-      
+
       toast.error(errorMessage);
     } finally {
       setLoading(false);
@@ -159,18 +197,21 @@ export function RegisterForm({
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target;
-    const newValue = type === 'checkbox' ? checked : value;
-    
+    const newValue = type === "checkbox" ? checked : value;
+
     setFormData({
       ...formData,
-      [name]: newValue
+      [name]: newValue,
     });
-    
+
     // Clear error when user starts typing/checking
     if (touched[name as keyof typeof touched]) {
       setErrors({
         ...errors,
-        [name]: validateField(name, type === 'checkbox' ? String(checked) : value)
+        [name]: validateField(
+          name,
+          type === "checkbox" ? String(checked) : value
+        ),
       });
     }
   };
@@ -179,11 +220,11 @@ export function RegisterForm({
     const { name, value } = e.target;
     setTouched({
       ...touched,
-      [name]: true
+      [name]: true,
     });
     setErrors({
       ...errors,
-      [name]: validateField(name, value)
+      [name]: validateField(name, value),
     });
   };
 
@@ -210,7 +251,9 @@ export function RegisterForm({
             onChange={handleChange}
             onBlur={handleBlur}
             className={`input-field-minimal ${
-              touched.fullName && errors.fullName ? 'border-red-500 focus:border-red-500 focus:ring-red-500' : ''
+              touched.fullName && errors.fullName
+                ? "border-red-500 focus:border-red-500 focus:ring-red-500"
+                : ""
             }`}
           />
           {touched.fullName && errors.fullName && (
@@ -230,7 +273,9 @@ export function RegisterForm({
             onChange={handleChange}
             onBlur={handleBlur}
             className={`input-field-minimal ${
-              touched.email && errors.email ? 'border-red-500 focus:border-red-500 focus:ring-red-500' : ''
+              touched.email && errors.email
+                ? "border-red-500 focus:border-red-500 focus:ring-red-500"
+                : ""
             }`}
           />
           {touched.email && errors.email && (
@@ -250,14 +295,18 @@ export function RegisterForm({
             onChange={handleChange}
             onBlur={handleBlur}
             className={`input-field-minimal ${
-              touched.password && errors.password ? 'border-red-500 focus:border-red-500 focus:ring-red-500' : ''
+              touched.password && errors.password
+                ? "border-red-500 focus:border-red-500 focus:ring-red-500"
+                : ""
             }`}
           />
           {touched.password && errors.password && (
             <p className="text-red-500 text-xs mt-1">{errors.password}</p>
           )}
           {!errors.password && (
-            <p className="text-gray-500 dark:text-gray-400 text-xs mt-1">Minimum 8 characters</p>
+            <p className="text-gray-500 dark:text-gray-400 text-xs mt-1">
+              Minimum 8 characters
+            </p>
           )}
         </div>
 
@@ -272,14 +321,18 @@ export function RegisterForm({
             onChange={handleChange}
             onBlur={handleBlur}
             className={`input-field-minimal ${
-              touched.birthday && errors.birthday ? 'border-red-500 focus:border-red-500 focus:ring-red-500' : ''
+              touched.birthday && errors.birthday
+                ? "border-red-500 focus:border-red-500 focus:ring-red-500"
+                : ""
             }`}
           />
           {touched.birthday && errors.birthday && (
             <p className="text-red-500 text-xs mt-1">{errors.birthday}</p>
           )}
           {!errors.birthday && (
-            <p className="text-gray-500 dark:text-gray-400 text-xs mt-1">You must be 18 or older</p>
+            <p className="text-gray-500 dark:text-gray-400 text-xs mt-1">
+              You must be 18 or older
+            </p>
           )}
         </div>
 
@@ -295,16 +348,28 @@ export function RegisterForm({
               onBlur={handleBlur}
               className="mt-1 h-4 w-4 text-primary border-gray-300 rounded focus:ring-primary"
             />
-            <label htmlFor="agreedToTerms" className="ml-2 text-xs text-gray-600 dark:text-gray-400">
-              I agree to the{' '}
-              <Link to="/terms" target="_blank" className="text-primary hover:underline font-medium">
+            <label
+              htmlFor="agreedToTerms"
+              className="ml-2 text-xs text-gray-600 dark:text-gray-400"
+            >
+              I agree to the{" "}
+              <Link
+                to="/terms"
+                target="_blank"
+                className="text-primary hover:underline font-medium"
+              >
                 Terms of Service
-              </Link>
-              {' '}and{' '}
-              <Link to="/privacy" target="_blank" className="text-primary hover:underline font-medium">
+              </Link>{" "}
+              and{" "}
+              <Link
+                to="/privacy"
+                target="_blank"
+                className="text-primary hover:underline font-medium"
+              >
                 Privacy Policy
               </Link>
-              , and consent to the collection and use of my personal data as described.
+              , and consent to the collection and use of my personal data as
+              described.
               <span className="text-red-500 ml-1">*</span>
             </label>
           </div>
@@ -318,14 +383,14 @@ export function RegisterForm({
           disabled={loading}
           className="w-full bg-primary hover:bg-primary-dark text-white font-semibold py-3.5 px-8 rounded-pill transition-all duration-200 shadow-md hover:shadow-lg hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          {loading ? 'Creating Account...' : 'Sign Up Now!'}
+          {loading ? "Creating Account..." : "Sign Up Now!"}
         </button>
       </form>
 
       {/* Login Link */}
       {showLoginLink && (
         <p className="text-center text-sm text-gray-600 dark:text-gray-400 mt-6">
-          Already have an account?{' '}
+          Already have an account?{" "}
           {onSwitchToLogin ? (
             <button
               onClick={onSwitchToLogin}
@@ -334,7 +399,10 @@ export function RegisterForm({
               Login
             </button>
           ) : (
-            <Link to="/login" className="text-primary hover:text-primary-dark font-medium underline">
+            <Link
+              to="/login"
+              className="text-primary hover:text-primary-dark font-medium underline"
+            >
               Login
             </Link>
           )}
