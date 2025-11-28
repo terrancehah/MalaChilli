@@ -1,4 +1,4 @@
-export const ownerDashboard = {
+export const merchantDashboard = {
   title: 'Papan Pemuka Pemilik',
   settings: 'Tetapan',
   
@@ -71,6 +71,7 @@ export const ownerDashboard = {
     pending: 'Menunggu',
     done: 'Selesai',
     avgTime: 'Masa purata',
+    networkGrowthTrend: 'Trend Pertumbuhan Rangkaian',
     comingSoon: '📊 Lebih banyak analitik viral akan datang: Visualisasi rangkaian, analisis tingkah laku perkongsian, penjejakan K-factor',
   },
   

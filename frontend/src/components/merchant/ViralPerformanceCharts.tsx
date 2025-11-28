@@ -2,6 +2,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from '../ui/chart';
 import { Area, AreaChart, Bar, BarChart, CartesianGrid, XAxis, YAxis } from 'recharts';
 import { TrendingUp, Users, Link2 } from 'lucide-react';
+import { getTranslation, type Language } from '../../translations';
 
 interface ViralPerformanceChartsProps {
   savedCodesPipeline?: {
@@ -15,27 +16,30 @@ interface ViralPerformanceChartsProps {
     total_customers: number;
     active_sharers: number;
   }>;
+  language: Language;
 }
 
 export function ViralPerformanceCharts({ 
   savedCodesPipeline,
-  networkGrowthData = []
+  networkGrowthData = [],
+  language
 }: ViralPerformanceChartsProps) {
+  const t = getTranslation(language);
   
   // Prepare saved codes data for bar chart
   const savedCodesData = savedCodesPipeline ? [
-    { name: 'Total Saved', value: savedCodesPipeline.total_saved_codes, fill: 'hsl(var(--chart-1))' },
-    { name: 'Awaiting Visit', value: savedCodesPipeline.unused_codes, fill: 'hsl(var(--chart-3))' },
-    { name: 'Converted', value: savedCodesPipeline.converted_codes, fill: 'hsl(var(--chart-2))' },
+    { name: t.merchantDashboard.viralPerformance.totalSaved, value: savedCodesPipeline.total_saved_codes, fill: 'hsl(var(--chart-1))' },
+    { name: t.merchantDashboard.viralPerformance.awaitingVisit, value: savedCodesPipeline.unused_codes, fill: 'hsl(var(--chart-3))' },
+    { name: t.merchantDashboard.viralPerformance.converted, value: savedCodesPipeline.converted_codes, fill: 'hsl(var(--chart-2))' },
   ] : [];
 
   const chartConfig = {
     total_customers: {
-      label: "Total Customers",
+      label: t.merchantDashboard.customerInsights.totalCustomers,
       color: "hsl(var(--chart-1))",
     },
     active_sharers: {
-      label: "Active Sharers",
+      label: t.merchantDashboard.viralPerformance.activeSharers,
       color: "hsl(var(--chart-2))",
     },
   };
@@ -48,7 +52,7 @@ export function ViralPerformanceCharts({
           <CardHeader>
             <CardTitle className="text-sm sm:text-base flex items-center gap-2">
               <Link2 className="h-4 w-4 sm:h-5 sm:w-5" />
-              Saved Codes Pipeline
+              {t.merchantDashboard.viralPerformance.savedCodesPipeline}
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -77,7 +81,7 @@ export function ViralPerformanceCharts({
                 <TrendingUp className="h-4 w-4" />
                 <span className="font-semibold">{savedCodesPipeline.conversion_rate.toFixed(1)}%</span>
               </div>
-              <span className="text-muted-foreground">conversion rate</span>
+              <span className="text-muted-foreground">{t.merchantDashboard.viralPerformance.conversionRate}</span>
             </div>
           </CardContent>
         </Card>
@@ -89,7 +93,7 @@ export function ViralPerformanceCharts({
           <CardHeader>
             <CardTitle className="text-sm sm:text-base flex items-center gap-2">
               <Users className="h-4 w-4 sm:h-5 sm:w-5" />
-              Network Growth Trend
+              {t.merchantDashboard.viralPerformance.networkGrowthTrend}
             </CardTitle>
           </CardHeader>
           <CardContent>

@@ -96,7 +96,7 @@ export default function BranchesManagement() {
           <Button
             variant="secondary"
             size="sm"
-            onClick={() => navigate('/owner/dashboard')}
+            onClick={() => navigate('/merchant/dashboard')}
             className="bg-white/20 hover:bg-white/30 text-primary-foreground border-0"
           >
             <ArrowLeft className="h-4 w-4" />
@@ -146,7 +146,7 @@ export default function BranchesManagement() {
 
         {/* Add Branch Button */}
         <Button
-          onClick={() => navigate('/owner/branches/add')}
+          onClick={() => navigate('/merchant/branches/add')}
           className="w-full"
         >
           <Plus className="h-4 w-4 mr-2" />
@@ -191,7 +191,7 @@ export default function BranchesManagement() {
                       <Button
                         variant="outline"
                         size="sm"
-                        onClick={() => navigate(`/owner/branches/edit/${branch.id}`)}
+                        onClick={() => navigate(`/merchant/branches/edit/${branch.id}`)}
                       >
                         <Edit className="h-4 w-4" />
                       </Button>

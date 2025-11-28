@@ -23,7 +23,7 @@ export default function TermsOfService() {
             <h2 className="text-xl font-bold text-foreground mb-3">2. Definitions</h2>
             <ul className="list-disc pl-6 space-y-1 text-foreground">
               <li><strong>"Platform":</strong> The MalaChilli web application and services</li>
-              <li><strong>"User":</strong> Any person who creates an account (Customer, Staff, or Owner)</li>
+              <li><strong>"User":</strong> Any person who creates an account (Customer, Staff, or Merchant)</li>
               <li><strong>"Virtual Currency" (VC):</strong> Reward credits earned through referrals, redeemable for discounts</li>
               <li><strong>"Referral Code":</strong> Unique code assigned to each user for sharing</li>
               <li><strong>"Restaurant Partner":</strong> Participating restaurants offering discounts through the Platform</li>

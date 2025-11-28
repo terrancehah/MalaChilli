@@ -1,6 +1,6 @@
 // Database types based on our schema design
 
-export type UserRole = 'customer' | 'staff' | 'owner' | 'admin';
+export type UserRole = 'customer' | 'staff' | 'merchant' | 'admin';
 
 export type TransactionType = 'earn' | 'redeem' | 'expire' | 'adjust';
 
@@ -14,7 +14,7 @@ export interface User {
   referral_code: string;
   role: UserRole;
   branch_id: string | null; // For staff - which branch they work at
-  restaurant_id: string | null; // For staff and owners - which restaurant they belong to
+  restaurant_id: string | null; // For staff and merchants - which restaurant they belong to
   email_verified: boolean;
   email_notifications_enabled: boolean;
   created_at: string;
@@ -26,7 +26,7 @@ export interface Restaurant {
   name: string;
   slug: string;
   description: string | null;
-  owner_id: string;
+  merchant_id: string;
   guaranteed_discount_percentage: number;
   upline_reward_percentage: number;
   max_redemption_percentage: number;

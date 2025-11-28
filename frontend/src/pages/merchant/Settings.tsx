@@ -108,7 +108,7 @@ export default function RestaurantSettings() {
           <Button
             variant="secondary"
             size="sm"
-            onClick={() => navigate('/owner/dashboard')}
+            onClick={() => navigate('/merchant/dashboard')}
             className="bg-white/20 hover:bg-white/30 text-primary-foreground border-0"
           >
             <ArrowLeft className="h-4 w-4" />

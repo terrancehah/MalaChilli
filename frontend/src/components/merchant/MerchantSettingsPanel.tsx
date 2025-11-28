@@ -5,7 +5,7 @@ import { getTranslation, type Language } from '../../translations';
 import { supabase } from '../../lib/supabase';
 import { BaseSettingsPanel } from '../shared';
 
-interface OwnerSettingsPanelProps {
+interface MerchantSettingsPanelProps {
   isOpen: boolean;
   onClose: () => void;
   user: {
@@ -20,7 +20,7 @@ interface OwnerSettingsPanelProps {
   onLanguageChange: (lang: Language) => void;
 }
 
-export function OwnerSettingsPanel({ 
+export function MerchantSettingsPanel({ 
   isOpen, 
   onClose, 
   user, 
@@ -28,7 +28,7 @@ export function OwnerSettingsPanel({
   restaurantName,
   language,
   onLanguageChange
-}: OwnerSettingsPanelProps) {
+}: MerchantSettingsPanelProps) {
   const t = getTranslation(language);
   const [isEditingName, setIsEditingName] = useState(false);
   const [editedName, setEditedName] = useState('');

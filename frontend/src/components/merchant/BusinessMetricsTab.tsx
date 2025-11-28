@@ -123,10 +123,10 @@ export function BusinessMetricsTab({
           <CardHeader className="pb-3">
             <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">
               <DollarSign className="h-4 w-4" />
-              {t.ownerDashboard.businessMetrics.totalRevenue}
+              {t.merchantDashboard.businessMetrics.totalRevenue}
               <InfoButton
-                title={t.ownerDashboard.businessMetrics.totalRevenue}
-                description={t.ownerDashboard.businessMetrics.totalRevenueInfo}
+                title={t.merchantDashboard.businessMetrics.totalRevenue}
+                description={t.merchantDashboard.businessMetrics.totalRevenueInfo}
               />
             </CardTitle>
           </CardHeader>
@@ -140,7 +140,7 @@ export function BusinessMetricsTab({
                 })}
               </p>
               <p className="text-xs text-muted-foreground">
-                {t.ownerDashboard.businessMetrics.last30Days}
+                {t.merchantDashboard.businessMetrics.last30Days}
               </p>
             </div>
           </CardContent>
@@ -151,10 +151,10 @@ export function BusinessMetricsTab({
           <CardHeader className="pb-3">
             <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">
               <TrendingUp className="h-4 w-4" />
-              {t.ownerDashboard.businessMetrics.netRevenue}
+              {t.merchantDashboard.businessMetrics.netRevenue}
               <InfoButton
-                title={t.ownerDashboard.businessMetrics.netRevenue}
-                description={t.ownerDashboard.businessMetrics.netRevenueInfo}
+                title={t.merchantDashboard.businessMetrics.netRevenue}
+                description={t.merchantDashboard.businessMetrics.netRevenueInfo}
               />
             </CardTitle>
           </CardHeader>
@@ -169,7 +169,7 @@ export function BusinessMetricsTab({
               </p>
               <p className="text-xs text-muted-foreground">
                 {((netRevenue / totalRevenue) * 100).toFixed(1)}%{" "}
-                {t.ownerDashboard.businessMetrics.ofGross}
+                {t.merchantDashboard.businessMetrics.ofGross}
               </p>
             </div>
           </CardContent>
@@ -180,11 +180,11 @@ export function BusinessMetricsTab({
           <CardHeader className="pb-3">
             <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">
               <CreditCard className="h-4 w-4" />
-              {t.ownerDashboard.businessMetrics.totalTransactions}
+              {t.merchantDashboard.businessMetrics.totalTransactions}
               <InfoButton
-                title={t.ownerDashboard.businessMetrics.totalTransactions}
+                title={t.merchantDashboard.businessMetrics.totalTransactions}
                 description={
-                  t.ownerDashboard.businessMetrics.totalTransactionsInfo
+                  t.merchantDashboard.businessMetrics.totalTransactionsInfo
                 }
               />
             </CardTitle>
@@ -195,7 +195,7 @@ export function BusinessMetricsTab({
                 {totalTransactions}
               </p>
               <p className="text-xs text-muted-foreground">
-                {t.ownerDashboard.businessMetrics.avg}: RM{" "}
+                {t.merchantDashboard.businessMetrics.avg}: RM{" "}
                 {avgBillAmount.toFixed(2)}
               </p>
             </div>
@@ -216,7 +216,7 @@ export function BusinessMetricsTab({
                 {roi}:1
               </p>
               <p className="text-xs text-muted-foreground">
-                {t.ownerDashboard.businessMetrics.revenueVsDiscount}
+                {t.merchantDashboard.businessMetrics.revenueVsDiscount}
               </p>
             </div>
           </CardContent>
@@ -228,11 +228,11 @@ export function BusinessMetricsTab({
         <CardHeader>
           <CardTitle className="text-base font-semibold flex items-center gap-2">
             <CreditCard className="h-5 w-5" />
-            {t.ownerDashboard.businessMetrics.discountBreakdown}
+            {t.merchantDashboard.businessMetrics.discountBreakdown}
             <InfoButton
-              title={t.ownerDashboard.businessMetrics.discountBreakdown}
+              title={t.merchantDashboard.businessMetrics.discountBreakdown}
               description={
-                t.ownerDashboard.businessMetrics.discountBreakdownInfo
+                t.merchantDashboard.businessMetrics.discountBreakdownInfo
               }
             />
           </CardTitle>
@@ -243,7 +243,7 @@ export function BusinessMetricsTab({
             <div className="flex items-center justify-between p-4 rounded-lg bg-muted/50">
               <div>
                 <p className="text-sm text-muted-foreground">
-                  {t.ownerDashboard.businessMetrics.totalDiscounts}
+                  {t.merchantDashboard.businessMetrics.totalDiscounts}
                 </p>
                 <p className="text-xl md:text-2xl font-bold text-foreground">
                   RM{" "}
@@ -257,7 +257,7 @@ export function BusinessMetricsTab({
               </div>
               <div className="text-right">
                 <p className="text-sm text-muted-foreground">
-                  {t.ownerDashboard.businessMetrics.discountPercentage}
+                  {t.merchantDashboard.businessMetrics.discountPercentage}
                 </p>
                 <p className="text-xl md:text-2xl font-bold text-orange-600">
                   {totalRevenue > 0
@@ -278,7 +278,7 @@ export function BusinessMetricsTab({
                 <div className="p-4 rounded-lg border border-border/50">
                   <div className="flex items-center justify-between mb-2">
                     <p className="text-sm font-medium text-muted-foreground">
-                      {t.ownerDashboard.businessMetrics.guaranteedDiscount}
+                      {t.merchantDashboard.businessMetrics.guaranteedDiscount}
                     </p>
                     <p className="text-sm font-bold text-blue-600">
                       {discountBreakdown.guaranteed_percentage.toFixed(1)}%
@@ -292,14 +292,14 @@ export function BusinessMetricsTab({
                     )}
                   </p>
                   <p className="text-xs text-muted-foreground mt-1">
-                    {t.ownerDashboard.businessMetrics.firstTimeDiscount}
+                    {t.merchantDashboard.businessMetrics.firstTimeDiscount}
                   </p>
                 </div>
 
                 <div className="p-4 rounded-lg border border-border/50">
                   <div className="flex items-center justify-between mb-2">
                     <p className="text-sm font-medium text-muted-foreground">
-                      {t.ownerDashboard.businessMetrics.vcRedeemed}
+                      {t.merchantDashboard.businessMetrics.vcRedeemed}
                     </p>
                     <p className="text-sm font-bold text-purple-600">
                       {discountBreakdown.vc_percentage.toFixed(1)}%
@@ -313,7 +313,7 @@ export function BusinessMetricsTab({
                     )}
                   </p>
                   <p className="text-xs text-muted-foreground mt-1">
-                    {t.ownerDashboard.businessMetrics.virtualCurrencyRedeemed}
+                    {t.merchantDashboard.businessMetrics.virtualCurrencyRedeemed}
                   </p>
                 </div>
               </div>
@@ -327,17 +327,17 @@ export function BusinessMetricsTab({
         <CardHeader>
           <CardTitle className="text-base font-semibold flex items-center gap-2">
             <PieChart className="h-5 w-5" />
-            {t.ownerDashboard.businessMetrics.uplineRewards}
+            {t.merchantDashboard.businessMetrics.uplineRewards}
             <InfoButton
-              title={t.ownerDashboard.businessMetrics.uplineRewards}
-              description={t.ownerDashboard.businessMetrics.uplineRewardsInfo}
+              title={t.merchantDashboard.businessMetrics.uplineRewards}
+              description={t.merchantDashboard.businessMetrics.uplineRewardsInfo}
             />
           </CardTitle>
         </CardHeader>
         <CardContent>
           {uplineRewards.length === 0 ? (
             <p className="text-sm text-muted-foreground text-center py-8">
-              {t.ownerDashboard.businessMetrics.noRewardsYet}
+              {t.merchantDashboard.businessMetrics.noRewardsYet}
             </p>
           ) : (
             <div className="space-y-3">
@@ -352,9 +352,9 @@ export function BusinessMetricsTab({
                     </p>
                     <p className="text-xs text-muted-foreground">
                       {reward.unique_recipients}{" "}
-                      {t.ownerDashboard.businessMetrics.recipients} •{" "}
+                      {t.merchantDashboard.businessMetrics.recipients} •{" "}
                       {reward.reward_count}{" "}
-                      {t.ownerDashboard.businessMetrics.rewards}
+                      {t.merchantDashboard.businessMetrics.rewards}
                     </p>
                   </div>
                   <div className="text-right">
@@ -365,7 +365,7 @@ export function BusinessMetricsTab({
                       })}
                     </p>
                     <p className="text-xs text-muted-foreground">
-                      {t.ownerDashboard.businessMetrics.avgReward}: RM{" "}
+                      {t.merchantDashboard.businessMetrics.avgReward}: RM{" "}
                       {reward.avg_reward_amount.toFixed(2)}
                     </p>
                   </div>
@@ -375,7 +375,7 @@ export function BusinessMetricsTab({
               {/* Total */}
               <div className="flex items-center justify-between p-4 rounded-lg bg-primary/10 border-2 border-primary/20">
                 <p className="font-bold text-foreground">
-                  {t.ownerDashboard.businessMetrics.totalPaid}
+                  {t.merchantDashboard.businessMetrics.totalPaid}
                 </p>
                 <p className="text-2xl font-bold text-primary">
                   RM{" "}
@@ -402,7 +402,7 @@ export function BusinessMetricsTab({
       <Card className="border-border/50 bg-muted/30">
         <CardContent className="p-6 text-center">
           <p className="text-sm text-muted-foreground">
-            {t.ownerDashboard.businessMetrics.comingSoon}
+            {t.merchantDashboard.businessMetrics.comingSoon}
           </p>
         </CardContent>
       </Card>

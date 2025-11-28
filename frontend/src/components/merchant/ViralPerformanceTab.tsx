@@ -7,7 +7,6 @@ import {
   Users,
   TrendingUp,
   TrendingDown,
-  Link2,
   Share2,
 } from "lucide-react";
 import type {
@@ -17,6 +16,8 @@ import type {
 } from "../../types/analytics.types";
 import { getTranslation, type Language } from "../../translations";
 import { InfoButton } from "../shared";
+
+import { ViralPerformanceCharts } from './ViralPerformanceCharts';
 
 interface ViralPerformanceTabProps {
   restaurantId: string;
@@ -96,12 +97,12 @@ export function ViralPerformanceTab({
             <div className="flex items-center gap-2 mb-2">
               <Target className="h-4 w-4 text-muted-foreground" />
               <span className="text-sm font-medium text-muted-foreground">
-                {t.ownerDashboard.viralPerformance.viralityCoefficient}
+                {t.merchantDashboard.viralPerformance.viralityCoefficient}
               </span>
               <InfoButton
-                title={t.ownerDashboard.viralPerformance.viralityCoefficient}
+                title={t.merchantDashboard.viralPerformance.viralityCoefficient}
                 description={
-                  t.ownerDashboard.viralPerformance.viralityCoefficientInfo
+                  t.merchantDashboard.viralPerformance.viralityCoefficientInfo
                 }
               />
             </div>
@@ -117,10 +118,10 @@ export function ViralPerformanceTab({
             </div>
             <p className="text-xs text-muted-foreground mt-1">
               {viralMetrics && viralMetrics.virality_coefficient >= 2
-                ? t.ownerDashboard.viralPerformance.exponentialGrowth
+                ? t.merchantDashboard.viralPerformance.exponentialGrowth
                 : viralMetrics && viralMetrics.virality_coefficient >= 1
-                ? t.ownerDashboard.viralPerformance.steadyGrowth
-                : t.ownerDashboard.viralPerformance.belowViralThreshold}
+                ? t.merchantDashboard.viralPerformance.steadyGrowth
+                : t.merchantDashboard.viralPerformance.belowViralThreshold}
             </p>
           </CardContent>
         </Card>
@@ -134,12 +135,12 @@ export function ViralPerformanceTab({
                 <div className="flex items-center gap-2 mb-2">
                   <Users className="h-4 w-4 text-muted-foreground" />
                   <span className="text-sm font-medium text-muted-foreground">
-                    {t.ownerDashboard.viralPerformance.networkSize}
+                    {t.merchantDashboard.viralPerformance.networkSize}
                   </span>
                   <InfoButton
-                    title={t.ownerDashboard.viralPerformance.networkSize}
+                    title={t.merchantDashboard.viralPerformance.networkSize}
                     description={
-                      t.ownerDashboard.viralPerformance.networkSizeInfo
+                      t.merchantDashboard.viralPerformance.networkSizeInfo
                     }
                   />
                 </div>
@@ -150,7 +151,7 @@ export function ViralPerformanceTab({
                   <span className="font-semibold text-foreground">
                     {viralMetrics?.total_sharers || 0}
                   </span>{" "}
-                  {t.ownerDashboard.viralPerformance.activeSharersCount}
+                  {t.merchantDashboard.viralPerformance.activeSharersCount}
                 </p>
               </div>
 
@@ -159,12 +160,12 @@ export function ViralPerformanceTab({
                 <div className="flex items-center gap-2 mb-2">
                   <Share2 className="h-4 w-4 text-muted-foreground" />
                   <span className="text-sm font-medium text-muted-foreground">
-                    {t.ownerDashboard.viralPerformance.networkDepth}
+                    {t.merchantDashboard.viralPerformance.networkDepth}
                   </span>
                   <InfoButton
-                    title={t.ownerDashboard.viralPerformance.networkDepth}
+                    title={t.merchantDashboard.viralPerformance.networkDepth}
                     description={
-                      t.ownerDashboard.viralPerformance.networkDepthInfo
+                      t.merchantDashboard.viralPerformance.networkDepthInfo
                     }
                   />
                 </div>
@@ -194,155 +195,28 @@ export function ViralPerformanceTab({
         </Card>
       </div>
 
-      {/* Saved Codes Pipeline - Combined Stats + Chart */}
-      {savedCodesPipeline && (
-        <Card className="border-border/50">
-          <CardHeader>
-            <CardTitle className="text-base font-semibold flex items-center gap-2">
-              <Link2 className="h-5 w-5" />
-              {t.ownerDashboard.viralPerformance.savedCodesPipeline}
-              <InfoButton
-                title={t.ownerDashboard.viralPerformance.savedCodesPipeline}
-                description={
-                  t.ownerDashboard.viralPerformance.savedCodesPipelineInfo
-                }
-              />
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-              {/* Key Metrics */}
-              <div className="space-y-3">
-                <div className="flex items-center justify-between">
-                  <span className="text-sm font-medium text-muted-foreground">
-                    {t.ownerDashboard.viralPerformance.totalSaved}
-                  </span>
-                  <span className="text-xl font-bold">
-                    {savedCodesPipeline.total_saved_codes}
-                  </span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-sm font-medium text-muted-foreground">
-                    {t.ownerDashboard.viralPerformance.awaitingVisit}
-                  </span>
-                  <span className="text-xl font-bold text-orange-600">
-                    {savedCodesPipeline.unused_codes}
-                  </span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-sm font-medium text-muted-foreground">
-                    {t.ownerDashboard.viralPerformance.converted}
-                  </span>
-                  <span className="text-xl font-bold text-green-600">
-                    {savedCodesPipeline.converted_codes}
-                  </span>
-                </div>
-                <div className="pt-2 border-t">
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm font-medium">
-                      {t.ownerDashboard.viralPerformance.conversionRate}
-                    </span>
-                    <span className="text-2xl font-bold text-blue-600">
-                      {savedCodesPipeline.conversion_rate != null
-                        ? `${savedCodesPipeline.conversion_rate.toFixed(1)}%`
-                        : "0.0%"}
-                    </span>
-                  </div>
-                  <p className="text-xs text-muted-foreground mt-1">
-                    {t.ownerDashboard.viralPerformance.avgTime}:{" "}
-                    {savedCodesPipeline.avg_days_to_first_visit != null
-                      ? `${savedCodesPipeline.avg_days_to_first_visit.toFixed(
-                          1
-                        )} ${t.ownerDashboard.viralPerformance.days}`
-                      : "N/A"}
-                  </p>
-                </div>
-              </div>
-
-              {/* Mini Bar Chart */}
-              <div className="flex items-center justify-center">
-                <div className="w-full max-w-[280px]">
-                  <div className="flex items-end justify-around h-32 gap-2">
-                    <div className="flex flex-col items-center gap-1 flex-1">
-                      <div
-                        className="w-full bg-chart-1 rounded-t transition-all"
-                        style={{
-                          height: `${
-                            (savedCodesPipeline.total_saved_codes /
-                              Math.max(
-                                savedCodesPipeline.total_saved_codes,
-                                1
-                              )) *
-                            100
-                          }%`,
-                          minHeight: "20px",
-                        }}
-                      />
-                      <span className="text-xs text-muted-foreground">
-                        {t.ownerDashboard.viralPerformance.saved}
-                      </span>
-                    </div>
-                    <div className="flex flex-col items-center gap-1 flex-1">
-                      <div
-                        className="w-full bg-orange-500 rounded-t transition-all"
-                        style={{
-                          height: `${
-                            (savedCodesPipeline.unused_codes /
-                              Math.max(
-                                savedCodesPipeline.total_saved_codes,
-                                1
-                              )) *
-                            100
-                          }%`,
-                          minHeight: "20px",
-                        }}
-                      />
-                      <span className="text-xs text-muted-foreground">
-                        {t.ownerDashboard.viralPerformance.pending}
-                      </span>
-                    </div>
-                    <div className="flex flex-col items-center gap-1 flex-1">
-                      <div
-                        className="w-full bg-green-500 rounded-t transition-all"
-                        style={{
-                          height: `${
-                            (savedCodesPipeline.converted_codes /
-                              Math.max(
-                                savedCodesPipeline.total_saved_codes,
-                                1
-                              )) *
-                            100
-                          }%`,
-                          minHeight: "20px",
-                        }}
-                      />
-                      <span className="text-xs text-muted-foreground">
-                        {t.ownerDashboard.viralPerformance.done}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      )}
+      {/* Charts Section */}
+      <ViralPerformanceCharts
+        savedCodesPipeline={savedCodesPipeline || undefined}
+        networkGrowthData={[]} // TODO: Add network growth data from summary
+        language={language}
+      />
 
       {/* Top Sharers Leaderboard */}
       <Card className="border-border/50">
         <CardHeader>
           <CardTitle className="text-base font-semibold flex items-center gap-2">
-            {t.ownerDashboard.viralPerformance.topSharers}
+            {t.merchantDashboard.viralPerformance.topSharers}
             <InfoButton
-              title={t.ownerDashboard.viralPerformance.topSharers}
-              description={t.ownerDashboard.viralPerformance.topSharersInfo}
+              title={t.merchantDashboard.viralPerformance.topSharers}
+              description={t.merchantDashboard.viralPerformance.topSharersInfo}
             />
           </CardTitle>
         </CardHeader>
         <CardContent>
           {topSharers.length === 0 ? (
             <p className="text-sm text-muted-foreground text-center py-8">
-              {t.ownerDashboard.viralPerformance.noSharers}
+              {t.merchantDashboard.viralPerformance.noSharers}
             </p>
           ) : (
             <div className="space-y-3">
@@ -380,11 +254,11 @@ export function ViralPerformanceTab({
                   <div className="text-right">
                     <p className="font-bold text-foreground">
                       {sharer.total_downlines}{" "}
-                      {t.ownerDashboard.viralPerformance.downlines}
+                      {t.merchantDashboard.viralPerformance.downlines}
                     </p>
                     <p className="text-xs text-muted-foreground">
                       RM {sharer.total_earned.toFixed(2)}{" "}
-                      {t.ownerDashboard.viralPerformance.earned}
+                      {t.merchantDashboard.viralPerformance.earned}
                     </p>
                   </div>
                 </div>
@@ -398,7 +272,7 @@ export function ViralPerformanceTab({
       <Card className="border-border/50 bg-muted/30">
         <CardContent className="p-6 text-center">
           <p className="text-sm text-muted-foreground">
-            {t.ownerDashboard.viralPerformance.comingSoon}
+            {t.merchantDashboard.viralPerformance.comingSoon}
           </p>
         </CardContent>
       </Card>

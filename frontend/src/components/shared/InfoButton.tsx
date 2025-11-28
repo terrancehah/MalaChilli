@@ -10,7 +10,7 @@ interface InfoButtonProps {
 
 /**
  * InfoButton component displays an info icon that opens a modal with detailed information
- * Used throughout the owner dashboard to explain metrics and statistics
+ * Used throughout the merchant dashboard to explain metrics and statistics
  */
 export function InfoButton({ title, description }: InfoButtonProps) {
   const [isOpen, setIsOpen] = useState(false);

@@ -10,7 +10,7 @@ interface User {
   id: string;
   email: string;
   full_name: string;
-  role: 'customer' | 'staff' | 'owner' | 'admin';
+  role: 'customer' | 'staff' | 'merchant' | 'admin';
   created_at: string;
   last_login: string;
 }
@@ -139,17 +139,17 @@ export default function AdminUsers() {
                           >
                             <option value="customer">Customer</option>
                             <option value="staff">Staff</option>
-                            <option value="owner">Merchant (Owner)</option>
+                            <option value="merchant">Merchant (Merchant)</option>
                             <option value="admin">Admin</option>
                           </select>
                         ) : (
                           <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
                             user.role === 'admin' ? 'bg-red-100 text-red-800' :
-                            user.role === 'owner' ? 'bg-purple-100 text-purple-800' :
+                            user.role === 'merchant' ? 'bg-purple-100 text-purple-800' :
                             user.role === 'staff' ? 'bg-orange-100 text-orange-800' :
                             'bg-green-100 text-green-800'
                           }`}>
-                            {user.role === 'owner' ? 'Merchant' : 
+                            {user.role === 'merchant' ? 'Merchant' : 
                              user.role.charAt(0).toUpperCase() + user.role.slice(1)}
                           </span>
                         )}

@@ -130,7 +130,7 @@ export default function StaffManagement() {
           <Button
             variant="secondary"
             size="sm"
-            onClick={() => navigate('/owner/dashboard')}
+            onClick={() => navigate('/merchant/dashboard')}
             className="bg-white/20 hover:bg-white/30 text-primary-foreground border-0"
           >
             <ArrowLeft className="h-4 w-4" />
@@ -180,7 +180,7 @@ export default function StaffManagement() {
 
         {/* Add Staff Button */}
         <Button
-          onClick={() => navigate('/owner/staff/add')}
+          onClick={() => navigate('/merchant/staff/add')}
           className="w-full"
         >
           <UserPlus className="h-4 w-4 mr-2" />
@@ -217,7 +217,7 @@ export default function StaffManagement() {
                       <Button
                         variant="outline"
                         size="sm"
-                        onClick={() => navigate(`/owner/staff/edit/${member.id}`)}
+                        onClick={() => navigate(`/merchant/staff/edit/${member.id}`)}
                       >
                         <Edit className="h-4 w-4" />
                       </Button>

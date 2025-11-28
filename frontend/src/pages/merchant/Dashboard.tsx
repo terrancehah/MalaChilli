@@ -21,9 +21,9 @@ import {
   ViralPerformanceTab,
   BusinessMetricsTab,
   CustomerInsightsTab,
-} from "../../components/owner";
-import { OwnerSettingsPanel } from "../../components/owner/OwnerSettingsPanel";
-import { ManagementPanel } from "../../components/owner/ManagementPanel";
+} from "../../components/merchant";
+import { MerchantSettingsPanel } from "../../components/merchant/MerchantSettingsPanel";
+import { ManagementPanel } from "../../components/merchant/ManagementPanel";
 import { DashboardHeader } from "../../components/shared/DashboardHeader";
 import { LanguageSelector } from "../../components/shared";
 import { useLanguagePreference } from "../../hooks/useLanguagePreference";
@@ -31,7 +31,7 @@ import PullToRefresh from "react-simple-pull-to-refresh";
 
 type TabType = "viral" | "business" | "customers";
 
-export default function OwnerDashboard() {
+export default function MerchantDashboard() {
   const { user, signOut } = useAuth();
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState<TabType>("viral");
@@ -54,7 +54,7 @@ export default function OwnerDashboard() {
       if (!user) return;
 
       try {
-        // Owner users should have restaurant_id directly
+        // Merchant users should have restaurant_id directly
         if (user.restaurant_id) {
           setRestaurantId(user.restaurant_id);
 
@@ -73,7 +73,7 @@ export default function OwnerDashboard() {
           const { data } = await supabase
             .from("restaurants")
             .select("id, name")
-            .eq("owner_id", user.id)
+            .eq("merchant_id", user.id)
             .single();
 
           if (data) {
@@ -133,7 +133,7 @@ export default function OwnerDashboard() {
       <div className="min-h-screen pb-6">
         <HeaderSkeleton />
         <div className="px-6 mt-6 space-y-6">
-          {/* Owner stats skeleton - 2x2 grid */}
+          {/* Merchant stats skeleton - 2x2 grid */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {Array.from({ length: 4 }).map((_, index) => (
               <Card key={index} className="glass-card border-0">
@@ -194,7 +194,7 @@ export default function OwnerDashboard() {
     >
       <div className="min-h-screen pb-6">
         <DashboardHeader
-          title={t.ownerDashboard.title}
+          title={t.merchantDashboard.title}
           subtitle={user?.full_name || user?.email || ""}
           actions={
             <>
@@ -207,7 +207,7 @@ export default function OwnerDashboard() {
                 size="icon"
                 onClick={() => setShowManagement(true)}
                 className="bg-white/20 hover:bg-white/30 backdrop-blur-sm text-primary-foreground border-0 h-12 w-12 rounded-xl shadow-lg"
-                title={t.ownerDashboard.management.title}
+                title={t.merchantDashboard.management.title}
               >
                 <Briefcase className="h-6 w-6" />
               </Button>
@@ -216,7 +216,7 @@ export default function OwnerDashboard() {
                 size="icon"
                 onClick={() => setShowSettings(true)}
                 className="bg-white/20 hover:bg-white/30 backdrop-blur-sm text-primary-foreground border-0 h-12 w-12 rounded-xl shadow-lg"
-                title={t.ownerDashboard.settings}
+                title={t.merchantDashboard.settings}
               >
                 <Settings className="h-6 w-6" />
               </Button>
@@ -234,7 +234,7 @@ export default function OwnerDashboard() {
             >
               <Share2 className="h-4 w-4 sm:mr-2" />
               <span className="hidden sm:inline">
-                {t.ownerDashboard.tabs.viralPerformance}
+                {t.merchantDashboard.tabs.viralPerformance}
               </span>
             </Button>
             <Button
@@ -244,7 +244,7 @@ export default function OwnerDashboard() {
             >
               <DollarSign className="h-4 w-4 sm:mr-2" />
               <span className="hidden sm:inline">
-                {t.ownerDashboard.tabs.businessMetrics}
+                {t.merchantDashboard.tabs.businessMetrics}
               </span>
             </Button>
             <Button
@@ -254,7 +254,7 @@ export default function OwnerDashboard() {
             >
               <UsersIcon className="h-4 w-4 sm:mr-2" />
               <span className="hidden sm:inline">
-                {t.ownerDashboard.tabs.customerInsights}
+                {t.merchantDashboard.tabs.customerInsights}
               </span>
             </Button>
           </div>
@@ -292,7 +292,7 @@ export default function OwnerDashboard() {
         />
 
         {/* Settings Panel */}
-        <OwnerSettingsPanel
+        <MerchantSettingsPanel
           isOpen={showSettings}
           onClose={() => setShowSettings(false)}
           user={user}

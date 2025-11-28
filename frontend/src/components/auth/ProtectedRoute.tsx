@@ -40,8 +40,8 @@ export function ProtectedRoute({ children, allowedRoles }: ProtectedRouteProps) 
         return <Navigate to="/customer/dashboard" replace />;
       case 'staff':
         return <Navigate to="/staff/dashboard" replace />;
-      case 'owner':
-        return <Navigate to="/owner/dashboard" replace />;
+      case 'merchant':
+        return <Navigate to="/merchant/dashboard" replace />;
       case 'admin':
         return <Navigate to="/admin/dashboard" replace />;
       default:

@@ -92,7 +92,7 @@ export const about = {
   step4Title: 'Redeem & Save',
   step4Desc: 'Use your virtual currency to get up to 20% off your next meal. Show your QR code and save instantly!',
   
-  forRestaurantsTitle: 'For Restaurant Owners',
+  forRestaurantsTitle: 'For Restaurant Merchants',
   forRestaurantsPara: 'MalaChilli helps you acquire new customers at a fraction of traditional marketing costs. Instead of spending on ads, you reward customers who bring in their friends.',
   forRestaurantsPoint1: 'Organic growth through word-of-mouth marketing',
   forRestaurantsPoint2: 'Real-time analytics dashboard to track performance',
@@ -101,7 +101,7 @@ export const about = {
   partnerWithUs: 'Partner With Us',
   
   questionsTitle: 'Questions or Feedback?',
-  questionsDesc: 'We\'d love to hear from you! Whether you\'re a customer or restaurant owner, get in touch.',
+  questionsDesc: 'We\'d love to hear from you! Whether you\'re a customer or restaurant merchant, get in touch.',
   viewFAQ: 'View FAQ',
   contactUs: 'Contact Us',
 };

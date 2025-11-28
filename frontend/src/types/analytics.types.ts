@@ -1,4 +1,4 @@
-// Analytics Types for Owner Dashboard
+// Analytics Types for Merchant Dashboard
 // Date: 2025-11-01
 
 /**

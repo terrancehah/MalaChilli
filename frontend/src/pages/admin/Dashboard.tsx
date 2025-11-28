@@ -46,7 +46,7 @@ export default function AdminDashboard() {
 
         const totalUsers = users?.length || 0;
         const totalMerchants =
-          users?.filter((u) => u.role === "owner").length || 0;
+          users?.filter((u) => u.role === "merchant").length || 0;
         const totalStaff = users?.filter((u) => u.role === "staff").length || 0;
 
         setStats({

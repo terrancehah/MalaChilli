@@ -2,7 +2,7 @@ import { common, timeAgo } from './common';
 import { auth } from './auth';
 import * as customer from './customer';
 import { staffDashboard } from './staff';
-import { ownerDashboard } from './owner';
+import { merchantDashboard } from './merchant';
 import * as legal from './legal';
 
 export const ms = {
@@ -11,6 +11,6 @@ export const ms = {
   auth,
   ...customer,
   staffDashboard,
-  ownerDashboard,
+  merchantDashboard,
   ...legal,
 };

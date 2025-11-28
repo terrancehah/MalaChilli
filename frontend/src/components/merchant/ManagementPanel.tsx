@@ -23,29 +23,29 @@ export function ManagementPanel({
   const menuItems = [
     {
       icon: Users,
-      label: t.ownerDashboard.management.manageStaff,
-      description: t.ownerDashboard.management.manageStaffDesc,
+      label: t.merchantDashboard.management.manageStaff,
+      description: t.merchantDashboard.management.manageStaffDesc,
       onClick: () => {
         onClose();
-        navigate('/owner/staff');
+        navigate('/merchant/staff');
       }
     },
     {
       icon: Building2,
-      label: t.ownerDashboard.management.manageBranches,
-      description: t.ownerDashboard.management.manageBranchesDesc,
+      label: t.merchantDashboard.management.manageBranches,
+      description: t.merchantDashboard.management.manageBranchesDesc,
       onClick: () => {
         onClose();
-        navigate('/owner/branches');
+        navigate('/merchant/branches');
       }
     },
     {
       icon: SettingsIcon,
-      label: t.ownerDashboard.management.restaurantSettings,
-      description: t.ownerDashboard.management.restaurantSettingsDesc,
+      label: t.merchantDashboard.management.restaurantSettings,
+      description: t.merchantDashboard.management.restaurantSettingsDesc,
       onClick: () => {
         onClose();
-        navigate('/owner/settings');
+        navigate('/merchant/settings');
       }
     }
   ];
@@ -70,7 +70,7 @@ export function ManagementPanel({
 
         {/* Header */}
         <div className="px-6 py-4 border-b border-border">
-          <h2 className="text-lg font-bold text-foreground">{t.ownerDashboard.management.title}</h2>
+          <h2 className="text-lg font-bold text-foreground">{t.merchantDashboard.management.title}</h2>
           {restaurantName && (
             <p className="text-sm text-muted-foreground mt-1">
               {restaurantName}

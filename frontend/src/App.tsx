@@ -19,13 +19,13 @@ import StaffDashboard from "./pages/staff/Dashboard";
 import StaffTransactions from "./pages/staff/Transactions";
 import { MenuManagement } from "./pages/staff/MenuManagement";
 
-// Owner pages
-import OwnerDashboard from "./pages/owner/Dashboard";
-import OwnerCustomers from "./pages/owner/Customers";
-import OwnerTransactions from "./pages/owner/Transactions";
-import OwnerStaff from "./pages/owner/Staff";
-import OwnerBranches from "./pages/owner/Branches";
-import OwnerSettings from "./pages/owner/Settings";
+// Merchant pages
+import MerchantDashboard from "./pages/merchant/Dashboard";
+import MerchantCustomers from "./pages/merchant/Customers";
+import MerchantTransactions from "./pages/merchant/Transactions";
+import MerchantStaff from "./pages/merchant/Staff";
+import MerchantBranches from "./pages/merchant/Branches";
+import MerchantSettings from "./pages/merchant/Settings";
 
 // Admin pages
 import AdminDashboard from "./pages/admin/Dashboard";
@@ -101,52 +101,52 @@ function App() {
             }
           />
 
-          {/* Owner Portal (protected) */}
+          {/* Merchant Portal (protected) */}
           <Route
-            path="/owner/dashboard"
+            path="/merchant/dashboard"
             element={
-              <ProtectedRoute allowedRoles={["owner"]}>
-                <OwnerDashboard />
+              <ProtectedRoute allowedRoles={["merchant"]}>
+                <MerchantDashboard />
               </ProtectedRoute>
             }
           />
           <Route
-            path="/owner/customers"
+            path="/merchant/customers"
             element={
-              <ProtectedRoute allowedRoles={["owner"]}>
-                <OwnerCustomers />
+              <ProtectedRoute allowedRoles={["merchant"]}>
+                <MerchantCustomers />
               </ProtectedRoute>
             }
           />
           <Route
-            path="/owner/transactions"
+            path="/merchant/transactions"
             element={
-              <ProtectedRoute allowedRoles={["owner"]}>
-                <OwnerTransactions />
+              <ProtectedRoute allowedRoles={["merchant"]}>
+                <MerchantTransactions />
               </ProtectedRoute>
             }
           />
           <Route
-            path="/owner/staff"
+            path="/merchant/staff"
             element={
-              <ProtectedRoute allowedRoles={["owner"]}>
-                <OwnerStaff />
+              <ProtectedRoute allowedRoles={["merchant"]}>
+                <MerchantStaff />
               </ProtectedRoute>
             }
           />
           <Route
-            path="/owner/branches"
+            path="/merchant/branches"
             element={
-              <ProtectedRoute allowedRoles={["owner"]}>
-                <OwnerBranches />
+              <ProtectedRoute allowedRoles={["merchant"]}>
+                <MerchantBranches />
               </ProtectedRoute>
             }
           />
           <Route
-            path="/owner/settings"
+            path="/merchant/settings"
             element={
-              <ProtectedRoute allowedRoles={["owner"]}>
-                <OwnerSettings />
+              <ProtectedRoute allowedRoles={["merchant"]}>
+                <MerchantSettings />
               </ProtectedRoute>
             }
           />

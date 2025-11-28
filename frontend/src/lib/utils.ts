@@ -83,8 +83,8 @@ export function getDashboardRoute(role: string): string {
       return '/customer/dashboard';
     case 'staff':
       return '/staff/dashboard';
-    case 'owner':
-      return '/owner/dashboard';
+    case 'merchant':
+      return '/merchant/dashboard';
     default:
       return '/customer/dashboard';
   }

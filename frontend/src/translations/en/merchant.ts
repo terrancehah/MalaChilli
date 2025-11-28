@@ -1,5 +1,5 @@
-export const ownerDashboard = {
-  title: 'Owner Dashboard',
+export const merchantDashboard = {
+  title: 'Merchant Dashboard',
   settings: 'Settings',
   
   // Tabs
@@ -71,6 +71,7 @@ export const ownerDashboard = {
     pending: 'Pending',
     done: 'Done',
     avgTime: 'Avg time',
+    networkGrowthTrend: 'Network Growth Trend',
     comingSoon: '📊 More viral analytics coming soon: Network visualization, sharing behavior analysis, K-factor tracking',
   },
   

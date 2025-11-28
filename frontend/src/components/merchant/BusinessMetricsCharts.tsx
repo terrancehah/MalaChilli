@@ -26,15 +26,15 @@ export function BusinessMetricsCharts({
   
   const chartConfig = {
     gross_revenue: {
-      label: t.ownerDashboard.businessMetrics.totalRevenue,
+      label: t.merchantDashboard.businessMetrics.totalRevenue,
       color: "hsl(var(--chart-1))",
     },
     net_revenue: {
-      label: t.ownerDashboard.businessMetrics.netRevenue,
+      label: t.merchantDashboard.businessMetrics.netRevenue,
       color: "hsl(var(--chart-2))",
     },
     discount_amount: {
-      label: t.ownerDashboard.businessMetrics.totalDiscounts,
+      label: t.merchantDashboard.businessMetrics.totalDiscounts,
       color: "hsl(var(--chart-3))",
     },
   };
@@ -56,10 +56,10 @@ export function BusinessMetricsCharts({
             <div className="flex items-center justify-between flex-wrap gap-2">
               <CardTitle className="text-sm sm:text-base flex items-center gap-2">
                 <TrendingUp className="h-4 w-4 sm:h-5 sm:w-5" />
-                {t.ownerDashboard.businessMetrics.revenueOverTime}
+                {t.merchantDashboard.businessMetrics.revenueOverTime}
                 <InfoButton 
-                  title={t.ownerDashboard.businessMetrics.revenueOverTime}
-                  description={t.ownerDashboard.businessMetrics.revenueOverTimeInfo}
+                  title={t.merchantDashboard.businessMetrics.revenueOverTime}
+                  description={t.merchantDashboard.businessMetrics.revenueOverTimeInfo}
                 />
               </CardTitle>
               
@@ -71,7 +71,7 @@ export function BusinessMetricsCharts({
                   onClick={() => setRevenuePeriod(7)}
                   className="h-8 px-3 text-xs"
                 >
-                  {t.ownerDashboard.businessMetrics.days7}
+                  {t.merchantDashboard.businessMetrics.days7}
                 </Button>
                 <Button
                   variant={revenuePeriod === 14 ? 'default' : 'outline'}
@@ -79,7 +79,7 @@ export function BusinessMetricsCharts({
                   onClick={() => setRevenuePeriod(14)}
                   className="h-8 px-3 text-xs"
                 >
-                  {t.ownerDashboard.businessMetrics.days14}
+                  {t.merchantDashboard.businessMetrics.days14}
                 </Button>
                 <Button
                   variant={revenuePeriod === 30 ? 'default' : 'outline'}
@@ -87,7 +87,7 @@ export function BusinessMetricsCharts({
                   onClick={() => setRevenuePeriod(30)}
                   className="h-8 px-3 text-xs"
                 >
-                  {t.ownerDashboard.businessMetrics.days30}
+                  {t.merchantDashboard.businessMetrics.days30}
                 </Button>
               </div>
             </div>
@@ -95,19 +95,19 @@ export function BusinessMetricsCharts({
             {/* Revenue Summary */}
             <div className="grid grid-cols-3 gap-3 sm:gap-4 text-center">
               <div className={`p-2 rounded-lg transition-colors ${revenuePeriod === 7 ? 'bg-primary/10' : 'bg-muted/30'}`}>
-                <p className="text-xs text-muted-foreground">{t.ownerDashboard.businessMetrics.last7Days}</p>
+                <p className="text-xs text-muted-foreground">{t.merchantDashboard.businessMetrics.last7Days}</p>
                 <p className="text-sm sm:text-lg font-bold text-foreground">
                   RM {revenue7d.toLocaleString('en-MY', { minimumFractionDigits: 2 })}
                 </p>
               </div>
               <div className={`p-2 rounded-lg transition-colors ${revenuePeriod === 14 ? 'bg-primary/10' : 'bg-muted/30'}`}>
-                <p className="text-xs text-muted-foreground">{t.ownerDashboard.businessMetrics.last14Days}</p>
+                <p className="text-xs text-muted-foreground">{t.merchantDashboard.businessMetrics.last14Days}</p>
                 <p className="text-sm sm:text-lg font-bold text-foreground">
                   RM {revenue14d.toLocaleString('en-MY', { minimumFractionDigits: 2 })}
                 </p>
               </div>
               <div className={`p-2 rounded-lg transition-colors ${revenuePeriod === 30 ? 'bg-primary/10' : 'bg-muted/30'}`}>
-                <p className="text-xs text-muted-foreground">{t.ownerDashboard.businessMetrics.last30Days}</p>
+                <p className="text-xs text-muted-foreground">{t.merchantDashboard.businessMetrics.last30Days}</p>
                 <p className="text-sm sm:text-lg font-bold text-foreground">
                   RM {revenue30d.toLocaleString('en-MY', { minimumFractionDigits: 2 })}
                 </p>

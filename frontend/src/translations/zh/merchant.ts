@@ -1,4 +1,4 @@
-export const ownerDashboard = {
+export const merchantDashboard = {
   title: '业主仪表板',
   settings: '设置',
   
@@ -71,6 +71,7 @@ export const ownerDashboard = {
     pending: '待处理',
     done: '已完成',
     avgTime: '平均时长',
+    networkGrowthTrend: '网络增长趋势',
     comingSoon: '📊 更多传播分析即将推出：网络可视化、分享行为分析、K因子追踪',
   },
   
