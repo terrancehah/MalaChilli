@@ -140,7 +140,7 @@ export const referralInfo = {
 
 export const demo = {
   title: '演示仪表板',
-  subtitle: '体验 MalaChilli',
+  subtitle: '体验 MakanTak',
   description: '这是一个演示仪表板，展示客户体验如何运作。',
   tryItOut: '试用',
   features: '功能',

@@ -82,7 +82,7 @@ export default function Contact() {
                 {t.contact.emailSupportDesc}
               </p>
               <a
-                href="mailto:support@malachilli.com"
+                href="mailto:support@makantak.com"
                 className="text-primary hover:underline font-medium"
               >
                 {t.contact.emailSupportAddress}
@@ -98,7 +98,7 @@ export default function Contact() {
                 {t.contact.businessInquiriesDesc}
               </p>
               <a
-                href="mailto:business@malachilli.com"
+                href="mailto:business@makantak.com"
                 className="text-primary hover:underline font-medium"
               >
                 {t.contact.businessInquiriesAddress}

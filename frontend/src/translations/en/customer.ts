@@ -140,7 +140,7 @@ export const referralInfo = {
 
 export const demo = {
   title: 'Demo Dashboard',
-  subtitle: 'Experience MalaChilli',
+  subtitle: 'Experience MakanTak',
   description: 'This is a demo dashboard showing how the customer experience works.',
   tryItOut: 'Try It Out',
   features: 'Features',

@@ -1,13 +1,13 @@
 export const faq = {
   title: 'Soalan Lazim',
-  subtitle: 'Cari jawapan kepada soalan lazim tentang MalaChilli',
+  subtitle: 'Cari jawapan kepada soalan lazim tentang MakanTak',
   backToHome: 'Kembali ke Laman Utama',
   stillHaveQuestions: 'Masih ada soalan?',
   stillHaveQuestionsDesc: 'Tidak jumpa jawapan yang anda cari? Pasukan sokongan kami sedia membantu!',
   contactSupport: 'Hubungi Sokongan',
   
-  q1: 'Apakah MalaChilli?',
-  a1: 'MalaChilli adalah platform diskaun rujukan viral yang memberi ganjaran kepada anda kerana berkongsi dengan rakan. Apabila anda merujuk seseorang dan mereka membuat pembelian, anda memperoleh mata wang virtual yang boleh digunakan sebagai diskaun pada lawatan seterusnya!',
+  q1: 'Apakah MakanTak?',
+  a1: 'MakanTak adalah platform diskaun rujukan viral yang memberi ganjaran kepada anda kerana berkongsi dengan rakan. Apabila anda merujuk seseorang dan mereka membuat pembelian, anda memperoleh mata wang virtual yang boleh digunakan sebagai diskaun pada lawatan seterusnya!',
   
   q2: 'Bagaimana saya memperoleh mata wang virtual?',
   a2Title: 'Anda memperoleh mata wang virtual dalam dua cara:',
@@ -50,7 +50,7 @@ export const faq = {
   a13: 'Kami memerlukan tarikh lahir anda untuk mengesahkan anda berumur 18 tahun ke atas (keperluan umur undang-undang) dan untuk menghantar tawaran istimewa hari lahir!',
   
   q14: 'Bagaimana saya memadam akaun saya?',
-  a14: 'Untuk memadam akaun anda dan semua data yang berkaitan, sila hubungi pasukan sokongan kami di support@malachilli.com',
+  a14: 'Untuk memadam akaun anda dan semua data yang berkaitan, sila hubungi pasukan sokongan kami di support@makantak.com',
   a14Note: 'Nota: Memadam akaun anda akan membuang semua baki mata wang virtual dan sejarah rujukan anda.',
   
   q15: 'Bolehkah saya memindahkan mata wang virtual saya kepada orang lain?',
@@ -61,7 +61,7 @@ export const faq = {
 };
 
 export const about = {
-  title: 'Tentang MalaChilli',
+  title: 'Tentang MakanTak',
   subtitle: 'Merevolusikan kesetiaan restoran melalui rujukan viral',
   backToHome: 'Kembali ke Laman Utama',
   
@@ -69,8 +69,8 @@ export const about = {
   missionText: 'Untuk memperkasakan restoran dan pelanggan melalui sistem rujukan menang-menang yang memberi ganjaran perkongsian, membina komuniti, dan menjadikan makan di luar lebih berpatutan untuk semua orang.',
   
   whatWeDoTitle: 'Apa Yang Kami Lakukan',
-  whatWeDoPara1: 'MalaChilli adalah platform diskaun rujukan viral pertama Malaysia yang direka khusus untuk restoran. Kami membantu restoran mengembangkan pangkalan pelanggan mereka secara organik sambil memberi ganjaran kepada pelanggan setia kerana menyebarkan berita.',
-  whatWeDoPara2: 'Tidak seperti program kesetiaan tradisional yang hanya memberi ganjaran pembelian individu, MalaChilli mencipta kesan rangkaian di mana semua orang mendapat manfaat. Apabila anda berkongsi kod rujukan anda dan rakan anda makan di restoran, anda memperoleh mata wang virtual. Apabila rakan mereka makan, anda memperoleh lagi - sehingga 3 peringkat!',
+  whatWeDoPara1: 'MakanTak adalah platform diskaun rujukan viral pertama Malaysia yang direka khusus untuk restoran. Kami membantu restoran mengembangkan pangkalan pelanggan mereka secara organik sambil memberi ganjaran kepada pelanggan setia kerana menyebarkan berita.',
+  whatWeDoPara2: 'Tidak seperti program kesetiaan tradisional yang hanya memberi ganjaran pembelian individu, MakanTak mencipta kesan rangkaian di mana semua orang mendapat manfaat. Apabila anda berkongsi kod rujukan anda dan rakan anda makan di restoran, anda memperoleh mata wang virtual. Apabila rakan mereka makan, anda memperoleh lagi - sehingga 3 peringkat!',
   
   coreValuesTitle: 'Nilai Teras Kami',
   transparencyTitle: 'Ketelusan',
@@ -93,7 +93,7 @@ export const about = {
   step4Desc: 'Gunakan mata wang virtual anda untuk mendapat sehingga 20% diskaun pada hidangan seterusnya. Tunjukkan kod QR anda dan jimat serta-merta!',
   
   forRestaurantsTitle: 'Untuk Pemilik Restoran',
-  forRestaurantsPara: 'MalaChilli membantu anda memperoleh pelanggan baharu pada sebahagian kecil daripada kos pemasaran tradisional. Daripada berbelanja untuk iklan, anda memberi ganjaran kepada pelanggan yang membawa rakan mereka.',
+  forRestaurantsPara: 'MakanTak membantu anda memperoleh pelanggan baharu pada sebahagian kecil daripada kos pemasaran tradisional. Daripada berbelanja untuk iklan, anda memberi ganjaran kepada pelanggan yang membawa rakan mereka.',
   forRestaurantsPoint1: 'Pertumbuhan organik melalui pemasaran dari mulut ke mulut',
   forRestaurantsPoint2: 'Papan pemuka analitik masa nyata untuk menjejak prestasi',
   forRestaurantsPoint3: 'Pengiraan diskaun automatik dan pengurusan mata wang virtual',
@@ -113,11 +113,11 @@ export const contact = {
   
   emailSupportTitle: 'Sokongan E-mel',
   emailSupportDesc: 'Untuk pertanyaan am dan sokongan',
-  emailSupportAddress: 'support@malachilli.com',
+  emailSupportAddress: 'support@makantak.com',
   
   businessInquiriesTitle: 'Pertanyaan Perniagaan',
   businessInquiriesDesc: 'Perkongsian restoran dan kerjasama',
-  businessInquiriesAddress: 'business@malachilli.com',
+  businessInquiriesAddress: 'business@makantak.com',
   
   phoneSupportTitle: 'Sokongan Telefon',
   phoneSupportDesc: 'Isnin-Jumaat, 9 PAGI-6 PETANG (GMT+8)',
@@ -151,7 +151,7 @@ export const contact = {
   faqTitle: 'Soalan Lazim',
   faqDesc: 'Soalan lazim',
   aboutTitle: 'Tentang Kami',
-  aboutDesc: 'Ketahui lebih lanjut tentang MalaChilli',
+  aboutDesc: 'Ketahui lebih lanjut tentang MakanTak',
   privacyTitle: 'Dasar Privasi',
   privacyDesc: 'Bagaimana kami melindungi data anda',
   

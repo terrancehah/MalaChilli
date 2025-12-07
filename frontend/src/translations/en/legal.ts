@@ -1,13 +1,13 @@
 export const faq = {
   title: 'Frequently Asked Questions',
-  subtitle: 'Find answers to common questions about MalaChilli',
+  subtitle: 'Find answers to common questions about MakanTak',
   backToHome: 'Back to Home',
   stillHaveQuestions: 'Still have questions?',
   stillHaveQuestionsDesc: 'Can\'t find the answer you\'re looking for? Our support team is here to help!',
   contactSupport: 'Contact Support',
   
-  q1: 'What is MalaChilli?',
-  a1: 'MalaChilli is a viral referral discount platform that rewards you for sharing with friends. When you refer someone and they make a purchase, you earn virtual currency that can be used as discounts on your next visit!',
+  q1: 'What is MakanTak?',
+  a1: 'MakanTak is a viral referral discount platform that rewards you for sharing with friends. When you refer someone and they make a purchase, you earn virtual currency that can be used as discounts on your next visit!',
   
   q2: 'How do I earn virtual currency?',
   a2Title: 'You earn virtual currency in two ways:',
@@ -50,7 +50,7 @@ export const faq = {
   a13: 'We require your birthday to verify you\'re 18 or older (legal age requirement) and to send you special birthday offers!',
   
   q14: 'How do I delete my account?',
-  a14: 'To delete your account and all associated data, please contact our support team at support@malachilli.com',
+  a14: 'To delete your account and all associated data, please contact our support team at support@makantak.com',
   a14Note: 'Note: Deleting your account will remove all your virtual currency balance and referral history.',
   
   q15: 'Can I transfer my virtual currency to someone else?',
@@ -61,7 +61,7 @@ export const faq = {
 };
 
 export const about = {
-  title: 'About MalaChilli',
+  title: 'About MakanTak',
   subtitle: 'Revolutionizing restaurant loyalty through viral referrals',
   backToHome: 'Back to Home',
   
@@ -69,8 +69,8 @@ export const about = {
   missionText: 'To empower restaurants and customers through a win-win referral system that rewards sharing, builds community, and makes dining out more affordable for everyone.',
   
   whatWeDoTitle: 'What We Do',
-  whatWeDoPara1: 'MalaChilli is Malaysia\'s first viral referral discount platform designed specifically for restaurants. We help restaurants grow their customer base organically while rewarding loyal customers for spreading the word.',
-  whatWeDoPara2: 'Unlike traditional loyalty programs that only reward individual purchases, MalaChilli creates a network effect where everyone benefits. When you share your referral code and your friends dine at the restaurant, you earn virtual currency. When their friends dine, you earn again - up to 3 levels deep!',
+  whatWeDoPara1: 'MakanTak is Malaysia\'s first viral referral discount platform designed specifically for restaurants. We help restaurants grow their customer base organically while rewarding loyal customers for spreading the word.',
+  whatWeDoPara2: 'Unlike traditional loyalty programs that only reward individual purchases, MakanTak creates a network effect where everyone benefits. When you share your referral code and your friends dine at the restaurant, you earn virtual currency. When their friends dine, you earn again - up to 3 levels deep!',
   
   coreValuesTitle: 'Our Core Values',
   transparencyTitle: 'Transparency',
@@ -93,7 +93,7 @@ export const about = {
   step4Desc: 'Use your virtual currency to get up to 20% off your next meal. Show your QR code and save instantly!',
   
   forRestaurantsTitle: 'For Restaurant Merchants',
-  forRestaurantsPara: 'MalaChilli helps you acquire new customers at a fraction of traditional marketing costs. Instead of spending on ads, you reward customers who bring in their friends.',
+  forRestaurantsPara: 'MakanTak helps you acquire new customers at a fraction of traditional marketing costs. Instead of spending on ads, you reward customers who bring in their friends.',
   forRestaurantsPoint1: 'Organic growth through word-of-mouth marketing',
   forRestaurantsPoint2: 'Real-time analytics dashboard to track performance',
   forRestaurantsPoint3: 'Automated discount calculations and virtual currency management',
@@ -113,11 +113,11 @@ export const contact = {
   
   emailSupportTitle: 'Email Support',
   emailSupportDesc: 'For general inquiries and support',
-  emailSupportAddress: 'support@malachilli.com',
+  emailSupportAddress: 'support@makantak.com',
   
   businessInquiriesTitle: 'Business Inquiries',
   businessInquiriesDesc: 'Restaurant partnerships and collaborations',
-  businessInquiriesAddress: 'business@malachilli.com',
+  businessInquiriesAddress: 'business@makantak.com',
   
   phoneSupportTitle: 'Phone Support',
   phoneSupportDesc: 'Mon-Fri, 9AM-6PM (GMT+8)',
@@ -151,7 +151,7 @@ export const contact = {
   faqTitle: 'FAQ',
   faqDesc: 'Common questions',
   aboutTitle: 'About Us',
-  aboutDesc: 'Learn more about MalaChilli',
+  aboutDesc: 'Learn more about MakanTak',
   privacyTitle: 'Privacy Policy',
   privacyDesc: 'How we protect your data',
   

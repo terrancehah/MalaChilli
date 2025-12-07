@@ -47,7 +47,7 @@ export default function LoginPage() {
           </h2>
           <p className="mt-2 text-sm text-gray-600">
             Sign in to continue to{" "}
-            <span className="font-semibold text-primary">MalaChilli</span>
+            <span className="font-semibold text-primary">MakanTak</span>
           </p>
         </div>
 

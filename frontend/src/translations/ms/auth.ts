@@ -14,7 +14,7 @@ export const auth = {
   // Register
   register: 'Daftar',
   registerTitle: 'Cipta Akaun',
-  registerSubtitle: 'Sertai MalaChilli hari ini',
+  registerSubtitle: 'Sertai MakanTak hari ini',
   fullName: 'Nama Penuh',
   confirmPassword: 'Sahkan Kata Laluan',
   haveAccount: 'Sudah mempunyai akaun?',

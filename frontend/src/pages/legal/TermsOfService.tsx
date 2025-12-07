@@ -14,7 +14,7 @@ export default function TermsOfService() {
           <section>
             <h2 className="text-xl font-bold text-foreground mb-3">1. Acceptance of Terms</h2>
             <p className="text-foreground leading-relaxed">
-              By accessing or using MalaChilli ("the Platform"), you agree to be bound by these Terms of Service. If you do not agree to these terms, please do not use the Platform.
+              By accessing or using MakanTak ("the Platform"), you agree to be bound by these Terms of Service. If you do not agree to these terms, please do not use the Platform.
             </p>
           </section>
 
@@ -22,7 +22,7 @@ export default function TermsOfService() {
           <section>
             <h2 className="text-xl font-bold text-foreground mb-3">2. Definitions</h2>
             <ul className="list-disc pl-6 space-y-1 text-foreground">
-              <li><strong>"Platform":</strong> The MalaChilli web application and services</li>
+              <li><strong>"Platform":</strong> The MakanTak web application and services</li>
               <li><strong>"User":</strong> Any person who creates an account (Customer, Staff, or Merchant)</li>
               <li><strong>"Virtual Currency" (VC):</strong> Reward credits earned through referrals, redeemable for discounts</li>
               <li><strong>"Referral Code":</strong> Unique code assigned to each user for sharing</li>
@@ -141,7 +141,7 @@ export default function TermsOfService() {
           <section>
             <h2 className="text-xl font-bold text-foreground mb-3">7. Intellectual Property</h2>
             <p className="text-foreground leading-relaxed">
-              All content, trademarks, logos, and intellectual property on the Platform are owned by MalaChilli or our licensors. You may not copy, modify, distribute, or create derivative works without written permission.
+              All content, trademarks, logos, and intellectual property on the Platform are owned by MakanTak or our licensors. You may not copy, modify, distribute, or create derivative works without written permission.
             </p>
           </section>
 
@@ -194,7 +194,7 @@ export default function TermsOfService() {
           <section>
             <h2 className="text-xl font-bold text-foreground mb-3">11. Limitation of Liability</h2>
             <p className="text-foreground leading-relaxed">
-              TO THE MAXIMUM EXTENT PERMITTED BY LAW, MALACHILLI SHALL NOT BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, OR PUNITIVE DAMAGES, INCLUDING LOSS OF PROFITS, DATA, OR VIRTUAL CURRENCY.
+              TO THE MAXIMUM EXTENT PERMITTED BY LAW, MAKANTAK SHALL NOT BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, OR PUNITIVE DAMAGES, INCLUDING LOSS OF PROFITS, DATA, OR VIRTUAL CURRENCY.
             </p>
             <p className="text-foreground leading-relaxed mt-3">
               Our total liability shall not exceed RM 100 or the amount you paid to us in the past 12 months, whichever is greater.
@@ -205,7 +205,7 @@ export default function TermsOfService() {
           <section>
             <h2 className="text-xl font-bold text-foreground mb-3">12. Indemnification</h2>
             <p className="text-foreground leading-relaxed">
-              You agree to indemnify and hold harmless MalaChilli, its affiliates, and restaurant partners from any claims, damages, or expenses arising from your use of the Platform or violation of these Terms.
+              You agree to indemnify and hold harmless MakanTak, its affiliates, and restaurant partners from any claims, damages, or expenses arising from your use of the Platform or violation of these Terms.
             </p>
           </section>
 
@@ -232,7 +232,7 @@ export default function TermsOfService() {
               If you have questions about these Terms, contact us at:
             </p>
             <div className="mt-3 text-foreground">
-              <p><strong>Email:</strong> support@malachilli.com</p>
+              <p><strong>Email:</strong> support@makantak.com</p>
               <p><strong>Address:</strong> [Your Business Address]</p>
             </div>
           </section>

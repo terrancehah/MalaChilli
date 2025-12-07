@@ -1,6 +1,6 @@
 # Technical Reference
 
-## MalaChilli - System Architecture & Data Model
+## MakanTak - System Architecture & Data Model
 
 **Document Type:** Technical Reference  
 **Last Updated:** 2025-11-21 (Consolidated)  

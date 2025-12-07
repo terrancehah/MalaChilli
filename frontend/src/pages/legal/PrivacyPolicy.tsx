@@ -14,7 +14,7 @@ export default function PrivacyPolicy() {
           <section>
             <h2 className="text-xl font-bold text-foreground mb-3">1. Introduction</h2>
             <p className="text-foreground leading-relaxed">
-              MalaChilli ("we", "our", or "us") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our viral restaurant discount platform.
+              MakanTak ("we", "our", or "us") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our viral restaurant discount platform.
             </p>
             <p className="text-foreground leading-relaxed mt-2">
               This policy complies with the Personal Data Protection Act 2010 (PDPA) of Malaysia.
@@ -119,7 +119,7 @@ export default function PrivacyPolicy() {
               <li><strong>Complaint:</strong> Lodge a complaint with the Personal Data Protection Commissioner</li>
             </ul>
             <p className="text-foreground leading-relaxed mt-3">
-              To exercise these rights, contact us at: <a href="mailto:privacy@malachilli.com" className="text-primary hover:underline">privacy@malachilli.com</a>
+              To exercise these rights, contact us at: <a href="mailto:privacy@makantak.com" className="text-primary hover:underline">privacy@makantak.com</a>
             </p>
           </section>
 
@@ -162,7 +162,7 @@ export default function PrivacyPolicy() {
               If you have questions about this Privacy Policy or our data practices, contact us at:
             </p>
             <div className="mt-3 text-foreground">
-              <p><strong>Email:</strong> privacy@malachilli.com</p>
+              <p><strong>Email:</strong> privacy@makantak.com</p>
               <p><strong>Address:</strong> [Your Business Address]</p>
               <p><strong>Data Protection Officer:</strong> [DPO Name and Contact]</p>
             </div>

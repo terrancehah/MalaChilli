@@ -1,13 +1,13 @@
 export const faq = {
   title: '常见问题',
-  subtitle: '查找有关MalaChilli的常见问题答案',
+  subtitle: '查找有关MakanTak的常见问题答案',
   backToHome: '返回首页',
   stillHaveQuestions: '还有问题？',
   stillHaveQuestionsDesc: '找不到您要找的答案？我们的支持团队随时为您服务！',
   contactSupport: '联系支持',
   
-  q1: '什么是MalaChilli？',
-  a1: 'MalaChilli是一个病毒式推荐折扣平台，奖励您与朋友分享。当您推荐某人并且他们进行购买时，您将获得虚拟货币，可用作下次访问的折扣！',
+  q1: '什么是MakanTak？',
+  a1: 'MakanTak是一个病毒式推荐折扣平台，奖励您与朋友分享。当您推荐某人并且他们进行购买时，您将获得虚拟货币，可用作下次访问的折扣！',
   
   q2: '如何赚取虚拟货币？',
   a2Title: '您可以通过两种方式赚取虚拟货币：',
@@ -50,7 +50,7 @@ export const faq = {
   a13: '我们需要您的生日来验证您年满18岁（法定年龄要求）并向您发送特别的生日优惠！',
   
   q14: '如何删除我的账户？',
-  a14: '要删除您的账户和所有相关数据，请联系我们的支持团队：support@malachilli.com',
+  a14: '要删除您的账户和所有相关数据，请联系我们的支持团队：support@makantak.com',
   a14Note: '注意：删除您的账户将删除您所有的虚拟货币余额和推荐历史记录。',
   
   q15: '我可以将我的虚拟货币转让给其他人吗？',
@@ -61,7 +61,7 @@ export const faq = {
 };
 
 export const about = {
-  title: '关于MalaChilli',
+  title: '关于MakanTak',
   subtitle: '通过病毒式推荐革新餐厅忠诚度',
   backToHome: '返回首页',
   
@@ -69,8 +69,8 @@ export const about = {
   missionText: '通过双赢的推荐系统赋能餐厅和顾客，奖励分享，建立社区，让每个人的外出就餐更实惠。',
   
   whatWeDoTitle: '我们做什么',
-  whatWeDoPara1: 'MalaChilli是马来西亚首个专为餐厅设计的病毒式推荐折扣平台。我们帮助餐厅有机地增长客户群，同时奖励忠实客户传播信息。',
-  whatWeDoPara2: '与仅奖励个人购买的传统忠诚度计划不同，MalaChilli创造了一个网络效应，让每个人都受益。当您分享推荐码并且您的朋友在餐厅用餐时，您会赚取虚拟货币。当他们的朋友用餐时，您再次赚取 - 最多3级！',
+  whatWeDoPara1: 'MakanTak是马来西亚首个专为餐厅设计的病毒式推荐折扣平台。我们帮助餐厅有机地增长客户群，同时奖励忠实客户传播信息。',
+  whatWeDoPara2: '与仅奖励个人购买的传统忠诚度计划不同，MakanTak创造了一个网络效应，让每个人都受益。当您分享推荐码并且您的朋友在餐厅用餐时，您会赚取虚拟货币。当他们的朋友用餐时，您再次赚取 - 最多3级！',
   
   coreValuesTitle: '我们的核心价值观',
   transparencyTitle: '透明度',
@@ -93,7 +93,7 @@ export const about = {
   step4Desc: '使用您的虚拟货币在下一餐获得最多20%的折扣。出示您的二维码，立即节省！',
   
   forRestaurantsTitle: '为餐厅老板',
-  forRestaurantsPara: 'MalaChilli帮助您以传统营销成本的一小部分获得新客户。您不是在广告上花钱，而是奖励带来朋友的客户。',
+  forRestaurantsPara: 'MakanTak帮助您以传统营销成本的一小部分获得新客户。您不是在广告上花钱，而是奖励带来朋友的客户。',
   forRestaurantsPoint1: '通过口碑营销实现有机增长',
   forRestaurantsPoint2: '实时分析仪表板跟踪性能',
   forRestaurantsPoint3: '自动折扣计算和虚拟货币管理',
@@ -113,11 +113,11 @@ export const contact = {
   
   emailSupportTitle: '电子邮件支持',
   emailSupportDesc: '一般咨询和支持',
-  emailSupportAddress: 'support@malachilli.com',
+  emailSupportAddress: 'support@makantak.com',
   
   businessInquiriesTitle: '商务咨询',
   businessInquiriesDesc: '餐厅合作伙伴关系和协作',
-  businessInquiriesAddress: 'business@malachilli.com',
+  businessInquiriesAddress: 'business@makantak.com',
   
   phoneSupportTitle: '电话支持',
   phoneSupportDesc: '周一至周五，上午9点至下午6点（GMT+8）',
@@ -151,7 +151,7 @@ export const contact = {
   faqTitle: '常见问题',
   faqDesc: '常见问题',
   aboutTitle: '关于我们',
-  aboutDesc: '了解更多关于MalaChilli',
+  aboutDesc: '了解更多关于MakanTak',
   privacyTitle: '隐私政策',
   privacyDesc: '我们如何保护您的数据',
   

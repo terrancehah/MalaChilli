@@ -1,4 +1,4 @@
-# MalaChilli 🍽️
+# MakanTak 🍽️
 
 **Full-Stack Restaurant Loyalty Platform** — React • TypeScript • Supabase • PostgreSQL
 

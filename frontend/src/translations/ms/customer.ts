@@ -140,7 +140,7 @@ export const referralInfo = {
 
 export const demo = {
   title: 'Papan Pemuka Demo',
-  subtitle: 'Alami MalaChilli',
+  subtitle: 'Alami MakanTak',
   description: 'Ini adalah papan pemuka demo yang menunjukkan cara pengalaman pelanggan berfungsi.',
   tryItOut: 'Cuba Sekarang',
   features: 'Ciri-ciri',

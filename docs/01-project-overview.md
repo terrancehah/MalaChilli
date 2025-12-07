@@ -1,6 +1,6 @@
 # Project Overview
 
-## MalaChilli - Viral Restaurant Discount Platform
+## MakanTak - Viral Restaurant Discount Platform
 
 **Document Type:** Master Project Overview  
 **Last Updated:** 2025-11-21 (Consolidated)  
@@ -10,7 +10,7 @@
 
 ## 1. Vision & Value Proposition
 
-MalaChilli is a web-based viral marketing platform that helps Malaysian local restaurants increase foot traffic and sales through multi-level discount sharing.
+MakanTak is a web-based viral marketing platform that helps Malaysian local restaurants increase foot traffic and sales through multi-level discount sharing.
 
 **Tagline:** *"Share the savings, grow the community"*
 
@@ -95,4 +95,4 @@ MalaChilli is a web-based viral marketing platform that helps Malaysian local re
 
 * **Target:** Malaysian local restaurants (Kopitiam, Mamak, Cafes).
 * **Initial Focus:** Klang Valley (Pilot phase).
-* **Differentiation:** Unlike GrabFood/Foodpanda (high commissions) or Fave (one-off deals), MalaChilli builds **owned** referral networks for restaurants.
+* **Differentiation:** Unlike GrabFood/Foodpanda (high commissions) or Fave (one-off deals), MakanTak builds **owned** referral networks for restaurants.

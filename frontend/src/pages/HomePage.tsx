@@ -22,7 +22,7 @@ export default function HomePage() {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
         <div className="text-center">
           <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 dark:text-white mb-4">
-            MalaChilli
+            MakanTak
           </h1>
           <p className="text-lg sm:text-xl text-gray-600 dark:text-gray-300 mb-8 max-w-2xl mx-auto">
             Earn rewards by sharing. Save on every meal.

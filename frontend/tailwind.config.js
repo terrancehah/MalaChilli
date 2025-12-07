@@ -8,7 +8,7 @@ export default {
   theme: {
   	extend: {
   		colors: {
-  			// MalaChilli Brand Colors (Green Food Theme)
+  			// MakanTak Brand Colors (Green Food Theme)
   			primary: {
   				DEFAULT: '#2E7D32', // Fresh Forest Green
   				dark: '#1B5E20',     // Deep Green

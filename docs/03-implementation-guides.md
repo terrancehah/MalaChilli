@@ -1,6 +1,6 @@
 # Implementation Guides & Design System
 
-## MalaChilli - Developer Handbook
+## MakanTak - Developer Handbook
 
 **Document Type:** Implementation Guide  
 **Last Updated:** 2025-11-21 (Consolidated)  
@@ -126,7 +126,7 @@ A user has one **Customer ID** (`CHILLI-ABC123`) for identification, but generat
 1. **First Visit:** Backend detects `first_transaction` = true.
 2. **Auto-Generate:** Edge Function creates a code for that restaurant (e.g., `CHILLI-REST1-XYZ`).
 3. **Storage:** Stored in `user_restaurant_referral_codes`.
-4. **Sharing:** Customer shares `malachilli.com/join/restaurant-slug/CHILLI-REST1-XYZ`.
+4. **Sharing:** Customer shares `makantak.com/join/restaurant-slug/CHILLI-REST1-XYZ`.
 
 #### Link Handling
 

@@ -14,7 +14,7 @@ export const auth = {
   // Register
   register: '注册',
   registerTitle: '创建账户',
-  registerSubtitle: '今天加入 MalaChilli',
+  registerSubtitle: '今天加入 MakanTak',
   fullName: '全名',
   confirmPassword: '确认密码',
   haveAccount: '已有账户？',

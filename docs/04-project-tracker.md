@@ -1,6 +1,6 @@
 # Project Tracker & Changelog
 
-## MalaChilli - Development Status
+## MakanTak - Development Status
 
 **Document Type:** Project Management  
 **Last Updated:** 2025-11-21 (Consolidated)  
