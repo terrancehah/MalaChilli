@@ -43,7 +43,7 @@
 **Multi-Language Support** - Full internationalization in English, Bahasa Malaysia, and Simplified Chinese  
 **Customer Dashboard** - Restaurant-specific virtual currency tracking, referral management, QR codes  
 **Social Sharing** - One-click WhatsApp/Facebook sharing with pre-filled messages  
-**Transaction Processing** - QR scanning, receipt uploads, real-time calculations  
+**Transaction Processing** - QR scanning, AI receipt OCR, real-time calculations  
 **Analytics** - Metrics dashboard with reporting and export capabilities
 
 ---
@@ -54,7 +54,7 @@
 Centralized stats card showing total earnings and savings across all restaurants, giving users a complete overview of their loyalty rewards throughout their app lifecycle.
 
 <div align="center">
-  <img src="docs/images/dashboard-total-stats.png" alt="Total Stats" width="300"/>
+  <img src="docs/images/dashboard-currency-card.png" alt="Total Stats" width="300"/>
   <p><em>Total earned and redeemed VC across all restaurants</em></p>
 </div>
 

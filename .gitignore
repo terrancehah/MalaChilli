@@ -80,7 +80,7 @@ Thumbs.db
 # maintaining the repository as a technical portfolio.
 
 # Business-sensitive documentation (exclude entire folder)
-docs/
+# docs/
 
 # Supabase configuration and migrations (contains proprietary business logic)
 supabase/
