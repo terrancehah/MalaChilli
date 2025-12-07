@@ -71,7 +71,7 @@
 | **`transaction_items`** | Line items from receipts. | **NEW (Nov 1)**: Supports OCR extraction and item-level analytics. |
 | **`referrals`** | Upline-Downline links. | Tracks relationships **per restaurant**. Max 3 levels deep. |
 | **`virtual_currency_ledger`** | Wallet history. | Tracks `earn`, `redeem`, `expire` events. FIFO redemption logic. |
-| **`user_restaurant_referral_codes`** | Share codes. | One unique code per user per restaurant (e.g., `CHILLI-REST1-ABC`). |
+| **`user_restaurant_referral_codes`** | Share codes. | One unique code per user per restaurant (e.g., `MAKAN-REST1-ABC`). |
 | **`customer_restaurant_history`** | Visit tracking. | Used to determine "First Visit" eligibility. |
 
 ---

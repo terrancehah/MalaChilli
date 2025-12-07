@@ -43,7 +43,7 @@ export function formatDateTime(date: Date | string): string {
  */
 export function generateReferralCode(): string {
   const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-  let code = 'CHILLI-';
+  let code = 'MAKAN-';
   for (let i = 0; i < 6; i++) {
     code += chars.charAt(Math.floor(Math.random() * chars.length));
   }

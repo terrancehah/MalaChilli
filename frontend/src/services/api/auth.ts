@@ -42,7 +42,7 @@ export async function signUpUser(
   }
 
   // Generate referral code
-  const referralCode = `CHILLI-${Math.random()
+  const referralCode = `MAKAN-${Math.random()
     .toString(36)
     .substring(2, 8)
     .toUpperCase()}`;

@@ -116,7 +116,7 @@ const demoUser = {
   nickname: "Sarah",
   birthday: "1995-03-15",
   age: 29,
-  referral_code: "CHILLI-ABC123",
+  referral_code: "MAKAN-ABC123",
   role: "customer" as const,
   is_email_verified: true,
   email_notifications_enabled: true,
@@ -136,7 +136,7 @@ const mockRestaurantCodes: RestaurantCode[] = [
   {
     id: "1",
     restaurant_id: "rest-1",
-    referral_code: "CHILLI-REST1-ABC",
+    referral_code: "MAKAN-REST1-ABC",
     restaurant: {
       name: "Nasi Lemak Corner",
       slug: "nasi-lemak-corner",
@@ -152,7 +152,7 @@ const mockRestaurantCodes: RestaurantCode[] = [
   {
     id: "2",
     restaurant_id: "rest-2",
-    referral_code: "CHILLI-REST2-XYZ",
+    referral_code: "MAKAN-REST2-XYZ",
     restaurant: {
       name: "Mama's Kitchen",
       slug: "mamas-kitchen",

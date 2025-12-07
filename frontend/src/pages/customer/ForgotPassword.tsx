@@ -63,8 +63,8 @@ export default function ForgotPassword() {
           {/* Logo */}
           <div className="text-center mb-10">
             <h1 className="font-display text-5xl mb-2">
-              <span className="text-gray-900">Mala</span>
-              <span className="text-primary">Chilli</span>
+              <span className="text-gray-900">Makan</span>
+              <span className="text-primary">Tak</span>
             </h1>
             <p className="text-sm text-gray-600">Reset your password</p>
           </div>

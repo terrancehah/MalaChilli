@@ -195,7 +195,7 @@ export function QRScannerSheet({ isOpen, onClose, onScanSuccess, language = 'en'
                   <Input
                     id="manual-code"
                     type="text"
-                    placeholder="CHILLI-ABC123"
+                    placeholder="MAKAN-ABC123"
                     value={manualCode}
                     onChange={(e) => setManualCode(e.target.value.toUpperCase())}
                     className="mt-2 text-base md:landscape:text-lg md:landscape:h-14"
