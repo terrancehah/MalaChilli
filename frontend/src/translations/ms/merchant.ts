@@ -124,7 +124,35 @@ export const merchantDashboard = {
     days14: '14h',
     days30: '30h',
     noRewardsYet: 'Tiada ganjaran rujukan diagihkan lagi.',
-    comingSoon: '📈 Lebih banyak analitik perniagaan akan datang: Carta hasil, peta haba waktu puncak, perbandingan cawangan, prestasi kakitangan',
+    comingSoon: '📈 Lebih banyak analitik akan datang: Carta hasil, peta haba waktu puncak, perbandingan cawangan, prestasi kakitangan',
+    
+    // Transactions Tab
+    transactions: {
+      searchPlaceholder: 'Cari Pelanggan, E-mel atau ID Transaksi...',
+      filter: {
+        today: 'Hari Ini',
+        '7d': '7 Hari',
+        '30d': '30 Hari',
+        all: 'Semua'
+      },
+      columns: {
+        date: 'Tarikh & Masa',
+        customer: 'Pelanggan',
+        branch: 'Cawangan',
+        amount: 'Jumlah Bil',
+        discount: 'Diskaun',
+        net: 'Jumlah Bersih',
+        status: 'Status'
+      },
+      status: {
+        firstVisit: 'Lawatan Pertama',
+        returning: 'Berulang'
+      },
+      noData: 'Tiada transaksi dijumpai untuk tempoh yang dipilih.',
+      showing: 'Menunjukkan',
+      of: 'daripada',
+      results: 'keputusan'
+    },
   },
   
   // Customer Insights Tab

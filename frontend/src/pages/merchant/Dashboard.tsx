@@ -21,6 +21,7 @@ import {
   ViralPerformanceTab,
   BusinessMetricsTab,
   CustomerInsightsTab,
+  TransactionsTab,
 } from "../../components/merchant";
 import { MerchantSettingsPanel } from "../../components/merchant/MerchantSettingsPanel";
 import { ManagementPanel } from "../../components/merchant/ManagementPanel";
@@ -29,7 +30,7 @@ import { LanguageSelector } from "../../components/shared";
 import { useLanguagePreference } from "../../hooks/useLanguagePreference";
 import PullToRefresh from "react-simple-pull-to-refresh";
 
-type TabType = "viral" | "business" | "customers";
+type TabType = "viral" | "business" | "customers" | "transactions";
 
 export default function MerchantDashboard() {
   const { user, signOut } = useAuth();
@@ -278,6 +279,12 @@ export default function MerchantDashboard() {
             <CustomerInsightsTab
               restaurantId={restaurantId!}
               summary={summary}
+              language={language}
+            />
+          )}
+          {activeTab === "transactions" && (
+            <TransactionsTab
+              restaurantId={restaurantId!}
               language={language}
             />
           )}

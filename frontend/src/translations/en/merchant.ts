@@ -125,6 +125,34 @@ export const merchantDashboard = {
     days30: '30d',
     noRewardsYet: 'No upline rewards distributed yet.',
     comingSoon: '📈 More business analytics coming soon: Revenue charts, peak hours heatmap, branch comparison, staff performance',
+    
+    // Transactions Tab
+    transactions: {
+      searchPlaceholder: 'Search by Customer, Email or Transaction ID...',
+      filter: {
+        today: 'Today',
+        '7d': '7 Days',
+        '30d': '30 Days',
+        all: 'All Time'
+      },
+      columns: {
+        date: 'Date & Time',
+        customer: 'Customer',
+        branch: 'Branch',
+        amount: 'Bill Amount',
+        discount: 'Discount',
+        net: 'Net Amount',
+        status: 'Status'
+      },
+      status: {
+        firstVisit: 'First Visit',
+        returning: 'Returning'
+      },
+      noData: 'No transactions found for the selected period.',
+      showing: 'Showing',
+      of: 'of',
+      results: 'results'
+    },
   },
   
   // Customer Insights Tab
