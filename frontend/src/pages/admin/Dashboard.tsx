@@ -6,7 +6,7 @@ import { Card, CardContent } from "../../components/ui/card";
 import { Users, TrendingUp, Store, Settings, Briefcase } from "lucide-react";
 import { useAuth } from "../../contexts/AuthContext";
 import { DashboardHeader } from "../../components/shared/DashboardHeader";
-import { BaseSettingsPanel } from "../../components/shared";
+import { BaseSettingsPanel, SEO } from "../../components/shared";
 import { LanguageSelector } from "../../components/shared";
 import { useLanguagePreference } from "../../hooks/useLanguagePreference";
 import PullToRefresh from "react-simple-pull-to-refresh";
@@ -104,6 +104,7 @@ export default function AdminDashboard() {
       }
     >
       <div className="min-h-screen pb-6">
+        <SEO title="Admin Dashboard" description="Admin Control Center" />
         <DashboardHeader
           title="Super Admin"
           subtitle="System Control Center"

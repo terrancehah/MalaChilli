@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { resetPasswordForEmail } from '../../services/api';
 import toast, { Toaster } from 'react-hot-toast';
+import { SEO } from '../../components/shared';
 
 export default function ForgotPassword() {
   const [email, setEmail] = useState('');
@@ -38,6 +39,7 @@ export default function ForgotPassword() {
 
   return (
     <>
+      <SEO title="Forgot Password" description="Reset your MakanTak password." />
       <Toaster position="top-right" toastOptions={{
         duration: 4000,
         style: {

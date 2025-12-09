@@ -1,5 +1,6 @@
 export { DashboardHeader } from './DashboardHeader';
-export { StatsCard } from './StatsCard';
+export * from './StatsCard';
+export * from './SEO';
 export { LanguageSelector } from './LanguageSelector';
 export { InfoButton } from './InfoButton';
 export { BaseSettingsPanel } from './BaseSettingsPanel';

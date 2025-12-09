@@ -1,6 +1,9 @@
+import { SEO } from '../../components/shared/SEO';
+
 export default function TermsOfService() {
   return (
     <div className="min-h-screen bg-background">
+      <SEO title="Terms of Service" description="MakanTak Terms of Service - Rules and regulations for using our platform." />
       <div className="max-w-4xl mx-auto px-4 py-8">
         {/* Header */}
         <div className="mb-8">

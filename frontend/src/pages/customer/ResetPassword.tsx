@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { getCurrentSession, signOutUser } from '../../services/api';
 import { supabase } from '../../lib/supabase';
 import toast, { Toaster } from 'react-hot-toast';
+import { SEO } from '../../components/shared';
 
 export default function ResetPassword() {
   const [password, setPassword] = useState('');
@@ -83,6 +84,7 @@ export default function ResetPassword() {
 
   return (
     <>
+      <SEO title="Reset Password" description="Set a new password for your MakanTak account." />
       <Toaster position="top-right" toastOptions={{
         duration: 4000,
         style: {

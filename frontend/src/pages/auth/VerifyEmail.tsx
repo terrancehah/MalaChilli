@@ -3,6 +3,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { supabase } from '../../lib/supabase';
 import { Card, CardContent } from '../../components/ui/card';
 import { CheckCircle, XCircle, Loader2 } from 'lucide-react';
+import { SEO } from '../../components/shared';
 
 export default function VerifyEmail() {
   const [searchParams] = useSearchParams();
@@ -55,6 +56,7 @@ export default function VerifyEmail() {
 
   return (
     <div className="min-h-screen bg-background flex items-center justify-center p-6">
+      <SEO title="Verify Email" description="Verify your email address for MakanTak." />
       <Card className="w-full max-w-md">
         <CardContent className="p-8 text-center">
           {status === 'loading' && (

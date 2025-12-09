@@ -1,10 +1,12 @@
 import { Toaster } from 'react-hot-toast';
 import { LoginForm } from '../../components/auth';
+import { SEO } from '../../components/shared';
 
 export default function Login() {
 
   return (
     <>
+      <SEO title="Login" description="Login to your MakanTak account." />
       <Toaster position="top-right" toastOptions={{
         duration: 4000,
         style: {

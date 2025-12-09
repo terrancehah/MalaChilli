@@ -26,7 +26,7 @@ import { TransactionDetailSheet } from "../../components/customer/TransactionDet
 import { DashboardHeader } from "../../components/shared/DashboardHeader";
 import { StatsCard } from "../../components/shared/StatsCard";
 import { ListSkeleton } from "../../components/ui/skeleton";
-import { LanguageSelector } from "../../components/shared";
+import { LanguageSelector, SEO } from "../../components/shared";
 import { useLanguagePreference } from "../../hooks/useLanguagePreference";
 import PullToRefresh from "react-simple-pull-to-refresh";
 import { Loader2 } from "lucide-react";
@@ -416,6 +416,7 @@ export default function CustomerDashboard() {
       }
     >
       <div className="min-h-screen pb-6">
+        <SEO title="Dashboard" description="View your savings, rewards, and restaurant codes." />
         <DashboardHeader
           title={user.full_name || user.email}
           subtitle={t.profile.welcome}

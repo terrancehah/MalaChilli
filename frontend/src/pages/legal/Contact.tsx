@@ -3,7 +3,7 @@ import { Mail, MessageSquare, Phone, MapPin } from 'lucide-react';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
 import { getTranslation, type Language } from '../../translations';
-import { LanguageSelector } from '../../components/shared';
+import { LanguageSelector, SEO } from '../../components/shared';
 
 export default function Contact() {
   const [language, setLanguage] = useState<Language>('en');
@@ -57,6 +57,7 @@ export default function Contact() {
 
   return (
     <div className="min-h-screen bg-background">
+      <SEO title={t.contact.title} description="Get in touch with the MakanTak team for support, business inquiries, or feedback." />
       <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8">
         {/* Header */}
         <div className="mb-8">

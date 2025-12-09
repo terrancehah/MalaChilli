@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import { ChevronDown, ChevronUp } from 'lucide-react';
 import { useState } from 'react';
 import { getTranslation, type Language } from '../../translations';
-import { LanguageSelector } from '../../components/shared';
+import { LanguageSelector, SEO } from '../../components/shared';
 
 interface FAQItem {
   question: string;
@@ -110,6 +110,7 @@ export default function FAQ() {
 
   return (
     <div className="min-h-screen bg-background">
+      <SEO title={t.faq.title} description="Frequently asked questions about MakanTak - The viral restaurant discount platform." />
       <div className="max-w-4xl mx-auto px-4 sm:px-6 py-8">
         {/* Header */}
         <div className="mb-8">

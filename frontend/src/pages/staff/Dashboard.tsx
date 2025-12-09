@@ -6,7 +6,7 @@ import { Button } from "../../components/ui/button";
 import { HeaderSkeleton } from "../../components/ui/skeleton";
 import { Alert, AlertDescription } from "../../components/ui/alert";
 import { getTranslation } from "../../translations";
-import { LanguageSelector } from "../../components/shared";
+import { LanguageSelector, SEO } from "../../components/shared";
 import { useLanguagePreference } from "../../hooks/useLanguagePreference";
 import {
   SettingsPanel,
@@ -241,6 +241,7 @@ export default function StaffDashboard() {
       }
     >
       <div className="min-h-screen pb-6">
+        <SEO title={t.staffDashboard.title} description="Staff Dashboard - Process transactions and verify customers." />
         <DashboardHeader
           title={user?.full_name || user?.email || t.staffDashboard.title}
           subtitle={t.staffDashboard.subtitle}

@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import { Target, Users, TrendingUp, Heart } from 'lucide-react';
 import { useState } from 'react';
 import { getTranslation, type Language } from '../../translations';
-import { LanguageSelector } from '../../components/shared';
+import { LanguageSelector, SEO } from '../../components/shared';
 
 export default function AboutUs() {
   const [language, setLanguage] = useState<Language>('en');
@@ -10,6 +10,7 @@ export default function AboutUs() {
 
   return (
     <div className="min-h-screen bg-background">
+      <SEO title={t.about.title} description="Learn about MakanTak's mission to help local restaurants grow through community-driven viral marketing." />
       <div className="max-w-4xl mx-auto px-4 sm:px-6 py-8">
         {/* Header */}
         <div className="mb-8">

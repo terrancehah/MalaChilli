@@ -1,6 +1,9 @@
+import { SEO } from '../../components/shared/SEO';
+
 export default function PrivacyPolicy() {
   return (
     <div className="min-h-screen bg-background">
+      <SEO title="Privacy Policy" description="MakanTak Privacy Policy - How we collect, use, and protect your personal information." />
       <div className="max-w-4xl mx-auto px-4 py-8">
         {/* Header */}
         <div className="mb-8">

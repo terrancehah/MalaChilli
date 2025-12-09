@@ -26,7 +26,7 @@ import {
 import { MerchantSettingsPanel } from "../../components/merchant/MerchantSettingsPanel";
 import { ManagementPanel } from "../../components/merchant/ManagementPanel";
 import { DashboardHeader } from "../../components/shared/DashboardHeader";
-import { LanguageSelector } from "../../components/shared";
+import { LanguageSelector, SEO } from "../../components/shared";
 import { useLanguagePreference } from "../../hooks/useLanguagePreference";
 import PullToRefresh from "react-simple-pull-to-refresh";
 
@@ -194,6 +194,7 @@ export default function MerchantDashboard() {
       }
     >
       <div className="min-h-screen pb-6">
+        <SEO title={t.merchantDashboard.title} description="Merchant Dashboard - Monitor your restaurant's viral performance and business metrics." />
         <DashboardHeader
           title={t.merchantDashboard.title}
           subtitle={user?.full_name || user?.email || ""}

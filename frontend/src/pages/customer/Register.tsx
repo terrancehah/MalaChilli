@@ -1,6 +1,7 @@
 import { useParams, useLocation } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 import { RegisterForm } from "../../components/auth";
+import { SEO } from "../../components/shared";
 
 export default function Register() {
   const { referralCode: urlReferralCode } = useParams();
@@ -12,6 +13,7 @@ export default function Register() {
 
   return (
     <>
+      <SEO title="Register" description="Create a new MakanTak account." />
       <Toaster
         position="top-right"
         toastOptions={{

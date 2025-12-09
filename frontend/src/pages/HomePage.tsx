@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { LoginModal, RegisterModal } from '../components/auth';
 import { Toaster } from 'react-hot-toast';
+import { SEO } from '../components/shared';
 
 export default function HomePage() {
   const [showLoginModal, setShowLoginModal] = useState(false);
@@ -19,6 +20,7 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-primary/5 to-white dark:from-gray-900 dark:to-gray-950">
+      <SEO title="Home" description="MakanTak - Share the savings, grow the community. The viral restaurant discount platform." />
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
         <div className="text-center">
           <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 dark:text-white mb-4">
