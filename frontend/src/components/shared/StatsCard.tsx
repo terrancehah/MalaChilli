@@ -12,7 +12,7 @@ interface StatsCardProps {
 
 export function StatsCard({ stats }: StatsCardProps) {
   return (
-    <Card className="glass-card border-0 bg-white/50 dark:bg-gray-900/50">
+    <Card className="glass-card border-0 bg-white/90 dark:bg-gray-900/90 shadow-lg backdrop-blur-xl">
       <CardContent className="p-5 md:p-6">
         <div
           className={`grid grid-cols-${stats.length} gap-2 md:gap-4 text-center`}

@@ -253,8 +253,8 @@ export default function DemoDashboard() {
     <div className="min-h-screen pb-6">
       <SEO title="Demo Dashboard" description="Experience the MakanTak dashboard in demo mode." />
       {/* Demo Banner */}
-      <div className="bg-accent/10 border-b border-accent/20 px-6 py-3 backdrop-blur-sm">
-        <p className="text-center text-sm text-accent-foreground font-medium">
+      <div className="bg-orange-100 dark:bg-orange-900/30 border-b border-orange-200 dark:border-orange-800 px-6 py-3 backdrop-blur-sm">
+        <p className="text-center text-sm text-orange-800 dark:text-orange-200 font-medium">
           <strong>Demo Mode</strong> - This is a preview with sample data.
         </p>
       </div>
@@ -282,11 +282,9 @@ export default function DemoDashboard() {
             </Button>
           </>
         }
-      />
-
-      <div className="px-6 -mt-16 space-y-6 relative z-10">
+      >
         <StatsCard stats={demoStats} />
-      </div>
+      </DashboardHeader>
 
       <div className="px-6 mt-6 space-y-6">
         {/* Restaurant-Specific Referral Codes */}
