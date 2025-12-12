@@ -22,6 +22,7 @@ import {
   BusinessMetricsTab,
   CustomerInsightsTab,
   TransactionsTab,
+  MerchantAIChat,
 } from "../../components/merchant";
 import { MerchantSettingsPanel } from "../../components/merchant/MerchantSettingsPanel";
 import { ManagementPanel } from "../../components/merchant/ManagementPanel";
@@ -308,6 +309,13 @@ export default function MerchantDashboard() {
           restaurantName={restaurantName}
           language={language}
           onLanguageChange={setLanguage}
+        />
+
+        {/* AI Chat Assistant - Active (v1) */}
+        <MerchantAIChat
+          summary={summary}
+          restaurantName={restaurantName}
+          language={language}
         />
       </div>
     </PullToRefresh>
