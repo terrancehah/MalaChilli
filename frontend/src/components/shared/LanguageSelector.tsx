@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { Globe, ChevronDown } from "lucide-react";
 import type { Language } from "../../translations";
+import { cn } from "../../lib/utils";
 
 interface LanguageSelectorProps {
   language: Language;
@@ -12,7 +13,7 @@ export function LanguageSelector({
   onLanguageChange,
 }: LanguageSelectorProps) {
   const [isOpen, setIsOpen] = useState(false);
-  const dropdownRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   const languages: { code: Language; label: string }[] = [
     { code: "en", label: "English" },
@@ -20,59 +21,56 @@ export function LanguageSelector({
     { code: "zh", label: "中文" },
   ];
 
-  // Close dropdown when clicking outside
+  // Close when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(event.target as Node)
+        containerRef.current &&
+        !containerRef.current.contains(event.target as Node)
       ) {
         setIsOpen(false);
       }
     };
-
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const handleLanguageSelect = (lang: Language) => {
-    onLanguageChange(lang);
+  const handleSelect = (code: Language) => {
+    onLanguageChange(code);
     setIsOpen(false);
   };
 
   return (
-    <div className="relative inline-block" ref={dropdownRef}>
-      <button
-        className="h-12 flex items-center gap-2 px-4 py-2 text-sm bg-white/20 hover:bg-white/30 backdrop-blur-sm text-primary-foreground rounded-xl transition-colors border-0 shadow-lg"
-        onClick={() => setIsOpen(!isOpen)}
-      >
-        <Globe className="h-5 w-5" />
-        <span className="hidden sm:inline">
-          {languages.find((l) => l.code === language)?.label}
-        </span>
-        <ChevronDown
-          className={`h-4 w-4 transition-transform ${
-            isOpen ? "rotate-180" : ""
-          }`}
-        />
-      </button>
-
-      {isOpen && (
-        <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 z-50">
+    <div className="relative z-50" ref={containerRef}>
+      {isOpen ? (
+        <div className="absolute right-0 top-0 w-40 bg-white rounded-xl shadow-xl border border-gray-100 overflow-hidden animate-in fade-in zoom-in-95 duration-200">
           {languages.map((lang) => (
             <button
               key={lang.code}
-              className={`w-full text-left px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors first:rounded-t-lg last:rounded-b-lg ${
+              onClick={() => handleSelect(lang.code)}
+              className={cn(
+                "w-full text-left px-4 py-3 text-sm transition-colors hover:bg-gray-50",
                 language === lang.code
-                  ? "bg-gray-100 dark:bg-gray-700 font-semibold"
-                  : ""
-              }`}
-              onClick={() => handleLanguageSelect(lang.code)}
+                  ? "text-primary font-bold bg-primary/10"
+                  : "text-gray-700"
+              )}
             >
               {lang.label}
             </button>
           ))}
         </div>
+      ) : (
+        <button
+          className="h-12 flex items-center gap-2 px-4 py-2 text-sm bg-white/20 hover:bg-white/30 backdrop-blur-sm text-primary-foreground rounded-xl transition-all border-0 shadow-lg"
+          onClick={() => setIsOpen(true)}
+          title="Change Language"
+        >
+          <Globe className="h-5 w-5" />
+          <span className="hidden sm:inline font-medium">
+            {languages.find((l) => l.code === language)?.label}
+          </span>
+          <ChevronDown className="h-4 w-4" />
+        </button>
       )}
     </div>
   );
