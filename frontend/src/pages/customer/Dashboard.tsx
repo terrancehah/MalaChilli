@@ -418,8 +418,8 @@ export default function CustomerDashboard() {
       <div className="min-h-screen pb-6">
         <SEO title="Dashboard" description="View your savings, rewards, and restaurant codes." />
         <DashboardHeader
-          title={user.full_name || user.email}
-          subtitle={t.profile.welcome}
+           title={t.profile.welcome}
+            subtitle={user.full_name || user.email}
           actions={
             <>
               <LanguageSelector

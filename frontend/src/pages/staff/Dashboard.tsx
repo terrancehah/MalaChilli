@@ -243,8 +243,8 @@ export default function StaffDashboard() {
       <div className="min-h-screen pb-6">
         <SEO title={t.staffDashboard.title} description="Staff Dashboard - Process transactions and verify customers." />
         <DashboardHeader
-          title={user?.full_name || user?.email || t.staffDashboard.title}
-          subtitle={t.staffDashboard.subtitle}
+            title={t.staffDashboard.subtitle}
+            subtitle={user?.full_name || user?.email || t.staffDashboard.title}
           actions={
             <>
               <LanguageSelector
