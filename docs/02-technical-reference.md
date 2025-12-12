@@ -3,7 +3,7 @@
 ## MakanTak - System Architecture & Data Model
 
 **Document Type:** Technical Reference  
-**Last Updated:** 2025-11-21 (Consolidated)  
+**Last Updated:** 2025-12-12 (Role Standardization)  
 **Source of Truth:**  
 
 * **Database Schema:** `/supabase/migrations/`
@@ -64,7 +64,7 @@
 
 | Table Name | Purpose | Key Notes |
 | :--- | :--- | :--- |
-| **`users`** | All accounts (Customer, Staff, Merchant). | Managed via Supabase Auth. Includes `preferred_language`, `role`. |
+| **`users`** | All accounts (Customer, Staff, Merchant, Admin). | Managed via Supabase Auth. Role: `customer`, `staff`, `merchant`, `admin`. |
 | **`restaurants`** | Restaurant entities. | Configures `guaranteed_discount_percent`, `upline_reward_percent`. |
 | **`branches`** | Physical locations. | Linked to Staff users. |
 | **`transactions`** | Checkout records. | Stores `bill_amount`, `final_amount`, `receipt_photo_url`. |
@@ -81,11 +81,12 @@
 ### Authentication & Authorization
 
 * **JWT:** All API requests are authenticated via Supabase JWT.
-* **RBAC:** Users have a `role` column (`customer`, `staff`, `merchant`).
+* **RBAC:** Users have a `role` column (`customer`, `staff`, `merchant`, `admin`).
 * **RLS (Row Level Security):** Database policies enforce access control at the SQL level.
   * *Customers* can only see their own data.
   * *Staff* can see data for their assigned branch.
   * *Merchants* can see data for their restaurant.
+  * *Admins* have full system access (via specific admin policies).
 
 ### Data Compliance (PDPA)
 

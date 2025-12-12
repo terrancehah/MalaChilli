@@ -10,6 +10,21 @@
 
 ## 1. Recent Updates (Changelog)
 
+### 📅 Dec 2025 Updates
+
+**Role & Schema Standardization** ✅
+
+* **Database:** Migrated legacy `owner` roles to `merchant`.
+* **Constraint:** Updated `users` table constraint to strictly enforce `merchant` role.
+* **Frontend:** Standardized all protected routes to use `merchant` role.
+
+**UX & Reliability Improvements** ✅
+
+* **Mobile UX:** Enhanced Merchant Dashboard tabs for better readability on small screens.
+* **Visuals:** Improved `StatsCard` contrast and visibility against green backgrounds.
+* **Login:** Fixed race condition in redirection logic and added autocomplete attributes.
+* **Analytics:** Fixed 406 error on empty states by handling zero-row returns gracefully.
+
 ### 📅 Nov 2025 Updates
 
 **VC Expiry Cron Job Deployed** ✅

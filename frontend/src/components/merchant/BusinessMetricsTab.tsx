@@ -74,7 +74,7 @@ export function BusinessMetricsTab({
           .from("discount_breakdown")
           .select("*")
           .eq("restaurant_id", restaurantId)
-          .single();
+          .maybeSingle();
 
         if (discountData) {
           setDiscountBreakdown(discountData);

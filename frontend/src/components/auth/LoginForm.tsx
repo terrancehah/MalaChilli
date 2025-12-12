@@ -31,15 +31,14 @@ export function LoginForm({ onSuccess, showSignUpLink = true, onSwitchToSignUp }
       await signIn(formData.email, formData.password);
       toast.success('Welcome back!');
       
+      // Navigate immediately to dashboard
+      // The router will handle the redirection to /customer/dashboard or /staff/dashboard based on role
+      navigate('/dashboard');
+
       // Call onSuccess callback if provided (for modal close)
       if (onSuccess) {
         onSuccess();
       }
-      
-      // Redirect to dashboard on success
-      setTimeout(() => {
-        navigate('/dashboard');
-      }, 500);
     } catch (err: any) {
       toast.error(err.message || 'Failed to login. Please check your credentials.');
     } finally {
@@ -68,6 +67,7 @@ export function LoginForm({ onSuccess, showSignUpLink = true, onSwitchToSignUp }
             placeholder="your.email@example.com"
             value={formData.email}
             onChange={handleChange}
+            autoComplete="username"
             className="input-field-minimal"
             required
           />
@@ -83,6 +83,7 @@ export function LoginForm({ onSuccess, showSignUpLink = true, onSwitchToSignUp }
             placeholder="••••••••"
             value={formData.password}
             onChange={handleChange}
+            autoComplete="current-password"
             className="input-field-minimal"
             required
           />

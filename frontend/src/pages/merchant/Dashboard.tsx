@@ -232,30 +232,30 @@ export default function MerchantDashboard() {
             <Button
               onClick={() => setActiveTab("viral")}
               variant={activeTab === "viral" ? "default" : "outline"}
-              className="h-10 whitespace-nowrap flex-shrink-0"
+              className="h-10 whitespace-nowrap flex-shrink-0 px-3 sm:px-4 gap-1"
             >
-              <Share2 className="h-4 w-4 sm:mr-2" />
-              <span className="hidden sm:inline">
+              <Share2 className="h-4 w-4 mr-1" />
+              <span className="text-xs sm:text-sm">
                 {t.merchantDashboard.tabs.viralPerformance}
               </span>
             </Button>
             <Button
               onClick={() => setActiveTab("business")}
               variant={activeTab === "business" ? "default" : "outline"}
-              className="h-10 whitespace-nowrap flex-shrink-0"
+              className="h-10 whitespace-nowrap flex-shrink-0 px-3 sm:px-4 gap-1"
             >
-              <DollarSign className="h-4 w-4 sm:mr-2" />
-              <span className="hidden sm:inline">
+              <DollarSign className="h-4 w-4 mr-1" />
+              <span className="text-xs sm:text-sm">
                 {t.merchantDashboard.tabs.businessMetrics}
               </span>
             </Button>
             <Button
               onClick={() => setActiveTab("customers")}
               variant={activeTab === "customers" ? "default" : "outline"}
-              className="h-10 whitespace-nowrap flex-shrink-0"
+              className="h-10 whitespace-nowrap flex-shrink-0 px-3 sm:px-4 gap-1"
             >
-              <UsersIcon className="h-4 w-4 sm:mr-2" />
-              <span className="hidden sm:inline">
+              <UsersIcon className="h-4 w-4 mr-1" />
+              <span className="text-xs sm:text-sm">
                 {t.merchantDashboard.tabs.customerInsights}
               </span>
             </Button>
