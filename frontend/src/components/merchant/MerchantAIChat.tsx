@@ -88,7 +88,7 @@ export function MerchantAIChat({ summary, restaurantName, language }: MerchantAI
 
         const genAI = new GoogleGenerativeAI(apiKey);
         const model = genAI.getGenerativeModel({ 
-          model: "gemini-2.0-flash", // Reverted to 2.0-flash as requested
+          model: "gemini-2.5-flash", // Reverted to 2.5-flash as requested
           systemInstruction: `You are an expert restaurant business analyst assistant for "${restaurantName}".
           
           Your goal is to help the merchant understand their business performance based on the provided dashboard data.
