@@ -3,7 +3,7 @@
 ## MakanTak - Developer Handbook
 
 **Document Type:** Implementation Guide  
-**Last Updated:** 2025-11-21 (Consolidated)  
+**Last Updated:** 2025-12-17 (Documentation Audit)  
 **Covers:** Design System, Frontend Architecture, and Critical Feature Flows.
 
 ---
@@ -88,14 +88,19 @@ npm run dev
 ``
 /src
   ├── /components          # UI Components
-  │   ├── /common          # Buttons, Modals, Cards
-  │   ├── /customer        # Customer-specific logic
+  │   ├── /auth            # Authentication (ProtectedRoute, etc.)
+  │   ├── /customer        # Customer dashboard components
+  │   ├── /merchant        # Merchant analytics & management
+  │   ├── /shared          # Reusable components (StatsCard, LanguageSelector, etc.)
   │   ├── /staff           # Staff dashboard & checkout
-  │   └── /merchant           # Analytics charts
+  │   └── /ui              # Base UI primitives (Button, Card, Input, etc.)
   ├── /contexts            # Global State (AuthContext)
+  ├── /hooks               # Custom React hooks (useLanguagePreference, etc.)
+  ├── /lib                 # Supabase client, Utils, OCR helpers
   ├── /pages               # Route Views
-  ├── /translations        # i18n (en.ts, ms.ts, zh.ts)
-  └── /lib                 # Supabase client, Utils
+  ├── /services            # API service layer
+  ├── /translations        # i18n (en/, ms/, zh/ subdirectories)
+  └── /types               # TypeScript type definitions
 ``
 
 ### 2. Internationalization (i18n)
@@ -147,9 +152,9 @@ A user has one **Customer ID** (`MAKAN-ABC123`) for identification, but generate
 
 1. **Scan:** Staff uploads/snaps receipt photo in Dashboard.
 2. **Process:** Gemini extracts structured data (JSON).
-3. **Match:** 
-   - **Fuzzy Match:** Compares extracted text with `menu_items` using Levenshtein distance.
-   - **Transaction Match:** Looks for existing transaction by `bill_amount` and `timestamp`.
+3. **Match:**
+   * **Fuzzy Match:** Compares extracted text with `menu_items` using Levenshtein distance.
+   * **Transaction Match:** Looks for existing transaction by `bill_amount` and `timestamp`.
 4. **Link:** Updates the transaction with `receipt_photo_url` and structured item data.
 
 ### 3. Staff Checkout Flow (Streamlined)

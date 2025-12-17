@@ -131,7 +131,6 @@ export default function RegisterPage() {
       const userData = await signUp(email, password, {
         full_name: fullName,
         birthday,
-        age,
         referral_code: userReferralCode,
         role,
       });

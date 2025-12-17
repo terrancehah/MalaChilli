@@ -3,7 +3,7 @@
 ## MakanTak - System Architecture & Data Model
 
 **Document Type:** Technical Reference  
-**Last Updated:** 2025-12-12 (Role Standardization)  
+**Last Updated:** 2025-12-17 (Documentation Audit)  
 **Source of Truth:**  
 
 * **Database Schema:** `/supabase/migrations/`
@@ -28,7 +28,7 @@
 * **Database:** PostgreSQL 15
 * **Auth:** Supabase Auth (Email/Password + Magic Link)
 * **API:** Auto-generated REST API + Edge Functions
-* **Realtime:** Supabase Realtime (Wallet updates)
+* **Realtime:** Supabase Realtime (Planned for wallet updates - not yet implemented)
 * **Storage:** Supabase Storage (Receipt photos)
 
 ### Infrastructure
@@ -71,8 +71,12 @@
 | **`transaction_items`** | Line items from receipts. | **NEW (Nov 1)**: Supports OCR extraction and item-level analytics. |
 | **`referrals`** | Upline-Downline links. | Tracks relationships **per restaurant**. Max 3 levels deep. |
 | **`virtual_currency_ledger`** | Wallet history. | Tracks `earn`, `redeem`, `expire` events. FIFO redemption logic. |
-| **`user_restaurant_referral_codes`** | Share codes. | One unique code per user per restaurant (e.g., `MAKAN-REST1-ABC`). |
+| **`user_restaurant_referral_codes`** | Share codes. | One unique code per user per restaurant (e.g., `MAKANTAK-CHUANXING-JOHNSMITH`). |
 | **`customer_restaurant_history`** | Visit tracking. | Used to determine "First Visit" eligibility. |
+| **`menu_items`** | Restaurant menu/products. | For OCR matching and inventory management. |
+| **`email_notifications`** | Email tracking. | Tracks sent emails to prevent duplicates. |
+| **`audit_logs`** | Action logging. | Tracks critical actions for security and debugging. |
+| **`system_config`** | System settings. | System-wide configuration parameters. |
 
 ---
 

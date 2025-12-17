@@ -71,17 +71,8 @@ export default function MerchantDashboard() {
             setRestaurantName(restaurantData.name);
           }
         } else {
-          // Fallback: fetch from restaurants table
-          const { data } = await supabase
-            .from("restaurants")
-            .select("id, name")
-            .eq("merchant_id", user.id)
-            .single();
-
-          if (data) {
-            setRestaurantId(data.id);
-            setRestaurantName(data.name);
-          }
+          // Merchant users should always have restaurant_id set
+          console.warn("Merchant user missing restaurant_id association");
         }
       } catch (error) {
         console.error("Error fetching restaurant ID:", error);

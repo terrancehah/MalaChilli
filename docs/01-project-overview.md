@@ -3,7 +3,7 @@
 ## MakanTak - Viral Restaurant Discount Platform
 
 **Document Type:** Master Project Overview  
-**Last Updated:** 2025-11-21 (Consolidated)  
+**Last Updated:** 2025-12-17 (Documentation Audit)  
 **Status:** Production Ready / Active Development
 
 ---
@@ -31,9 +31,9 @@ MakanTak is a web-based viral marketing platform that helps Malaysian local rest
 
 ### The Viral Loop
 
-1. **Register:** Customer scans QR at counter, registers, and gets a unique **Customer ID** (e.g., `MAKAN-ABC123`).
+1. **Register:** Customer scans QR at counter, registers, and gets a unique **Customer ID** (e.g., `MAKANTAK-ABC123`).
 2. **First Visit:** Customer gets a **Guaranteed 5% Discount** on their first visit to *any* participating restaurant.
-3. **Share:** System automatically generates a **Restaurant-Specific Promotion Code** (e.g., `MAKAN-REST1-XYZ`) for that customer.
+3. **Share:** System automatically generates a **Restaurant-Specific Promotion Code** (e.g., `MAKANTAK-CHUANXING-JOHNSMITH`) for that customer.
 4. **Earn:** When a friend uses that code:
     * Friend gets 5% discount (First Visit).
     * Original Customer earns **1% of the bill** as Virtual Currency (VC).
