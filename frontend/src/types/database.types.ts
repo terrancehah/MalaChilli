@@ -42,9 +42,9 @@ export interface Branch {
   name: string;
   address: string | null;
   phone: string | null;
-  city: string | null; // Future: city for location filtering
-  state: string | null; // Future: state for location filtering
-  postal_code: string | null; // Future: postal code for location filtering
+  city: string | null; // City name for location filtering
+  state: string | null; // State/region for location filtering
+  postal_code: string | null; // Postal/ZIP code for location filtering
   is_active: boolean;
   created_at: string;
   updated_at: string;
