@@ -3,7 +3,7 @@
 ## MakanTak - System Architecture & Data Model
 
 **Document Type:** Technical Reference  
-**Last Updated:** 2025-12-17 (Documentation Audit)  
+**Last Updated:** 2025-12-19 (Schema Sync)  
 **Source of Truth:**  
 
 * **Database Schema:** `/supabase/migrations/`
@@ -64,15 +64,16 @@
 
 | Table Name | Purpose | Key Notes |
 | :--- | :--- | :--- |
-| **`users`** | All accounts (Customer, Staff, Merchant, Admin). | Managed via Supabase Auth. Role: `customer`, `staff`, `merchant`, `admin`. |
-| **`restaurants`** | Restaurant entities. | Configures `guaranteed_discount_percent`, `upline_reward_percent`. |
-| **`branches`** | Physical locations. | Linked to Staff users. |
-| **`transactions`** | Checkout records. | Stores `bill_amount`, `final_amount`, `receipt_photo_url`. |
-| **`transaction_items`** | Line items from receipts. | **NEW (Nov 1)**: Supports OCR extraction and item-level analytics. |
-| **`referrals`** | Upline-Downline links. | Tracks relationships **per restaurant**. Max 3 levels deep. |
-| **`virtual_currency_ledger`** | Wallet history. | Tracks `earn`, `redeem`, `expire` events. FIFO redemption logic. |
-| **`user_restaurant_referral_codes`** | Share codes. | One unique code per user per restaurant (e.g., `MAKANTAK-CHUANXING-JOHNSMITH`). |
-| **`customer_restaurant_history`** | Visit tracking. | Used to determine "First Visit" eligibility. |
+| **`users`** | All accounts (Customer, Staff, Merchant, Admin). | Role-based access. Includes `preferred_language`, `last_login`, PDPA fields (`is_deleted`, `deleted_at`, `deletion_reason`). |
+| **`restaurants`** | Restaurant entities. | Configures `guaranteed_discount_percent`, `upline_reward_percent`, `max_redemption_percent`, `virtual_currency_expiry_days`. |
+| **`branches`** | Physical locations. | Required `address`. Optional `city`, `state`, `postal_code` for location filtering. |
+| **`transactions`** | Checkout records. | Stores amounts, OCR data (`ocr_processed`, `ocr_data`), `status` (completed/voided). |
+| **`transaction_items`** | Line items from receipts. | Supports OCR extraction with `match_confidence` and item-level analytics. |
+| **`referrals`** | Upline-Downline links. | Tracks relationships **per restaurant**. `upline_level` (1-3). |
+| **`virtual_currency_ledger`** | Wallet history. | Tracks `earn`, `redeem`, `expire`. Includes `balance_after`, `upline_level`, `related_user_id`. |
+| **`user_restaurant_referral_codes`** | Share codes. | Format: `MAKANTAK-{restaurant_slug}-{customer_name}`. |
+| **`saved_referral_codes`** | Pending referrals. | Codes saved before first visit. `upline_user_id` derived from lookup. |
+| **`customer_restaurant_history`** | Visit tracking. | Tracks `first_visit_date`, `total_visits`, `total_spent` per restaurant. |
 | **`menu_items`** | Restaurant menu/products. | For OCR matching and inventory management. |
 | **`email_notifications`** | Email tracking. | Tracks sent emails to prevent duplicates. |
 | **`audit_logs`** | Action logging. | Tracks critical actions for security and debugging. |

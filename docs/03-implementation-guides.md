@@ -3,7 +3,7 @@
 ## MakanTak - Developer Handbook
 
 **Document Type:** Implementation Guide  
-**Last Updated:** 2025-12-17 (Documentation Audit)  
+**Last Updated:** 2025-12-19 (Schema Sync)  
 **Covers:** Design System, Frontend Architecture, and Critical Feature Flows.
 
 ---
@@ -124,14 +124,14 @@ npm run dev
 
 #### The "One Customer, Multiple Codes" Model
 
-A user has one **Customer ID** (`MAKAN-ABC123`) for identification, but generates unique **Promotion Codes** for *each* restaurant they visit.
+A user has one **Customer ID** (stored in `users.referral_code`) for identification, but generates unique **Promotion Codes** for *each* restaurant they visit.
 
 **Flow:**
 
 1. **First Visit:** Backend detects `first_transaction` = true.
-2. **Auto-Generate:** Edge Function creates a code for that restaurant (e.g., `MAKAN-REST1-XYZ`).
-3. **Storage:** Stored in `user_restaurant_referral_codes`.
-4. **Sharing:** Customer shares `makantak.com/join/restaurant-slug/MAKAN-REST1-XYZ`.
+2. **Auto-Generate:** Database function creates a code for that restaurant (format: `MAKANTAK-{restaurant_slug}-{customer_name}`).
+3. **Storage:** Stored in `user_restaurant_referral_codes` table.
+4. **Sharing:** Customer shares `makantak.com/join/{restaurant-slug}/{MAKANTAK-SLUG-NAME}`.
 
 #### Link Handling
 

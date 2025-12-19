@@ -17,6 +17,8 @@ export interface User {
   preferred_language: 'en' | 'ms' | 'zh'; // User preferred UI language
   is_deleted: boolean; // Soft-delete flag for PDPA compliance
   deleted_at: string | null; // When user was soft-deleted
+  deletion_reason: string | null; // Reason for account deletion (PDPA compliance)
+  last_login: string | null; // Last login timestamp
   created_at: string;
   updated_at: string;
 }
@@ -40,7 +42,7 @@ export interface Branch {
   id: string;
   restaurant_id: string;
   name: string;
-  address: string | null;
+  address: string; // Required - physical branch location
   phone: string | null;
   city: string | null; // City name for location filtering
   state: string | null; // State/region for location filtering
@@ -64,7 +66,7 @@ export interface SavedReferralCode {
   user_id: string;
   restaurant_id: string;
   referral_code: string;
-  upline_user_id: string;
+  upline_user_id: string | null; // Derived from referral code lookup
   is_used: boolean;
   used_at: string | null;
   saved_at: string;
@@ -78,7 +80,6 @@ export interface UserRestaurantReferralCode {
   referral_code: string; // Format: MAKANTAK-{restaurant_slug}-{customer_name}
   is_active: boolean;
   created_at: string;
-  updated_at: string;
 }
 
 // Transaction status for voiding/completing transactions
