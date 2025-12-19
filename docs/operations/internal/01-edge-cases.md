@@ -215,6 +215,8 @@ SELECT * FROM referrals WHERE downline_id = 'NEW_CUSTOMER_ID'::uuid;
 
 **Expected Behavior:** Rejected "Insufficient virtual currency balance"
 
+**Runbook:** [RB-002: VC Balance Discrepancy](./02-emergency-runbooks.md#rb-002-vc-balance-discrepancy) (if balance is actually incorrect)
+
 **SQL Verification:**
 
 ```sql
@@ -378,7 +380,9 @@ SELECT * FROM referrals WHERE downline_id = 'NEW_CUSTOMER_ID'::uuid;
 **Severity:** 🔴 Critical  
 **Description:** Transaction is voided after upline rewards have been distributed.
 
-**Expected Behavior:** Requires manual rollback procedure (see Emergency Runbooks)
+**Expected Behavior:** Requires manual rollback procedure
+
+**Runbook:** [RB-001: Void Transaction with Distributed Rewards](./02-emergency-runbooks.md#rb-001-void-transaction-with-distributed-rewards)
 
 **Notes:** Currently no automatic rollback. Need to:
 
