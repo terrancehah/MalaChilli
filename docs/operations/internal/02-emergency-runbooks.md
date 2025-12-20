@@ -409,6 +409,7 @@ AND al.id IS NULL;
 #### Step 2: Assess Each Record
 
 For each orphaned record, determine if it should be:
+
 - **Completed:** If customer was charged
 - **Deleted:** If no payment was made
 - **Voided:** If partially processed
