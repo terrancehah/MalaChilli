@@ -1,4 +1,3 @@
-import { Toaster } from 'react-hot-toast';
 import { LoginForm } from '../../components/auth';
 import { SEO } from '../../components/shared';
 
@@ -7,25 +6,6 @@ export default function Login() {
   return (
     <>
       <SEO title="Login" description="Login to your MakanTak account." />
-      <Toaster position="top-right" toastOptions={{
-        duration: 4000,
-        style: {
-          background: '#fff',
-          color: '#111827',
-        },
-        success: {
-          iconTheme: {
-            primary: '#0A5F0A',
-            secondary: '#fff',
-          },
-        },
-        error: {
-          iconTheme: {
-            primary: '#DC2626',
-            secondary: '#fff',
-          },
-        },
-      }} />
       <div className="min-h-screen auth-gradient-bg flex items-center justify-center py-8 sm:py-12 px-4 sm:px-6 lg:px-8">
         <div className="w-full max-w-md bg-white rounded-card shadow-2xl p-12">
           {/* Logo */}

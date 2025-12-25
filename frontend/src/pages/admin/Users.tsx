@@ -4,7 +4,7 @@ import { supabase } from '../../lib/supabase';
 import { Button } from '../../components/ui/button';
 import { Card, CardContent } from '../../components/ui/card';
 import { ArrowLeft, Search, Edit, Check, X } from 'lucide-react';
-import toast, { Toaster } from 'react-hot-toast';
+import { showSuccessToast, showErrorToast } from '../../components/ui/toast';
 
 interface User {
   id: string;
@@ -39,7 +39,7 @@ export default function AdminUsers() {
       setUsers(data || []);
     } catch (error) {
       console.error('Error fetching users:', error);
-      toast.error('Failed to load users');
+      showErrorToast('Failed to load users');
     } finally {
       setLoading(false);
     }
@@ -56,10 +56,10 @@ export default function AdminUsers() {
 
       setUsers(users.map(u => u.id === userId ? { ...u, role: newRole as any } : u));
       setEditingId(null);
-      toast.success(`User role updated to ${newRole}`);
+      showSuccessToast(`User role updated to ${newRole}`);
     } catch (error) {
       console.error('Error updating role:', error);
-      toast.error('Failed to update role');
+      showErrorToast('Failed to update role');
     }
   };
 
@@ -70,7 +70,6 @@ export default function AdminUsers() {
 
   return (
     <div className="min-h-screen bg-gray-50 p-6">
-      <Toaster />
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="flex items-center justify-between mb-8">

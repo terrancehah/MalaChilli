@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getCurrentSession, signOutUser } from '../../services/api';
 import { supabase } from '../../lib/supabase';
-import toast, { Toaster } from 'react-hot-toast';
+import { showSuccessToast, showErrorToast } from '../../components/ui/toast';
 import { SEO } from '../../components/shared';
 
 export default function ResetPassword() {
@@ -18,11 +18,11 @@ export default function ResetPassword() {
       if (session) {
         setValidSession(true);
       } else {
-        toast.error('Invalid or expired reset link');
+        showErrorToast('Invalid or expired reset link');
         setTimeout(() => navigate('/forgot-password'), 2000);
       }
     }).catch(() => {
-      toast.error('Invalid or expired reset link');
+      showErrorToast('Invalid or expired reset link');
       setTimeout(() => navigate('/forgot-password'), 2000);
     });
   }, [navigate]);
@@ -40,12 +40,12 @@ export default function ResetPassword() {
     // Validation
     const passwordError = validatePassword(password);
     if (passwordError) {
-      toast.error(passwordError);
+      showErrorToast(passwordError);
       return;
     }
 
     if (password !== confirmPassword) {
-      toast.error('Passwords do not match');
+      showErrorToast('Passwords do not match');
       return;
     }
 
@@ -58,7 +58,7 @@ export default function ResetPassword() {
 
       if (error) throw error;
 
-      toast.success('Password updated successfully! Redirecting to login...');
+      showSuccessToast('Password updated successfully!', { description: 'Redirecting to login...' });
       
       // Sign out and redirect to login
       await signOutUser();
@@ -66,7 +66,7 @@ export default function ResetPassword() {
       
     } catch (err: any) {
       console.error('Password reset error:', err);
-      toast.error(err.message || 'Failed to reset password. Please try again.');
+      showErrorToast(err.message || 'Failed to reset password. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -85,25 +85,6 @@ export default function ResetPassword() {
   return (
     <>
       <SEO title="Reset Password" description="Set a new password for your MakanTak account." />
-      <Toaster position="top-right" toastOptions={{
-        duration: 4000,
-        style: {
-          background: '#fff',
-          color: '#111827',
-        },
-        success: {
-          iconTheme: {
-            primary: '#0A5F0A',
-            secondary: '#fff',
-          },
-        },
-        error: {
-          iconTheme: {
-            primary: '#DC2626',
-            secondary: '#fff',
-          },
-        },
-      }} />
       
       <div className="min-h-screen auth-gradient-bg flex items-center justify-center p-6">
         <div className="w-full max-w-md bg-white rounded-card shadow-2xl p-12">

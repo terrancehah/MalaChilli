@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { X, Clock, Receipt, DollarSign, User, Package, CheckCircle, AlertCircle, AlertTriangle } from 'lucide-react';
 import { Button } from '../ui/button';
 import { supabase } from '../../lib/supabase';
-import { toast } from 'react-hot-toast';
+import { showSuccessToast, showErrorToast } from '../ui/toast';
 import { getTranslation, type Language } from '../../translations';
 
 interface TransactionDetailSheetProps {
@@ -58,7 +58,7 @@ export function TransactionDetailSheet({
 
   const handleVoidTransaction = async () => {
     if (!voidReason.trim()) {
-      toast.error(t.staffDashboard.voidReasonPlaceholder);
+      showErrorToast(t.staffDashboard.voidReasonPlaceholder);
       return;
     }
 
@@ -71,12 +71,12 @@ export function TransactionDetailSheet({
 
       if (error) throw error;
 
-      toast.success(t.staffDashboard.voidSuccess);
+      showSuccessToast(t.staffDashboard.voidSuccess);
       if (onVoidSuccess) onVoidSuccess();
       else onClose();
     } catch (error) {
       console.error('Error voiding transaction:', error);
-      toast.error(t.common.error);
+      showErrorToast(t.common.error);
     } finally {
       setIsVoiding(false);
     }
