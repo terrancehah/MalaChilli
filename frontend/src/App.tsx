@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider } from "./contexts/AuthContext";
 import { ProtectedRoute } from "./components/auth/ProtectedRoute";
+import { ToastProvider } from "./components/ui/toast";
 
 // Auth pages with new Malaysian green food design
 import Login from "./pages/customer/Login";
@@ -45,6 +46,8 @@ function App() {
   return (
     <BrowserRouter>
       <AuthProvider>
+        {/* Centralized toast notifications - Design System State Patterns */}
+        <ToastProvider />
         <Routes>
           {/* Public routes */}
           <Route path="/" element={<HomePage />} />

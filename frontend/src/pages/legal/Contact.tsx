@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import { Mail, MessageSquare, Phone, MapPin } from 'lucide-react';
 import { useState } from 'react';
-import toast from 'react-hot-toast';
+import { showSuccessToast, showErrorToast } from '../../components/ui/toast';
 import { getTranslation, type Language } from '../../translations';
 import { LanguageSelector, SEO } from '../../components/shared';
 
@@ -28,7 +28,7 @@ export default function Contact() {
     
     // Basic validation
     if (!formData.name || !formData.email || !formData.subject || !formData.message) {
-      toast.error(t.contact.fillAllFields);
+      showErrorToast(t.contact.fillAllFields);
       return;
     }
 
@@ -39,7 +39,7 @@ export default function Contact() {
       // For now, just show success message
       await new Promise(resolve => setTimeout(resolve, 1000));
       
-      toast.success(t.contact.messageSent);
+      showSuccessToast(t.contact.messageSent);
       
       // Reset form
       setFormData({
@@ -49,7 +49,7 @@ export default function Contact() {
         message: ''
       });
     } catch (error) {
-      toast.error(t.contact.messageFailed);
+      showErrorToast(t.contact.messageFailed);
     } finally {
       setLoading(false);
     }

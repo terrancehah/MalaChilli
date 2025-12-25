@@ -3,7 +3,7 @@ import { Button } from '../ui/button';
 import { X, Loader2 } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
 import { getTranslation, type Language } from '../../translations';
-import toast from 'react-hot-toast';
+import { showSuccessToast, showErrorToast } from '../ui/toast';
 import type { MenuItem } from '../../types/ocr.types';
 
 interface MenuItemFormProps {
@@ -96,11 +96,11 @@ export function MenuItemForm({ restaurantId, item, onClose, onSuccess, language 
         if (error) throw error;
       }
 
-      toast.success(item ? 'Menu item updated successfully' : 'Menu item added successfully');
+      showSuccessToast(item ? 'Menu item updated successfully' : 'Menu item added successfully');
       onSuccess();
     } catch (err: any) {
       console.error('Failed to save menu item:', err);
-      toast.error(`Failed to save item: ${err.message || 'Please try again'}`);
+      showErrorToast(`Failed to save item: ${err.message || 'Please try again'}`);
     } finally {
       setIsSubmitting(false);
     }

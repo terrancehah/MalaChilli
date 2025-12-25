@@ -6,7 +6,7 @@ import { MenuItemForm } from './MenuItemForm';
 import { MenuItemImport } from './MenuItemImport';
 import { LanguageSelector } from '../shared';
 import { getTranslation, type Language } from '../../translations';
-import toast from 'react-hot-toast';
+import { showSuccessToast, showErrorToast } from '../ui/toast';
 import type { MenuItem } from '../../types/ocr.types';
 
 interface MenuItemManagementProps {
@@ -222,7 +222,7 @@ export function MenuItemManagement({ restaurantId, onBack, language, onLanguageC
 
   const handleExport = () => {
     if (menuItems.length === 0) {
-      toast.error('No items to export');
+      showErrorToast('No items to export');
       return;
     }
 
@@ -261,10 +261,10 @@ export function MenuItemManagement({ restaurantId, onBack, language, onLanguageC
       URL.revokeObjectURL(url);
 
       // Success notification
-      toast.success(`Exported ${menuItems.length} items to ${filename}`);
+      showSuccessToast(`Exported ${menuItems.length} items to ${filename}`);
     } catch (error) {
       console.error('Export failed:', error);
-      toast.error('Failed to export items. Please try again.');
+      showErrorToast('Failed to export items. Please try again.');
     }
   };
 
@@ -736,7 +736,7 @@ export function MenuItemManagement({ restaurantId, onBack, language, onLanguageC
         onSuccess={() => {
           setIsImportOpen(false);
           loadMenuItems();
-          toast.success('Menu items imported successfully');
+          showSuccessToast('Menu items imported successfully');
         }}
       />
     </div>

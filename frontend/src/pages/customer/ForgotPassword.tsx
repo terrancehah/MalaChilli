@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { resetPasswordForEmail } from '../../services/api';
-import toast, { Toaster } from 'react-hot-toast';
+import { showSuccessToast, showErrorToast } from '../../components/ui/toast';
 import { SEO } from '../../components/shared';
 
 export default function ForgotPassword() {
@@ -13,13 +13,13 @@ export default function ForgotPassword() {
     e.preventDefault();
 
     if (!email.trim()) {
-      toast.error('Please enter your email address');
+      showErrorToast('Please enter your email address');
       return;
     }
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
-      toast.error('Please enter a valid email address');
+      showErrorToast('Please enter a valid email address');
       return;
     }
 
@@ -28,10 +28,10 @@ export default function ForgotPassword() {
     try {
       await resetPasswordForEmail(email);
       setEmailSent(true);
-      toast.success('Password reset email sent! Check your inbox.');
+      showSuccessToast('Password reset email sent!', { description: 'Check your inbox.' });
     } catch (err: any) {
       console.error('Password reset error:', err);
-      toast.error(err.message || 'Failed to send reset email. Please try again.');
+      showErrorToast(err.message || 'Failed to send reset email. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -40,25 +40,6 @@ export default function ForgotPassword() {
   return (
     <>
       <SEO title="Forgot Password" description="Reset your MakanTak password." />
-      <Toaster position="top-right" toastOptions={{
-        duration: 4000,
-        style: {
-          background: '#fff',
-          color: '#111827',
-        },
-        success: {
-          iconTheme: {
-            primary: '#0A5F0A',
-            secondary: '#fff',
-          },
-        },
-        error: {
-          iconTheme: {
-            primary: '#DC2626',
-            secondary: '#fff',
-          },
-        },
-      }} />
       
       <div className="min-h-screen auth-gradient-bg flex items-center justify-center p-6">
         <div className="w-full max-w-md bg-white rounded-card shadow-2xl p-12">

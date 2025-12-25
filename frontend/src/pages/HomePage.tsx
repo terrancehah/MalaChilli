@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { LoginModal, RegisterModal } from '../components/auth';
-import { Toaster } from 'react-hot-toast';
 import { SEO } from '../components/shared';
 import { ArrowRight, Gift, Percent, Share2, LayoutDashboard } from 'lucide-react';
 
@@ -100,27 +99,6 @@ export default function HomePage() {
           </div>
         </div>
       </div>
-
-      {/* Toast Notifications */}
-      <Toaster position="top-right" toastOptions={{
-        duration: 4000,
-        style: {
-          background: '#fff',
-          color: '#111827',
-        },
-        success: {
-          iconTheme: {
-            primary: '#0A5F0A',
-            secondary: '#fff',
-          },
-        },
-        error: {
-          iconTheme: {
-            primary: '#DC2626',
-            secondary: '#fff',
-          },
-        },
-      }} />
 
       {/* Auth Modals */}
       <LoginModal 

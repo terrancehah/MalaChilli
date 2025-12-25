@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
 // import { supabase } from '../../lib/supabase'; // TODO: Uncomment when voucher claim is active
-import toast from "react-hot-toast";
+import { showSuccessToast, showErrorToast } from "../ui/toast";
 
 interface RegisterFormProps {
   onSuccess?: () => void;
@@ -122,7 +122,7 @@ export function RegisterForm({
     // Check if any errors exist
     const hasErrors = Object.values(newErrors).some((error) => error !== "");
     if (hasErrors) {
-      toast.error("Please fix all errors before submitting");
+      showErrorToast("Please fix all errors before submitting");
       return;
     }
 
@@ -160,7 +160,7 @@ export function RegisterForm({
       }
       */
 
-      toast.success("Account created successfully! Redirecting...");
+      showSuccessToast("Account created successfully!", { description: "Redirecting..." });
 
       // Call onSuccess callback if provided (for modal close)
       if (onSuccess) {
@@ -189,7 +189,7 @@ export function RegisterForm({
         errorMessage = err.message;
       }
 
-      toast.error(errorMessage);
+      showErrorToast(errorMessage);
     } finally {
       setLoading(false);
     }

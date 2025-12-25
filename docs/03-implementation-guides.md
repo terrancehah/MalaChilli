@@ -48,36 +48,16 @@ npm run dev
 
 ## PART B: Design System
 
-### 1. Core Principles
+> **📖 Full Reference:** See `05-design-system.md` for comprehensive visual design standards including typography, colors, spacing, components, and state patterns.
+>
+> **📝 Content Guidelines:** See `06-content-voice-guidelines.md` for UX writing standards, terminology, and tone guidelines.
+
+### Quick Reference
 
 * **Mobile-First:** All designs start with mobile viewport.
 * **Touch-Optimized:** Min 44px touch targets.
 * **Shadow Depth:** Use shadows to simulate physical button presses (`shadow-md` -> `shadow-sm` on press).
-
-### 2. Color Palette
-
-* **Forest Green:** `#0A5F0A` (Primary Branding)
-* **Lime Green:** `#7CB342` (Secondary / Accents)
-* **Soft Cream:** `#FEF7ED` (Backgrounds)
-* **Functional:** Success (`#10B981`), Warning (`#F59E0B`), Error (`#EF4444`).
-
-### 3. Key Component Patterns
-
-#### Bottom Sheet (Mobile) / Side Panel (Tablet)
-
-* **Usage:** Transaction details, QR Scanner, Share options.
-* **Behavior:** Slides from bottom on mobile. Slides from **left** (60% width) on iPad landscape to create a split-view dashboard.
-
-#### QR Scanner Frame
-
-* **Design:** Full-screen camera view with a 256x256px transparent cutout.
-* **Markers:** White "L" shaped corner brackets (4px thick).
-* **Library:** `@yudiel/react-qr-scanner` (Lightweight, React Native friendly).
-
-#### Interactive Cards
-
-* **Pattern:** `className="cursor-pointer shadow-md hover:shadow-sm active:shadow-none transition-shadow"`
-* **Why:** Mimics tactile feedback. Pressing "down" reduces the shadow.
+* **QR Scanner:** `@yudiel/react-qr-scanner` library with 256x256px transparent cutout.
 
 ---
 

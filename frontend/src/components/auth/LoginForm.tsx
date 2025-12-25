@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
-import toast from 'react-hot-toast';
+import { showSuccessToast, showErrorToast } from '../ui/toast';
 
 interface LoginFormProps {
   onSuccess?: () => void;
@@ -29,7 +29,7 @@ export function LoginForm({ onSuccess, showSignUpLink = true, onSwitchToSignUp }
 
     try {
       await signIn(formData.email, formData.password);
-      toast.success('Welcome back!');
+      showSuccessToast('Welcome back!');
       
       // Navigate immediately to dashboard
       // The router will handle the redirection to /customer/dashboard or /staff/dashboard based on role
@@ -40,7 +40,7 @@ export function LoginForm({ onSuccess, showSignUpLink = true, onSwitchToSignUp }
         onSuccess();
       }
     } catch (err: any) {
-      toast.error(err.message || 'Failed to login. Please check your credentials.');
+      showErrorToast(err.message || 'Failed to login. Please check your credentials.');
     } finally {
       setLoading(false);
     }
