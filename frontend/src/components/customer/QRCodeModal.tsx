@@ -68,8 +68,8 @@ export function QRCodeModal({ isOpen, onClose, userId, userName, language = 'en'
             </button>
           </div>
 
-          {/* QR Code */}
-          <div className="bg-white p-6 rounded-xl shadow-lg mb-4">
+          {/* QR Code - centered with flex */}
+          <div className="bg-white p-6 rounded-xl shadow-lg mb-4 flex items-center justify-center">
             <QRCode
               value={userId}
               size={220}

@@ -285,7 +285,7 @@ export default function StaffTransactions() {
                         {transaction.customer?.full_name || transaction.customer?.email}
                       </p>
                       {transaction.status === 'voided' && (
-                        <span className="text-[10px] font-bold uppercase bg-destructive/10 text-destructive px-1.5 py-0.5 rounded">
+                        <span className="text-xs font-bold uppercase bg-destructive/10 text-destructive px-1.5 py-0.5 rounded">
                           {t.staffDashboard.detailVoided}
                         </span>
                       )}

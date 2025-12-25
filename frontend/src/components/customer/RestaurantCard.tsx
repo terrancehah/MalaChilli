@@ -106,7 +106,7 @@ export function RestaurantCard({
         <div className="bg-primary/5 rounded-lg p-3 mb-3">
           <div className="flex items-center justify-between mb-2">
             <div>
-              <p className="text-[10px] text-muted-foreground leading-tight">
+              <p className="text-xs text-muted-foreground leading-tight">
                 {t.restaurantCard.vcBalance}
               </p>
               <p className="text-xl font-bold text-foreground leading-tight">
@@ -116,7 +116,7 @@ export function RestaurantCard({
             {/* Unrealized Earnings - FOMO Badge */}
             {totalUnrealizedEarnings > 0 && (
               <div className="bg-amber-100 dark:bg-amber-900/30 border border-amber-300 dark:border-amber-700 rounded-md px-2 py-1">
-                <p className="text-[9px] text-amber-700 dark:text-amber-400 font-medium leading-tight">
+                <p className="text-xs text-amber-700 dark:text-amber-400 font-medium leading-tight">
                   💰 {t.restaurantCard.earnUpTo}
                 </p>
                 <p className="text-sm font-bold text-amber-900 dark:text-amber-300 leading-tight">
@@ -199,7 +199,7 @@ export function RestaurantCard({
                               RM {transaction.bill_amount}
                             </p>
                             {transaction.is_first_transaction && (
-                              <p className="text-[10px] text-green-600 dark:text-green-400">
+                              <p className="text-xs text-green-600 dark:text-green-400">
                                 {t.recentTransactions.firstVisit}
                               </p>
                             )}
@@ -210,7 +210,7 @@ export function RestaurantCard({
                       </div>
 
                       {/* Transaction Summary */}
-                      <div className="flex items-center gap-3 text-[10px] text-muted-foreground flex-wrap">
+                      <div className="flex items-center gap-3 text-xs text-muted-foreground flex-wrap">
                         {transaction.guaranteed_discount_amount > 0 && (
                           <span className="flex items-center gap-1">
                             <span className="text-green-600 dark:text-green-400">
@@ -242,14 +242,14 @@ export function RestaurantCard({
                         <div className="bg-gradient-to-r from-amber-50 to-orange-50 dark:from-amber-900/20 dark:to-orange-900/20 rounded-md p-2.5 border border-amber-300 dark:border-amber-700 mt-2">
                           <div className="flex items-center justify-between">
                             <div>
-                              <p className="text-[10px] font-semibold text-amber-900 dark:text-amber-300">
+                              <p className="text-xs font-semibold text-amber-900 dark:text-amber-300">
                                 💰 {t.recentTransactions.unrealized}
                               </p>
                               <p className="text-sm font-bold text-amber-600 dark:text-amber-400">
                                 RM {totalPotentialEarning.toFixed(2)}
                               </p>
                             </div>
-                            <p className="text-[9px] text-amber-700 dark:text-amber-500 text-right max-w-[120px]">
+                            <p className="text-xs text-amber-700 dark:text-amber-500 text-right max-w-[120px]">
                               {t.recentTransactions.unrealizedDesc}
                             </p>
                           </div>
@@ -258,7 +258,7 @@ export function RestaurantCard({
 
                       {/* Tap to view indicator */}
                       <div className="mt-2 pt-2 border-t border-border/30">
-                        <p className="text-[10px] text-primary font-medium text-center">
+                        <p className="text-xs text-primary font-medium text-center">
                           {t.recentTransactions.tapToView} →
                         </p>
                       </div>

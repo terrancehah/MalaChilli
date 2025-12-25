@@ -3,14 +3,33 @@
 ## MakanTak - Development Status
 
 **Document Type:** Project Management  
-**Last Updated:** 2025-12-19 (Schema Sync)  
-**Overall Status:** 🟢 Production Ready (98%) - Final Polish
+**Last Updated:** 2025-12-25 (Security Audit & E2E Tests)  
+**Overall Status:** 🟢 Production Ready (99%) - Final Polish
 
 ---
 
 ## 1. Recent Updates (Changelog)
 
 ### 📅 Dec 2025 Updates
+
+**Security Audit & Database Hardening** ✅ (Dec 25)
+
+* **RLS Policies:** Fixed `staff_view_customer_ledger` to scope to restaurant only.
+* **Signup Policy:** `users_allow_signup` now requires `id = auth.uid()`.
+* **Function Security:** Added `SET search_path = public, pg_temp` to 19 functions.
+* **Result:** Security warnings reduced from 21 → 2 (remaining require Pro Plan).
+
+**E2E Testing Setup** ✅ (Dec 25)
+
+* **Playwright:** Configured with auth fixtures for customer/staff roles.
+* **Test Files:** `auth.spec.ts`, `navigation.spec.ts`, `customer.spec.ts`, `staff.spec.ts`.
+* **Auth Setup:** Dedicated E2E test users created in Supabase Auth.
+
+**Database Function Tests** ✅ (Dec 25)
+
+* **Vitest:** Configured for database function testing.
+* **Test Data:** Seeding script created (`seed-test-data.ts`).
+* **Coverage:** Referral chains, virtual currency, transaction voids, PDPA deletion.
 
 **Role & Schema Standardization** ✅
 
@@ -74,7 +93,7 @@
 * [x] **Transactions:** Manual bill entry + VC Redemption logic.
 * [x] **Receipts:** Photo upload & AI OCR extraction.
 
-### 🚧 PHASE 3: Scale & Analytics (Merchant Portal)
+### ✅ PHASE 3: Scale & Analytics (Merchant Portal)
 
 **Goal:** Data visibility and automation.
 
@@ -82,6 +101,15 @@
 * [x] **Management:** Staff & Branch CRUD.
 * [x] **Automated OCR:** Full Gemini AI integration with fuzzy menu matching.
 * [ ] **Email Automation:** SendGrid integration for "Earning" notifications (Edge Function not yet implemented).
+
+### ✅ PHASE 4: Production Readiness
+
+**Goal:** Security, testing, and reliability.
+
+* [x] **Security Audit:** RLS policies reviewed, function hardening applied.
+* [x] **E2E Tests:** Playwright configured with auth fixtures.
+* [x] **Database Tests:** Vitest setup for RPC function testing.
+* [x] **Edge Cases:** Test coverage for referrals, VC, voids, PDPA.
 
 ---
 

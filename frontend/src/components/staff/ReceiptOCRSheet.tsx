@@ -314,14 +314,14 @@ export function ReceiptOCRSheet({
                           <div className="flex-1">
                             <p className="font-medium text-foreground">{item.name}</p>
                             {matched && (
-                              <p className="text-[10px] text-green-600 dark:text-green-400">
+                              <p className="text-xs text-green-600 dark:text-green-400">
                                 ✓ Matched: {matched.menuItemName} ({matched.confidence}%)
                               </p>
                             )}
                           </div>
                           <div className="text-right ml-2">
                             <p className="font-semibold text-foreground">RM {item.total.toFixed(2)}</p>
-                            <p className="text-[10px] text-muted-foreground">{item.quantity}x @ RM{item.unitPrice.toFixed(2)}</p>
+                            <p className="text-xs text-muted-foreground">{item.quantity}x @ RM{item.unitPrice.toFixed(2)}</p>
                           </div>
                         </div>
                       );

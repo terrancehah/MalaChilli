@@ -25,7 +25,7 @@ export function StatsCard({ stats }: StatsCardProps) {
               <p className="text-lg sm:text-2xl md:text-3xl font-bold text-primary-dark mb-1 whitespace-nowrap truncate px-1">
                 {stat.value}
               </p>
-              <p className="text-[10px] sm:text-xs text-gray-600 font-medium uppercase tracking-wide truncate">
+              <p className="text-xs text-gray-600 font-medium uppercase tracking-wide truncate">
                 {stat.label}
               </p>
             </div>
