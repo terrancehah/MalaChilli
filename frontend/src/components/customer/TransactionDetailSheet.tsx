@@ -73,7 +73,7 @@ export function TransactionDetailSheet({ isOpen, onClose, transaction, language 
     <>
       {/* Backdrop */}
       <div
-        className={`fixed inset-0 bg-black/50 z-50 transition-opacity duration-300 ${
+        className={`fixed inset-0 bg-black/50 backdrop-blur-sm z-50 transition-opacity duration-300 ${
           isAnimating ? 'opacity-100' : 'opacity-0'
         }`}
         onClick={onClose}
@@ -266,7 +266,7 @@ export function TransactionDetailSheet({ isOpen, onClose, transaction, language 
       {showReferralInfo && (
         <>
           <div
-            className="fixed inset-0 bg-black/50 z-[60]"
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[60]"
             onClick={() => setShowReferralInfo(false)}
           />
           <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90%] max-w-md bg-background rounded-2xl shadow-2xl z-[60] p-6">

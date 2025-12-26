@@ -62,7 +62,7 @@ export function showSuccessToast(message: string, options?: ToastOptions) {
     (t) => (
       <div
         className={`flex items-center gap-3 p-4 bg-primary text-primary-foreground rounded-xl shadow-lg max-w-sm ${
-          t.visible ? 'animate-in fade-in slide-in-from-top-2' : 'animate-out fade-out slide-out-to-top-2'
+          t.visible ? 'animate-in fade-in slide-in-from-top-2 duration-300' : 'animate-out fade-out slide-out-to-top-2 duration-300'
         }`}
       >
         <CheckCircle className="h-5 w-5 flex-shrink-0" />
@@ -93,7 +93,7 @@ export function showErrorToast(message: string, options?: ToastOptions) {
     (t) => (
       <div
         className={`flex items-center gap-3 p-4 bg-destructive text-destructive-foreground rounded-xl shadow-lg max-w-sm ${
-          t.visible ? 'animate-in fade-in slide-in-from-top-2' : 'animate-out fade-out slide-out-to-top-2'
+          t.visible ? 'animate-in fade-in slide-in-from-top-2 duration-300' : 'animate-out fade-out slide-out-to-top-2 duration-300'
         }`}
       >
         <AlertCircle className="h-5 w-5 flex-shrink-0" />
@@ -124,7 +124,7 @@ export function showWarningToast(message: string, options?: ToastOptions) {
     (t) => (
       <div
         className={`flex items-center gap-3 p-4 bg-amber-500 text-white rounded-xl shadow-lg max-w-sm ${
-          t.visible ? 'animate-in fade-in slide-in-from-top-2' : 'animate-out fade-out slide-out-to-top-2'
+          t.visible ? 'animate-in fade-in slide-in-from-top-2 duration-300' : 'animate-out fade-out slide-out-to-top-2 duration-300'
         }`}
       >
         <AlertTriangle className="h-5 w-5 flex-shrink-0" />
@@ -155,7 +155,7 @@ export function showInfoToast(message: string, options?: ToastOptions) {
     (t) => (
       <div
         className={`flex items-center gap-3 p-4 bg-blue-600 text-white rounded-xl shadow-lg max-w-sm ${
-          t.visible ? 'animate-in fade-in slide-in-from-top-2' : 'animate-out fade-out slide-out-to-top-2'
+          t.visible ? 'animate-in fade-in slide-in-from-top-2 duration-300' : 'animate-out fade-out slide-out-to-top-2 duration-300'
         }`}
       >
         <Info className="h-5 w-5 flex-shrink-0" />
