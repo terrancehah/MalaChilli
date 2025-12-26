@@ -1333,3 +1333,330 @@ Use this quick reference to choose the right pattern:
 | **Modal** | `z-50` | `bg-black/50 backdrop-blur-sm` | Click backdrop, X, Escape | Locked |
 | **Bottom Sheet** | `z-50` | `bg-black/50 backdrop-blur-sm` | Swipe down, X, backdrop | Locked |
 | **Panel** | `z-50` | Optional `bg-black/30` | X, backdrop | Locked |
+
+---
+
+## 15. Motion Principles
+
+Motion in MakanTak serves to guide attention, provide feedback, and create a sense of polish. All animations should feel natural, purposeful, and never slow down the user.
+
+### 15.1 Philosophy
+
+| Principle | Description |
+|-----------|-------------|
+| **Purposeful** | Every animation should have a reason — guiding focus, confirming action, or showing state change |
+| **Fast** | Users should never wait for animations. Keep them snappy (200-300ms for most interactions) |
+| **Natural** | Motion should follow real-world physics — ease-out for entrances, ease-in for exits |
+| **Consistent** | Same type of element = same animation pattern across the app |
+| **Accessible** | Respect `prefers-reduced-motion` for users who are sensitive to motion |
+
+### 15.2 Duration Scale
+
+Use consistent duration values across the app:
+
+| Token | Value | Use Case |
+|-------|-------|----------|
+| `duration-150` | 150ms | Micro-interactions (hover states, color changes) |
+| `duration-200` | 200ms | Quick transitions (modal fade, button press) |
+| `duration-300` | 300ms | Standard transitions (panel slide, sheet slide, toast) |
+| `duration-500` | 500ms | Emphasis animations (success celebrations, onboarding) |
+
+#### Guidelines
+
+| Duration | When to Use |
+|----------|-------------|
+| **< 200ms** | Instant feedback (hover, focus, active states) |
+| **200-300ms** | Most UI transitions (overlays, state changes) |
+| **> 300ms** | Only for emphasis or complex choreographed animations |
+
+---
+
+### 15.3 Easing Functions
+
+| Easing | Tailwind Class | When to Use |
+|--------|----------------|-------------|
+| **ease-out** | `ease-out` | **Entrances** — elements appearing (modal open, sheet slide up) |
+| **ease-in** | `ease-in` | **Exits** — elements disappearing (modal close, sheet slide down) |
+| **ease-in-out** | `ease-in-out` | **Morphing** — elements changing shape/size (expand/collapse) |
+| **linear** | `linear` | **Continuous** — loading spinners, progress bars |
+
+#### Why This Matters
+
+```text
+Entrance (ease-out):  Fast start → Slow finish  (feels like arriving)
+Exit (ease-in):       Slow start → Fast finish  (feels like leaving)
+```
+
+---
+
+### 15.4 Animation Patterns
+
+#### 15.4.1 Toast Animations
+
+Toasts slide in from top and fade, then reverse on exit.
+
+| State | Animation | Classes |
+|-------|-----------|---------|
+| **Enter** | Fade in + slide down | `animate-in fade-in slide-in-from-top-2 duration-300` |
+| **Exit** | Fade out + slide up | `animate-out fade-out slide-out-to-top-2 duration-300` |
+
+```tsx
+// Toast enter/exit animation
+<div
+  className={`${
+    t.visible 
+      ? 'animate-in fade-in slide-in-from-top-2' 
+      : 'animate-out fade-out slide-out-to-top-2'
+  } duration-300`}
+>
+  {/* Toast content */}
+</div>
+```
+
+---
+
+#### 15.4.2 Modal Animations
+
+Modals fade in with a subtle scale effect. Backdrop fades separately.
+
+| State | Animation | Classes |
+|-------|-----------|---------|
+| **Enter** | Fade in + scale up (95% → 100%) | `transition-all duration-200`, `opacity-0 scale-95` → `opacity-100 scale-100` |
+| **Exit** | Fade out + scale down (100% → 95%) | `opacity-100 scale-100` → `opacity-0 scale-95` |
+| **Backdrop Enter** | Fade in | `transition-opacity duration-200`, `opacity-0` → `opacity-100` |
+| **Backdrop Exit** | Fade out | `opacity-100` → `opacity-0` |
+
+```tsx
+// Modal with fade + scale animation
+const [isAnimating, setIsAnimating] = useState(false);
+
+// Container (backdrop + centering)
+<div
+  className={`fixed inset-0 z-50 flex items-center justify-center p-4 
+    transition-opacity duration-200 ${
+      isAnimating ? 'opacity-100' : 'opacity-0'
+    }`}
+>
+  {/* Backdrop */}
+  <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" />
+  
+  {/* Modal content with scale */}
+  <div
+    className={`relative bg-background rounded-2xl shadow-2xl 
+      transition-all duration-200 ${
+        isAnimating ? 'scale-100 opacity-100' : 'scale-95 opacity-0'
+      }`}
+  >
+    {children}
+  </div>
+</div>
+```
+
+---
+
+#### 15.4.3 Bottom Sheet Animations
+
+Bottom sheets slide up from the bottom edge with swipe-to-dismiss support.
+
+| State | Animation | Implementation |
+|-------|-----------|----------------|
+| **Enter** | Slide up from bottom | `translateY(100%)` → `translateY(0)` |
+| **Exit** | Slide down to bottom | `translateY(0)` → `translateY(100%)` |
+| **Dragging** | Follow finger position | Dynamic `translateY()` based on touch delta |
+| **Backdrop Enter** | Fade in | `opacity-0` → `opacity-100` |
+| **Backdrop Exit** | Fade out | `opacity-100` → `opacity-0` |
+
+```tsx
+// Bottom sheet with slide animation
+<>
+  {/* Backdrop */}
+  <div 
+    className={`fixed inset-0 bg-black/50 backdrop-blur-sm z-50 
+      transition-opacity duration-300 ${
+        isAnimating ? 'opacity-100' : 'opacity-0'
+      }`}
+    onClick={onClose}
+  />
+  
+  {/* Sheet */}
+  <div 
+    className="fixed inset-x-0 bottom-0 z-50 transition-transform duration-300 ease-out"
+    style={{
+      transform: isDragging && touchCurrent > touchStart 
+        ? `translateY(${touchCurrent - touchStart}px)` 
+        : isAnimating ? 'translateY(0)' : 'translateY(100%)',
+      transition: isDragging ? 'none' : 'transform 0.3s ease-out'
+    }}
+  >
+    <div className="bg-background rounded-t-3xl shadow-2xl">
+      {/* Handle bar for drag affordance */}
+      <div className="w-12 h-1.5 bg-muted rounded-full mx-auto my-4" />
+      {children}
+    </div>
+  </div>
+</>
+```
+
+---
+
+#### 15.4.4 Panel Animations
+
+Panels slide in from the edge (typically right side for settings).
+
+| State | Animation | Classes |
+|-------|-----------|---------|
+| **Enter** | Slide in from right | `animate-in slide-in-from-right duration-300` |
+| **Exit** | Slide out to right | `animate-out slide-out-to-right duration-300` |
+| **Backdrop Enter** | Fade in | `transition-opacity duration-200`, `opacity-0` → `opacity-100` |
+| **Backdrop Exit** | Fade out | `transition-opacity duration-300`, `opacity-100` → `opacity-0` |
+
+```tsx
+// Panel with slide animation
+const [isClosing, setIsClosing] = useState(false);
+
+const handleClose = () => {
+  setIsClosing(true);
+};
+
+const handleAnimationEnd = () => {
+  if (isClosing) {
+    onClose();
+    setIsClosing(false);
+  }
+};
+
+<>
+  {/* Backdrop */}
+  <div 
+    className={`fixed inset-0 bg-black/50 backdrop-blur-sm z-50 transition-opacity ${
+      isClosing 
+        ? 'opacity-0 duration-300 pointer-events-none' 
+        : 'opacity-100 duration-200'
+    }`}
+    onClick={handleClose}
+  />
+  
+  {/* Panel */}
+  <div
+    className={`fixed inset-y-0 right-0 z-50 w-full max-w-md bg-background shadow-2xl ${
+      isClosing 
+        ? 'animate-out slide-out-to-right duration-300' 
+        : 'animate-in slide-in-from-right duration-300'
+    }`}
+    onAnimationEnd={handleAnimationEnd}
+  >
+    {children}
+  </div>
+</>
+```
+
+---
+
+### 15.5 Micro-Interactions
+
+Small animations that provide feedback for user actions.
+
+| Interaction | Animation | Classes |
+|-------------|-----------|---------|
+| **Button hover** | Subtle lift or color change | `hover:bg-primary/90 transition-colors` |
+| **Button press** | Scale down slightly | `active:scale-95 transition-transform` |
+| **Icon hover** | Scale up | `group-hover:scale-110 transition-transform duration-300` |
+| **Focus ring** | Fade in ring | `focus:ring-2 focus:ring-primary transition-all` |
+| **Loading spinner** | Continuous rotation | `animate-spin` |
+| **Skeleton pulse** | Opacity pulse | `animate-pulse` |
+
+```tsx
+// Button with hover and press feedback
+<Button
+  className="transition-all duration-300 hover:shadow-lg active:scale-95"
+>
+  Click me
+</Button>
+
+// Icon with hover scale
+<div className="group">
+  <QrCode className="h-12 w-12 group-hover:scale-110 transition-transform duration-300" />
+</div>
+```
+
+---
+
+### 15.6 Expand/Collapse Animations
+
+For collapsible sections and form field expansions.
+
+| Pattern | Implementation |
+|---------|----------------|
+| **Height animation** | Use CSS Grid trick for smooth height transitions |
+| **Duration** | `duration-300` |
+| **Easing** | `ease-in-out` |
+
+```tsx
+// Smooth expand/collapse using CSS Grid
+<div 
+  className="grid transition-[grid-template-rows] duration-300 ease-in-out" 
+  style={{
+    gridTemplateRows: isExpanded ? '1fr' : '0fr'
+  }}
+>
+  <div className="overflow-hidden">
+    {/* Collapsible content */}
+  </div>
+</div>
+```
+
+---
+
+### 15.7 Accessibility
+
+#### Reduced Motion
+
+Always respect the user's motion preferences:
+
+```tsx
+// Check for reduced motion preference
+const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+// In Tailwind, use motion-safe and motion-reduce variants
+<div className="motion-safe:animate-in motion-safe:slide-in-from-top motion-reduce:animate-none">
+  {/* Content */}
+</div>
+```
+
+#### CSS Implementation
+
+```css
+/* Respect reduced motion globally */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+```
+
+---
+
+### 15.8 Motion Quick Reference
+
+#### Overlay Enter/Exit Summary
+
+| Component | Enter Animation | Exit Animation | Duration |
+|-----------|-----------------|----------------|----------|
+| **Toast** | `fade-in slide-in-from-top-2` | `fade-out slide-out-to-top-2` | 300ms |
+| **Modal** | `opacity-100 scale-100` | `opacity-0 scale-95` | 200ms |
+| **Bottom Sheet** | `translateY(0)` | `translateY(100%)` | 300ms |
+| **Panel** | `slide-in-from-right` | `slide-out-to-right` | 300ms |
+| **Backdrop** | `opacity-100` | `opacity-0` | 200-300ms |
+
+#### Interaction Summary
+
+| Interaction | Animation | Duration |
+|-------------|-----------|----------|
+| **Hover color** | `transition-colors` | 150ms |
+| **Hover scale** | `scale-110` | 300ms |
+| **Button press** | `scale-95` | 150ms |
+| **Focus ring** | `ring-2` | 200ms |
+| **Expand/collapse** | `grid-template-rows` | 300ms |
+| **Loading spinner** | `animate-spin` | continuous |
