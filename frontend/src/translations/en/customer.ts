@@ -22,7 +22,7 @@ export const profile = {
   greeting: 'Hello',
   viewProfile: 'View Profile',
   settings: 'Settings',
-  logout: 'Logout',
+  logout: 'Sign out',
 };
 
 export const stats = {
@@ -172,7 +172,7 @@ export const settings = {
   nameUpdateFailed: 'Failed to update name',
   deleteAccount: 'Delete Account',
   deleteConfirmTitle: 'Delete Account?',
-  deleteConfirmDesc: 'This action cannot be undone. You will lose all earned points and referral history.',
+  deleteConfirmDesc: 'This action cannot be undone. You\'ll lose all earned VC and referral history.',
   confirmDelete: 'Yes, Delete My Account',
   deleteFailed: 'Failed to delete account. Please try again.',
   preferences: 'Preferences',

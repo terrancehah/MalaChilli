@@ -172,7 +172,7 @@ export const settings = {
   nameEmpty: '姓名不能为空',
   deleteAccount: '删除账户',
   deleteConfirmTitle: '删除账户？',
-  deleteConfirmDesc: '此操作无法撤销。您将失去所有已赚取的积分和推荐记录。',
+  deleteConfirmDesc: '此操作无法撤销。您将失去所有已赚取的 VC 和推荐记录。',
   confirmDelete: '是的，删除我的账户',
   deleteFailed: '删除账户失败。请重试。',
   language: '语言',

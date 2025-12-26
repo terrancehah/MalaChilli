@@ -945,3 +945,391 @@ No results states appear when a search or filter returns zero matches. They diff
 | **Error** | `bg-destructive/10` | `text-destructive` | `text-xl font-bold` | Retry + Back |
 | **Success** | `bg-primary/10` | `text-primary` | `text-xl font-bold` | Next action |
 | **No Results** | None | `text-muted-foreground` | `text-lg font-semibold` | Clear/Reset |
+
+---
+
+## 14. Overlay & Content Hierarchy
+
+This section defines when to use each overlay pattern (Toast, Modal, Bottom Sheet, Panel) to present content consistently across MakanTak.
+
+### 14.1 Overview
+
+Choose the right overlay based on **content complexity**, **user action required**, and **blocking behavior**.
+
+```text
+Low Complexity ←――――――――――――――――――――――――――→ High Complexity
+     Toast          Modal       Bottom Sheet      Panel
+```
+
+| Factor | Toast | Modal | Bottom Sheet | Panel |
+|--------|-------|-------|--------------|-------|
+| **Blocks interaction** | No | Yes | Yes | Partial |
+| **User action required** | No | Usually | Usually | No |
+| **Content complexity** | 1-2 lines | Low-Medium | Medium-High | High |
+| **Auto-dismisses** | Yes (4-5s) | No | No | No |
+| **Mobile behavior** | Top overlay | Centered | Slide from bottom | Slide from side |
+
+---
+
+### 14.2 Toast
+
+Toasts are **non-blocking, ephemeral notifications** for quick feedback that doesn't require user action.
+
+#### When to Use
+
+| Use Case | Example |
+|----------|---------|
+| **Action confirmation** | "Link copied!", "Settings saved" |
+| **Background success** | "Profile updated" |
+| **Non-critical errors** | "Unable to refresh. Try again later." |
+| **Informational updates** | "New referral earned!" |
+
+#### When NOT to Use
+
+| Avoid For | Use Instead |
+|-----------|-------------|
+| **Critical errors blocking workflow** | Error Modal |
+| **Success requiring next action** | Success Modal |
+| **Content needing user decision** | Modal or Bottom Sheet |
+| **Multi-line or complex content** | Modal |
+
+#### Variants
+
+| Variant | Icon | Background | Duration | Use Case |
+|---------|------|------------|----------|----------|
+| **Success** | `CheckCircle` | `bg-primary` | 4s | Confirmations |
+| **Error** | `AlertCircle` | `bg-destructive` | 5s | Errors |
+| **Warning** | `AlertTriangle` | `bg-amber-500` | 4s | Cautions |
+| **Info** | `Info` | `bg-blue-600` | 4s | Neutral info |
+
+#### Implementation
+
+```tsx
+import { showSuccessToast, showErrorToast } from '@/components/ui/toast';
+
+// Success toast
+showSuccessToast('Menu item saved');
+
+// Error toast with description
+showErrorToast('Unable to save', { 
+  description: 'Check your connection and try again' 
+});
+
+// Custom duration
+showSuccessToast('Copied!', { duration: 2000 });
+```
+
+#### Anatomy
+
+```
+┌─────────────────────────────────────────┐
+│  [Icon]  Message text              [X]  │
+│          Optional description           │
+└─────────────────────────────────────────┘
+```
+
+#### Guidelines
+
+| Guideline | Reason |
+|-----------|--------|
+| **Keep messages under 60 characters** | Toasts are meant to be glanceable |
+| **Use sentence case** | "Link copied" not "Link Copied" |
+| **No periods for single sentences** | "Saved successfully" not "Saved successfully." |
+| **Include dismiss button** | Users should be able to dismiss early |
+
+---
+
+### 14.3 Modal
+
+Modals are **blocking overlays** that focus user attention on a specific task or information.
+
+#### When to Use
+
+| Use Case | Example |
+|----------|---------|
+| **Confirmations requiring decision** | "Delete account?" with Cancel/Confirm |
+| **Critical success with summary** | Transaction success with breakdown |
+| **Critical errors** | Permission denied, session expired |
+| **Authentication forms** | Login, Register |
+| **Quick informational content** | "How it works" explanation |
+| **QR code display** | Customer ID QR for scanning |
+
+#### When NOT to Use
+
+| Avoid For | Use Instead |
+|-----------|-------------|
+| **Simple confirmations** | Toast |
+| **Multi-step workflows** | Bottom Sheet |
+| **Content requiring scrolling** | Bottom Sheet or Page |
+| **Settings/navigation** | Panel |
+
+#### Variants
+
+| Variant | Size | Use Case | Component Example |
+|---------|------|----------|-------------------|
+| **Small** | `max-w-sm` | Quick confirmations, verified status | `CustomerVerifiedModal` |
+| **Medium** | `max-w-md` | Forms, success summaries | `TransactionSuccessModal`, `AuthModal` |
+| **Large** | `max-w-lg` | Detailed info, complex forms | `InfoModal` |
+
+#### Implementation
+
+```tsx
+// Base modal pattern
+<div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+  {/* Backdrop with blur */}
+  <div 
+    className="absolute inset-0 bg-black/50 backdrop-blur-sm"
+    onClick={onClose}
+  />
+  
+  {/* Modal content */}
+  <div 
+    className="relative bg-background rounded-2xl shadow-2xl max-w-md w-full p-6"
+    onClick={(e) => e.stopPropagation()}
+  >
+    {/* Close button */}
+    <button className="absolute top-4 right-4">
+      <X className="h-5 w-5" />
+    </button>
+    
+    {/* Content */}
+    {children}
+  </div>
+</div>
+```
+
+#### Anatomy
+
+```
+┌─────────────────────────────────────────┐
+│                                    [X]  │
+│                                         │
+│              [Icon/Image]               │
+│                                         │
+│               Title Text                │
+│            Description text             │
+│                                         │
+│  ┌─────────────────────────────────┐   │
+│  │         Primary Action          │   │
+│  └─────────────────────────────────┘   │
+│  ┌─────────────────────────────────┐   │
+│  │        Secondary Action         │   │
+│  └─────────────────────────────────┘   │
+└─────────────────────────────────────────┘
+```
+
+#### Guidelines
+
+| Guideline | Reason |
+|-----------|--------|
+| **One primary action** | Clear user path |
+| **Always include close button** | Escape hatch for users |
+| **Backdrop click dismisses** | Standard expectation |
+| **Escape key dismisses** | Keyboard accessibility |
+| **Lock body scroll** | Prevent background scrolling |
+| **Center vertically and horizontally** | Consistent positioning |
+
+---
+
+### 14.4 Bottom Sheet
+
+Bottom Sheets are **mobile-first slide-up panels** for workflows, detail views, and interactive content.
+
+#### When to Use
+
+| Use Case | Example |
+|----------|---------|
+| **Multi-step workflows** | Checkout flow, QR scanning |
+| **Detail views** | Transaction details, restaurant info |
+| **Action menus** | Share options, social sharing |
+| **Forms with context** | Edit customer, manual code entry |
+| **Content requiring scroll** | Long lists, detailed breakdowns |
+
+#### When NOT to Use
+
+| Avoid For | Use Instead |
+|-----------|-------------|
+| **Quick confirmations** | Toast or Modal |
+| **Critical blocking errors** | Error Modal |
+| **Simple yes/no decisions** | Modal |
+| **Persistent navigation** | Panel |
+
+#### Variants
+
+| Variant | Height | Use Case | Component Example |
+|---------|--------|----------|-------------------|
+| **Compact** | `max-h-[50vh]` | Action menus, share options | `ShareBottomSheet` |
+| **Standard** | `max-h-[70vh]` | Detail views, forms | `TransactionDetailSheet` |
+| **Full** | `max-h-[85vh]` | Complex workflows | `CheckoutSheet`, `QRScannerSheet` |
+
+#### Implementation
+
+```tsx
+// Bottom sheet pattern with swipe-to-dismiss
+<>
+  {/* Backdrop */}
+  <div 
+    className={`fixed inset-0 bg-black/50 backdrop-blur-sm z-50 transition-opacity duration-300 ${
+      isAnimating ? 'opacity-100' : 'opacity-0'
+    }`}
+    onClick={onClose}
+  />
+  
+  {/* Sheet */}
+  <div 
+    className="fixed inset-x-0 bottom-0 z-50 transition-transform duration-300 ease-out"
+    style={{
+      transform: isDragging && touchCurrent > touchStart 
+        ? `translateY(${touchCurrent - touchStart}px)` 
+        : isAnimating ? 'translateY(0)' : 'translateY(100%)'
+    }}
+    onTouchStart={handleTouchStart}
+    onTouchMove={handleTouchMove}
+    onTouchEnd={handleTouchEnd}
+  >
+    <div className="bg-background rounded-t-3xl shadow-2xl max-h-[85vh] overflow-y-auto">
+      {/* Handle bar */}
+      <div className="w-12 h-1.5 bg-muted rounded-full mx-auto my-4" />
+      
+      {/* Content */}
+      <div className="p-6 pt-0">
+        {children}
+      </div>
+    </div>
+  </div>
+</>
+```
+
+#### Anatomy
+
+```
+┌─────────────────────────────────────────┐
+│              ═══════════                │  ← Handle bar (drag indicator)
+│                                    [X]  │  ← Close button
+│                                         │
+│  Title                                  │
+│  Subtitle or description                │
+│                                         │
+│  ┌─────────────────────────────────┐   │
+│  │                                 │   │
+│  │         Content Area            │   │
+│  │      (scrollable if needed)     │   │
+│  │                                 │   │
+│  └─────────────────────────────────┘   │
+│                                         │
+│  ┌─────────────────────────────────┐   │
+│  │         Primary Action          │   │
+│  └─────────────────────────────────┘   │
+└─────────────────────────────────────────┘
+```
+
+#### Swipe-to-Dismiss Behavior
+
+| Gesture | Threshold | Action |
+|---------|-----------|--------|
+| **Swipe down** | > 100px | Dismiss sheet |
+| **Swipe down** | < 100px | Snap back to open |
+| **Tap backdrop** | N/A | Dismiss sheet |
+
+#### Guidelines
+
+| Guideline | Reason |
+|-----------|--------|
+| **Include handle bar** | Visual affordance for swipe |
+| **Lock body scroll when open** | Prevent background scrolling |
+| **Swipe-to-dismiss on mobile** | Natural mobile gesture |
+| **Close button always visible** | Fallback for non-touch users |
+| **Rounded top corners** | Visual distinction from page |
+
+#### Tablet/Desktop Adaptation
+
+On larger screens (iPad landscape, desktop), bottom sheets can adapt:
+
+| Screen Size | Behavior |
+|-------------|----------|
+| **Mobile** | Full-width, slides from bottom |
+| **Tablet landscape** | 60% width, slides from left (split-view) |
+| **Desktop** | Consider using Modal instead |
+
+---
+
+### 14.5 Panel
+
+Panels are **persistent or semi-persistent side overlays** for navigation, settings, or contextual tools.
+
+#### When to Use
+
+| Use Case | Example |
+|----------|---------|
+| **Settings and preferences** | User settings, language selection |
+| **Navigation menus** | Mobile nav drawer |
+| **Contextual tools** | Filters, sorting options |
+
+#### When NOT to Use
+
+| Avoid For | Use Instead |
+|-----------|-------------|
+| **Quick feedback** | Toast |
+| **Focused tasks** | Modal or Bottom Sheet |
+| **Detail views** | Bottom Sheet |
+
+#### Implementation
+
+```tsx
+// Settings panel pattern
+<div 
+  className={`fixed inset-y-0 right-0 w-full max-w-sm bg-background shadow-2xl z-50 
+    transform transition-transform duration-300 ${
+      isOpen ? 'translate-x-0' : 'translate-x-full'
+    }`}
+>
+  {/* Header */}
+  <div className="flex items-center justify-between p-4 border-b">
+    <h2 className="text-lg font-semibold">Settings</h2>
+    <button onClick={onClose}>
+      <X className="h-5 w-5" />
+    </button>
+  </div>
+  
+  {/* Content */}
+  <div className="p-4 overflow-y-auto">
+    {children}
+  </div>
+</div>
+```
+
+#### Guidelines
+
+| Guideline | Reason |
+|-----------|--------|
+| **Slide from edge** | Natural drawer behavior |
+| **Partial backdrop** | Show context behind panel |
+| **Persistent header** | Always show close option |
+
+---
+
+### 14.6 Decision Matrix
+
+Use this quick reference to choose the right pattern:
+
+| Scenario | Pattern | Reason |
+|----------|---------|--------|
+| "Item saved successfully" | **Toast** | Quick confirmation, no action needed |
+| "Are you sure you want to delete?" | **Modal** | Requires decision |
+| "Transaction complete" with summary | **Modal** | Important info, single action |
+| "Network error, please retry" | **Toast** (recoverable) or **Modal** (blocking) | Depends on severity |
+| Share to social media | **Bottom Sheet** | Multiple options, mobile-friendly |
+| View transaction details | **Bottom Sheet** | Scrollable content, detail view |
+| Checkout workflow | **Bottom Sheet** | Multi-step, interactive |
+| User settings | **Panel** | Persistent, navigation-like |
+| Login/Register | **Modal** | Focused task, auth flow |
+| QR code display | **Modal** | Focused, single purpose |
+
+### Overlay Pattern Quick Reference
+
+| Pattern | Z-Index | Backdrop | Dismissal | Body Scroll |
+|---------|---------|----------|-----------|-------------|
+| **Toast** | `z-50` | None | Auto (4-5s) or swipe | Allowed |
+| **Modal** | `z-50` | `bg-black/50 backdrop-blur-sm` | Click backdrop, X, Escape | Locked |
+| **Bottom Sheet** | `z-50` | `bg-black/50 backdrop-blur-sm` | Swipe down, X, backdrop | Locked |
+| **Panel** | `z-50` | Optional `bg-black/30` | X, backdrop | Locked |

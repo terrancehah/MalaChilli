@@ -241,7 +241,7 @@ export function CheckoutSheet({
                   id="bill-amount"
                   type="number"
                   inputMode="decimal"
-                  placeholder={t.staffDashboard.enterBillAmount}
+                  placeholder={t.staffDashboard.billAmountPlaceholder}
                   value={billAmount}
                   onChange={(e) => setBillAmount(e.target.value)}
                   className="pl-12 text-lg h-12"

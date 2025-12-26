@@ -22,9 +22,11 @@ export const staffDashboard = {
   checkout: 'Pembayaran',
   billAmount: 'Jumlah Bil',
   enterBillAmount: 'Masukkan jumlah bil',
+  billAmountPlaceholder: '0.00',
   availableBalance: 'Baki Tersedia',
   redeemAmount: 'Jumlah Tebus',
   enterRedeemAmount: 'Masukkan jumlah untuk tebus',
+  redeemAmountPlaceholder: '0.00',
   maxRedeemable: 'Maksimum boleh tebus',
   summary: 'Ringkasan',
   originalAmount: 'Jumlah Asal',
@@ -177,7 +179,7 @@ export const staffDashboard = {
   privacyPolicy: 'Dasar Privasi',
   termsOfService: 'Terma Perkhidmatan',
   appVersion: 'Versi Aplikasi',
-  logout: 'Log Keluar',
+  logout: 'Log keluar',
   
   // Toast Messages
   customerNotFound: 'Pelanggan tidak dijumpai. Sila semak kod QR dan cuba lagi.',
@@ -222,6 +224,6 @@ export const staffDashboard = {
   confirmVoid: 'Sahkan Batal',
   cancelVoid: 'Batal',
   voidConfirmTitle: 'Batalkan Transaksi?',
-  voidConfirmDesc: 'Tindakan ini tidak boleh dibuat asal. Jumlah transaksi akan ditolak daripada hasil dan mata akan ditarik balik.',
+  voidConfirmDesc: 'Tindakan ini tidak boleh dibuat asal. Jumlah transaksi akan ditolak daripada hasil dan VC akan ditarik balik.',
   voidSuccess: 'Transaksi berjaya dibatalkan',
 };

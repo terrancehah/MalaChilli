@@ -22,7 +22,7 @@ export const profile = {
   greeting: 'Hello',
   viewProfile: 'Lihat Profil',
   settings: 'Tetapan',
-  logout: 'Log Keluar',
+  logout: 'Log keluar',
 };
 
 export const stats = {
@@ -172,7 +172,7 @@ export const settings = {
   nameEmpty: 'Nama tidak boleh kosong',
   deleteAccount: 'Padam Akaun',
   deleteConfirmTitle: 'Padam Akaun?',
-  deleteConfirmDesc: 'Tindakan ini tidak boleh dibuat asal. Anda akan kehilangan semua mata yang diperoleh dan sejarah rujukan.',
+  deleteConfirmDesc: 'Tindakan ini tidak boleh dibuat asal. Anda akan kehilangan semua VC yang diperoleh dan sejarah rujukan.',
   confirmDelete: 'Ya, Padam Akaun Saya',
   deleteFailed: 'Gagal memadam akaun. Sila cuba lagi.',
   preferences: 'Keutamaan',
@@ -185,5 +185,5 @@ export const settings = {
   privacyPolicy: 'Dasar Privasi',
   termsOfService: 'Terma Perkhidmatan',
   appVersion: 'Versi Aplikasi',
-  logout: 'Log Keluar',
+  logout: 'Log keluar',
 };

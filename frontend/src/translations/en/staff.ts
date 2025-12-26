@@ -5,33 +5,35 @@ export const staffDashboard = {
   
   // Quick Actions
   quickActions: 'Quick Actions',
-  scanForCheckout: 'Scan for Checkout',
-  menuItems: 'Menu Items',
-  editCustomer: 'Edit Customer',
-  scanReceipt: 'Scan Receipt',
-  viewTransactions: 'View Transactions',
+  scanForCheckout: 'Scan for checkout',
+  menuItems: 'Menu items',
+  editCustomer: 'Edit customer',
+  scanReceipt: 'Scan receipt',
+  viewTransactions: 'View transactions',
   
   // Customer Verification
   customerVerified: 'Customer Verified',
   welcomeBack: 'Welcome back',
   firstVisit: 'First Visit!',
   birthdayBonus: 'Birthday Bonus!',
-  continueToCheckout: 'Continue to Checkout',
+  continueToCheckout: 'Continue to checkout',
   
   // Checkout
   checkout: 'Checkout',
   billAmount: 'Bill Amount',
-  enterBillAmount: 'Enter bill amount',
+  enterBillAmount: 'Enter the bill amount',
+  billAmountPlaceholder: '0.00',
   availableBalance: 'Available Balance',
   redeemAmount: 'Redeem Amount',
   enterRedeemAmount: 'Enter amount to redeem',
+  redeemAmountPlaceholder: '0.00',
   maxRedeemable: 'Max redeemable',
   summary: 'Summary',
   originalAmount: 'Original Amount',
   discount: 'Discount (5%)',
   vcRedeemed: 'VC Redeemed',
   finalAmount: 'Final Amount',
-  processCheckout: 'Process Checkout',
+  processCheckout: 'Process checkout',
   processing: 'Processing...',
   
   // Transaction Success
@@ -55,18 +57,18 @@ export const staffDashboard = {
   email: 'Email',
   birthday: 'Birthday',
   optional: 'Optional',
-  saveChanges: 'Save Changes',
+  saveChanges: 'Save changes',
   saving: 'Saving...',
   
   // QR Scanner
-  scanCustomerQR: 'Scan Customer QR',
+  scanCustomerQR: 'Scan customer QR',
   pointCamera: 'Point your camera at the customer\'s QR code',
   cancel: 'Cancel',
   
   // Receipt OCR
-  scanReceiptTitle: 'Scan Receipt',
-  uploadReceipt: 'Upload Receipt',
-  takePhoto: 'Take Photo',
+  scanReceiptTitle: 'Scan receipt',
+  uploadReceipt: 'Upload receipt',
+  takePhoto: 'Take photo',
   processingReceipt: 'Processing...',
   extracting: 'Extracting data from receipt...',
   
@@ -106,9 +108,9 @@ export const staffDashboard = {
   noItemsDesc: 'Start by adding your first menu item or importing from CSV',
   
   // Menu Item Form
-  addMenuItem: 'Add Menu Item',
-  editMenuItem: 'Edit Menu Item',
-  itemName: 'Item Name',
+  addMenuItem: 'Add menu item',
+  editMenuItem: 'Edit menu item',
+  itemName: 'Item name',
   required: 'Required',
   itemNamePlaceholder: 'e.g., Chicken Breast, Tiger Prawns',
   itemNameHint: 'Use the exact name as it appears on receipts for better OCR matching',
@@ -126,12 +128,12 @@ export const staffDashboard = {
   toggleUnavailable: 'Toggle to mark item as unavailable',
   notes: 'Notes',
   notesPlaceholder: 'Additional notes or descriptions...',
-  addItem: 'Add Item',
-  updateItem: 'Update Item',
+  addItem: 'Add item',
+  updateItem: 'Update item',
   
   // Menu Item Import
-  importMenuItems: 'Import Menu Items',
-  howToImport: 'How to Import',
+  importMenuItems: 'Import menu items',
+  howToImport: 'How to import',
   importStep1: 'Download the CSV template below (includes format instructions and examples)',
   importStep2: 'Fill in your menu items - name and category are required',
   importStep3: 'Keep the instruction row (starts with #) for reference - it will be ignored during import',
@@ -142,8 +144,8 @@ export const staffDashboard = {
   formatLine1: 'First row: Column headers (required)',
   formatLine2: 'Second row: Instructions (optional, will be skipped)',
   formatLine3: 'Following rows: Your menu items',
-  downloadTemplate: 'Download CSV Template',
-  uploadCSV: 'Upload CSV File',
+  downloadTemplate: 'Download CSV template',
+  uploadCSV: 'Upload CSV file',
   clickToUpload: 'Click to upload CSV file',
   maxFileSize: 'Maximum file size: 5MB',
   validationErrors: 'Validation Errors',
@@ -152,7 +154,7 @@ export const staffDashboard = {
   failed: 'Failed',
   totalProcessed: 'Total processed',
   validCategories: 'Valid Categories:',
-  importItems: 'Import Items',
+  importItems: 'Import items',
   
   // Transactions Page
   transactions: 'Transactions',
@@ -177,7 +179,7 @@ export const staffDashboard = {
   privacyPolicy: 'Privacy Policy',
   termsOfService: 'Terms of Service',
   appVersion: 'App Version',
-  logout: 'Logout',
+  logout: 'Sign out',
   
   // Toast Messages
   customerNotFound: 'Customer not found. Please check the QR code and try again.',
