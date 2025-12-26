@@ -48,7 +48,8 @@ npm run dev
 
 ## PART B: Design System
 
-> **📖 Full Reference:** See `05-design-system.md` for comprehensive visual design standards including typography, colors, spacing, components, and state patterns.
+> **📖 Full Reference:** See `05-design-system.md` for comprehensive visual design standards
+including typography, colors, spacing, components, and state patterns.
 >
 > **📝 Content Guidelines:** See `06-content-voice-guidelines.md` for UX writing standards, terminology, and tone guidelines.
 
@@ -104,7 +105,8 @@ npm run dev
 
 #### The "One Customer, Multiple Codes" Model
 
-A user has one **Customer ID** (stored in `users.referral_code`) for identification, but generates unique **Promotion Codes** for *each* restaurant they visit.
+A user has one **Customer ID** (stored in `users.referral_code`) for identification,
+but generates unique **Promotion Codes** for *each* restaurant they visit.
 
 **Flow:**
 

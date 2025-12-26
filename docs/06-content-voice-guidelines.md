@@ -20,8 +20,8 @@ in a way that feels familiar and inclusive.
 |-------|-------------|---------|
 |**Friendly**|Warm and approachable, like a friend recommending a restaurant|"Welcome back! Ready to share some savings?"|
 |**Encouraging**|Motivates users to take action without being pushy|"Share your code to start earning rewards"|
-|**Clear**|Simple, jargon-free language that anyone can understand|"You earned RM 1.00" not "1.00 VC credited to your account balance"|
-|**Helpful**|Guides users through problems with solutions, not blame|"Check your connection and try again" not "Network error occurred"|
+|**Clear**|Simple language that anyone can understand|"You earned RM 1.00" not "1.00 VC credited to your account balance"|
+|**Helpful**|Guides users through problems with solutions|"Check your connection and try again" not "Network error occurred"|
 |**Local**|Feels Malaysian — uses familiar terms and cultural context|"RM", "Kopitiam", familiar food references|
 
 ### Voice Spectrum
