@@ -416,10 +416,13 @@ export default function CustomerDashboard() {
       }
     >
       <div className="min-h-screen pb-6">
-        <SEO title="Dashboard" description="View your savings, rewards, and restaurant codes." />
+        <SEO
+          title="Dashboard"
+          description="View your savings, rewards, and restaurant codes."
+        />
         <DashboardHeader
-           title={t.profile.welcome}
-            subtitle={user.full_name || user.email}
+          title={t.profile.welcome}
+          subtitle={user.full_name || user.email}
           actions={
             <>
               <LanguageSelector
@@ -429,7 +432,7 @@ export default function CustomerDashboard() {
               <Button
                 variant="secondary"
                 size="icon"
-                className="h-12 w-12 rounded-xl bg-white/20 hover:bg-white/30 backdrop-blur-sm text-primary-foreground border-0 shadow-lg"
+                className="h-12 w-12 rounded-xl bg-white hover:bg-gray-50 text-primary border-0 shadow-lg transition-transform hover:-translate-y-0.5"
                 onClick={() => setShowQR(true)}
               >
                 <QrCodeIcon className="h-6 w-6" />
@@ -437,7 +440,7 @@ export default function CustomerDashboard() {
               <Button
                 variant="secondary"
                 size="icon"
-                className="h-12 w-12 rounded-xl bg-white/20 hover:bg-white/30 backdrop-blur-sm text-primary-foreground border-0 shadow-lg"
+                className="h-12 w-12 rounded-xl bg-white hover:bg-gray-50 text-primary border-0 shadow-lg transition-transform hover:-translate-y-0.5"
                 onClick={() => setShowSettings(true)}
               >
                 <Settings className="h-6 w-6" />

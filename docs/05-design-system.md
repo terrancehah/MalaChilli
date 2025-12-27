@@ -48,15 +48,22 @@
 
 ## 2. Color Palette
 
+## 2. Color Palette
+
 ### Brand Colors
 
 |Name|Hex|CSS Variable|Tailwind|Usage|
 |------|-----|--------------|----------|-------|
-|**Primary**|`#2E7D32`|`--primary`|`bg-primary`|Main actions, headers|
-|**Primary Dark**|`#1B5E20`|-|`bg-primary-dark`|Hover states, emphasis|
-|**Primary Light**|`#4CAF50`|-|`bg-primary-light`|Gradients, accents|
-|**Secondary**|`#81C784`|`--secondary`|`bg-secondary`|Secondary elements|
-|**Accent**|`#FF9800`|`--accent`|`bg-accent`|CTAs, highlights|
+|**Primary**|`#FF6D1F`|`--primary`|`bg-primary`|Main actions (Vibrant Orange)|
+|**Secondary**|`#F5E7C6`|`--secondary`|`bg-secondary`|Beige highlights|
+|**Background**|`#FAF3E1`|`--background`|`bg-background`|Cream background|
+|**Foreground**|`#222222`|`--foreground`|`text-foreground`|Dark Charcoal Text|
+
+> **Accessibility Note:**
+> The Primary Orange (`#FF6D1F`) is paired with Dark Charcoal (`#222222`) text for buttons to ensure WCAG AA
+> compliance (Contrast Ratio ~8.5:1). Using White text on this bright orange would fail accessibility standards (~2.7:1).
+
+> **Note:** The palette was updated in Dec 2025 to a "Muted Orange & Navy" theme based on user feedback.
 
 ### Semantic Colors
 
