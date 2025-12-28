@@ -58,12 +58,12 @@ Centralized stats card showing total earnings and savings across all restaurants
   <p><em>Total earned and redeemed VC across all restaurants</em></p>
 </div>
 
-### Restaurant-Specific Promotion Cards
-Minimal restaurant cards displaying individual VC balance, visit tracking, and share functionality. Each restaurant maintains its own separate VC balance to prevent cross-restaurant exploitation. Currency earned at one restaurant can only be redeemed at that restaurant, ensuring fair distribution.
+### Restaurant-Specific Transaction Details
+Minimal transaction details cards displaying transaction details, unrealised VC earnings, and applied discounts.
 
 <div align="center">
-  <img src="docs/images/dashboard-restaurant-cards.png" alt="Restaurant Cards" width="300"/>
-  <p><em>Clean restaurant cards with minimal VC balance display</em></p>
+  <img src="docs/images/dashboard-transaction-details.png" alt="Transaction Details" width="300"/>
+  <p><em>Clean transaction details along with unrealised VC earnings displayed</em></p>
 </div>
 
 ### How It Works Modal
