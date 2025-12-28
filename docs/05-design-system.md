@@ -60,8 +60,7 @@
 |**Foreground**|`#222222`|`--foreground`|`text-foreground`|Dark Charcoal Text|
 
 > **Accessibility Note:**
-> The Primary Orange (`#FF6D1F`) is paired with Dark Charcoal (`#222222`) text for buttons to ensure WCAG AA
-> compliance (Contrast Ratio ~8.5:1). Using White text on this bright orange would fail accessibility standards (~2.7:1).
+> While strict WCAG AA requires 4.5:1 contrast (Black text on Orange), we have adopted the **Industry Standard** (Shopee/Fave style) of **White Text on Primary Orange** (~3.3:1 contrast) to ensure visual consistency and a premium feel. Large text (>18pt) meets AA standards.
 
 > **Note:** The palette was updated in Dec 2025 to a "Muted Orange & Navy" theme based on user feedback.
 

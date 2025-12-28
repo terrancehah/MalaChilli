@@ -7,10 +7,10 @@ export default {
       colors: {
         // MakanTak Brand Colors (User Custom Palette)
         primary: {
-          DEFAULT: "#fb8241ff", // Vibrant Orange
+          DEFAULT: "#FF6D1F", // Vibrant Orange
           dark: "#E55A10", // Deep Orange
           light: "#FF8E52", // Light Orange
-          foreground: "#222222", // Dark Charcoal (High Contrast)
+          foreground: "#FFFFFF", // White (Standard)
         },
         secondary: {
           DEFAULT: "#F5E7C6", // Beige
