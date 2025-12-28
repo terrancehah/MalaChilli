@@ -129,7 +129,7 @@ export default function MerchantDashboard() {
           {/* Merchant stats skeleton - 2x2 grid */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {Array.from({ length: 4 }).map((_, index) => (
-              <Card key={index} className="glass-card border-0">
+              <Card key={index} variant="glass" className="border-0">
                 <CardContent className="p-4">
                   <div className="flex items-center justify-between mb-2">
                     <Skeleton className="h-8 w-8 rounded-full" />
@@ -186,7 +186,10 @@ export default function MerchantDashboard() {
       }
     >
       <div className="min-h-screen pb-6">
-        <SEO title={t.merchantDashboard.title} description="Merchant Dashboard - Monitor your restaurant's viral performance and business metrics." />
+        <SEO
+          title={t.merchantDashboard.title}
+          description="Merchant Dashboard - Monitor your restaurant's viral performance and business metrics."
+        />
         <DashboardHeader
           title={t.merchantDashboard.title}
           subtitle={user?.full_name || user?.email || ""}
@@ -276,10 +279,7 @@ export default function MerchantDashboard() {
             />
           )}
           {activeTab === "transactions" && (
-            <TransactionsTab
-              restaurantId={restaurantId!}
-              language={language}
-            />
+            <TransactionsTab restaurantId={restaurantId!} language={language} />
           )}
         </div>
 

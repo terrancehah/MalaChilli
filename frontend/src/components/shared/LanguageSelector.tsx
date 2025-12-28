@@ -42,8 +42,27 @@ export function LanguageSelector({
 
   return (
     <div className="relative z-50" ref={containerRef}>
-      {isOpen ? (
-        <div className="absolute right-0 top-0 w-40 bg-white rounded-xl shadow-xl border border-gray-100 overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+      <button
+        className={cn(
+          "h-12 flex items-center gap-2 px-4 py-2 text-sm bg-white hover:bg-gray-50 text-primary rounded-xl transition-all hover:-translate-y-0.5 border-0 shadow-lg",
+          isOpen ? "sm:hidden" : "" // Hide on desktop when open
+        )}
+        onClick={() => setIsOpen(!isOpen)}
+        title="Change Language"
+      >
+        <Globe className="h-5 w-5" />
+        <span className="hidden sm:inline font-medium">
+          {languages.find((l) => l.code === language)?.label}
+        </span>
+        <ChevronDown
+          className={`h-4 w-4 transition-transform duration-200 ${
+            isOpen ? "rotate-180" : ""
+          }`}
+        />
+      </button>
+
+      {isOpen && (
+        <div className="absolute w-40 bg-white rounded-xl shadow-xl border border-gray-100 overflow-hidden animate-in fade-in zoom-in-95 duration-200 top-full left-0 mt-2 sm:top-0 sm:right-0 sm:mt-0 sm:left-auto">
           {languages.map((lang) => (
             <button
               key={lang.code}
@@ -59,18 +78,6 @@ export function LanguageSelector({
             </button>
           ))}
         </div>
-      ) : (
-        <button
-          className="h-12 flex items-center gap-2 px-4 py-2 text-sm bg-white hover:bg-gray-50 text-primary rounded-xl transition-all hover:-translate-y-0.5 border-0 shadow-lg"
-          onClick={() => setIsOpen(true)}
-          title="Change Language"
-        >
-          <Globe className="h-5 w-5" />
-          <span className="hidden sm:inline font-medium">
-            {languages.find((l) => l.code === language)?.label}
-          </span>
-          <ChevronDown className="h-4 w-4" />
-        </button>
       )}
     </div>
   );

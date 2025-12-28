@@ -1,9 +1,9 @@
-import QRCode from 'react-qr-code';
-import { Button } from '../ui/button';
-import { X } from 'lucide-react';
-import { useState, useEffect } from 'react';
-import { getTranslation } from '../../translations';
-import type { Language } from '../../translations';
+import QRCode from "react-qr-code";
+import { Button } from "../ui/button";
+import { X } from "lucide-react";
+import { useState, useEffect } from "react";
+import { getTranslation } from "../../translations";
+import type { Language } from "../../translations";
 
 interface QRCodeModalProps {
   isOpen: boolean;
@@ -13,7 +13,13 @@ interface QRCodeModalProps {
   language?: Language;
 }
 
-export function QRCodeModal({ isOpen, onClose, userId, userName, language = 'en' }: QRCodeModalProps) {
+export function QRCodeModal({
+  isOpen,
+  onClose,
+  userId,
+  userName,
+  language = "en",
+}: QRCodeModalProps) {
   const t = getTranslation(language);
   const [isAnimating, setIsAnimating] = useState(false);
   const [shouldRender, setShouldRender] = useState(false);
@@ -38,15 +44,15 @@ export function QRCodeModal({ isOpen, onClose, userId, userName, language = 'en'
   if (!shouldRender) return null;
 
   return (
-    <div 
+    <div
       className={`fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4 transition-opacity duration-200 ${
-        isAnimating ? 'opacity-100' : 'opacity-0'
+        isAnimating ? "opacity-100" : "opacity-0"
       }`}
       onClick={onClose}
     >
       <div
-        className={`bg-background rounded-2xl max-w-md w-full shadow-2xl border border-border transition-all duration-200 ${
-          isAnimating ? 'scale-100 opacity-100' : 'scale-95 opacity-0'
+        className={`glass max-w-md w-full transition-all duration-200 ${
+          isAnimating ? "scale-100 opacity-100" : "scale-95 opacity-0"
         }`}
         onClick={(e) => e.stopPropagation()}
       >
@@ -54,7 +60,9 @@ export function QRCodeModal({ isOpen, onClose, userId, userName, language = 'en'
           {/* Header */}
           <div className="relative mb-6">
             <div className="text-center">
-              <h3 className="text-xl font-bold text-foreground mb-2">{t.qrCode.title}</h3>
+              <h3 className="text-xl font-bold text-foreground mb-2">
+                {t.qrCode.title}
+              </h3>
               <p className="text-sm text-muted-foreground">
                 {t.qrCode.subtitle}
               </p>
@@ -69,28 +77,19 @@ export function QRCodeModal({ isOpen, onClose, userId, userName, language = 'en'
           </div>
 
           {/* QR Code - centered with flex */}
-          <div className="bg-white p-6 rounded-xl shadow-lg mb-4 flex items-center justify-center">
-            <QRCode
-              value={userId}
-              size={220}
-              level="H"
-            />
+          <div className="bg-white p-6 rounded-xl shadow-lg mb-4 w-min mx-6 flex items-center justify-center">
+            <QRCode value={userId} size={220} level="H" />
           </div>
 
           {/* User Info */}
           <div className="text-center mb-6">
-            <p className="font-semibold text-foreground mb-1">
-              {userName}
-            </p>
+            <p className="font-semibold text-foreground mb-1">{userName}</p>
             <p className="text-xs text-muted-foreground font-mono">
-              {t.qrCode.idLabel} {userId.substring(0, 8)}...
+              {t.qrCode.idLabel} {userId.substring(0, 8)}
             </p>
           </div>
 
-          <Button
-            onClick={onClose}
-            className="w-full"
-          >
+          <Button onClick={onClose} className="w-full">
             {t.qrCode.close}
           </Button>
         </div>

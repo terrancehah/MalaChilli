@@ -250,10 +250,10 @@ export function RegisterForm({
             value={formData.fullName}
             onChange={handleChange}
             onBlur={handleBlur}
-            className={`input-field-minimal ${
+            className={` ${
               touched.fullName && errors.fullName
                 ? "border-red-500 focus:border-red-500 focus:ring-red-500"
-                : ""
+                : "w-full"
             }`}
           />
           {touched.fullName && errors.fullName && (
@@ -272,10 +272,10 @@ export function RegisterForm({
             value={formData.email}
             onChange={handleChange}
             onBlur={handleBlur}
-            className={`input-field-minimal ${
+            className={` ${
               touched.email && errors.email
                 ? "border-red-500 focus:border-red-500 focus:ring-red-500"
-                : ""
+                : "w-full"
             }`}
           />
           {touched.email && errors.email && (
@@ -294,10 +294,10 @@ export function RegisterForm({
             value={formData.password}
             onChange={handleChange}
             onBlur={handleBlur}
-            className={`input-field-minimal ${
+            className={` ${
               touched.password && errors.password
                 ? "border-red-500 focus:border-red-500 focus:ring-red-500"
-                : ""
+                : "w-full"
             }`}
           />
           {touched.password && errors.password && (
@@ -320,10 +320,10 @@ export function RegisterForm({
             value={formData.birthday}
             onChange={handleChange}
             onBlur={handleBlur}
-            className={`input-field-minimal ${
+            className={` ${
               touched.birthday && errors.birthday
                 ? "border-red-500 focus:border-red-500 focus:ring-red-500"
-                : ""
+                : "w-full"
             }`}
           />
           {touched.birthday && errors.birthday && (

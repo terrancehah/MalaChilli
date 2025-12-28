@@ -251,7 +251,10 @@ export default function DemoDashboard() {
 
   return (
     <div className="min-h-screen pb-6">
-      <SEO title="Demo Dashboard" description="Experience the MakanTak dashboard in demo mode." />
+      <SEO
+        title="Demo Dashboard"
+        description="Experience the MakanTak dashboard in demo mode."
+      />
       {/* Demo Banner */}
       <div className="bg-orange-100 dark:bg-orange-900/30 border-b border-orange-200 dark:border-orange-800 px-6 py-3 backdrop-blur-sm">
         <p className="text-center text-sm text-orange-800 dark:text-orange-200 font-medium">
@@ -310,7 +313,7 @@ export default function DemoDashboard() {
           </div>
 
           {mockVisitedRestaurants.length === 0 ? (
-            <Card className="glass-card border-0">
+            <Card variant="glass" className="border-0">
               <CardContent className="p-12 text-center">
                 <div className="h-16 w-16 rounded-full bg-primary/10 mx-auto mb-4 flex items-center justify-center">
                   <Share2 className="h-8 w-8 text-primary" />
@@ -347,7 +350,7 @@ export default function DemoDashboard() {
             </h2>
           </div>
 
-          <Card className="glass-card border-0">
+          <Card variant="glass" className="border-0">
             <CardContent className="p-12 text-center">
               <div className="h-16 w-16 rounded-full bg-primary/10 mx-auto mb-4 flex items-center justify-center">
                 <Receipt className="h-8 w-8 text-primary" />

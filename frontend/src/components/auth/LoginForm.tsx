@@ -68,7 +68,7 @@ export function LoginForm({ onSuccess, showSignUpLink = true, onSwitchToSignUp }
             value={formData.email}
             onChange={handleChange}
             autoComplete="username"
-            className="input-field-minimal"
+            className="w-full"
             required
           />
         </div>
@@ -84,7 +84,7 @@ export function LoginForm({ onSuccess, showSignUpLink = true, onSwitchToSignUp }
             value={formData.password}
             onChange={handleChange}
             autoComplete="current-password"
-            className="input-field-minimal"
+            className="w-full"
             required
           />
           <div className="text-right mt-2">
