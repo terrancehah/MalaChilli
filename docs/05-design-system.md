@@ -12,78 +12,84 @@
 
 ### Font Families
 
-| Usage | Font | Tailwind Class |
+|Usage|Font|Tailwind Class|
 |-------|------|----------------|
-| **Headings** | Quicksand | `font-display` (auto-applied via CSS) |
-| **Body Text** | Inter | `font-sans` (default) |
-| **Decorative** | Pacifico | `font-cursive` |
+|**Headings**|Quicksand|`font-display` (auto-applied via CSS)|
+|**Body Text**|Inter|`font-sans` (default)|
+|**Decorative**|Pacifico|`font-cursive`|
 
 ### Type Scale
 
-| Name | Size | Tailwind | Usage |
+|Name|Size|Tailwind|Usage|
 |------|------|----------|-------|
-| **Display** | 36-48px | `text-4xl` / `text-5xl` | Hero headings, landing page |
-| **H1** | 30px | `text-3xl` | Page titles, dashboard headers |
-| **H2** | 24px | `text-2xl` | Section headings |
-| **H3** | 20px | `text-xl` | Card titles, modal headers |
-| **H4** | 18px | `text-lg` | Subsection titles |
-| **Body** | 16px | `text-base` | Primary content |
-| **Body Small** | 14px | `text-sm` | Secondary content, descriptions |
-| **Caption** | 12px | `text-xs` | Labels, timestamps, metadata |
-| **Micro** | 10px | `text-[10px]` | Badges, tags, fine print only |
+|**Display**|36-48px|`text-4xl` / `text-5xl`|Hero headings, landing page|
+|**H1**|30px|`text-3xl`|Page titles, dashboard headers|
+|**H2**|24px|`text-2xl`|Section headings|
+|**H3**|20px|`text-xl`|Card titles, modal headers|
+|**H4**|18px|`text-lg`|Subsection titles|
+|**Body**|16px|`text-base`|Primary content|
+|**Body Small**|14px|`text-sm`|Secondary content, descriptions|
+|**Caption**|12px|`text-xs`|Labels, timestamps, metadata|
+|**Micro**|10px|`text-[10px]`|Badges, tags, fine print only|
 
 > **Rule:** Avoid arbitrary sizes. Use `text-[10px]` sparingly for badges/tags only.
 
 ### Font Weights
 
-| Weight | Tailwind | Usage |
-|--------|----------|-------|
-| Regular | `font-normal` | Body text |
-| Medium | `font-medium` | Labels, buttons |
-| Semibold | `font-semibold` | Emphasis, card titles |
-| Bold | `font-bold` | Headings, important values |
-| Extrabold | `font-extrabold` | Hero text, page titles |
+|Weight|Tailwind|Usage|
+|------|----------|-------|
+|Regular|`font-normal`|Body text|
+|Medium|`font-medium`|Labels, buttons|
+|Semibold|`font-semibold`|Emphasis, card titles|
+|Bold|`font-bold`|Headings, important values|
+|Extrabold|`font-extrabold`|Hero text, page titles|
 
 ---
 
 ## 2. Color Palette
 
+## 2. Color Palette
+
 ### Brand Colors
 
-| Name | Hex | CSS Variable | Tailwind | Usage |
+|Name|Hex|CSS Variable|Tailwind|Usage|
 |------|-----|--------------|----------|-------|
-| **Primary** | `#2E7D32` | `--primary` | `bg-primary` | Main actions, headers |
-| **Primary Dark** | `#1B5E20` | - | `bg-primary-dark` | Hover states, emphasis |
-| **Primary Light** | `#4CAF50` | - | `bg-primary-light` | Gradients, accents |
-| **Secondary** | `#81C784` | `--secondary` | `bg-secondary` | Secondary elements |
-| **Accent** | `#FF9800` | `--accent` | `bg-accent` | CTAs, highlights |
+|**Primary**|`#FF6D1F`|`--primary`|`bg-primary`|Main actions (Vibrant Orange)|
+|**Secondary**|`#F5E7C6`|`--secondary`|`bg-secondary`|Beige highlights|
+|**Background**|`#FAF3E1`|`--background`|`bg-background`|Cream background|
+|**Foreground**|`#222222`|`--foreground`|`text-foreground`|Dark Charcoal Text|
+
+> **Accessibility Note:**
+> While strict WCAG AA requires 4.5:1 contrast (Black text on Orange), we have adopted the **Industry Standard** (Shopee/Fave style) of **White Text on Primary Orange** (~3.3:1 contrast) to ensure visual consistency and a premium feel. Large text (>18pt) meets AA standards.
+
+> **Note:** The palette was updated in Dec 2025 to a "Muted Orange & Navy" theme based on user feedback.
 
 ### Semantic Colors
 
-| Name | Hex | Usage |
+|Name|Hex|Usage|
 |------|-----|-------|
-| **Success** | `#2E7D32` | Positive actions, confirmations |
-| **Warning** | `#ED6C02` | Alerts, caution states |
-| **Error** | `#D32F2F` | Errors, destructive actions |
-| **Info** | `#0288D1` | Informational messages |
+|**Success**|`#2E7D32`|Positive actions, confirmations|
+|**Warning**|`#ED6C02`|Alerts, caution states|
+|**Error**|`#D32F2F`|Errors, destructive actions|
+|**Info**|`#0288D1`|Informational messages|
 
 ### Background Colors
 
-| Name | Tailwind | Usage |
+|Name|Tailwind|Usage|
 |------|----------|-------|
-| **Page Background** | `bg-background` | Main page background |
-| **Card Background** | `bg-card` / `bg-white` | Card surfaces |
-| **Muted Background** | `bg-muted` / `bg-muted/50` | Input backgrounds, sections |
-| **Overlay** | `bg-black/50` | Modal/sheet backdrops |
+|**Page Background**|`bg-background`|Main page background|
+|**Card Background**|`bg-card` / `bg-white`|Card surfaces|
+|**Muted Background**|`bg-muted` / `bg-muted/50`|Input backgrounds, sections|
+|**Overlay**|`bg-black/50`|Modal/sheet backdrops|
 
 ### Text Colors
 
-| Name | Tailwind | Usage |
+|Name|Tailwind|Usage|
 |------|----------|-------|
-| **Primary Text** | `text-foreground` | Main content |
-| **Secondary Text** | `text-muted-foreground` | Descriptions, labels |
-| **On Primary** | `text-primary-foreground` | Text on primary backgrounds |
-| **Link** | `text-primary` | Interactive text |
+|**Primary Text**|`text-foreground`|Main content|
+|**Secondary Text**|`text-muted-foreground`|Descriptions, labels|
+|**On Primary**|`text-primary-foreground`|Text on primary backgrounds|
+|**Link**|`text-primary`|Interactive text|
 
 ---
 
@@ -91,70 +97,70 @@
 
 ### Base Scale (4px increments)
 
-| Token | Value | Tailwind | Usage |
-|-------|-------|----------|-------|
-| **xs** | 4px | `p-1`, `gap-1` | Tight spacing, inline elements |
-| **sm** | 8px | `p-2`, `gap-2` | Compact spacing |
-| **md** | 12px | `p-3`, `gap-3` | Default component padding |
-| **lg** | 16px | `p-4`, `gap-4` | Card padding, section gaps |
-| **xl** | 24px | `p-6`, `gap-6` | Page padding, large gaps |
-| **2xl** | 32px | `p-8`, `gap-8` | Hero sections |
+|Token|Value|Tailwind|Usage|
+|------|-------|----------|-------|
+|**xs**|4px|`p-1`, `gap-1`|Tight spacing, inline elements|
+|**sm**|8px|`p-2`, `gap-2`|Compact spacing|
+|**md**|12px|`p-3`, `gap-3`|Default component padding|
+|**lg**|16px|`p-4`, `gap-4`|Card padding, section gaps|
+|**xl**|24px|`p-6`, `gap-6`|Page padding, large gaps|
+|**2xl**|32px|`p-8`, `gap-8`|Hero sections|
 
 ### Standard Patterns
 
-| Context | Padding | Gap |
-|---------|---------|-----|
-| **Page Container** | `px-6` | - |
-| **Card Content** | `p-4` | - |
-| **Modal/Sheet** | `p-6` | - |
-| **Form Fields** | `p-3` | `space-y-3` |
-| **Button Groups** | - | `gap-2` or `gap-3` |
-| **List Items** | `p-3` | `space-y-2` or `space-y-3` |
+|Context|Padding|Gap|
+|---------|---------|---------|
+|**Page Container**|`px-6`|-|
+|**Card Content**|`p-4`|-|
+|**Modal/Sheet**|`p-6`|-|
+|**Form Fields**|`p-3`|`space-y-3`|
+|**Button Groups**|-|`gap-2` or `gap-3`|
+|**List Items**|`p-3`|`space-y-2` or `space-y-3`|
 
 ---
 
 ## 4. Border Radius
 
-| Token | Value | Tailwind | Usage |
-|-------|-------|----------|-------|
-| **None** | 0 | `rounded-none` | Sharp edges |
-| **Small** | 6px | `rounded-md` | Inputs, small buttons |
-| **Default** | 8px | `rounded-lg` | Buttons, badges |
-| **Large** | 12px | `rounded-xl` | Cards, modals |
-| **XL** | 16px | `rounded-2xl` | Large cards, sheets |
-| **3XL** | 24px | `rounded-3xl` | Dashboard headers |
-| **Full** | 9999px | `rounded-full` | Avatars, pills, icon buttons |
+|Token|Value|Tailwind|Usage|
+|------|-------|----------|-------|
+|**None**|0|`rounded-none`|Sharp edges|
+|**Small**|6px|`rounded-md`|Inputs, small buttons|
+|**Default**|8px|`rounded-lg`|Buttons, badges|
+|**Large**|12px|`rounded-xl`|Cards, modals|
+|**XL**|16px|`rounded-2xl`|Large cards, sheets|
+|**3XL**|24px|`rounded-3xl`|Dashboard headers|
+|**Full**|9999px|`rounded-full`|Avatars, pills, icon buttons|
 
 ### Standard Patterns
 
-| Component | Radius |
-|-----------|--------|
-| **Cards** | `rounded-xl` or `rounded-2xl` |
-| **Modals** | `rounded-2xl` |
-| **Bottom Sheets** | `rounded-t-3xl` |
-| **Buttons** | `rounded-md` (default) or `rounded-full` (pill) |
-| **Inputs** | `rounded-lg` |
-| **Badges** | `rounded-md` or `rounded-full` |
-| **Icon Buttons** | `rounded-xl` |
+|Component|Radius|
+|-----------|---------|
+|**Cards**|`rounded-xl` or `rounded-2xl`|
+|**Modals**|`rounded-2xl`|
+|**Bottom Sheets**|`rounded-t-3xl`|
+|**Buttons**|`rounded-md` (default) or `rounded-full` (pill)|
+|**Inputs**|`rounded-lg`|
+|**Badges**|`rounded-md` or `rounded-full`|
+|**Icon Buttons**|`rounded-xl`|
 
 ---
 
 ## 5. Shadows & Elevation
 
-| Level | Tailwind | Usage |
-|-------|----------|-------|
-| **None** | `shadow-none` | Flat elements, pressed state |
-| **Soft** | `shadow-soft` | Subtle elevation (custom) |
-| **Small** | `shadow-sm` | Hover state (reduced) |
-| **Default** | `shadow` | Cards at rest |
-| **Medium** | `shadow-md` | Elevated cards, buttons |
-| **Large** | `shadow-lg` | Modals, dropdowns |
-| **XL** | `shadow-xl` | Popovers |
-| **2XL** | `shadow-2xl` | Sheets, overlays |
+|Level|Tailwind|Usage|
+|------|----------|-------|
+|**None**|`shadow-none`|Flat elements, pressed state|
+|**Soft**|`shadow-soft`|Subtle elevation (custom)|
+|**Small**|`shadow-sm`|Hover state (reduced)|
+|**Default**|`shadow`|Cards at rest|
+|**Medium**|`shadow-md`|Elevated cards, buttons|
+|**Large**|`shadow-lg`|Modals, dropdowns|
+|**XL**|`shadow-xl`|Popovers|
+|**2XL**|`shadow-2xl`|Sheets, overlays|
 
 ### Interactive Shadow Pattern
 
-```
+```text
 Default: shadow-md
 Hover: shadow-lg (or shadow-sm for "press down" effect)
 Active: shadow-none
@@ -166,49 +172,49 @@ Active: shadow-none
 
 ### Duration Tokens
 
-| Token | Value | Tailwind | Usage |
-|-------|-------|----------|-------|
-| **Fast** | 150ms | `duration-150` | Micro-interactions |
-| **Default** | 200ms | `duration-200` | Standard transitions |
-| **Medium** | 300ms | `duration-300` | Modal/sheet animations |
-| **Slow** | 500ms | `duration-500` | Page transitions |
+|Token|Value|Tailwind|Usage|
+|------|-------|----------|-------|
+|**Fast**|150ms|`duration-150`|Micro-interactions|
+|**Default**|200ms|`duration-200`|Standard transitions|
+|**Medium**|300ms|`duration-300`|Modal/sheet animations|
+|**Slow**|500ms|`duration-500`|Page transitions|
 
 ### Easing
 
-| Type | CSS | Usage |
+|Type|CSS|Usage|
 |------|-----|-------|
-| **Default** | `ease-out` | Most transitions |
-| **In-Out** | `ease-in-out` | Symmetric animations |
+|**Default**|`ease-out`|Most transitions|
+|**In-Out**|`ease-in-out`|Symmetric animations|
 
 ### Standard Transitions
 
-| Element | Classes |
+|Element|Classes|
 |---------|---------|
-| **Buttons** | `transition-colors` or `transition-all duration-200` |
-| **Cards (hover)** | `transition-all duration-300` |
-| **Modals** | `transition-all duration-200` |
-| **Sheets** | `transition-transform duration-300 ease-out` |
-| **Opacity** | `transition-opacity duration-200` |
+|**Buttons**|`transition-colors` or `transition-all duration-200`|
+|**Cards (hover)**|`transition-all duration-300`|
+|**Modals**|`transition-all duration-200`|
+|**Sheets**|`transition-transform duration-300 ease-out`|
+|**Opacity**|`transition-opacity duration-200`|
 
 ### Animation Patterns
 
 **Modal Enter/Exit:**
 
-```
+```text
 Enter: scale-95 opacity-0 → scale-100 opacity-100
 Exit: scale-100 opacity-100 → scale-95 opacity-0
 ```
 
 **Sheet Enter/Exit:**
 
-```
+```text
 Bottom Sheet: translateY(100%) → translateY(0)
 Side Panel: translateX(100%) → translateX(0)
 ```
 
 **Backdrop:**
 
-```
+```text
 Enter: opacity-0 → opacity-100
 Exit: opacity-100 → opacity-0
 ```
@@ -217,23 +223,23 @@ Exit: opacity-100 → opacity-0
 
 ## 7. Icon Sizing
 
-| Size | Dimensions | Tailwind | Usage |
+|Size|Dimensions|Tailwind|Usage|
 |------|------------|----------|-------|
-| **XS** | 12×12 | `h-3 w-3` | Inline indicators |
-| **Small** | 16×16 | `h-4 w-4` | Buttons, inline icons |
-| **Default** | 20×20 | `h-5 w-5` | Standard icons |
-| **Large** | 24×24 | `h-6 w-6` | Header actions, emphasis |
-| **XL** | 32×32 | `h-8 w-8` | Feature icons |
-| **2XL** | 48×48 | `h-12 w-12` | Hero icons, empty states |
-| **3XL** | 56×56 | `h-14 w-14` | Dashboard action buttons |
+|**XS**|12×12|`h-3 w-3`|Inline indicators|
+|**Small**|16×16|`h-4 w-4`|Buttons, inline icons|
+|**Default**|20×20|`h-5 w-5`|Standard icons|
+|**Large**|24×24|`h-6 w-6`|Header actions, emphasis|
+|**XL**|32×32|`h-8 w-8`|Feature icons|
+|**2XL**|48×48|`h-12 w-12`|Hero icons, empty states|
+|**3XL**|56×56|`h-14 w-14`|Dashboard action buttons|
 
 ### Icon Button Sizes
 
-| Size | Button | Icon |
+|Size|Button|Icon|
 |------|--------|------|
-| **Small** | `h-8 w-8` | `h-4 w-4` |
-| **Default** | `h-10 w-10` | `h-5 w-5` |
-| **Large** | `h-12 w-12` | `h-6 w-6` |
+|**Small**|`h-8 w-8`|`h-4 w-4`|
+|**Default**|`h-10 w-10`|`h-5 w-5`|
+|**Large**|`h-12 w-12`|`h-6 w-6`|
 
 ---
 
@@ -257,13 +263,13 @@ Exit: opacity-100 → opacity-0
 
 ### Buttons
 
-| Variant | Usage |
+|Variant|Usage|
 |---------|-------|
-| `default` | Primary actions |
-| `secondary` | Secondary actions |
-| `outline` | Tertiary actions |
-| `ghost` | Subtle actions |
-| `destructive` | Dangerous actions |
+|`default`|Primary actions|
+|`secondary`|Secondary actions|
+|`outline`|Tertiary actions|
+|`ghost`|Subtle actions|
+|`destructive`|Dangerous actions|
 
 **Touch Target:** Minimum `h-10` (40px) for mobile, `h-12` (48px) preferred.
 
@@ -312,7 +318,8 @@ Exit: opacity-100 → opacity-0
 
 ```tsx
 // Input
-<input className="w-full px-3 py-2 text-sm bg-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary transition-all" />
+<input className="w-full px-3 py-2 text-sm bg-background border border-border rounded-lg 
+focus:outline-none focus:ring-2 focus:ring-primary transition-all" />
 
 // Field Container
 <div className="p-3 bg-muted/50 rounded-lg">
@@ -325,13 +332,13 @@ Exit: opacity-100 → opacity-0
 
 ## 9. Responsive Breakpoints
 
-| Breakpoint | Width | Usage |
+|Breakpoint|Width|Usage|
 |------------|-------|-------|
-| **Default** | 0px+ | Mobile-first base |
-| **sm** | 640px+ | Large phones |
-| **md** | 768px+ | Tablets |
-| **lg** | 1024px+ | Laptops |
-| **xl** | 1280px+ | Desktops |
+|**Default**|0px+|Mobile-first base|
+|**sm**|640px+|Large phones|
+|**md**|768px+|Tablets|
+|**lg**|1024px+|Laptops|
+|**xl**|1280px+|Desktops|
 
 ### Common Patterns
 
@@ -410,35 +417,36 @@ className="focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-
 
 ### Most Common Classes
 
-| Purpose | Classes |
+|Purpose|Classes|
 |---------|---------|
-| **Card** | `glass-card border-0` |
-| **Card Padding** | `p-4` |
-| **Page Padding** | `px-6` |
-| **Section Gap** | `space-y-6` |
-| **Item Gap** | `space-y-3` or `gap-3` |
-| **Heading** | `text-xl font-bold text-foreground` |
-| **Subheading** | `text-lg font-semibold text-foreground` |
-| **Body** | `text-sm text-muted-foreground` |
-| **Caption** | `text-xs text-muted-foreground` |
-| **Interactive Hover** | `hover:shadow-lg transition-all duration-300` |
-| **Button Transition** | `transition-colors` |
+|**Card**|`glass-card border-0`|
+|**Card Padding**|`p-4`|
+|**Page Padding**|`px-6`|
+|**Section Gap**|`space-y-6`|
+|**Item Gap**|`space-y-3` or `gap-3`|
+|**Heading**|`text-xl font-bold text-foreground`|
+|**Subheading**|`text-lg font-semibold text-foreground`|
+|**Body**|`text-sm text-muted-foreground`|
+|**Caption**|`text-xs text-muted-foreground`|
+|**Interactive Hover**|`hover:shadow-lg transition-all duration-300`|
+|**Button Transition**|`transition-colors`|
 
 ---
 
 ## 13. State Patterns
 
-State patterns define how the UI communicates different data conditions to users. Consistent state handling improves user experience by setting clear expectations.
+State patterns define how the UI communicates different data conditions to users.
+Consistent state handling improves user experience by setting clear expectations.
 
 ### Overview
 
-| State | Purpose | Example |
+|State|Purpose|Example|
 |-------|---------|---------|
-| **Empty** | No data exists yet | No orders, no menu items, no reviews |
-| **Loading** | Data is being fetched | Fetching restaurant details, loading order history |
-| **Error** | Something went wrong | Network failure, server error, permission denied |
-| **Success** | Action completed | Order placed, menu item saved, settings updated |
-| **No Results** | Search/filter returned nothing | No restaurants match filter, no search results |
+|**Empty**|No data exists yet|No orders, no menu items, no reviews|
+|**Loading**|Data is being fetched|Fetching restaurant details, loading order history|
+|**Error**|Something went wrong|Network failure, server error, permission denied|
+|**Success**|Action completed|Order placed, menu item saved, settings updated|
+|**No Results**|Search/filter returned nothing|No restaurants match filter, no search results|
 
 ---
 
@@ -454,12 +462,12 @@ Empty states appear when there is no data to display. They should guide users to
 
 #### Anatomy
 
-| Element | Required | Description |
+|Element|Required|Description|
 |---------|----------|-------------|
-| **Icon** | Yes | Lucide icon representing the empty context |
-| **Heading** | Yes | Brief statement of the empty state |
-| **Description** | Optional | Explains why it's empty or what will appear here |
-| **Action Button** | Recommended | Primary action to populate the state |
+|**Icon**|Yes|Lucide icon representing the empty context|
+|**Heading**|Yes|Brief statement of the empty state|
+|**Description**|Optional|Explains why it's empty or what will appear here|
+|**Action Button**|Recommended|Primary action to populate the state|
 
 #### Full-Page Empty State
 
@@ -506,31 +514,32 @@ Use within cards or sections when a specific area has no content.
 
 #### Content Guidelines
 
-| Do | Don't |
-|----|-------|
-| Be specific about what will appear when populated | Use generic messages like "Nothing here" |
-| Provide a clear next action | Leave users at a dead end |
-| Use friendly, encouraging tone | Blame the user or use negative language |
-| Keep text concise (1-2 sentences max) | Write lengthy explanations |
+|Do|Don't|
+|-----|--------|
+|Be specific about what will appear when populated|Use generic messages like "Nothing here"|
+|Provide a clear next action|Leave users at a dead end|
+|Use friendly, encouraging tone|Blame the user or use negative language|
+|Keep text concise (1-2 sentences max)|Write lengthy explanations|
 
 #### Common Empty State Icons
 
-| Context | Lucide Icon |
+|Context|Lucide Icon|
 |---------|-------------|
-| No menu items | `UtensilsCrossed` |
-| No orders | `ClipboardList` |
-| No reviews | `MessageSquare` |
-| Empty cart | `ShoppingBag` |
-| No notifications | `Bell` |
-| No search results | `Search` |
-| No images | `ImageOff` |
-| No customers | `Users` |
+|No menu items|`UtensilsCrossed`|
+|No orders|`ClipboardList`|
+|No reviews|`MessageSquare`|
+|Empty cart|`ShoppingBag`|
+|No notifications|`Bell`|
+|No search results|`Search`|
+|No images|`ImageOff`|
+|No customers|`Users`|
 
 ---
 
 ### 13.2 Loading States
 
-Loading states indicate that content is being fetched. Use skeleton loaders to maintain layout stability and reduce perceived wait time.
+Loading states indicate that content is being fetched.
+Use skeleton loaders to maintain layout stability and reduce perceived wait time.
 
 #### When to Use
 
@@ -541,12 +550,12 @@ Loading states indicate that content is being fetched. Use skeleton loaders to m
 
 #### Skeleton Principles
 
-| Principle | Description |
+|Principle|Description|
 |-----------|-------------|
-| **Match layout** | Skeleton shape should mirror the actual content structure |
-| **Animate subtly** | Use pulse animation, not aggressive flashing |
-| **Maintain dimensions** | Prevent layout shift when content loads |
-| **Show hierarchy** | Larger skeletons for headings, smaller for body text |
+|**Match layout**|Skeleton shape should mirror the actual content structure|
+|**Animate subtly**|Use pulse animation, not aggressive flashing|
+|**Maintain dimensions**|Prevent layout shift when content loads|
+|**Show hierarchy**|Larger skeletons for headings, smaller for body text|
 
 #### Base Skeleton Classes
 
@@ -681,12 +690,12 @@ Error states communicate that something went wrong and guide users toward resolu
 
 #### Anatomy
 
-| Element | Required | Description |
+|Element|Required|Description|
 |---------|----------|-------------|
-| **Icon** | Yes | `AlertCircle`, `WifiOff`, `ShieldX`, or context-specific |
-| **Heading** | Yes | Clear statement of the problem |
-| **Description** | Yes | Explains what happened and/or how to fix it |
-| **Action Button** | Recommended | Retry, go back, or alternative action |
+|**Icon**|Yes|`AlertCircle`, `WifiOff`, `ShieldX`, or context-specific|
+|**Heading**|Yes|Clear statement of the problem|
+|**Description**|Yes|Explains what happened and/or how to fix it|
+|**Action Button**|Recommended|Retry, go back, or alternative action|
 
 #### Full-Page Error State
 
@@ -757,23 +766,23 @@ Error states communicate that something went wrong and guide users toward resolu
 
 #### Content Guidelines
 
-| Do | Don't |
-|----|-------|
-| Use plain language, no error codes | Show technical jargon like "Error 500" |
-| Explain what the user can do | Just say "Something went wrong" |
-| Provide a recovery action | Leave users stuck |
-| Be respectful and calm | Use alarming or blaming language |
+|Do|Don't|
+|-----|--------|
+|Use plain language, no error codes|Show technical jargon like "Error 500"|
+|Explain what the user can do|Just say "Something went wrong"|
+|Provide a recovery action|Leave users stuck|
+|Be respectful and calm|Use alarming or blaming language|
 
 #### Common Error Icons
 
-| Error Type | Lucide Icon |
+|Error Type|Lucide Icon|
 |------------|-------------|
-| General error | `AlertCircle` |
-| Network error | `WifiOff` |
-| Permission denied | `ShieldX` |
-| Not found | `FileQuestion` |
-| Server error | `ServerCrash` |
-| Timeout | `Clock` |
+|General error|`AlertCircle`|
+|Network error|`WifiOff`|
+|Permission denied|`ShieldX`|
+|Not found|`FileQuestion`|
+|Server error|`ServerCrash`|
+|Timeout|`Clock`|
 
 ---
 
@@ -808,21 +817,21 @@ Toasts are non-blocking, auto-dismiss notifications that appear at the top or bo
 
 #### Toast Variants
 
-| Variant | Background | Icon | Usage |
+|Variant|Background|Icon|Usage|
 |---------|------------|------|-------|
-| **Success** | `bg-primary` | `CheckCircle` | Positive confirmations |
-| **Info** | `bg-blue-600` | `Info` | Neutral information |
-| **Warning** | `bg-amber-500` | `AlertTriangle` | Caution, non-blocking |
-| **Error** | `bg-destructive` | `AlertCircle` | Failed actions |
+|**Success**|`bg-primary`|`CheckCircle`|Positive confirmations|
+|**Info**|`bg-blue-600`|`Info`|Neutral information|
+|**Warning**|`bg-amber-500`|`AlertTriangle`|Caution, non-blocking|
+|**Error**|`bg-destructive`|`AlertCircle`|Failed actions|
 
 #### Toast Behavior
 
-| Property | Value |
-|----------|-------|
-| **Duration** | 4-5 seconds (auto-dismiss) |
-| **Position** | Top center or bottom center |
-| **Animation** | Slide in from top/bottom, fade out |
-| **Stacking** | Max 3 visible, queue additional |
+|Property|Value|
+|---------|-------|
+|**Duration**|4-5 seconds (auto-dismiss)|
+|**Position**|Top center or bottom center|
+|**Animation**|Slide in from top/bottom, fade out|
+|**Stacking**|Max 3 visible, queue additional|
 
 #### Inline Success (Forms)
 
@@ -867,7 +876,8 @@ For significant completions, show a success state with a clear next step.
 
 ### 13.5 No Results States
 
-No results states appear when a search or filter returns zero matches. They differ from empty states because data exists, but none matches the criteria.
+No results states appear when a search or filter returns zero matches.
+They differ from empty states because data exists, but none matches the criteria.
 
 #### When to Use
 
@@ -877,12 +887,12 @@ No results states appear when a search or filter returns zero matches. They diff
 
 #### Anatomy
 
-| Element | Required | Description |
+|Element|Required|Description|
 |---------|----------|-------------|
-| **Icon** | Yes | `Search`, `Filter`, or context-specific |
-| **Heading** | Yes | Acknowledges the search/filter attempt |
-| **Description** | Yes | Suggests how to find results |
-| **Action** | Recommended | Clear filters, modify search, or browse all |
+|**Icon**|Yes|`Search`, `Filter`, or context-specific|
+|**Heading**|Yes|Acknowledges the search/filter attempt|
+|**Description**|Yes|Suggests how to find results|
+|**Action**|Recommended|Clear filters, modify search, or browse all|
 
 #### No Search Results
 
@@ -928,29 +938,30 @@ No results states appear when a search or filter returns zero matches. They diff
 
 #### Content Guidelines
 
-| Do | Don't |
-|----|-------|
-| Echo the user's search term | Use generic "No results" |
-| Suggest alternatives (broaden search, check spelling) | Leave users without guidance |
-| Provide a clear action to reset | Require manual clearing |
+|Do|Don't|
+|-----|--------|
+|Echo the user's search term|Use generic "No results"|
+|Suggest alternatives (broaden search, check spelling)|Leave users without guidance|
+|Provide a clear action to reset|Require manual clearing|
 
 ---
 
 ### State Pattern Quick Reference
 
-| State | Icon Background | Icon Color | Heading Style | Action |
+|State|Icon Background|Icon Color|Heading Style|Action|
 |-------|-----------------|------------|---------------|--------|
-| **Empty** | `bg-muted` | `text-muted-foreground` | `text-xl font-bold` | Primary CTA |
-| **Loading** | N/A (skeleton) | N/A | N/A | N/A |
-| **Error** | `bg-destructive/10` | `text-destructive` | `text-xl font-bold` | Retry + Back |
-| **Success** | `bg-primary/10` | `text-primary` | `text-xl font-bold` | Next action |
-| **No Results** | None | `text-muted-foreground` | `text-lg font-semibold` | Clear/Reset |
+|**Empty**|`bg-muted`|`text-muted-foreground`|`text-xl font-bold`|Primary CTA|
+|**Loading**|N/A (skeleton)|N/A|N/A|N/A|
+|**Error**|`bg-destructive/10`|`text-destructive`|`text-xl font-bold`|Retry + Back|
+|**Success**|`bg-primary/10`|`text-primary`|`text-xl font-bold`|Next action|
+|**No Results**|None|`text-muted-foreground`|`text-lg font-semibold`|Clear/Reset|
 
 ---
 
 ## 14. Overlay & Content Hierarchy
 
-This section defines when to use each overlay pattern (Toast, Modal, Bottom Sheet, Panel) to present content consistently across MakanTak.
+This section defines when to use each overlay pattern (Toast, Modal, Bottom Sheet, Panel)
+to present content consistently across MakanTak.
 
 ### 14.1 Overview
 
@@ -961,13 +972,13 @@ Low Complexity ←――――――――――――――――――――�
      Toast          Modal       Bottom Sheet      Panel
 ```
 
-| Factor | Toast | Modal | Bottom Sheet | Panel |
+|Factor|Toast|Modal|Bottom Sheet|Panel|
 |--------|-------|-------|--------------|-------|
-| **Blocks interaction** | No | Yes | Yes | Partial |
-| **User action required** | No | Usually | Usually | No |
-| **Content complexity** | 1-2 lines | Low-Medium | Medium-High | High |
-| **Auto-dismisses** | Yes (4-5s) | No | No | No |
-| **Mobile behavior** | Top overlay | Centered | Slide from bottom | Slide from side |
+|**Blocks interaction**|No|Yes|Yes|Partial|
+|**User action required**|No|Usually|Usually|No|
+|**Content complexity**|1-2 lines|Low-Medium|Medium-High|High|
+|**Auto-dismisses**|Yes (4-5s)|No|No|No|
+|**Mobile behavior**|Top overlay|Centered|Slide from bottom|Slide from side|
 
 ---
 
@@ -977,30 +988,30 @@ Toasts are **non-blocking, ephemeral notifications** for quick feedback that doe
 
 #### When to Use
 
-| Use Case | Example |
+|Use Case|Example|
 |----------|---------|
-| **Action confirmation** | "Link copied!", "Settings saved" |
-| **Background success** | "Profile updated" |
-| **Non-critical errors** | "Unable to refresh. Try again later." |
-| **Informational updates** | "New referral earned!" |
+|**Action confirmation**|"Link copied!", "Settings saved"|
+|**Background success**|"Profile updated"|
+|**Non-critical errors**|"Unable to refresh. Try again later."|
+|**Informational updates**|"New referral earned!"|
 
 #### When NOT to Use
 
-| Avoid For | Use Instead |
+|Avoid For|Use Instead|
 |-----------|-------------|
-| **Critical errors blocking workflow** | Error Modal |
-| **Success requiring next action** | Success Modal |
-| **Content needing user decision** | Modal or Bottom Sheet |
-| **Multi-line or complex content** | Modal |
+|**Critical errors blocking workflow**|Error Modal|
+|**Success requiring next action**|Success Modal|
+|**Content needing user decision**|Modal or Bottom Sheet|
+|**Multi-line or complex content**|Modal|
 
 #### Variants
 
-| Variant | Icon | Background | Duration | Use Case |
+|Variant|Icon|Background|Duration|Use Case|
 |---------|------|------------|----------|----------|
-| **Success** | `CheckCircle` | `bg-primary` | 4s | Confirmations |
-| **Error** | `AlertCircle` | `bg-destructive` | 5s | Errors |
-| **Warning** | `AlertTriangle` | `bg-amber-500` | 4s | Cautions |
-| **Info** | `Info` | `bg-blue-600` | 4s | Neutral info |
+|**Success**|`CheckCircle`|`bg-primary`|4s|Confirmations|
+|**Error**|`AlertCircle`|`bg-destructive`|5s|Errors|
+|**Warning**|`AlertTriangle`|`bg-amber-500`|4s|Cautions|
+|**Info**|`Info`|`bg-blue-600`|4s|Neutral info|
 
 #### Implementation
 
@@ -1021,7 +1032,7 @@ showSuccessToast('Copied!', { duration: 2000 });
 
 #### Anatomy
 
-```
+``` Visual
 ┌─────────────────────────────────────────┐
 │  [Icon]  Message text              [X]  │
 │          Optional description           │
@@ -1030,12 +1041,12 @@ showSuccessToast('Copied!', { duration: 2000 });
 
 #### Guidelines
 
-| Guideline | Reason |
+|Guideline|Reason|
 |-----------|--------|
-| **Keep messages under 60 characters** | Toasts are meant to be glanceable |
-| **Use sentence case** | "Link copied" not "Link Copied" |
-| **No periods for single sentences** | "Saved successfully" not "Saved successfully." |
-| **Include dismiss button** | Users should be able to dismiss early |
+|**Keep messages under 60 characters**|Toasts are meant to be glanceable|
+|**Use sentence case**|"Link copied" not "Link Copied"|
+|**No periods for single sentences**|"Saved successfully" not "Saved successfully."|
+|**Include dismiss button**|Users should be able to dismiss early|
 
 ---
 
@@ -1045,31 +1056,31 @@ Modals are **blocking overlays** that focus user attention on a specific task or
 
 #### When to Use
 
-| Use Case | Example |
+|Use Case|Example|
 |----------|---------|
-| **Confirmations requiring decision** | "Delete account?" with Cancel/Confirm |
-| **Critical success with summary** | Transaction success with breakdown |
-| **Critical errors** | Permission denied, session expired |
-| **Authentication forms** | Login, Register |
-| **Quick informational content** | "How it works" explanation |
-| **QR code display** | Customer ID QR for scanning |
+|**Confirmations requiring decision**|"Delete account?" with Cancel/Confirm|
+|**Critical success with summary**|Transaction success with breakdown|
+|**Critical errors**|Permission denied, session expired|
+|**Authentication forms**|Login, Register|
+|**Quick informational content**|"How it works" explanation|
+|**QR code display**|Customer ID QR for scanning|
 
 #### When NOT to Use
 
-| Avoid For | Use Instead |
+|Avoid For|Use Instead|
 |-----------|-------------|
-| **Simple confirmations** | Toast |
-| **Multi-step workflows** | Bottom Sheet |
-| **Content requiring scrolling** | Bottom Sheet or Page |
-| **Settings/navigation** | Panel |
+|**Simple confirmations**|Toast|
+|**Multi-step workflows**|Bottom Sheet|
+|**Content requiring scrolling**|Bottom Sheet or Page|
+|**Settings/navigation**|Panel|
 
 #### Variants
 
-| Variant | Size | Use Case | Component Example |
+|Variant|Size|Use Case|Component Example|
 |---------|------|----------|-------------------|
-| **Small** | `max-w-sm` | Quick confirmations, verified status | `CustomerVerifiedModal` |
-| **Medium** | `max-w-md` | Forms, success summaries | `TransactionSuccessModal`, `AuthModal` |
-| **Large** | `max-w-lg` | Detailed info, complex forms | `InfoModal` |
+|**Small**|`max-w-sm`|Quick confirmations, verified status|`CustomerVerifiedModal`|
+|**Medium**|`max-w-md`|Forms, success summaries|`TransactionSuccessModal`, `AuthModal`|
+|**Large**|`max-w-lg`|Detailed info, complex forms|`InfoModal`|
 
 #### Implementation
 
@@ -1100,7 +1111,7 @@ Modals are **blocking overlays** that focus user attention on a specific task or
 
 #### Anatomy
 
-```
+``` Visual
 ┌─────────────────────────────────────────┐
 │                                    [X]  │
 │                                         │
@@ -1120,14 +1131,14 @@ Modals are **blocking overlays** that focus user attention on a specific task or
 
 #### Guidelines
 
-| Guideline | Reason |
+|Guideline|Reason|
 |-----------|--------|
-| **One primary action** | Clear user path |
-| **Always include close button** | Escape hatch for users |
-| **Backdrop click dismisses** | Standard expectation |
-| **Escape key dismisses** | Keyboard accessibility |
-| **Lock body scroll** | Prevent background scrolling |
-| **Center vertically and horizontally** | Consistent positioning |
+|**One primary action**|Clear user path|
+|**Always include close button**|Escape hatch for users|
+|**Backdrop click dismisses**|Standard expectation|
+|**Escape key dismisses**|Keyboard accessibility|
+|**Lock body scroll**|Prevent background scrolling|
+|**Center vertically and horizontally**|Consistent positioning|
 
 ---
 
@@ -1137,30 +1148,30 @@ Bottom Sheets are **mobile-first slide-up panels** for workflows, detail views, 
 
 #### When to Use
 
-| Use Case | Example |
+|Use Case|Example|
 |----------|---------|
-| **Multi-step workflows** | Checkout flow, QR scanning |
-| **Detail views** | Transaction details, restaurant info |
-| **Action menus** | Share options, social sharing |
-| **Forms with context** | Edit customer, manual code entry |
-| **Content requiring scroll** | Long lists, detailed breakdowns |
+|**Multi-step workflows**|Checkout flow, QR scanning|
+|**Detail views**|Transaction details, restaurant info|
+|**Action menus**|Share options, social sharing|
+|**Forms with context**|Edit customer, manual code entry|
+|**Content requiring scroll**|Long lists, detailed breakdowns|
 
 #### When NOT to Use
 
-| Avoid For | Use Instead |
+|Avoid For|Use Instead|
 |-----------|-------------|
-| **Quick confirmations** | Toast or Modal |
-| **Critical blocking errors** | Error Modal |
-| **Simple yes/no decisions** | Modal |
-| **Persistent navigation** | Panel |
+|**Quick confirmations**|Toast or Modal|
+|**Critical blocking errors**|Error Modal|
+|**Simple yes/no decisions**|Modal|
+|**Persistent navigation**|Panel|
 
 #### Variants
 
-| Variant | Height | Use Case | Component Example |
+|Variant|Height|Use Case|Component Example|
 |---------|--------|----------|-------------------|
-| **Compact** | `max-h-[50vh]` | Action menus, share options | `ShareBottomSheet` |
-| **Standard** | `max-h-[70vh]` | Detail views, forms | `TransactionDetailSheet` |
-| **Full** | `max-h-[85vh]` | Complex workflows | `CheckoutSheet`, `QRScannerSheet` |
+|**Compact**|`max-h-[50vh]`|Action menus, share options|`ShareBottomSheet`|
+|**Standard**|`max-h-[70vh]`|Detail views, forms|`TransactionDetailSheet`|
+|**Full**|`max-h-[85vh]`|Complex workflows|`CheckoutSheet`, `QRScannerSheet`|
 
 #### Implementation
 
@@ -1202,7 +1213,7 @@ Bottom Sheets are **mobile-first slide-up panels** for workflows, detail views, 
 
 #### Anatomy
 
-```
+``` Visual
 ┌─────────────────────────────────────────┐
 │              ═══════════                │  ← Handle bar (drag indicator)
 │                                    [X]  │  ← Close button
@@ -1225,31 +1236,31 @@ Bottom Sheets are **mobile-first slide-up panels** for workflows, detail views, 
 
 #### Swipe-to-Dismiss Behavior
 
-| Gesture | Threshold | Action |
+|Gesture|Threshold|Action|
 |---------|-----------|--------|
-| **Swipe down** | > 100px | Dismiss sheet |
-| **Swipe down** | < 100px | Snap back to open |
-| **Tap backdrop** | N/A | Dismiss sheet |
+|**Swipe down**|> 100px|Dismiss sheet|
+|**Swipe down**|< 100px|Snap back to open|
+|**Tap backdrop**|N/A|Dismiss sheet|
 
 #### Guidelines
 
-| Guideline | Reason |
+|Guideline|Reason|
 |-----------|--------|
-| **Include handle bar** | Visual affordance for swipe |
-| **Lock body scroll when open** | Prevent background scrolling |
-| **Swipe-to-dismiss on mobile** | Natural mobile gesture |
-| **Close button always visible** | Fallback for non-touch users |
-| **Rounded top corners** | Visual distinction from page |
+|**Include handle bar**|Visual affordance for swipe|
+|**Lock body scroll when open**|Prevent background scrolling|
+|**Swipe-to-dismiss on mobile**|Natural mobile gesture|
+|**Close button always visible**|Fallback for non-touch users|
+|**Rounded top corners**|Visual distinction from page|
 
 #### Tablet/Desktop Adaptation
 
 On larger screens (iPad landscape, desktop), bottom sheets can adapt:
 
-| Screen Size | Behavior |
+|Screen Size|Behavior|
 |-------------|----------|
-| **Mobile** | Full-width, slides from bottom |
-| **Tablet landscape** | 60% width, slides from left (split-view) |
-| **Desktop** | Consider using Modal instead |
+|**Mobile**|Full-width, slides from bottom|
+|**Tablet landscape**|60% width, slides from left (split-view)|
+|**Desktop**|Consider using Modal instead|
 
 ---
 
@@ -1259,19 +1270,19 @@ Panels are **persistent or semi-persistent side overlays** for navigation, setti
 
 #### When to Use
 
-| Use Case | Example |
+|Use Case|Example|
 |----------|---------|
-| **Settings and preferences** | User settings, language selection |
-| **Navigation menus** | Mobile nav drawer |
-| **Contextual tools** | Filters, sorting options |
+|**Settings and preferences**|User settings, language selection|
+|**Navigation menus**|Mobile nav drawer|
+|**Contextual tools**|Filters, sorting options|
 
 #### When NOT to Use
 
-| Avoid For | Use Instead |
+|Avoid For|Use Instead|
 |-----------|-------------|
-| **Quick feedback** | Toast |
-| **Focused tasks** | Modal or Bottom Sheet |
-| **Detail views** | Bottom Sheet |
+|**Quick feedback**|Toast|
+|**Focused tasks**|Modal or Bottom Sheet|
+|**Detail views**|Bottom Sheet|
 
 #### Implementation
 
@@ -1300,11 +1311,11 @@ Panels are **persistent or semi-persistent side overlays** for navigation, setti
 
 #### Guidelines
 
-| Guideline | Reason |
+|Guideline|Reason|
 |-----------|--------|
-| **Slide from edge** | Natural drawer behavior |
-| **Partial backdrop** | Show context behind panel |
-| **Persistent header** | Always show close option |
+|**Slide from edge**|Natural drawer behavior|
+|**Partial backdrop**|Show context behind panel|
+|**Persistent header**|Always show close option|
 
 ---
 
@@ -1312,73 +1323,74 @@ Panels are **persistent or semi-persistent side overlays** for navigation, setti
 
 Use this quick reference to choose the right pattern:
 
-| Scenario | Pattern | Reason |
+|Scenario|Pattern|Reason|
 |----------|---------|--------|
-| "Item saved successfully" | **Toast** | Quick confirmation, no action needed |
-| "Are you sure you want to delete?" | **Modal** | Requires decision |
-| "Transaction complete" with summary | **Modal** | Important info, single action |
-| "Network error, please retry" | **Toast** (recoverable) or **Modal** (blocking) | Depends on severity |
-| Share to social media | **Bottom Sheet** | Multiple options, mobile-friendly |
-| View transaction details | **Bottom Sheet** | Scrollable content, detail view |
-| Checkout workflow | **Bottom Sheet** | Multi-step, interactive |
-| User settings | **Panel** | Persistent, navigation-like |
-| Login/Register | **Modal** | Focused task, auth flow |
-| QR code display | **Modal** | Focused, single purpose |
+|"Item saved successfully"|**Toast**|Quick confirmation, no action needed|
+|"Are you sure you want to delete?"|**Modal**|Requires decision|
+|"Transaction complete" with summary|**Modal**|Important info, single action|
+|"Network error, please retry"|**Toast** (recoverable) or **Modal** (blocking)|Depends on severity|
+|Share to social media|**Bottom Sheet**|Multiple options, mobile-friendly|
+|View transaction details|**Bottom Sheet**|Scrollable content, detail view|
+|Checkout workflow|**Bottom Sheet**|Multi-step, interactive|
+|User settings|**Panel**|Persistent, navigation-like|
+|Login/Register|**Modal**|Focused task, auth flow|
+|QR code display|**Modal**|Focused, single purpose|
 
 ### Overlay Pattern Quick Reference
 
-| Pattern | Z-Index | Backdrop | Dismissal | Body Scroll |
+|Pattern|Z-Index|Backdrop|Dismissal|Body Scroll|
 |---------|---------|----------|-----------|-------------|
-| **Toast** | `z-50` | None | Auto (4-5s) or swipe | Allowed |
-| **Modal** | `z-50` | `bg-black/50 backdrop-blur-sm` | Click backdrop, X, Escape | Locked |
-| **Bottom Sheet** | `z-50` | `bg-black/50 backdrop-blur-sm` | Swipe down, X, backdrop | Locked |
-| **Panel** | `z-50` | Optional `bg-black/30` | X, backdrop | Locked |
+|**Toast**|`z-50`|None|Auto (4-5s) or swipe|Allowed|
+|**Modal**|`z-50`|`bg-black/50 backdrop-blur-sm`|Click backdrop, X, Escape|Locked|
+|**Bottom Sheet**|`z-50`|`bg-black/50 backdrop-blur-sm`|Swipe down, X, backdrop|Locked|
+|**Panel**|`z-50`|Optional `bg-black/30`|X, backdrop|Locked|
 
 ---
 
 ## 15. Motion Principles
 
-Motion in MakanTak serves to guide attention, provide feedback, and create a sense of polish. All animations should feel natural, purposeful, and never slow down the user.
+Motion in MakanTak serves to guide attention, provide feedback, and create a sense of polish.
+All animations should feel natural, purposeful, and never slow down the user.
 
 ### 15.1 Philosophy
 
-| Principle | Description |
+|Principle|Description|
 |-----------|-------------|
-| **Purposeful** | Every animation should have a reason — guiding focus, confirming action, or showing state change |
-| **Fast** | Users should never wait for animations. Keep them snappy (200-300ms for most interactions) |
-| **Natural** | Motion should follow real-world physics — ease-out for entrances, ease-in for exits |
-| **Consistent** | Same type of element = same animation pattern across the app |
-| **Accessible** | Respect `prefers-reduced-motion` for users who are sensitive to motion |
+|**Purposeful**|Every animation should have a reason — guiding focus, confirming action, or showing state change|
+|**Fast**|Users should never wait for animations. Keep them snappy (200-300ms for most interactions)|
+|**Natural**|Motion should follow real-world physics — ease-out for entrances, ease-in for exits|
+|**Consistent**|Same type of element = same animation pattern across the app|
+|**Accessible**|Respect `prefers-reduced-motion` for users who are sensitive to motion|
 
 ### 15.2 Duration Scale
 
 Use consistent duration values across the app:
 
-| Token | Value | Use Case |
+|Token|Value|Use Case|
 |-------|-------|----------|
-| `duration-150` | 150ms | Micro-interactions (hover states, color changes) |
-| `duration-200` | 200ms | Quick transitions (modal fade, button press) |
-| `duration-300` | 300ms | Standard transitions (panel slide, sheet slide, toast) |
-| `duration-500` | 500ms | Emphasis animations (success celebrations, onboarding) |
+|`duration-150`|150ms|Micro-interactions (hover states, color changes)|
+|`duration-200`|200ms|Quick transitions (modal fade, button press)|
+|`duration-300`|300ms|Standard transitions (panel slide, sheet slide, toast)|
+|`duration-500`|500ms|Emphasis animations (success celebrations, onboarding)|
 
 #### Guidelines
 
-| Duration | When to Use |
+|Duration|When to Use|
 |----------|-------------|
-| **< 200ms** | Instant feedback (hover, focus, active states) |
-| **200-300ms** | Most UI transitions (overlays, state changes) |
-| **> 300ms** | Only for emphasis or complex choreographed animations |
+|**< 200ms**|Instant feedback (hover, focus, active states)|
+|**200-300ms**|Most UI transitions (overlays, state changes)|
+|**> 300ms**|Only for emphasis or complex choreographed animations|
 
 ---
 
 ### 15.3 Easing Functions
 
-| Easing | Tailwind Class | When to Use |
+|Easing|Tailwind Class|When to Use|
 |--------|----------------|-------------|
-| **ease-out** | `ease-out` | **Entrances** — elements appearing (modal open, sheet slide up) |
-| **ease-in** | `ease-in` | **Exits** — elements disappearing (modal close, sheet slide down) |
-| **ease-in-out** | `ease-in-out` | **Morphing** — elements changing shape/size (expand/collapse) |
-| **linear** | `linear` | **Continuous** — loading spinners, progress bars |
+|**ease-out**|`ease-out`|**Entrances** — elements appearing (modal open, sheet slide up)|
+|**ease-in**|`ease-in`|**Exits** — elements disappearing (modal close, sheet slide down)|
+|**ease-in-out**|`ease-in-out`|**Morphing** — elements changing shape/size (expand/collapse)|
+|**linear**|`linear`|**Continuous** — loading spinners, progress bars|
 
 #### Why This Matters
 
@@ -1395,10 +1407,10 @@ Exit (ease-in):       Slow start → Fast finish  (feels like leaving)
 
 Toasts slide in from top and fade, then reverse on exit.
 
-| State | Animation | Classes |
+|State|Animation|Classes|
 |-------|-----------|---------|
-| **Enter** | Fade in + slide down | `animate-in fade-in slide-in-from-top-2 duration-300` |
-| **Exit** | Fade out + slide up | `animate-out fade-out slide-out-to-top-2 duration-300` |
+|**Enter**|Fade in + slide down|`animate-in fade-in slide-in-from-top-2 duration-300`|
+|**Exit**|Fade out + slide up|`animate-out fade-out slide-out-to-top-2 duration-300`|
 
 ```tsx
 // Toast enter/exit animation
@@ -1419,12 +1431,12 @@ Toasts slide in from top and fade, then reverse on exit.
 
 Modals fade in with a subtle scale effect. Backdrop fades separately.
 
-| State | Animation | Classes |
+|State|Animation|Classes|
 |-------|-----------|---------|
-| **Enter** | Fade in + scale up (95% → 100%) | `transition-all duration-200`, `opacity-0 scale-95` → `opacity-100 scale-100` |
-| **Exit** | Fade out + scale down (100% → 95%) | `opacity-100 scale-100` → `opacity-0 scale-95` |
-| **Backdrop Enter** | Fade in | `transition-opacity duration-200`, `opacity-0` → `opacity-100` |
-| **Backdrop Exit** | Fade out | `opacity-100` → `opacity-0` |
+|**Enter**|Fade in + scale up (95% → 100%)|`transition-all duration-200`, `opacity-0 scale-95` → `opacity-100 scale-100`|
+|**Exit**|Fade out + scale down (100% → 95%)|`opacity-100 scale-100` → `opacity-0 scale-95`|
+|**Backdrop Enter**|Fade in|`transition-opacity duration-200`, `opacity-0` → `opacity-100`|
+|**Backdrop Exit**|Fade out|`opacity-100` → `opacity-0`|
 
 ```tsx
 // Modal with fade + scale animation
@@ -1458,13 +1470,13 @@ const [isAnimating, setIsAnimating] = useState(false);
 
 Bottom sheets slide up from the bottom edge with swipe-to-dismiss support.
 
-| State | Animation | Implementation |
+|State|Animation|Implementation|
 |-------|-----------|----------------|
-| **Enter** | Slide up from bottom | `translateY(100%)` → `translateY(0)` |
-| **Exit** | Slide down to bottom | `translateY(0)` → `translateY(100%)` |
-| **Dragging** | Follow finger position | Dynamic `translateY()` based on touch delta |
-| **Backdrop Enter** | Fade in | `opacity-0` → `opacity-100` |
-| **Backdrop Exit** | Fade out | `opacity-100` → `opacity-0` |
+|**Enter**|Slide up from bottom|`translateY(100%)` → `translateY(0)`|
+|**Exit**|Slide down to bottom|`translateY(0)` → `translateY(100%)`|
+|**Dragging**|Follow finger position|Dynamic `translateY()` based on touch delta|
+|**Backdrop Enter**|Fade in|`opacity-0` → `opacity-100`|
+|**Backdrop Exit**|Fade out|`opacity-100` → `opacity-0`|
 
 ```tsx
 // Bottom sheet with slide animation
@@ -1503,12 +1515,12 @@ Bottom sheets slide up from the bottom edge with swipe-to-dismiss support.
 
 Panels slide in from the edge (typically right side for settings).
 
-| State | Animation | Classes |
+|State|Animation|Classes|
 |-------|-----------|---------|
-| **Enter** | Slide in from right | `animate-in slide-in-from-right duration-300` |
-| **Exit** | Slide out to right | `animate-out slide-out-to-right duration-300` |
-| **Backdrop Enter** | Fade in | `transition-opacity duration-200`, `opacity-0` → `opacity-100` |
-| **Backdrop Exit** | Fade out | `transition-opacity duration-300`, `opacity-100` → `opacity-0` |
+|**Enter**|Slide in from right|`animate-in slide-in-from-right duration-300`|
+|**Exit**|Slide out to right|`animate-out slide-out-to-right duration-300`|
+|**Backdrop Enter**|Fade in|`transition-opacity duration-200`, `opacity-0` → `opacity-100`|
+|**Backdrop Exit**|Fade out|`transition-opacity duration-300`, `opacity-100` → `opacity-0`|
 
 ```tsx
 // Panel with slide animation
@@ -1556,14 +1568,14 @@ const handleAnimationEnd = () => {
 
 Small animations that provide feedback for user actions.
 
-| Interaction | Animation | Classes |
+|Interaction|Animation|Classes|
 |-------------|-----------|---------|
-| **Button hover** | Subtle lift or color change | `hover:bg-primary/90 transition-colors` |
-| **Button press** | Scale down slightly | `active:scale-95 transition-transform` |
-| **Icon hover** | Scale up | `group-hover:scale-110 transition-transform duration-300` |
-| **Focus ring** | Fade in ring | `focus:ring-2 focus:ring-primary transition-all` |
-| **Loading spinner** | Continuous rotation | `animate-spin` |
-| **Skeleton pulse** | Opacity pulse | `animate-pulse` |
+|**Button hover**|Subtle lift or color change|`hover:bg-primary/90 transition-colors`|
+|**Button press**|Scale down slightly|`active:scale-95 transition-transform`|
+|**Icon hover**|Scale up|`group-hover:scale-110 transition-transform duration-300`|
+|**Focus ring**|Fade in ring|`focus:ring-2 focus:ring-primary transition-all`|
+|**Loading spinner**|Continuous rotation|`animate-spin`|
+|**Skeleton pulse**|Opacity pulse|`animate-pulse`|
 
 ```tsx
 // Button with hover and press feedback
@@ -1585,11 +1597,11 @@ Small animations that provide feedback for user actions.
 
 For collapsible sections and form field expansions.
 
-| Pattern | Implementation |
+|Pattern|Implementation|
 |---------|----------------|
-| **Height animation** | Use CSS Grid trick for smooth height transitions |
-| **Duration** | `duration-300` |
-| **Easing** | `ease-in-out` |
+|**Height animation**|Use CSS Grid trick for smooth height transitions|
+|**Duration**|`duration-300`|
+|**Easing**|`ease-in-out`|
 
 ```tsx
 // Smooth expand/collapse using CSS Grid
@@ -1642,21 +1654,21 @@ const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)
 
 #### Overlay Enter/Exit Summary
 
-| Component | Enter Animation | Exit Animation | Duration |
+|Component|Enter Animation|Exit Animation|Duration|
 |-----------|-----------------|----------------|----------|
-| **Toast** | `fade-in slide-in-from-top-2` | `fade-out slide-out-to-top-2` | 300ms |
-| **Modal** | `opacity-100 scale-100` | `opacity-0 scale-95` | 200ms |
-| **Bottom Sheet** | `translateY(0)` | `translateY(100%)` | 300ms |
-| **Panel** | `slide-in-from-right` | `slide-out-to-right` | 300ms |
-| **Backdrop** | `opacity-100` | `opacity-0` | 200-300ms |
+|**Toast**|`fade-in slide-in-from-top-2`|`fade-out slide-out-to-top-2`|300ms|
+|**Modal**|`opacity-100 scale-100`|`opacity-0 scale-95`|200ms|
+|**Bottom Sheet**|`translateY(0)`|`translateY(100%)`|300ms|
+|**Panel**|`slide-in-from-right`|`slide-out-to-right`|300ms|
+|**Backdrop**|`opacity-100`|`opacity-0`|200-300ms|
 
 #### Interaction Summary
 
-| Interaction | Animation | Duration |
+|Interaction|Animation|Duration|
 |-------------|-----------|----------|
-| **Hover color** | `transition-colors` | 150ms |
-| **Hover scale** | `scale-110` | 300ms |
-| **Button press** | `scale-95` | 150ms |
-| **Focus ring** | `ring-2` | 200ms |
-| **Expand/collapse** | `grid-template-rows` | 300ms |
-| **Loading spinner** | `animate-spin` | continuous |
+|**Hover color**|`transition-colors`|150ms|
+|**Hover scale**|`scale-110`|300ms|
+|**Button press**|`scale-95`|150ms|
+|**Focus ring**|`ring-2`|200ms|
+|**Expand/collapse**|`grid-template-rows`|300ms|
+|**Loading spinner**|`animate-spin`|continuous|

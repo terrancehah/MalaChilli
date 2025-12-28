@@ -61,7 +61,7 @@ export function LanguageSelector({
         </div>
       ) : (
         <button
-          className="h-12 flex items-center gap-2 px-4 py-2 text-sm bg-white/20 hover:bg-white/30 backdrop-blur-sm text-primary-foreground rounded-xl transition-all border-0 shadow-lg"
+          className="h-12 flex items-center gap-2 px-4 py-2 text-sm bg-white hover:bg-gray-50 text-primary rounded-xl transition-all hover:-translate-y-0.5 border-0 shadow-lg"
           onClick={() => setIsOpen(true)}
           title="Change Language"
         >

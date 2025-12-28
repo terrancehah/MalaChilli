@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Quicksand:wght@500;600;700&family=Pacifico&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Quicksand:wght@500;600;700&family=Pacifico&display=swap");
 
 @tailwind base;
 @tailwind components;
@@ -6,40 +6,40 @@
 
 @layer base {
   :root {
-    /* MakanTak - Green Food Theme */
-    --background: 88 50% 95%; /* #F1F8E9 */
-    --foreground: 120 40% 10%; /* Dark Green Text */
-    
+    /* MakanTak - Orange Food Theme */
+    --background: 36 100% 98%; /* Warm Cream #FFF8E1 */
+    --foreground: 222 47% 11%; /* Charcoal #101727 */
+
     --card: 0 0% 100%;
-    --card-foreground: 120 40% 10%;
-    
+    --card-foreground: 222 47% 11%;
+
     --popover: 0 0% 100%;
-    --popover-foreground: 120 40% 10%;
-    
-    /* Primary: Fresh Forest Green #2E7D32 */
-    --primary: 123 46% 34%;
+    --popover-foreground: 222 47% 11%;
+
+    /* Primary: Vibrant Orange #FF6D1F */
+    --primary: 21 100% 56%;
     --primary-foreground: 0 0% 100%;
-    
-    /* Secondary: Soft Green #81C784 */
-    --secondary: 123 41% 64%;
-    --secondary-foreground: 120 40% 10%;
-    
-    /* Muted: Light Grayish Green */
-    --muted: 120 20% 90%;
-    --muted-foreground: 120 10% 40%;
-    
-    /* Accent: Orange #FF9800 */
-    --accent: 36 100% 50%;
+
+    /* Secondary: Yolk Yellow (Cheerful) */
+    --secondary: 45 100% 51%; /* #FFC107 */
+    --secondary-foreground: 222 47% 11%;
+
+    /* Muted: Warm Gray */
+    --muted: 36 20% 96%;
+    --muted-foreground: 215 16% 47%;
+
+    /* Accent: Deep Orange */
+    --accent: 24 95% 50%;
     --accent-foreground: 0 0% 100%;
-    
+
     /* Destructive: Red */
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
-    
-    --border: 120 20% 90%;
-    --input: 120 20% 90%;
-    --ring: 123 46% 34%;
-    
+
+    --border: 214 32% 91%;
+    --input: 214 32% 91%;
+    --ring: 14 100% 57%;
+
     --radius: 1rem;
   }
 
@@ -47,28 +47,28 @@
     /* Dark mode with deep green tones */
     --background: 120 40% 5%;
     --foreground: 120 10% 90%;
-    
+
     --card: 120 40% 8%;
     --card-foreground: 120 10% 90%;
-    
+
     --popover: 120 40% 8%;
     --popover-foreground: 120 10% 90%;
-    
+
     --primary: 123 46% 40%;
     --primary-foreground: 0 0% 100%;
-    
+
     --secondary: 123 41% 20%;
     --secondary-foreground: 120 10% 90%;
-    
+
     --muted: 120 20% 15%;
     --muted-foreground: 120 10% 60%;
-    
+
     --accent: 36 100% 50%;
     --accent-foreground: 0 0% 100%;
-    
+
     --destructive: 0 62% 30%;
     --destructive-foreground: 0 0% 100%;
-    
+
     --border: 120 20% 15%;
     --input: 120 20% 15%;
     --ring: 123 46% 40%;
@@ -81,14 +81,26 @@
   }
   body {
     @apply bg-background text-foreground;
-    font-family: 'Inter', system-ui, sans-serif;
-    background-image: 
-        radial-gradient(circle at 10% 20%, rgba(129, 199, 132, 0.1) 0%, transparent 20%),
-        radial-gradient(circle at 90% 80%, rgba(76, 175, 80, 0.1) 0%, transparent 20%);
+    font-family: "Inter", system-ui, sans-serif;
+    background-image: radial-gradient(
+        circle at 10% 20%,
+        rgba(245, 231, 198, 0.4) 0%, /* Beige */
+        transparent 20%
+      ),
+      radial-gradient(
+        circle at 90% 80%,
+        rgba(255, 109, 31, 0.08) 0%, /* Orange */
+        transparent 20%
+      );
     background-attachment: fixed;
   }
-  h1, h2, h3, h4, h5, h6 {
-    font-family: 'Quicksand', sans-serif;
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: "Quicksand", sans-serif;
   }
 }
 
@@ -96,15 +108,15 @@
   .glass-card {
     @apply bg-white/80 dark:bg-gray-900/80 backdrop-blur-md border border-white/20 shadow-soft rounded-card;
   }
-  
+
   .glass-input {
     @apply bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm border border-gray-200 dark:border-gray-700 rounded-pill px-5 py-3 outline-none focus:ring-2 focus:ring-primary/50 transition-all;
   }
-  
+
   .btn-primary {
     @apply bg-gradient-to-r from-primary to-primary-light text-white shadow-lg shadow-primary/30 hover:shadow-primary/50 hover:-translate-y-0.5 transition-all duration-300 rounded-pill font-semibold px-6 py-3;
   }
-  
+
   .btn-secondary {
     @apply bg-white text-primary border-2 border-primary/20 hover:border-primary hover:bg-primary/5 transition-all duration-300 rounded-pill font-semibold px-6 py-3;
   }
@@ -122,7 +134,9 @@
 
 /* Accessibility: Respect reduced motion preferences (Section 15.7) */
 @media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
+  *,
+  *::before,
+  *::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
