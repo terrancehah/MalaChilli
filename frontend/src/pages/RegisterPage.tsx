@@ -175,7 +175,7 @@ export default function RegisterPage() {
   if (emailSent) {
     return (
       <div className="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
-        <div className="max-w-md w-full glass-card p-8 text-center relative z-10">
+        <div className="max-w-md w-full glass-modal p-8 text-center relative z-10">
           <div className="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-green-100 mb-4">
             <svg
               className="h-8 w-8 text-green-600"
@@ -220,7 +220,7 @@ export default function RegisterPage() {
         <div className="absolute top-[10%] left-[10%] w-[20%] h-[20%] rounded-full bg-accent/10 blur-3xl"></div>
       </div>
 
-      <div className="max-w-md w-full space-y-8 glass-card p-8 sm:p-10 relative z-10">
+      <div className="max-w-md w-full space-y-8 glass-modal p-8 sm:p-10 relative z-10">
         <div className="text-center">
           <h2 className="text-3xl font-display font-bold text-primary-dark">
             Create Account

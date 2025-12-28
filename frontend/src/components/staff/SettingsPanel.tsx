@@ -1,8 +1,8 @@
-import { useState, useEffect } from 'react';
-import { Building2, MapPin } from 'lucide-react';
-import { getTranslation, type Language } from '../../translations';
-import { supabase } from '../../lib/supabase';
-import { BaseSettingsPanel } from '../shared';
+import { useState, useEffect } from "react";
+import { Building2, MapPin } from "lucide-react";
+import { getTranslation, type Language } from "../../translations";
+import { supabase } from "../../lib/supabase";
+import { BaseSettingsPanel } from "../shared";
 
 interface SettingsPanelProps {
   isOpen: boolean;
@@ -20,14 +20,21 @@ interface SettingsPanelProps {
   onLanguageChange?: (lang: Language) => void;
 }
 
-export function SettingsPanel({ isOpen, onClose, user, onSignOut, language = 'en', onLanguageChange }: SettingsPanelProps) {
+export function SettingsPanel({
+  isOpen,
+  onClose,
+  user,
+  onSignOut,
+  language = "en",
+  onLanguageChange,
+}: SettingsPanelProps) {
   const t = getTranslation(language);
   const [restaurantName, setRestaurantName] = useState<string | null>(null);
   const [branchName, setBranchName] = useState<string | null>(null);
 
-  const memberSince = new Date(user.created_at).toLocaleDateString('en-US', {
-    month: 'short',
-    year: 'numeric',
+  const memberSince = new Date(user.created_at).toLocaleDateString("en-US", {
+    month: "short",
+    year: "numeric",
   });
 
   // Fetch restaurant and branch names
@@ -39,15 +46,15 @@ export function SettingsPanel({ isOpen, onClose, user, onSignOut, language = 'en
 
   const fetchLocationInfo = async () => {
     if (!user.restaurant_id) return;
-    
+
     try {
       // Fetch restaurant name
       const { data: restaurant } = await supabase
-        .from('restaurants')
-        .select('name')
-        .eq('id', user.restaurant_id)
+        .from("restaurants")
+        .select("name")
+        .eq("id", user.restaurant_id)
         .single();
-      
+
       if (restaurant) {
         setRestaurantName(restaurant.name);
       }
@@ -55,17 +62,17 @@ export function SettingsPanel({ isOpen, onClose, user, onSignOut, language = 'en
       // Fetch branch name if available
       if (user.branch_id) {
         const { data: branch } = await supabase
-          .from('branches')
-          .select('name')
-          .eq('id', user.branch_id)
+          .from("branches")
+          .select("name")
+          .eq("id", user.branch_id)
           .single();
-        
+
         if (branch) {
           setBranchName(branch.name);
         }
       }
     } catch (err) {
-      console.error('Failed to fetch location info:', err);
+      console.error("Failed to fetch location info:", err);
     }
   };
 
@@ -80,18 +87,28 @@ export function SettingsPanel({ isOpen, onClose, user, onSignOut, language = 'en
     >
       {/* Profile Section */}
       <div className="mb-6">
-        <h4 className="text-base font-bold text-foreground mb-4">{t.settings.profile}</h4>
+        <h4 className="text-base font-bold text-foreground mb-4">
+          {t.settings.profile}
+        </h4>
         <div className="space-y-3">
           <div className="p-3 bg-muted/50 rounded-lg">
-            <p className="text-sm font-semibold text-foreground mb-2">{t.settings.name}</p>
-            <p className="text-sm text-muted-foreground">{user.full_name || t.settings.notSet}</p>
+            <p className="text-sm font-semibold text-foreground mb-2">
+              {t.settings.name}
+            </p>
+            <p className="text-sm text-muted-foreground">
+              {user.full_name || t.settings.notSet}
+            </p>
           </div>
           <div className="p-3 bg-muted/50 rounded-lg">
-            <p className="text-sm font-semibold text-foreground mb-2">{t.settings.email}</p>
+            <p className="text-sm font-semibold text-foreground mb-2">
+              {t.settings.email}
+            </p>
             <p className="text-sm text-muted-foreground">{user.email}</p>
           </div>
           <div className="p-3 bg-muted/50 rounded-lg">
-            <p className="text-sm font-semibold text-foreground mb-2">{t.settings.memberSince}</p>
+            <p className="text-sm font-semibold text-foreground mb-2">
+              {t.settings.memberSince}
+            </p>
             <p className="text-sm text-muted-foreground">{memberSince}</p>
           </div>
         </div>
@@ -106,16 +123,22 @@ export function SettingsPanel({ isOpen, onClose, user, onSignOut, language = 'en
               <div className="p-3 bg-muted/50 rounded-lg">
                 <div className="flex items-center gap-2 mb-2">
                   <Building2 className="h-4 w-4 text-primary" />
-                  <p className="text-sm font-semibold text-foreground">Restaurant</p>
+                  <p className="text-sm font-semibold text-foreground">
+                    Restaurant
+                  </p>
                 </div>
-                <p className="text-sm text-muted-foreground">{restaurantName}</p>
+                <p className="text-sm text-muted-foreground">
+                  {restaurantName}
+                </p>
               </div>
             )}
             {branchName && (
               <div className="p-3 bg-muted/50 rounded-lg">
                 <div className="flex items-center gap-2 mb-2">
                   <MapPin className="h-4 w-4 text-primary" />
-                  <p className="text-sm font-semibold text-foreground">Branch</p>
+                  <p className="text-sm font-semibold text-foreground">
+                    Branch
+                  </p>
                 </div>
                 <p className="text-sm text-muted-foreground">{branchName}</p>
               </div>

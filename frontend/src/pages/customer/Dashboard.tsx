@@ -529,7 +529,7 @@ export default function CustomerDashboard() {
             {loadingCodes ? (
               <ListSkeleton items={3} />
             ) : restaurantCodes.length === 0 ? (
-              <Card className="glass-card border-0">
+              <Card variant="default">
                 <CardContent className="p-12 text-center">
                   <p className="text-lg font-semibold text-muted-foreground mb-2">
                     {t.promoteRestaurants.noRestaurants}

@@ -108,7 +108,7 @@ export default function ResetPassword() {
                 placeholder="••••••••"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="input-field-minimal"
+                className="w-full"
                 autoFocus
               />
               <p className="text-gray-500 text-xs mt-1">
@@ -125,7 +125,7 @@ export default function ResetPassword() {
                 placeholder="••••••••"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
-                className="input-field-minimal"
+                className="w-full"
               />
             </div>
 

@@ -12,7 +12,7 @@ interface StatsCardProps {
 
 export function StatsCard({ stats }: StatsCardProps) {
   return (
-    <Card className="glass-card border-0 bg-white/90 dark:bg-gray-900/90 shadow-lg backdrop-blur-xl">
+    <Card variant="default" className="bg-white dark:bg-gray-900">
       <CardContent className="p-4 md:p-6">
         <div
           className={`grid grid-cols-${stats.length} gap-2 md:gap-4 text-center`}
@@ -25,7 +25,7 @@ export function StatsCard({ stats }: StatsCardProps) {
               <p className="text-lg sm:text-2xl md:text-3xl font-bold text-primary-dark mb-1 whitespace-nowrap truncate px-1">
                 {stat.value}
               </p>
-              <p className="text-xs text-gray-600 font-medium uppercase tracking-wide truncate">
+              <p className="text-xs text-muted-foreground font-medium uppercase tracking-normal">
                 {stat.label}
               </p>
             </div>

@@ -77,7 +77,10 @@ export function RestaurantCard({
   }, 0);
 
   return (
-    <Card className="glass-card border-0 bg-white/50 dark:bg-gray-900/50 hover:shadow-lg transition-all duration-300">
+    <Card
+      variant="default"
+      className="hover:shadow-lg transition-all duration-300"
+    >
       <CardContent className="p-4">
         <div className="flex items-start justify-between mb-3">
           <div className="flex-1">

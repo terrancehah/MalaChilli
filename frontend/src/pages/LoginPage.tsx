@@ -36,7 +36,7 @@ export default function LoginPage() {
         <div className="absolute top-[20%] right-[10%] w-[20%] h-[20%] rounded-full bg-accent/10 blur-3xl"></div>
       </div>
 
-      <div className="max-w-md w-full space-y-8 glass-card p-8 sm:p-10 relative z-10">
+      <div className="max-w-md w-full space-y-8 glass-modal p-8 sm:p-10 relative z-10">
         <div className="text-center">
           {/* Placeholder Logo */}
           <div className="mx-auto h-20 w-20 bg-gradient-to-br from-primary to-primary-light rounded-full flex items-center justify-center shadow-lg mb-4">

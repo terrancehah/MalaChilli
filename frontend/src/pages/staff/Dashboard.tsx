@@ -241,10 +241,13 @@ export default function StaffDashboard() {
       }
     >
       <div className="min-h-screen pb-6">
-        <SEO title={t.staffDashboard.title} description="Staff Dashboard - Process transactions and verify customers." />
+        <SEO
+          title={t.staffDashboard.title}
+          description="Staff Dashboard - Process transactions and verify customers."
+        />
         <DashboardHeader
-            title={t.staffDashboard.subtitle}
-            subtitle={user?.full_name || user?.email || t.staffDashboard.title}
+          title={t.staffDashboard.subtitle}
+          subtitle={user?.full_name || user?.email || t.staffDashboard.title}
           actions={
             <>
               <LanguageSelector
@@ -308,7 +311,7 @@ export default function StaffDashboard() {
               <Button
                 onClick={handleMenuManagement}
                 variant="outline"
-                className="h-32 md:h-36 glass-card bg-white/50 dark:bg-gray-900/50 hover:bg-white/80 dark:hover:bg-gray-900/80 border-0 shadow-md hover:shadow-lg transition-all duration-300 rounded-2xl flex flex-col items-center justify-center gap-4 group"
+                className="h-32 md:h-36 bg-white/50 dark:bg-gray-900/50 hover:bg-white/80 dark:hover:bg-gray-900/80 border-0 shadow-md hover:shadow-lg transition-all duration-300 rounded-2xl flex flex-col items-center justify-center gap-4 group"
                 size="lg"
               >
                 <Package className="!h-12 !w-12 md:!h-14 md:!w-14 text-primary/80 group-hover:text-primary group-hover:scale-110 transition-all duration-300" />
@@ -321,7 +324,7 @@ export default function StaffDashboard() {
               <Button
                 onClick={() => setShowCustomerLookup(true)}
                 variant="outline"
-                className="h-32 md:h-36 glass-card bg-white/50 dark:bg-gray-900/50 hover:bg-white/80 dark:hover:bg-gray-900/80 border-0 shadow-md hover:shadow-lg transition-all duration-300 rounded-2xl flex flex-col items-center justify-center gap-4 group"
+                className="h-32 md:h-36 bg-white/50 dark:bg-gray-900/50 hover:bg-white/80 dark:hover:bg-gray-900/80 border-0 shadow-md hover:shadow-lg transition-all duration-300 rounded-2xl flex flex-col items-center justify-center gap-4 group"
                 size="lg"
               >
                 <Edit className="!h-12 !w-12 md:!h-14 md:!w-14 text-primary/80 group-hover:text-primary group-hover:scale-110 transition-all duration-300" />
@@ -334,7 +337,7 @@ export default function StaffDashboard() {
               <Button
                 onClick={() => setShowReceiptOCR(true)}
                 variant="outline"
-                className="h-32 md:h-36 glass-card bg-white/50 dark:bg-gray-900/50 hover:bg-white/80 dark:hover:bg-gray-900/80 border-0 shadow-md hover:shadow-lg transition-all duration-300 rounded-2xl flex flex-col items-center justify-center gap-4 group"
+                className="h-32 md:h-36 bg-white/50 dark:bg-gray-900/50 hover:bg-white/80 dark:hover:bg-gray-900/80 border-0 shadow-md hover:shadow-lg transition-all duration-300 rounded-2xl flex flex-col items-center justify-center gap-4 group"
                 size="lg"
               >
                 <Camera className="!h-12 !w-12 md:!h-14 md:!w-14 text-primary/80 group-hover:text-primary group-hover:scale-110 transition-all duration-300" />
@@ -347,7 +350,7 @@ export default function StaffDashboard() {
               <Button
                 onClick={handleViewTransactions}
                 variant="outline"
-                className="h-32 md:h-36 glass-card bg-white/50 dark:bg-gray-900/50 hover:bg-white/80 dark:hover:bg-gray-900/80 border-0 shadow-md hover:shadow-lg transition-all duration-300 rounded-2xl flex flex-col items-center justify-center gap-4 group"
+                className="h-32 md:h-36 bg-white/50 dark:bg-gray-900/50 hover:bg-white/80 dark:hover:bg-gray-900/80 border-0 shadow-md hover:shadow-lg transition-all duration-300 rounded-2xl flex flex-col items-center justify-center gap-4 group"
                 size="lg"
               >
                 <Receipt className="!h-12 !w-12 md:!h-14 md:!w-14 text-primary/80 group-hover:text-primary group-hover:scale-110 transition-all duration-300" />
