@@ -20,8 +20,8 @@
     --primary: 21 100% 56%;
     --primary-foreground: 0 0% 100%;
 
-    /* Secondary: Yolk Yellow (Cheerful) */
-    --secondary: 45 100% 51%; /* #FFC107 */
+    /* Secondary: Beige highlights #F5E7C6 */
+    --secondary: 43 65% 87%; /* #F5E7C6 */
     --secondary-foreground: 222 47% 11%;
 
     /* Muted: Warm Gray */

@@ -249,14 +249,14 @@ Exit: opacity-100 → opacity-0
 
 ```tsx
 // Standard Card
-<Card className="glass-card border-0">
+<Card className="glass border-0">
   <CardContent className="p-4">
     {/* content */}
   </CardContent>
 </Card>
 
 // Interactive Card
-<Card className="glass-card border-0 hover:shadow-lg transition-all duration-300">
+<Card className="glass border-0 hover:shadow-lg transition-all duration-300">
   {/* content */}
 </Card>
 ```
@@ -357,18 +357,36 @@ className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
 
 ## 10. Glass Morphism
 
-### Standard Glass Card
+### Glass Classes
+
+The following glass morphism classes are available in `index.css`:
 
 ```css
-.glass-card {
-  @apply bg-white/80 dark:bg-gray-900/80 backdrop-blur-md border border-white/20 shadow-soft rounded-card;
+/* Standard glass effect */
+.glass {
+  @apply bg-muted/50 dark:bg-black/60 backdrop-blur-xl backdrop-saturate-[180%] shadow-lg rounded-xl;
+}
+
+/* Heavy glass for prominent elements */
+.glass-heavy {
+  @apply bg-white/40 dark:bg-black/40 backdrop-blur-2xl backdrop-saturate-[180%] border border-white/30 shadow-xl rounded-3xl;
+}
+
+/* Modal glass effect */
+.glass-modal {
+  @apply bg-muted/50 dark:bg-black/60 backdrop-blur-3xl backdrop-saturate-[180%] border border-white/20 shadow-2xl rounded-3xl;
+}
+
+/* Glass input fields */
+.glass-input {
+  @apply bg-white/30 dark:bg-white/5 backdrop-blur-lg border border-white/20 rounded-xl px-4 py-3;
 }
 ```
 
 ### Usage
 
 ```tsx
-<Card className="glass-card border-0 bg-white/50 dark:bg-gray-900/50">
+<Card className="glass border-0">
 ```
 
 ---
@@ -419,7 +437,7 @@ className="focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-
 
 |Purpose|Classes|
 |---------|---------|
-|**Card**|`glass-card border-0`|
+|**Card**|`glass border-0`|
 |**Card Padding**|`p-4`|
 |**Page Padding**|`px-6`|
 |**Section Gap**|`space-y-6`|
@@ -574,7 +592,7 @@ const skeletonAvatar = "rounded-full bg-muted animate-pulse";
 
 ```tsx
 // Menu item card skeleton
-<Card className="glass-card border-0">
+<Card className="glass border-0">
   <CardContent className="p-4">
     {/* Image skeleton */}
     <div className="h-32 w-full bg-muted rounded-lg animate-pulse mb-3" />
@@ -630,7 +648,7 @@ const skeletonAvatar = "rounded-full bg-muted animate-pulse";
 // Grid of card skeletons
 <div className="grid grid-cols-2 gap-4">
   {[...Array(4)].map((_, i) => (
-    <Card key={i} className="glass-card border-0">
+    <Card key={i} className="glass border-0">
       <CardContent className="p-4">
         <div className="h-24 bg-muted rounded-lg animate-pulse mb-3" />
         <div className="h-4 w-3/4 bg-muted rounded-md animate-pulse mb-2" />
