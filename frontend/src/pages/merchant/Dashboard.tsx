@@ -302,10 +302,11 @@ export default function MerchantDashboard() {
           onLanguageChange={setLanguage}
         />
 
-        {/* AI Chat Assistant - Active (v1) */}
+        {/* AI Chat Assistant - Secure Edge Function with streaming */}
         <MerchantAIChat
           summary={summary}
           restaurantName={restaurantName}
+          restaurantId={restaurantId!}
           language={language}
         />
       </div>

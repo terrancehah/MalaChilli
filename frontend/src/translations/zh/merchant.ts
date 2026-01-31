@@ -270,4 +270,27 @@ export const merchantDashboard = {
     reengagementTip: '💡 提示：向这些顾客发送特别优惠或奖励以重新吸引他们！',
     comingSoon: '👥 更多顾客洞察即将推出：队列留存分析、CLV预测、流失预测、访问频率模式',
   },
+  
+  // AI Chat Assistant
+  aiChat: {
+    title: 'AI 助手',
+    placeholder: '询问关于您的仪表板...',
+    thinking: '思考中...',
+    newChat: '新对话',
+    history: '对话历史',
+    noHistory: '没有之前的对话',
+    loadMore: '加载更多',
+    rateLimitExceeded: '已达到消息限制。请稍后再发送更多消息。',
+    rateLimitStatus: '本小时剩余消息数',
+    errorGeneric: '发送消息失败。请重试。',
+    errorConnection: '连接错误。请检查您的网络。',
+    greeting: {
+      en: "Hello! I'm ready to analyze your dashboard for **{restaurantName}**. What would you like to know?",
+      ms: "Hai! Saya bersedia untuk menganalisis data **{restaurantName}**. Apa yang anda ingin tahu?",
+      zh: "您好！我已经准备好分析 **{restaurantName}** 的数据。请告诉我您想了解什么？",
+    },
+    sessionTitle: '对话于 {date}',
+    deleteSession: '删除对话',
+    deleteConfirm: '您确定要删除此对话吗？',
+  },
 };

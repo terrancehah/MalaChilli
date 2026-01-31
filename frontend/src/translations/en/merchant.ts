@@ -270,4 +270,27 @@ Why Percentiles? This ensures fair comparison as your business grows. A customer
     reengagementTip: '💡 Tip: Send these customers a special offer or bonus to re-engage them!',
     comingSoon: '👥 More customer insights coming soon: Cohort retention analysis, CLV predictions, churn forecasting, visit frequency patterns',
   },
+  
+  // AI Chat Assistant
+  aiChat: {
+    title: 'AI Assistant',
+    placeholder: 'Ask about your dashboard...',
+    thinking: 'Thinking...',
+    newChat: 'New Chat',
+    history: 'Chat History',
+    noHistory: 'No previous conversations',
+    loadMore: 'Load more',
+    rateLimitExceeded: 'Message limit reached. Please wait before sending more messages.',
+    rateLimitStatus: 'messages remaining this hour',
+    errorGeneric: 'Failed to send message. Please try again.',
+    errorConnection: 'Connection error. Please check your internet.',
+    greeting: {
+      en: "Hello! I'm ready to analyze your dashboard for **{restaurantName}**. What would you like to know?",
+      ms: "Hai! Saya bersedia untuk menganalisis data **{restaurantName}**. Apa yang anda ingin tahu?",
+      zh: "您好！我已经准备好分析 **{restaurantName}** 的数据。请告诉我您想了解什么？",
+    },
+    sessionTitle: 'Chat from {date}',
+    deleteSession: 'Delete conversation',
+    deleteConfirm: 'Are you sure you want to delete this conversation?',
+  },
 };
