@@ -1,19 +1,21 @@
-import { useState, useEffect, useRef } from "react";
-import { GoogleGenerativeAI, ChatSession } from "@google/generative-ai";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { Button } from "../ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { Input } from "../ui/input";
-import { Bot, Send, X, Loader2, Sparkles } from "lucide-react";
+import { Bot, Send, X, Loader2, Sparkles, History, Plus } from "lucide-react";
 import type { DashboardSummary } from "../../types/analytics.types";
-import { type Language } from "../../translations";
+import { getTranslation, type Language } from "../../translations";
 import { cn } from "../../lib/utils";
+import { supabase } from "../../lib/supabase";
 
 interface MerchantAIChatProps {
   summary: DashboardSummary | null;
   restaurantName: string;
+  restaurantId: string;
   language: Language;
 }
 
+// Message interface for chat display
 interface Message {
   id: string;
   role: "user" | "model";
@@ -21,32 +23,66 @@ interface Message {
   timestamp: Date;
 }
 
-export function MerchantAIChat({ summary, restaurantName, language }: MerchantAIChatProps) {
+// Session interface for history dropdown
+interface ChatSession {
+  id: string;
+  title: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export function MerchantAIChat({ summary, restaurantName, restaurantId, language }: MerchantAIChatProps) {
+  // UI State
   const [isOpen, setIsOpen] = useState(false);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [messages, setMessages] = useState<Message[]>([]);
-  const [chatSession, setChatSession] = useState<ChatSession | null>(null);
+  const [isStreaming, setIsStreaming] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  
+  // Chat State
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [currentSessionId, setCurrentSessionId] = useState<string | null>(null);
+  
+  // Session History State
+  const [showHistory, setShowHistory] = useState(false);
+  const [sessions, setSessions] = useState<ChatSession[]>([]);
+  const [loadingSessions, setLoadingSessions] = useState(false);
+  
+  // Rate Limit State
+  const [rateLimitInfo, setRateLimitInfo] = useState<{ remaining: number; resetsAt: string } | null>(null);
+  
+  // Refs
   const scrollRef = useRef<HTMLDivElement>(null);
+  const abortControllerRef = useRef<AbortController | null>(null);
+  
+  // Translations
+  const t = getTranslation(language);
 
-  // Set initial greeting when opened, but don't start API session yet
+  // Get greeting message based on language
+  const getGreeting = useCallback(() => {
+    const greetings = t.merchantDashboard.aiChat.greeting;
+    const greeting = greetings[language] || greetings.en;
+    return greeting.replace('{restaurantName}', restaurantName);
+  }, [language, restaurantName, t]);
+
+  // Set initial greeting when opened with no session
   useEffect(() => {
-    if (isOpen && messages.length === 0) {
-      setMessages([
-        {
-          id: "init",
-          role: "model",
-          text: language === 'zh' 
-            ? `您好！我已经准备好分析 **${restaurantName}** 的数据。请告诉我您想了解什么？`
-            : language === 'ms'
-            ? `Hai! Saya bersedia untuk menganalisis data **${restaurantName}**. Apa yang anda ingin tahu?`
-            : `Hello! I'm ready to analyze your dashboard for **${restaurantName}**. What would you like to know?`,
-          timestamp: new Date()
-        }
-      ]);
+    if (isOpen && messages.length === 0 && !currentSessionId) {
+      setMessages([{
+        id: "init",
+        role: "model",
+        text: getGreeting(),
+        timestamp: new Date()
+      }]);
     }
-  }, [isOpen, restaurantName, language, messages.length]);
+  }, [isOpen, messages.length, currentSessionId, getGreeting]);
+
+  // Load sessions when history dropdown is opened
+  useEffect(() => {
+    if (showHistory && sessions.length === 0) {
+      loadSessions();
+    }
+  }, [showHistory]);
 
   // Auto-scroll to bottom
   useEffect(() => {
@@ -55,8 +91,74 @@ export function MerchantAIChat({ summary, restaurantName, language }: MerchantAI
     }
   }, [messages]);
 
+  // Load chat sessions from database
+  const loadSessions = async () => {
+    setLoadingSessions(true);
+    try {
+      const { data, error } = await supabase
+        .from('ai_chat_sessions')
+        .select('id, title, created_at, updated_at')
+        .eq('restaurant_id', restaurantId)
+        .order('updated_at', { ascending: false })
+        .limit(10);
+
+      if (error) throw error;
+      setSessions(data || []);
+    } catch (err) {
+      console.error('Failed to load sessions:', err);
+    } finally {
+      setLoadingSessions(false);
+    }
+  };
+
+  // Load messages for a specific session
+  const loadSession = async (sessionId: string) => {
+    setIsLoading(true);
+    setShowHistory(false);
+    
+    try {
+      const { data: messagesData, error } = await supabase
+        .from('ai_chat_messages')
+        .select('id, role, content, created_at')
+        .eq('session_id', sessionId)
+        .order('created_at', { ascending: true });
+
+      if (error) throw error;
+
+      const loadedMessages: Message[] = (messagesData || []).map(m => ({
+        id: m.id,
+        role: m.role as 'user' | 'model',
+        text: m.content,
+        timestamp: new Date(m.created_at)
+      }));
+
+      setMessages(loadedMessages);
+      setCurrentSessionId(sessionId);
+      setError(null);
+    } catch (err) {
+      console.error('Failed to load session:', err);
+      setError(t.merchantDashboard.aiChat.errorGeneric);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Start a new chat session
+  const startNewChat = () => {
+    setCurrentSessionId(null);
+    setMessages([{
+      id: "init",
+      role: "model",
+      text: getGreeting(),
+      timestamp: new Date()
+    }]);
+    setShowHistory(false);
+    setError(null);
+  };
+
+  // Send message via Edge Function with streaming
   const handleSend = async () => {
-    if (!input.trim()) return;
+    if (!input.trim() || isLoading || isStreaming) return;
 
     const userMessage = input.trim();
     setInput("");
@@ -72,72 +174,134 @@ export function MerchantAIChat({ summary, restaurantName, language }: MerchantAI
     setMessages(prev => [...prev, newUserMsg]);
     setIsLoading(true);
 
+    // Create abort controller for cancellation
+    abortControllerRef.current = new AbortController();
+
     try {
-      let currentSession = chatSession;
+      if (!summary) {
+        throw new Error("Dashboard data not available yet");
+      }
 
-      // Lazy initialization on first message
-      if (!currentSession) {
-        if (!summary) {
-          throw new Error("Dashboard data not available yet");
-        }
+      // Get current session token
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session?.access_token) {
+        throw new Error("Not authenticated");
+      }
 
-        const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
-        if (!apiKey) {
-          throw new Error("API Key not found");
-        }
-
-        const genAI = new GoogleGenerativeAI(apiKey);
-        const model = genAI.getGenerativeModel({ 
-          model: "gemini-2.5-flash", // Reverted to 2.5-flash as requested
-          systemInstruction: `You are an expert restaurant business analyst assistant for "${restaurantName}".
-          
-          Your goal is to help the merchant understand their business performance based on the provided dashboard data.
-          
-          Guidelines:
-          1. Be concise, professional, and encouraging.
-          2. Use specific numbers from the data to back up your points.
-          3. Formatting: Use Markdown for bolding key figures (e.g., **RM 1,200**).
-          4. If the user asks about something not in the data, politely explain you only have access to the current dashboard summary.
-          5. Analyze trends if you see them (e.g., high viral coefficient but low retention).
-          
-          Current Dashboard Data (JSON):
-          ${JSON.stringify(summary)}
-          `
-        });
-
-        currentSession = model.startChat({
-          history: [],
-          generationConfig: {
-            maxOutputTokens: 1000,
+      // Call Edge Function
+      const response = await fetch(
+        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/ai-chat`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${session.access_token}`,
           },
-        });
+          body: JSON.stringify({
+            message: userMessage,
+            sessionId: currentSessionId,
+            summary: currentSessionId ? undefined : summary, // Only send summary for new sessions
+            restaurantId,
+            restaurantName,
+            language
+          }),
+          signal: abortControllerRef.current.signal
+        }
+      );
 
-        setChatSession(currentSession);
+      // Handle non-streaming error responses
+      if (!response.ok) {
+        const errorData = await response.json();
+        
+        if (response.status === 429) {
+          setError(t.merchantDashboard.aiChat.rateLimitExceeded);
+          if (errorData.rateLimitStatus) {
+            setRateLimitInfo({
+              remaining: errorData.rateLimitStatus.messagesRemaining,
+              resetsAt: errorData.rateLimitStatus.windowResetsAt
+            });
+          }
+          return;
+        }
+        
+        throw new Error(errorData.error || 'Request failed');
       }
 
-      const result = await currentSession.sendMessage(userMessage);
-      const response = await result.response;
-      const text = response.text();
+      // Handle streaming response
+      setIsLoading(false);
+      setIsStreaming(true);
 
-      const newBotMsg: Message = {
-        id: (Date.now() + 1).toString(),
+      // Add placeholder for AI response
+      const aiMsgId = (Date.now() + 1).toString();
+      setMessages(prev => [...prev, {
+        id: aiMsgId,
         role: "model",
-        text: text,
+        text: "",
         timestamp: new Date()
-      };
-      setMessages(prev => [...prev, newBotMsg]);
-    } catch (err: any) {
-      console.error("Chat error:", err);
-      if (err.message?.includes("429") || err.status === 429) {
-        setError("Usage limit reached. Please wait a moment before trying again.");
-      } else {
-        setError("Failed to send message. Please try again.");
+      }]);
+
+      // Read the stream
+      const reader = response.body?.getReader();
+      const decoder = new TextDecoder();
+      let fullText = "";
+
+      if (reader) {
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+
+          const chunk = decoder.decode(value, { stream: true });
+          const lines = chunk.split('\n');
+
+          for (const line of lines) {
+            if (line.startsWith('data: ')) {
+              try {
+                const data = JSON.parse(line.slice(6));
+                
+                if (data.chunk) {
+                  fullText += data.chunk;
+                  // Update the AI message with accumulated text
+                  setMessages(prev => prev.map(msg => 
+                    msg.id === aiMsgId ? { ...msg, text: fullText } : msg
+                  ));
+                }
+                
+                if (data.done && data.sessionId) {
+                  // Update session ID if this was a new session
+                  if (!currentSessionId) {
+                    setCurrentSessionId(data.sessionId);
+                    // Refresh sessions list
+                    loadSessions();
+                  }
+                }
+                
+                if (data.error) {
+                  setError(data.error);
+                }
+              } catch {
+                // Ignore JSON parse errors for incomplete chunks
+              }
+            }
+          }
+        }
       }
+    } catch (err: unknown) {
+      console.error("Chat error:", err);
+      
+      // Don't show error if request was aborted
+      if (err instanceof Error && err.name === 'AbortError') {
+        return;
+      }
+      
+      setError(t.merchantDashboard.aiChat.errorGeneric);
     } finally {
       setIsLoading(false);
+      setIsStreaming(false);
+      abortControllerRef.current = null;
     }
   };
 
+  // Handle Enter key to send message
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
@@ -145,7 +309,18 @@ export function MerchantAIChat({ summary, restaurantName, language }: MerchantAI
     }
   };
 
-  // If hidden or no summary, don't render anything (or just render button)
+  // Format date for session display
+  const formatSessionDate = (dateStr: string) => {
+    const date = new Date(dateStr);
+    return date.toLocaleDateString(language === 'zh' ? 'zh-CN' : language === 'ms' ? 'ms-MY' : 'en-US', {
+      month: 'short',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+  };
+
+  // If no summary available, don't render the chat button
   if (!summary) return null;
 
   return (
@@ -159,13 +334,71 @@ export function MerchantAIChat({ summary, restaurantName, language }: MerchantAI
                 <Sparkles className="h-4 w-4 text-primary" />
               </div>
               <div>
-                <CardTitle className="text-sm font-bold">AI Assistant</CardTitle>
+                <CardTitle className="text-sm font-bold">{t.merchantDashboard.aiChat.title}</CardTitle>
                 <p className="text-xs text-muted-foreground">{restaurantName}</p>
               </div>
             </div>
-            <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => setIsOpen(false)}>
-              <X className="h-4 w-4" />
-            </Button>
+            <div className="flex items-center gap-1">
+              {/* History Button */}
+              <div className="relative">
+                <Button 
+                  variant="ghost" 
+                  size="icon" 
+                  className="h-8 w-8" 
+                  onClick={() => setShowHistory(!showHistory)}
+                  title={t.merchantDashboard.aiChat.history}
+                >
+                  <History className="h-4 w-4" />
+                </Button>
+                
+                {/* History Dropdown */}
+                {showHistory && (
+                  <div className="absolute right-0 top-10 w-64 bg-background border rounded-lg shadow-lg z-10 overflow-hidden">
+                    <div className="p-2 border-b">
+                      <Button 
+                        variant="ghost" 
+                        size="sm" 
+                        className="w-full justify-start gap-2 text-sm"
+                        onClick={startNewChat}
+                      >
+                        <Plus className="h-4 w-4" />
+                        {t.merchantDashboard.aiChat.newChat}
+                      </Button>
+                    </div>
+                    <div className="max-h-48 overflow-y-auto">
+                      {loadingSessions ? (
+                        <div className="p-4 text-center text-sm text-muted-foreground">
+                          <Loader2 className="h-4 w-4 animate-spin mx-auto" />
+                        </div>
+                      ) : sessions.length === 0 ? (
+                        <div className="p-4 text-center text-sm text-muted-foreground">
+                          {t.merchantDashboard.aiChat.noHistory}
+                        </div>
+                      ) : (
+                        sessions.map(session => (
+                          <button
+                            key={session.id}
+                            className={cn(
+                              "w-full p-3 text-left hover:bg-muted/50 transition-colors border-b last:border-b-0",
+                              currentSessionId === session.id && "bg-muted/50"
+                            )}
+                            onClick={() => loadSession(session.id)}
+                          >
+                            <p className="text-sm font-medium truncate">{session.title || 'Untitled'}</p>
+                            <p className="text-xs text-muted-foreground">{formatSessionDate(session.updated_at)}</p>
+                          </button>
+                        ))
+                      )}
+                    </div>
+                  </div>
+                )}
+              </div>
+              
+              {/* Close Button */}
+              <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => setIsOpen(false)}>
+                <X className="h-4 w-4" />
+              </Button>
+            </div>
           </CardHeader>
           
           <CardContent className="flex-1 flex flex-col p-0 overflow-hidden">
@@ -194,11 +427,12 @@ export function MerchantAIChat({ summary, restaurantName, language }: MerchantAI
                   </div>
                 </div>
               ))}
-              {isLoading && (
+              {/* Loading/Streaming indicator */}
+              {(isLoading || isStreaming) && (
                 <div className="flex justify-start">
                   <div className="bg-muted rounded-2xl rounded-bl-none px-4 py-2 flex items-center gap-2">
                     <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
-                    <span className="text-xs text-muted-foreground">Thinking...</span>
+                    <span className="text-xs text-muted-foreground">{t.merchantDashboard.aiChat.thinking}</span>
                   </div>
                 </div>
               )}
@@ -211,21 +445,27 @@ export function MerchantAIChat({ summary, restaurantName, language }: MerchantAI
 
             {/* Input Area */}
             <div className="p-4 border-t bg-background">
+              {/* Rate limit indicator */}
+              {rateLimitInfo && rateLimitInfo.remaining <= 5 && (
+                <p className="text-xs text-muted-foreground mb-2 text-center">
+                  {rateLimitInfo.remaining} {t.merchantDashboard.aiChat.rateLimitStatus}
+                </p>
+              )}
               <div className="flex gap-2">
                 <Input
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
                   onKeyDown={handleKeyDown}
-                  placeholder="Ask about your dashboard..."
+                  placeholder={t.merchantDashboard.aiChat.placeholder}
                   className="flex-1 focus-visible:ring-primary/50"
-                  disabled={isLoading}
+                  disabled={isLoading || isStreaming}
                 />
                 <Button 
                   onClick={handleSend} 
-                  disabled={!input.trim() || isLoading}
+                  disabled={!input.trim() || isLoading || isStreaming}
                   size="icon"
                 >
-                  {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
+                  {(isLoading || isStreaming) ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
                 </Button>
               </div>
             </div>

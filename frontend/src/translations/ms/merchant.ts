@@ -270,4 +270,27 @@ Mengapa Persentil? Ini memastikan perbandingan adil apabila perniagaan anda berk
     reengagementTip: '💡 Petua: Hantar tawaran istimewa atau bonus kepada pelanggan ini untuk melibatkan mereka semula!',
     comingSoon: '👥 Lebih banyak pandangan pelanggan akan datang: Analisis pengekalan kohort, ramalan CLV, ramalan churn, corak kekerapan lawatan',
   },
+  
+  // AI Chat Assistant
+  aiChat: {
+    title: 'Pembantu AI',
+    placeholder: 'Tanya tentang papan pemuka anda...',
+    thinking: 'Sedang berfikir...',
+    newChat: 'Sembang Baru',
+    history: 'Sejarah Sembang',
+    noHistory: 'Tiada perbualan sebelumnya',
+    loadMore: 'Muat lebih banyak',
+    rateLimitExceeded: 'Had mesej dicapai. Sila tunggu sebelum menghantar lebih banyak mesej.',
+    rateLimitStatus: 'mesej berbaki sejam ini',
+    errorGeneric: 'Gagal menghantar mesej. Sila cuba lagi.',
+    errorConnection: 'Ralat sambungan. Sila semak internet anda.',
+    greeting: {
+      en: "Hello! I'm ready to analyze your dashboard for **{restaurantName}**. What would you like to know?",
+      ms: "Hai! Saya bersedia untuk menganalisis data **{restaurantName}**. Apa yang anda ingin tahu?",
+      zh: "您好！我已经准备好分析 **{restaurantName}** 的数据。请告诉我您想了解什么？",
+    },
+    sessionTitle: 'Sembang dari {date}',
+    deleteSession: 'Padam perbualan',
+    deleteConfirm: 'Adakah anda pasti mahu memadam perbualan ini?',
+  },
 };
