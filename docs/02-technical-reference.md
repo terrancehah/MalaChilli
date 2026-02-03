@@ -3,7 +3,7 @@
 ## MakanTak - System Architecture & Data Model
 
 **Document Type:** Technical Reference  
-**Last Updated:** 2025-12-19 (Schema Sync)  
+**Last Updated:** 2026-02-03 (AI Chat & RFM)  
 **Source of Truth:**  
 
 * **Database Schema:** `/supabase/migrations/`
@@ -78,6 +78,9 @@
 | **`email_notifications`** | Email tracking. | Tracks sent emails to prevent duplicates. |
 | **`audit_logs`** | Action logging. | Tracks critical actions for security and debugging. |
 | **`system_config`** | System settings. | System-wide configuration parameters. |
+| **`ai_chat_sessions`** | AI chat sessions. | Stores chat sessions with context snapshots for merchant AI assistant. |
+| **`ai_chat_messages`** | Chat messages. | Individual messages within AI chat sessions (user and model roles). |
+| **`ai_chat_rate_limits`** | Rate limiting. | Tracks message counts per user for rate limiting (50/hour). |
 
 ---
 
@@ -113,6 +116,9 @@ Instead of exposing raw table access for complex logic, we use **PostgreSQL Stor
 | `distribute_upline_rewards` | RPC | Calculates and inserts VC earnings for the upline chain (1% per level). |
 | `redeem_virtual_currency` | RPC | Deducts VC from wallet during checkout (FIFO logic). |
 | `expire_virtual_currency` | Cron | Runs daily. Expires VC older than 30 days. |
+| `get_dashboard_summary` | RPC | Returns comprehensive dashboard data including RFM segmentation. |
+| `check_ai_chat_rate_limit` | RPC | Validates user hasn't exceeded 50 messages/hour limit. |
+| `ai-chat` | Edge | Secure AI chat endpoint with Gemini streaming and session persistence. |
 | `send-earning-notification` | Edge | Sends email via SendGrid when a user earns VC. |
 
 ### API Patterns

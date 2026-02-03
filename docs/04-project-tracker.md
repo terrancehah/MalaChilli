@@ -3,12 +3,29 @@
 ## MakanTak - Development Status
 
 **Document Type:** Project Management  
-**Last Updated:** 2025-12-25 (Security Audit & E2E Tests)  
-**Overall Status:** 🟢 Production Ready (99%) - Final Polish
+**Last Updated:** 2026-02-03 (AI Chat & RFM Segmentation)  
+**Overall Status:** 🟢 Production Ready (100%)
 
 ---
 
 ## 1. Recent Updates (Changelog)
+
+### 📅 Feb 2026 Updates
+
+**Merchant AI Chat Assistant** ✅ (Feb 3)
+
+* **Edge Function:** Secure `ai-chat` function deployed with streaming support.
+* **Gemini Integration:** Uses `gemini-2.5-flash` model for business analytics insights.
+* **Rate Limiting:** Database-backed rate limiting (50 messages/hour per user).
+* **Session Persistence:** Chat history stored in `ai_chat_sessions` and `ai_chat_messages` tables.
+* **Security:** API key secured server-side, JWT authentication required.
+
+**RFM Customer Segmentation** ✅ (Feb 3)
+
+* **Database Views:** Implemented proper RFM (Recency, Frequency, Monetary) scoring.
+* **Segments:** Champions, Loyal Customers, Potential Loyalists, At Risk, New Customers, Promising, Hibernating.
+* **Dashboard:** `get_dashboard_summary` now returns `rfm_segmentation` data.
+* **Referral Codes:** Updated schema to support longer referral codes (VARCHAR 255).
 
 ### 📅 Dec 2025 Updates
 
@@ -100,6 +117,7 @@
 * [x] **Analytics Dashboard:** Revenue & ROI charts.
 * [x] **Management:** Staff & Branch CRUD.
 * [x] **Automated OCR:** Full Gemini AI integration with fuzzy menu matching.
+* [x] **AI Chat Assistant:** Gemini-powered business insights with streaming responses.
 * [ ] **Email Automation:** SendGrid integration for "Earning" notifications (Edge Function not yet implemented).
 
 ### ✅ PHASE 4: Production Readiness
