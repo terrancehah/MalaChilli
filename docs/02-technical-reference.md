@@ -3,7 +3,7 @@
 ## MakanTak - System Architecture & Data Model
 
 **Document Type:** Technical Reference  
-**Last Updated:** 2026-02-03 (AI Chat & RFM)  
+**Last Updated:** 2026-02-05 (Auth Security Enhancements)  
 **Source of Truth:**  
 
 * **Database Schema:** `/supabase/migrations/`
@@ -95,6 +95,21 @@
   * *Staff* can see data for their assigned branch.
   * *Merchants* can see data for their restaurant.
   * *Admins* have full system access (via specific admin policies).
+
+### Client-Side Security Utilities
+
+| Utility | Location | Purpose |
+| :--- | :--- | :--- |
+| **Rate Limiter** | `/frontend/src/lib/rate-limiter.ts` | Prevents brute-force attacks on auth endpoints. Tracks attempts per action with configurable lockouts. |
+| **Password Validator** | `/frontend/src/lib/password-validator.ts` | Enforces standardized password requirements: 8+ chars, 1 uppercase, 1 number. |
+
+#### Rate Limiting Configuration
+
+| Action | Max Attempts | Window | Lockout Duration |
+| :--- | :--- | :--- | :--- |
+| Login | 5 | 15 minutes | 5 minutes |
+| Signup | 3 | 1 hour | 15 minutes |
+| Forgot Password | 3 | 1 hour | 30 minutes |
 
 ### Data Compliance (PDPA)
 
