@@ -3,7 +3,7 @@
 ## MakanTak - Developer Handbook
 
 **Document Type:** Implementation Guide  
-**Last Updated:** 2025-12-19 (Schema Sync)  
+**Last Updated:** 2026-02-05 (Auth Security Enhancements)  
 **Covers:** Design System, Frontend Architecture, and Critical Feature Flows.
 
 ---
@@ -93,9 +93,26 @@ including typography, colors, spacing, components, and state patterns.
 
 ### 3. Authentication Flow
 
-1. **Register:** `/register` -> Supabase Auth (`signUp`) -> Auto-login.
-2. **Login:** `/login` -> Supabase Auth (`signInWithPassword`).
+1. **Register:** `/register` -> Supabase Auth (`signUp`) -> Email verification required.
+2. **Login:** `/login` or Login Modal -> Supabase Auth (`signInWithPassword`).
 3. **Protected Routes:** `AuthContext` checks `user.role`. Redirects unauthorized access to `/login`.
+
+#### Auth UI Features
+
+* **Show/Hide Password:** Toggle visibility on all password fields.
+* **Remember Me:** Checkbox on login forms (default: checked).
+* **Rate Limiting:** Client-side protection against brute-force attacks.
+* **Password Requirements:** Minimum 8 characters, 1 uppercase letter, 1 number.
+* **Dark Mode:** Full dark mode support on all auth pages.
+
+#### Auth Components
+
+| Component | Location | Purpose |
+| :--- | :--- | :--- |
+| `LoginForm` | `/components/auth/LoginForm.tsx` | Reusable login form (modal + page) |
+| `RegisterForm` | `/components/auth/RegisterForm.tsx` | Reusable registration form |
+| `Login` | `/pages/customer/Login.tsx` | Standalone login page wrapper |
+| `Register` | `/pages/RegisterPage.tsx` | Standalone registration page |
 
 ---
 

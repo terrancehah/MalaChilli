@@ -3,12 +3,16 @@ import { Link, useParams } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
 import { supabase } from "../lib/supabase";
 import { generateReferralCode, calculateAge } from "../lib/utils";
+import { checkRateLimit, recordAttempt, clearRateLimit, getRemainingAttempts } from "../lib/rate-limiter";
+import { validatePassword, getPasswordRequirements } from "../lib/password-validator";
 
 export default function RegisterPage() {
   const { restaurantSlug, referralCode } = useParams();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [fullName, setFullName] = useState("");
   const [birthday, setBirthday] = useState("");
   const [error, setError] = useState("");
@@ -100,14 +104,23 @@ export default function RegisterPage() {
     e.preventDefault();
     setError("");
 
-    // Validation
-    if (password !== confirmPassword) {
-      setError("Passwords do not match");
+    // Check rate limit before attempting signup
+    const rateLimitError = checkRateLimit('signup');
+    if (rateLimitError) {
+      setError(rateLimitError);
       return;
     }
 
-    if (password.length < 6) {
-      setError("Password must be at least 6 characters");
+    // Validate password with standardized requirements
+    const passwordValidation = validatePassword(password);
+    if (!passwordValidation.isValid) {
+      setError(passwordValidation.errors[0]);
+      return;
+    }
+
+    // Check passwords match
+    if (password !== confirmPassword) {
+      setError("Passwords do not match");
       return;
     }
 
@@ -162,10 +175,20 @@ export default function RegisterPage() {
         }
       }
 
+      // Clear rate limit on successful signup
+      clearRateLimit('signup');
       // Success! Show email confirmation message
       setEmailSent(true);
     } catch (err: any) {
-      setError(err.message || "Failed to create account");
+      // Record failed attempt for rate limiting
+      recordAttempt('signup');
+      const remaining = getRemainingAttempts('signup');
+      const baseError = err.message || "Failed to create account";
+      if (remaining <= 1 && remaining > 0) {
+        setError(`${baseError}. ${remaining} attempt remaining.`);
+      } else {
+        setError(baseError);
+      }
     } finally {
       setLoading(false);
     }
@@ -174,9 +197,9 @@ export default function RegisterPage() {
   // Show email confirmation message after successful signup
   if (emailSent) {
     return (
-      <div className="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
-        <div className="max-w-md w-full glass-modal p-8 text-center relative z-10">
-          <div className="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-green-100 mb-4">
+      <div className="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 relative overflow-hidden bg-gray-50 dark:bg-gray-900">
+        <div className="max-w-md w-full glass-modal dark:bg-gray-800 dark:border-gray-700 p-8 text-center relative z-10">
+          <div className="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-green-100 dark:bg-green-900/30 mb-4">
             <svg
               className="h-8 w-8 text-green-600"
               fill="none"
@@ -191,15 +214,15 @@ export default function RegisterPage() {
               />
             </svg>
           </div>
-          <h2 className="text-3xl font-display font-bold text-gray-900 mb-4">
+          <h2 className="text-3xl font-display font-bold text-gray-900 dark:text-white mb-4">
             Check your email!
           </h2>
-          <p className="text-gray-600 mb-2">
+          <p className="text-gray-600 dark:text-gray-400 mb-2">
             We've sent a confirmation link to:
           </p>
           <p className="text-lg font-semibold text-primary mb-6">{email}</p>
-          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
-            <p className="text-sm text-blue-800">
+          <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4 mb-6">
+            <p className="text-sm text-blue-800 dark:text-blue-300">
               Click the link in the email to verify your account. Then you can
               sign in to access your dashboard.
             </p>
@@ -213,16 +236,16 @@ export default function RegisterPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
+    <div className="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 relative overflow-hidden bg-gray-50 dark:bg-gray-900">
       {/* Decorative background elements */}
       <div className="absolute top-0 left-0 w-full h-full overflow-hidden -z-10 pointer-events-none">
-        <div className="absolute -bottom-[10%] -right-[10%] w-[40%] h-[40%] rounded-full bg-primary/10 blur-3xl"></div>
-        <div className="absolute top-[10%] left-[10%] w-[20%] h-[20%] rounded-full bg-accent/10 blur-3xl"></div>
+        <div className="absolute -bottom-[10%] -right-[10%] w-[40%] h-[40%] rounded-full bg-primary/10 dark:bg-primary/5 blur-3xl"></div>
+        <div className="absolute top-[10%] left-[10%] w-[20%] h-[20%] rounded-full bg-accent/10 dark:bg-accent/5 blur-3xl"></div>
       </div>
 
-      <div className="max-w-md w-full space-y-8 glass-modal p-8 sm:p-10 relative z-10">
+      <div className="max-w-md w-full space-y-8 glass-modal dark:bg-gray-800 dark:border-gray-700 p-8 sm:p-10 relative z-10">
         <div className="text-center">
-          <h2 className="text-3xl font-display font-bold text-primary-dark">
+          <h2 className="text-3xl font-display font-bold text-primary-dark dark:text-primary-light">
             Create Account
           </h2>
 
@@ -261,7 +284,7 @@ export default function RegisterPage() {
             </div>
           )}
 
-          <p className="mt-4 text-sm text-gray-600">
+          <p className="mt-4 text-sm text-gray-600 dark:text-gray-400">
             Already have an account?{" "}
             <Link
               to="/login"
@@ -274,7 +297,7 @@ export default function RegisterPage() {
 
         <form className="mt-8 space-y-5" onSubmit={handleSubmit}>
           {error && (
-            <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm flex items-center">
+            <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-400 px-4 py-3 rounded-lg text-sm flex items-center">
               <svg
                 className="w-5 h-5 mr-2"
                 fill="none"
@@ -296,7 +319,7 @@ export default function RegisterPage() {
             <div>
               <label
                 htmlFor="fullName"
-                className="block text-sm font-medium text-gray-700 mb-1 ml-1"
+                className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 ml-1"
               >
                 Full Name
               </label>
@@ -315,7 +338,7 @@ export default function RegisterPage() {
             <div>
               <label
                 htmlFor="email"
-                className="block text-sm font-medium text-gray-700 mb-1 ml-1"
+                className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 ml-1"
               >
                 Email address
               </label>
@@ -335,7 +358,7 @@ export default function RegisterPage() {
             <div>
               <label
                 htmlFor="birthday"
-                className="block text-sm font-medium text-gray-700 mb-1 ml-1"
+                className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 ml-1"
               >
                 Birthday
               </label>
@@ -349,7 +372,7 @@ export default function RegisterPage() {
                 max={new Date().toISOString().split("T")[0]}
                 className="glass-input w-full"
               />
-              <p className="mt-1 text-xs text-gray-500 ml-1">
+              <p className="mt-1 text-xs text-gray-500 dark:text-gray-400 ml-1">
                 You must be 18 or older
               </p>
             </div>
@@ -357,41 +380,81 @@ export default function RegisterPage() {
             <div>
               <label
                 htmlFor="password"
-                className="block text-sm font-medium text-gray-700 mb-1 ml-1"
+                className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 ml-1"
               >
                 Password
               </label>
-              <input
-                id="password"
-                name="password"
-                type="password"
-                autoComplete="new-password"
-                required
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="glass-input w-full"
-                placeholder="At least 6 characters"
-              />
+              <div className="relative">
+                <input
+                  id="password"
+                  name="password"
+                  type={showPassword ? "text" : "password"}
+                  autoComplete="new-password"
+                  required
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="glass-input w-full pr-10"
+                  placeholder={getPasswordRequirements()}
+                />
+                {/* Show/Hide password toggle button */}
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 transition-colors"
+                  aria-label={showPassword ? "Hide password" : "Show password"}
+                >
+                  {showPassword ? (
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
+                    </svg>
+                  ) : (
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                    </svg>
+                  )}
+                </button>
+              </div>
             </div>
 
             <div>
               <label
                 htmlFor="confirmPassword"
-                className="block text-sm font-medium text-gray-700 mb-1 ml-1"
+                className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 ml-1"
               >
                 Confirm Password
               </label>
-              <input
-                id="confirmPassword"
-                name="confirmPassword"
-                type="password"
-                autoComplete="new-password"
-                required
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                className="glass-input w-full"
-                placeholder="Confirm your password"
-              />
+              <div className="relative">
+                <input
+                  id="confirmPassword"
+                  name="confirmPassword"
+                  type={showConfirmPassword ? "text" : "password"}
+                  autoComplete="new-password"
+                  required
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  className="glass-input w-full pr-10"
+                  placeholder="Confirm your password"
+                />
+                {/* Show/Hide confirm password toggle button */}
+                <button
+                  type="button"
+                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                  className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 transition-colors"
+                  aria-label={showConfirmPassword ? "Hide password" : "Show password"}
+                >
+                  {showConfirmPassword ? (
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
+                    </svg>
+                  ) : (
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                    </svg>
+                  )}
+                </button>
+              </div>
             </div>
           </div>
 
@@ -427,7 +490,7 @@ export default function RegisterPage() {
             </button>
           </div>
 
-          <div className="text-xs text-gray-500 text-center">
+          <div className="text-xs text-gray-500 dark:text-gray-400 text-center">
             By signing up, you agree to our{" "}
             <Link to="/terms" className="text-primary hover:underline">
               Terms of Service
