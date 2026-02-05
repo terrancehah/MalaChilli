@@ -69,25 +69,31 @@ Deno.serve(async (req) => {
       )
     }
 
+    // Extract the token from the Authorization header
+    const token = authHeader.replace('Bearer ', '')
+
+    // Create service role client for rate limiting and auth verification (bypasses RLS)
+    const supabaseAdmin = createClient(supabaseUrl, supabaseServiceKey, {
+      auth: { autoRefreshToken: false, persistSession: false }
+    })
+
+    // Verify user authentication using service role client with the user's token
+    const { data: { user }, error: authError } = await supabaseAdmin.auth.getUser(token)
+    if (authError || !user) {
+      console.error('Auth error:', authError?.message || 'No user found')
+      return new Response(
+        JSON.stringify({ success: false, error: 'Invalid or expired token', details: authError?.message }),
+        { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      )
+    }
+    
+    console.log('Authenticated user:', user.id, user.email)
+
     // Create Supabase client with user's JWT for RLS policies
     const supabaseUser = createClient(supabaseUrl, supabaseAnonKey, {
       global: { headers: { Authorization: authHeader } },
       auth: { autoRefreshToken: false, persistSession: false }
     })
-
-    // Create service role client for rate limiting (bypasses RLS)
-    const supabaseAdmin = createClient(supabaseUrl, supabaseServiceKey, {
-      auth: { autoRefreshToken: false, persistSession: false }
-    })
-
-    // Verify user authentication
-    const { data: { user }, error: authError } = await supabaseUser.auth.getUser()
-    if (authError || !user) {
-      return new Response(
-        JSON.stringify({ success: false, error: 'Invalid or expired token' }),
-        { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      )
-    }
 
     // Parse request body
     const body: ChatRequest = await req.json()

@@ -87,3 +87,4 @@ Thumbs.db
 
 # Supabase configuration and migrations (contains proprietary business logic)
 supabase/
+supabase/functions/ai-chat/index.ts
