@@ -198,7 +198,7 @@ export function SettingsPanel({
         <div className="space-y-3">
           {/* Name Field */}
           <div
-            className={`bg-muted/50 rounded-lg transition-all duration-300 ease-in-out ${
+            className={`bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg transition-all duration-300 ease-in-out shadow-sm ${
               isEditingName ? "ring-2 ring-primary/20" : ""
             }`}
           >
@@ -227,7 +227,7 @@ export function SettingsPanel({
                         type="text"
                         value={editedName}
                         onChange={(e) => setEditedName(e.target.value)}
-                        className="w-full px-3 py-2 text-sm bg-background border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary transition-all duration-200"
+                        className="w-full px-3 py-2 text-sm bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary transition-all duration-200 shadow-sm"
                         placeholder={t.settings.enterName}
                         disabled={isSaving}
                         autoFocus
@@ -274,7 +274,7 @@ export function SettingsPanel({
           </div>
 
           {/* Email Field */}
-          <div className="p-3 bg-muted/50 rounded-lg">
+          <div className="p-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm">
             <p className="text-sm font-semibold text-foreground mb-2">
               {t.settings.email}
             </p>
@@ -282,7 +282,7 @@ export function SettingsPanel({
           </div>
 
           {/* Member Since */}
-          <div className="p-3 bg-muted/50 rounded-lg">
+          <div className="p-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm">
             <p className="text-sm font-semibold text-foreground mb-2">
               {t.settings.memberSince}
             </p>

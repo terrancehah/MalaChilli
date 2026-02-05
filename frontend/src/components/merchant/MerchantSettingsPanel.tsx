@@ -118,7 +118,7 @@ export function MerchantSettingsPanel({
         <div className="space-y-3">
           {/* Name Field */}
           <div
-            className={`bg-muted/50 rounded-lg transition-all duration-300 ease-in-out ${
+            className={`bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg transition-all duration-300 ease-in-out shadow-sm ${
               isEditingName ? "ring-2 ring-primary/20" : ""
             }`}
           >
@@ -194,7 +194,7 @@ export function MerchantSettingsPanel({
           </div>
 
           {/* Email Field */}
-          <div className="p-3 bg-muted/50 rounded-lg">
+          <div className="p-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm">
             <p className="text-sm font-semibold text-foreground mb-2">
               {t.settings.email}
             </p>
@@ -203,7 +203,7 @@ export function MerchantSettingsPanel({
 
           {/* Restaurant Name */}
           {restaurantName && (
-            <div className="p-3 bg-muted/50 rounded-lg">
+            <div className="p-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm">
               <p className="text-sm font-semibold text-foreground mb-2">
                 {t.settings.restaurant}
               </p>
@@ -212,7 +212,7 @@ export function MerchantSettingsPanel({
           )}
 
           {/* Member Since */}
-          <div className="p-3 bg-muted/50 rounded-lg">
+          <div className="p-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm">
             <p className="text-sm font-semibold text-foreground mb-2">
               {t.settings.memberSince}
             </p>

@@ -109,7 +109,7 @@ export function BaseSettingsPanel({
               <div className="relative">
                 <button
                   onClick={() => setShowLanguageMenu(!showLanguageMenu)}
-                  className="w-full flex items-center justify-between p-3 bg-muted/50 rounded-lg hover:bg-muted transition-colors"
+                  className="w-full flex items-center justify-between p-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors shadow-sm cursor-pointer"
                 >
                   <div className="text-left">
                     <p className="text-sm font-semibold text-foreground">
@@ -171,7 +171,7 @@ export function BaseSettingsPanel({
                   </>
                 )}
               </div>
-              <button className="w-full flex items-center justify-between p-3 bg-muted/50 rounded-lg hover:bg-muted transition-colors">
+              <button className="w-full flex items-center justify-between p-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors shadow-sm cursor-pointer">
                 <div className="text-left">
                   <p className="text-sm font-semibold text-foreground">
                     {t.settings.notifications}
@@ -193,17 +193,17 @@ export function BaseSettingsPanel({
               {t.settings.about}
             </h4>
             <div className="space-y-3">
-              <button className="w-full flex items-center justify-between p-3 bg-muted/50 rounded-lg hover:bg-muted transition-colors">
+              <button className="w-full flex items-center justify-between p-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors shadow-sm cursor-pointer">
                 <p className="text-sm font-semibold text-foreground">
                   {t.settings.privacyPolicy}
                 </p>
               </button>
-              <button className="w-full flex items-center justify-between p-3 bg-muted/50 rounded-lg hover:bg-muted transition-colors">
+              <button className="w-full flex items-center justify-between p-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors shadow-sm cursor-pointer">
                 <p className="text-sm font-semibold text-foreground">
                   {t.settings.termsOfService}
                 </p>
               </button>
-              <div className="p-3 bg-muted/50 rounded-lg">
+              <div className="p-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm">
                 <p className="text-sm font-semibold text-foreground mb-2">
                   {t.settings.appVersion}
                 </p>
