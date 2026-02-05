@@ -29,6 +29,7 @@ export interface Restaurant {
   slug: string; // URL-friendly identifier used in referral links
   description: string | null;
   logo_url: string | null; // Cloud storage URL for restaurant logo
+  merchant_id: string | null; // The merchant (owner) of this restaurant. One merchant can own multiple restaurants.
   guaranteed_discount_percent: number; // Discount given on first transaction (default 5%)
   upline_reward_percent: number; // Percentage given to each upline (default 1%)
   max_redemption_percent: number; // Max VC redemption percentage (default 20%)

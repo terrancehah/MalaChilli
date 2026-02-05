@@ -65,7 +65,7 @@
 | Table Name | Purpose | Key Notes |
 | :--- | :--- | :--- |
 | **`users`** | All accounts (Customer, Staff, Merchant, Admin). | Role-based access. Includes `preferred_language`, `last_login`, PDPA fields (`is_deleted`, `deleted_at`, `deletion_reason`). |
-| **`restaurants`** | Restaurant entities. | Configures `guaranteed_discount_percent`, `upline_reward_percent`, `max_redemption_percent`, `virtual_currency_expiry_days`. |
+| **`restaurants`** | Restaurant entities. | `merchant_id` links to owner (one merchant can own multiple restaurants). Configures `guaranteed_discount_percent`, `upline_reward_percent`, `max_redemption_percent`, `virtual_currency_expiry_days`. |
 | **`branches`** | Physical locations. | Required `address`. Optional `city`, `state`, `postal_code` for location filtering. |
 | **`transactions`** | Checkout records. | Stores amounts, OCR data (`ocr_processed`, `ocr_data`), `status` (completed/voided). |
 | **`transaction_items`** | Line items from receipts. | Supports OCR extraction with `match_confidence` and item-level analytics. |
