@@ -250,15 +250,18 @@ export default function DemoDashboard() {
   ];
 
   return (
-    <div className="min-h-screen pb-6">
+    <div className="min-h-screen pb-6 bg-gradient-to-b from-background to-background/80">
       <SEO
         title="Demo Dashboard"
         description="Experience the MakanTak dashboard in demo mode."
       />
-      {/* Demo Banner */}
-      <div className="bg-orange-100 dark:bg-orange-900/30 border-b border-orange-200 dark:border-orange-800 px-6 py-3 backdrop-blur-sm">
-        <p className="text-center text-sm text-orange-800 dark:text-orange-200 font-medium">
-          <strong>Demo Mode</strong> - This is a preview with sample data.
+      {/* Demo Banner - Enhanced with better visual hierarchy */}
+      <div className="bg-gradient-to-r from-orange-100 to-orange-50 dark:from-orange-900/30 dark:to-orange-800/20 border-b border-orange-200 dark:border-orange-800 px-6 py-3.5 backdrop-blur-sm shadow-sm">
+        <p className="text-center text-sm text-orange-900 dark:text-orange-100 font-semibold tracking-wide">
+          <span className="inline-flex items-center gap-2">
+            <span className="h-2 w-2 rounded-full bg-orange-500 animate-pulse" />
+            <strong>Demo Mode</strong> - This is a preview with sample data.
+          </span>
         </p>
       </div>
 
@@ -289,23 +292,23 @@ export default function DemoDashboard() {
         <StatsCard stats={demoStats} />
       </DashboardHeader>
 
-      <div className="px-6 mt-6 space-y-6">
-        {/* Restaurant-Specific Referral Codes */}
+      <div className="px-6 mt-8 space-y-8">
+        {/* Restaurant-Specific Referral Codes - Enhanced section header */}
         <div>
-          <div className="flex items-center justify-between mb-4">
-            <div>
-              <h2 className="text-xl font-display font-bold text-primary-dark">
-                Promote Restaurants
+          <div className="flex items-center justify-between mb-5">
+            <div className="space-y-1">
+              <h2 className="text-2xl font-display font-bold text-primary-dark tracking-tight">
+                🍽️ Promote Restaurants
               </h2>
-              <p className="text-sm text-gray-600">
-                Share codes for restaurants you've visited
+              <p className="text-sm text-gray-600 dark:text-gray-400 font-medium">
+                Share codes for restaurants you've visited and earn rewards
               </p>
             </div>
             <Button
               variant="ghost"
               size="sm"
               onClick={() => setShowInfoModal(true)}
-              className="h-8 w-8 p-0 rounded-full hover:bg-primary/10"
+              className="h-9 w-9 p-0 rounded-full hover:bg-primary/10 transition-all duration-200 hover:scale-110 cursor-pointer"
               title="How it works"
             >
               <Info className="h-5 w-5 text-primary" />
@@ -313,52 +316,72 @@ export default function DemoDashboard() {
           </div>
 
           {mockVisitedRestaurants.length === 0 ? (
-            <Card variant="glass" className="border-0">
+            <Card variant="glass" className="border-0 overflow-hidden">
               <CardContent className="p-12 text-center">
-                <div className="h-16 w-16 rounded-full bg-primary/10 mx-auto mb-4 flex items-center justify-center">
-                  <Share2 className="h-8 w-8 text-primary" />
+                <div className="relative">
+                  <div className="h-20 w-20 rounded-full bg-gradient-to-br from-primary/20 to-primary/5 mx-auto mb-5 flex items-center justify-center shadow-lg">
+                    <Share2 className="h-10 w-10 text-primary" />
+                  </div>
+                  <div className="absolute top-0 left-1/2 -translate-x-1/2 h-20 w-20 rounded-full bg-primary/5 animate-ping" />
                 </div>
-                <p className="text-gray-600 text-sm mb-2">
+                <p className="text-gray-700 dark:text-gray-300 text-base font-semibold mb-2">
                   No visited restaurants yet
                 </p>
-                <p className="text-xs text-gray-500">
-                  Visit a restaurant and make your first transaction to start
-                  promoting!
+                <p className="text-sm text-gray-500 dark:text-gray-400 max-w-xs mx-auto leading-relaxed">
+                  Visit a restaurant and make your first transaction to start promoting and earning rewards!
                 </p>
               </CardContent>
             </Card>
           ) : (
-            <div className="space-y-3">
+            <div className="space-y-4">
               {/* Restaurants with codes (auto-generated on first visit) */}
-              {mockRestaurantCodes.map((code) => (
-                <RestaurantCard
+              {mockRestaurantCodes.map((code, index) => (
+                <div
                   key={code.id}
-                  restaurant={code}
-                  getTimeAgo={getTimeAgo}
-                  onShare={handleShare}
-                />
+                  className="animate-in fade-in slide-in-from-bottom-4 duration-300"
+                  style={{ animationDelay: `${index * 100}ms` }}
+                >
+                  <RestaurantCard
+                    restaurant={code}
+                    getTimeAgo={getTimeAgo}
+                    onShare={handleShare}
+                  />
+                </div>
               ))}
             </div>
           )}
         </div>
 
-        {/* Recent Transactions - Coming Soon */}
+        {/* Recent Transactions - Coming Soon - Enhanced empty state */}
         <div>
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-xl font-display font-bold text-primary-dark">
-              Recent Transactions
-            </h2>
+          <div className="flex items-center justify-between mb-5">
+            <div className="space-y-1">
+              <h2 className="text-2xl font-display font-bold text-primary-dark tracking-tight">
+                📝 Recent Transactions
+              </h2>
+              <p className="text-sm text-gray-600 dark:text-gray-400 font-medium">
+                Track your dining history and rewards
+              </p>
+            </div>
           </div>
 
-          <Card variant="glass" className="border-0">
+          <Card variant="glass" className="border-0 overflow-hidden group hover:shadow-lg transition-shadow duration-300">
             <CardContent className="p-12 text-center">
-              <div className="h-16 w-16 rounded-full bg-primary/10 mx-auto mb-4 flex items-center justify-center">
-                <Receipt className="h-8 w-8 text-primary" />
+              <div className="relative">
+                <div className="h-20 w-20 rounded-full bg-gradient-to-br from-primary/20 to-orange-100 dark:to-orange-900/20 mx-auto mb-5 flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
+                  <Receipt className="h-10 w-10 text-primary" />
+                </div>
               </div>
-              <p className="text-gray-600 text-sm">
-                No transactions yet. Start dining at our partner restaurants to
-                earn rewards!
+              <p className="text-gray-700 dark:text-gray-300 text-base font-semibold mb-2">
+                No transactions yet
               </p>
+              <p className="text-sm text-gray-500 dark:text-gray-400 max-w-md mx-auto leading-relaxed">
+                Start dining at our partner restaurants to earn rewards and build your transaction history!
+              </p>
+              <div className="mt-6 inline-flex items-center gap-2 text-xs text-primary font-medium">
+                <span className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse" />
+                Ready to get started
+              </div>
             </CardContent>
           </Card>
         </div>

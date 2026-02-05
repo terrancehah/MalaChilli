@@ -91,7 +91,7 @@ export function SettingsPanel({
           {t.settings.profile}
         </h4>
         <div className="space-y-3">
-          <div className="p-3 bg-muted/50 rounded-lg">
+          <div className="p-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm">
             <p className="text-sm font-semibold text-foreground mb-2">
               {t.settings.name}
             </p>
@@ -99,13 +99,13 @@ export function SettingsPanel({
               {user.full_name || t.settings.notSet}
             </p>
           </div>
-          <div className="p-3 bg-muted/50 rounded-lg">
+          <div className="p-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm">
             <p className="text-sm font-semibold text-foreground mb-2">
               {t.settings.email}
             </p>
             <p className="text-sm text-muted-foreground">{user.email}</p>
           </div>
-          <div className="p-3 bg-muted/50 rounded-lg">
+          <div className="p-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm">
             <p className="text-sm font-semibold text-foreground mb-2">
               {t.settings.memberSince}
             </p>
@@ -120,7 +120,7 @@ export function SettingsPanel({
           <h4 className="text-base font-bold text-foreground mb-4">Location</h4>
           <div className="space-y-3">
             {restaurantName && (
-              <div className="p-3 bg-muted/50 rounded-lg">
+              <div className="p-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm">
                 <div className="flex items-center gap-2 mb-2">
                   <Building2 className="h-4 w-4 text-primary" />
                   <p className="text-sm font-semibold text-foreground">
@@ -133,7 +133,7 @@ export function SettingsPanel({
               </div>
             )}
             {branchName && (
-              <div className="p-3 bg-muted/50 rounded-lg">
+              <div className="p-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm">
                 <div className="flex items-center gap-2 mb-2">
                   <MapPin className="h-4 w-4 text-primary" />
                   <p className="text-sm font-semibold text-foreground">
