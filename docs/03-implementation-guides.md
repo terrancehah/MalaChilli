@@ -114,6 +114,37 @@ including typography, colors, spacing, components, and state patterns.
 | `Login` | `/pages/customer/Login.tsx` | Standalone login page wrapper |
 | `Register` | `/pages/RegisterPage.tsx` | Standalone registration page |
 
+### 4. Admin User Management
+
+The Super Admin dashboard (`/admin/users`) provides comprehensive user management.
+
+#### Features
+
+* **Sortable Columns:** Click headers to sort by Name, Role, Joined Date, or Last Login.
+  * Role sorting uses hierarchy: Admin > Merchant > Staff > Customer (not alphabetical).
+* **Role Filter:** Dropdown to filter by Customer, Staff, Merchant, or Admin.
+* **Restaurant/Branch Display:** Shows assigned restaurant(s) for merchants and staff.
+  * Merchants: Displays up to 3 restaurant names, with "+N more" for additional.
+  * Staff: Shows restaurant name and branch name.
+* **Pagination:** 15 users per page with navigation controls.
+
+#### Role Change Workflow
+
+When changing a user's role via the Edit modal:
+
+| New Role | Required Fields | Database Updates |
+| :--- | :--- | :--- |
+| Customer | None | Clears `user.restaurant_id`, `user.branch_id` |
+| Staff | Restaurant + Branch | Sets `user.restaurant_id`, `user.branch_id` |
+| Merchant | Restaurant | Sets `restaurant.merchant_id` to user ID |
+| Admin | None | Clears `user.restaurant_id`, `user.branch_id` |
+
+**Note:** Merchants are linked via `restaurants.merchant_id`, not `users.restaurant_id`. One merchant can own multiple restaurants.
+
+#### Security: Restaurant Assignment
+
+Restaurant ownership can **only** be modified by Super Admins via the admin dashboard. Merchants cannot self-assign restaurants - this prevents abuse and ensures proper onboarding. Merchants can edit their restaurant's **settings** (discount %, reward %, etc.) but not ownership.
+
 ---
 
 ## PART D: Feature Deep Dives
