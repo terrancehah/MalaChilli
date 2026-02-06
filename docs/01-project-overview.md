@@ -96,3 +96,11 @@ MakanTak is a web-based viral marketing platform that helps Malaysian local rest
 * **Target:** Malaysian local restaurants (Kopitiam, Mamak, Cafes).
 * **Initial Focus:** Klang Valley (Pilot phase).
 * **Differentiation:** Unlike GrabFood/Foodpanda (high commissions) or Fave (one-off deals), MakanTak builds **owned** referral networks for restaurants.
+
+---
+
+## 5. Contact & Support
+
+For merchant partnerships, technical support, or general inquiries:
+
+**Email:** support@makantak.com
