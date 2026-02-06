@@ -81,6 +81,30 @@ export default {
         soft: "0 4px 20px -2px rgba(255, 109, 31, 0.1)",
         glow: "0 0 15px rgba(245, 231, 198, 0.5)",
       },
+      keyframes: {
+        "bounce-slow": {
+          "0%, 100%": { transform: "translateY(0)" },
+          "50%": { transform: "translateY(-10px)" },
+        },
+        float: {
+          "0%, 100%": { transform: "translateY(0px)" },
+          "50%": { transform: "translateY(-20px)" },
+        },
+        drift: {
+          "0%, 100%": { transform: "translate(0, 0)" },
+          "50%": { transform: "translate(10px, -15px)" },
+        },
+        "float-delayed": {
+          "0%, 100%": { transform: "translateY(0px)" },
+          "50%": { transform: "translateY(-15px)" },
+        },
+      },
+      animation: {
+        "bounce-slow": "bounce-slow 3s ease-in-out infinite",
+        float: "float 4s ease-in-out infinite",
+        drift: "drift 5s ease-in-out infinite",
+        "float-delayed": "float-delayed 4.5s ease-in-out infinite 1s",
+      },
     },
   },
   plugins: [require("tailwindcss-animate")],

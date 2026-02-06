@@ -84,7 +84,13 @@ Mobile-optimized bottom sheet with organized sharing options: referral link, soc
 
 ---
 
-## 📄 License
+## � Contact
+
+For inquiries or support, reach us at: **support@makantak.com**
+
+---
+
+## �📄 License
 
 **Portfolio Project** | Copyright © 2025 | All Rights Reserved
 
