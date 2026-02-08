@@ -2,13 +2,19 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { LoginModal, RegisterModal } from '../components/auth';
 import { MerchantEnquiryForm } from '../components/merchant';
-import { SEO } from '../components/shared';
+import { SEO, LanguageSelector } from '../components/shared';
 import { ArrowRight, Gift, Percent, Share2, LayoutDashboard, Users, TrendingUp, Shield } from 'lucide-react';
+import { getTranslation } from '../translations';
+import { useLanguagePreference } from '../hooks/useLanguagePreference';
 
 export default function HomePage() {
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [showRegisterModal, setShowRegisterModal] = useState(false);
   const [showMerchantEnquiry, setShowMerchantEnquiry] = useState(false);
+  
+  // Language preference (no user ID for public page, uses localStorage only)
+  const { language, setLanguage } = useLanguagePreference(undefined);
+  const t = getTranslation(language);
 
   const handleSwitchToSignUp = () => {
     setShowLoginModal(false);
@@ -21,67 +27,77 @@ export default function HomePage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-orange-50 via-amber-50 to-background dark:from-gray-900 dark:to-gray-950 font-sans">
+    <div className="min-h-screen bg-gradient-to-b from-orange-50 via-amber-50 to-background dark:from-gray-900 dark:to-gray-950 font-sans overflow-x-hidden">
       <SEO title="Home" description="MakanTak - Share the savings, grow the community. The viral restaurant discount platform." />
       
+      {/* Header */}
+      <header className="w-full px-8 sm:px-10 lg:px-12 py-4 flex justify-between items-center">
+        <Link to="/" className="text-2xl font-bold text-gray-900 dark:text-white">
+          {t.home.title}
+        </Link>
+        <div className="flex items-center gap-4">
+          <LanguageSelector language={language} onLanguageChange={setLanguage} />
+          <button
+            onClick={() => setShowLoginModal(true)}
+            className="px-6 py-2.5 text-base lg:text-lg font-semibold text-primary dark:text-primary-light hover:bg-primary/5 dark:hover:bg-gray-800 rounded-lg transition-colors cursor-pointer"
+          >
+            {t.home.login}
+          </button>
+        </div>
+      </header>
+      
       {/* Hero Section */}
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-16 sm:pt-24 sm:pb-20">
+      <div className="w-full px-8 sm:px-10 lg:px-12 pt-8 pb-8 sm:pt-16 sm:pb-16 lg:pt-20 lg:pb-20">
         <div className="text-center max-w-4xl mx-auto">
-          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-gray-900 dark:text-white mb-6">
-            MakanTak
+          <h1 className="text-5xl sm:text-6xl lg:text-7xl xl:text-8xl font-extrabold tracking-tight text-gray-900 dark:text-white mb-6 lg:mb-8">
+            {t.home.title}
           </h1>
-          <p className="text-lg sm:text-xl lg:text-2xl text-gray-600 dark:text-gray-300 mb-10 max-w-2xl mx-auto leading-relaxed">
-            Earn rewards by sharing. Save on every meal. <br className="hidden sm:block"/>
-            The viral restaurant discount platform.
+          <p className="text-lg sm:text-xl lg:text-2xl xl:text-3xl text-gray-600 dark:text-gray-300 mb-4 max-w-3xl mx-auto leading-relaxed">
+            {t.home.tagline}
+          </p>
+          <p className="text-lg sm:text-xl lg:text-2xl xl:text-3xl text-gray-500 dark:text-gray-400 mb-12 lg:mb-16 max-w-2xl mx-auto">
+            {t.home.subtitle}
           </p>
           
           {/* Main Action Buttons */}
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center w-full max-w-md mx-auto sm:max-w-none">
-            <div className="relative w-full sm:w-auto">
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center w-full max-w-2xl mx-auto">
+            {/* Primary CTA - Get Started with ping animation */}
+            <div className="relative w-full sm:w-auto sm:flex-1 sm:max-w-[280px]">
               <div className="absolute -inset-2 bg-primary rounded-full opacity-20" style={{animation: "ping 3s cubic-bezier(0, 0, 0.2, 1) infinite"}}></div>
               <button
                 onClick={() => setShowRegisterModal(true)}
-                className="relative w-full sm:w-auto min-w-[160px] px-8 py-4 bg-primary text-white text-lg font-semibold rounded-full shadow-md hover:shadow-sm active:shadow-none active:scale-95 transition-all duration-200 flex items-center justify-center gap-2 group"
+                className="relative w-full px-10 py-5 bg-primary text-white text-lg lg:text-xl xl:text-2xl font-semibold rounded-full shadow-md hover:shadow-lg active:shadow-none active:scale-95 transition-all duration-200 flex items-center justify-center gap-3 group cursor-pointer"
               >
-                Get Started
-                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                {t.home.getStarted}
+                <ArrowRight className="w-6 h-6 lg:w-7 lg:h-7 group-hover:translate-x-1 transition-transform" />
               </button>
             </div>
             
-            <button
-              onClick={() => setShowLoginModal(true)}
-              className="w-full sm:w-auto min-w-[160px] px-8 py-4 bg-white dark:bg-gray-800 text-primary dark:text-primary-light border-2 border-primary dark:border-primary-light text-lg font-semibold rounded-full shadow-md hover:shadow-sm active:shadow-none active:scale-95 hover:bg-primary/5 dark:hover:bg-gray-700 transition-all duration-200 flex items-center justify-center"
-            >
-              Login
-            </button>
-          </div>
-
-          {/* Secondary / Demo Action - Repositioned for better UX */}
-          <div className="mt-8 sm:mt-10">
+            {/* Secondary CTA - Demo */}
             <Link
               to="/demo"
-              className="inline-flex items-center gap-2 text-sm sm:text-base text-gray-500 hover:text-primary dark:text-gray-400 dark:hover:text-primary-light transition-colors py-2 px-4 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800"
+              className="w-full sm:w-auto sm:flex-1 sm:max-w-[280px] px-10 py-5 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 text-lg lg:text-xl xl:text-2xl font-semibold rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 active:scale-95 transition-all duration-200 flex items-center justify-center gap-3 cursor-pointer"
             >
-              <LayoutDashboard className="w-4 h-4" />
-              <span>View Demo Dashboard</span>
+              <LayoutDashboard className="w-6 h-6 lg:w-7 lg:h-7" />
+              <span>{t.home.demo}</span>
             </Link>
           </div>
         </div>
 
         {/* Features Grid */}
-        <div className="mt-20 sm:mt-24 grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+        <div className="mt-20 sm:mt-24 grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8 max-w-6xl mx-auto">
           {/* Feature 1 */}
           <div className="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-md hover:shadow-lg hover:-translate-y-1 transition-all duration-300 border border-gray-100 dark:border-gray-700">
             <div className="w-14 h-14 bg-primary/10 rounded-xl flex items-center justify-center mb-6 text-primary group-hover:scale-110 transition-transform duration-300">
               <Percent className="w-7 h-7" />
             </div>
-            <h3 className="text-xl font-bold mb-3 text-gray-900 dark:text-white">5% Guaranteed Discount</h3>
-            <p className="text-gray-600 dark:text-gray-300 leading-relaxed mb-4">
-              Get an instant 5% discount on your first visit at any participating restaurant. No strings attached.
+            <h3 className="text-xl lg:text-2xl xl:text-3xl font-bold mb-3 lg:mb-4 text-gray-900 dark:text-white">{t.home.feature1Title}</h3>
+            <p className="text-base lg:text-lg xl:text-xl text-gray-600 dark:text-gray-300 leading-relaxed mb-4">
+              {t.home.feature1Desc}
             </p>
-            <div className="inline-flex items-center gap-2 text-sm font-semibold text-primary">
+            <div className="inline-flex items-center gap-2 text-sm lg:text-base font-semibold text-primary">
               <span className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse"></span>
-              <span>First visit bonus</span>
+              <span>{t.home.feature1Badge}</span>
             </div>
           </div>
           
@@ -90,13 +106,13 @@ export default function HomePage() {
             <div className="w-14 h-14 bg-primary/10 rounded-xl flex items-center justify-center mb-6 text-primary group-hover:scale-110 transition-transform duration-300">
               <Share2 className="w-7 h-7" />
             </div>
-            <h3 className="text-xl font-bold mb-3 text-gray-900 dark:text-white">Share & Earn</h3>
-            <p className="text-gray-600 dark:text-gray-300 leading-relaxed mb-4">
-              Share your unique code with friends. Earn 1% of their bill as virtual currency every time they dine.
+            <h3 className="text-xl lg:text-2xl xl:text-3xl font-bold mb-3 lg:mb-4 text-gray-900 dark:text-white">{t.home.feature2Title}</h3>
+            <p className="text-base lg:text-lg xl:text-xl text-gray-600 dark:text-gray-300 leading-relaxed mb-4">
+              {t.home.feature2Desc}
             </p>
-            <div className="inline-flex items-center gap-2 text-sm font-semibold text-primary">
+            <div className="inline-flex items-center gap-2 text-sm lg:text-base font-semibold text-primary">
               <span className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse"></span>
-              <span>3-level rewards system</span>
+              <span>{t.home.feature2Badge}</span>
             </div>
           </div>
           
@@ -105,13 +121,13 @@ export default function HomePage() {
             <div className="w-14 h-14 bg-primary/10 rounded-xl flex items-center justify-center mb-6 text-primary group-hover:scale-110 transition-transform duration-300">
               <Gift className="w-7 h-7" />
             </div>
-            <h3 className="text-xl font-bold mb-3 text-gray-900 dark:text-white">Redeem Rewards</h3>
-            <p className="text-gray-600 dark:text-gray-300 leading-relaxed mb-4">
-              Use your earned virtual currency to pay for your meals. Redeem up to 20% of your bill.
+            <h3 className="text-xl lg:text-2xl xl:text-3xl font-bold mb-3 lg:mb-4 text-gray-900 dark:text-white">{t.home.feature3Title}</h3>
+            <p className="text-base lg:text-lg xl:text-xl text-gray-600 dark:text-gray-300 leading-relaxed mb-4">
+              {t.home.feature3Desc}
             </p>
-            <div className="inline-flex items-center gap-2 text-sm font-semibold text-primary">
+            <div className="inline-flex items-center gap-2 text-sm lg:text-base font-semibold text-primary">
               <span className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse"></span>
-              <span>Max 20% redemption</span>
+              <span>{t.home.feature3Badge}</span>
             </div>
           </div>
         </div>
@@ -121,37 +137,37 @@ export default function HomePage() {
           <div className="bg-gradient-to-r from-primary to-orange-600 rounded-3xl overflow-hidden shadow-xl">
             <div className="grid md:grid-cols-2 gap-0 items-center">
               <div className="p-8 sm:p-12 text-white">
-                <h2 className="text-3xl sm:text-4xl font-bold mb-4">
-                  Own a Restaurant?
+                <h2 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold mb-4 lg:mb-6">
+                  {t.home.merchantTitle}
                 </h2>
-                <p className="text-lg sm:text-xl mb-6 opacity-95">
-                  Join MakanTak and turn your customers into brand ambassadors. Pay only for results with our viral referral system.
+                <p className="text-lg sm:text-xl lg:text-2xl xl:text-3xl mb-6 lg:mb-8 opacity-95">
+                  {t.home.merchantSubtitle}
                 </p>
-                <ul className="space-y-3 mb-8">
+                <ul className="space-y-3 lg:space-y-4 mb-8 lg:mb-10">
                   <li className="flex items-start gap-3">
-                    <div className="w-6 h-6 rounded-full bg-white/20 flex items-center justify-center flex-shrink-0 mt-0.5">
-                      <span className="text-sm">✓</span>
+                    <div className="w-6 h-6 lg:w-7 lg:h-7 rounded-full bg-white/20 flex items-center justify-center flex-shrink-0 mt-0.5">
+                      <span className="text-sm lg:text-base">✓</span>
                     </div>
-                    <span className="text-base">Max 8% marketing cost - only pay when customers dine</span>
+                    <span className="text-base lg:text-lg xl:text-xl">{t.home.merchantPoint1}</span>
                   </li>
                   <li className="flex items-start gap-3">
-                    <div className="w-6 h-6 rounded-full bg-white/20 flex items-center justify-center flex-shrink-0 mt-0.5">
-                      <span className="text-sm">✓</span>
+                    <div className="w-6 h-6 lg:w-7 lg:h-7 rounded-full bg-white/20 flex items-center justify-center flex-shrink-0 mt-0.5">
+                      <span className="text-sm lg:text-base">✓</span>
                     </div>
-                    <span className="text-base">Build your own customer referral network</span>
+                    <span className="text-base lg:text-lg xl:text-xl">{t.home.merchantPoint2}</span>
                   </li>
                   <li className="flex items-start gap-3">
-                    <div className="w-6 h-6 rounded-full bg-white/20 flex items-center justify-center flex-shrink-0 mt-0.5">
-                      <span className="text-sm">✓</span>
+                    <div className="w-6 h-6 lg:w-7 lg:h-7 rounded-full bg-white/20 flex items-center justify-center flex-shrink-0 mt-0.5">
+                      <span className="text-sm lg:text-base">✓</span>
                     </div>
-                    <span className="text-base">Track ROI with real-time analytics dashboard</span>
+                    <span className="text-base lg:text-lg xl:text-xl">{t.home.merchantPoint3}</span>
                   </li>
                 </ul>
                 <button
                   onClick={() => setShowMerchantEnquiry(true)}
-                  className="bg-white text-primary px-8 py-4 rounded-full font-bold text-lg hover:bg-gray-50 active:scale-95 transition-all duration-200 shadow-lg"
+                  className="bg-white text-primary px-8 lg:px-10 py-4 lg:py-5 rounded-full font-bold text-lg lg:text-xl xl:text-2xl hover:bg-gray-50 active:scale-95 transition-all duration-200 shadow-lg"
                 >
-                  Get Started
+                  {t.home.merchantCTA}
                 </button>
               </div>
               <div className="hidden md:block h-full min-h-[400px] bg-cover bg-center" style={{backgroundImage: "url('https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=800&q=80')"}}>
@@ -164,11 +180,11 @@ export default function HomePage() {
         {/* About Us Section */}
         <div className="mt-24 sm:mt-32 max-w-6xl mx-auto">
           <div className="text-center mb-12">
-            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white mb-4">
-              Why MakanTak?
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold text-gray-900 dark:text-white mb-4 lg:mb-6">
+              {t.home.aboutTitle}
             </h2>
-            <p className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
-              We're revolutionizing how Malaysian restaurants grow their business through viral word-of-mouth marketing.
+            <p className="text-lg lg:text-xl xl:text-2xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
+              {t.home.aboutSubtitle}
             </p>
           </div>
 
@@ -178,9 +194,9 @@ export default function HomePage() {
               <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-6">
                 <Users className="w-8 h-8 text-primary" />
               </div>
-              <h3 className="text-xl font-bold mb-3 text-gray-900 dark:text-white">Community-Driven</h3>
-              <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
-                Built for Malaysian local restaurants and their loyal customers. We believe in growing together through authentic referrals.
+              <h3 className="text-xl lg:text-2xl xl:text-3xl font-bold mb-3 lg:mb-4 text-gray-900 dark:text-white">{t.home.aboutCard1Title}</h3>
+              <p className="text-base lg:text-lg xl:text-xl text-gray-600 dark:text-gray-300 leading-relaxed">
+                {t.home.aboutCard1Desc}
               </p>
             </div>
 
@@ -189,9 +205,9 @@ export default function HomePage() {
               <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-6">
                 <TrendingUp className="w-8 h-8 text-primary" />
               </div>
-              <h3 className="text-xl font-bold mb-3 text-gray-900 dark:text-white">Performance-Based</h3>
-              <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
-                No upfront costs. Restaurants only pay when customers actually dine. Transparent, measurable, and fair for everyone.
+              <h3 className="text-xl lg:text-2xl xl:text-3xl font-bold mb-3 lg:mb-4 text-gray-900 dark:text-white">{t.home.aboutCard2Title}</h3>
+              <p className="text-base lg:text-lg xl:text-xl text-gray-600 dark:text-gray-300 leading-relaxed">
+                {t.home.aboutCard2Desc}
               </p>
             </div>
 
@@ -200,24 +216,154 @@ export default function HomePage() {
               <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-6">
                 <Shield className="w-8 h-8 text-primary" />
               </div>
-              <h3 className="text-xl font-bold mb-3 text-gray-900 dark:text-white">Secure & Compliant</h3>
-              <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
-                PDPA-compliant with robust security measures. Your data is protected, and your privacy is our priority.
+              <h3 className="text-xl lg:text-2xl xl:text-3xl font-bold mb-3 lg:mb-4 text-gray-900 dark:text-white">{t.home.aboutCard3Title}</h3>
+              <p className="text-base lg:text-lg xl:text-xl text-gray-600 dark:text-gray-300 leading-relaxed">
+                {t.home.aboutCard3Desc}
               </p>
             </div>
           </div>
 
-          {/* Contact Info */}
-          <div className="mt-12 text-center">
-            <p className="text-gray-600 dark:text-gray-400">
-              Questions? Reach us at{' '}
-              <a href="mailto:support@makantak.com" className="text-primary hover:underline font-semibold">
-                support@makantak.com
-              </a>
-            </p>
-          </div>
         </div>
       </div>
+
+      {/* Footer */}
+      <footer className="bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800 mt-24">
+        <div className="max-w-6xl mx-auto px-8 sm:px-10 lg:px-12 py-12">
+          {/* Footer Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+            {/* Brand Column */}
+            <div className="md:col-span-1">
+              <h3 className="text-xl lg:text-2xl font-bold text-gray-900 dark:text-white mb-3">
+                {t.home.title}
+              </h3>
+              <p className="text-sm lg:text-base text-gray-600 dark:text-gray-400 mb-4">
+                {t.home.footerTagline}
+              </p>
+              <p className="text-sm lg:text-base text-gray-600 dark:text-gray-400">
+                {t.home.footerDesc}
+              </p>
+            </div>
+
+            {/* For Customers Column */}
+            <div>
+              <h4 className="text-sm lg:text-base font-semibold text-gray-900 dark:text-white mb-4">
+                {t.home.forCustomers}
+              </h4>
+              <ul className="space-y-3">
+                <li>
+                  <Link
+                    to="/demo"
+                    className="text-sm lg:text-base text-gray-600 hover:text-primary dark:text-gray-400 dark:hover:text-primary-light transition-colors cursor-pointer"
+                  >
+                    {t.home.demoLink}
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    to="/faq"
+                    className="text-sm lg:text-base text-gray-600 hover:text-primary dark:text-gray-400 dark:hover:text-primary-light transition-colors cursor-pointer"
+                  >
+                    {t.home.faqLink}
+                  </Link>
+                </li>
+              </ul>
+            </div>
+
+            {/* For Restaurants Column */}
+            <div>
+              <h4 className="text-sm lg:text-base font-semibold text-gray-900 dark:text-white mb-4">
+                {t.home.forRestaurants}
+              </h4>
+              <ul className="space-y-3">
+                <li>
+                  <button
+                    onClick={() => setShowMerchantEnquiry(true)}
+                    className="text-sm lg:text-base text-gray-600 hover:text-primary dark:text-gray-400 dark:hover:text-primary-light transition-colors cursor-pointer text-left"
+                  >
+                    {t.home.merchantEnquiry}
+                  </button>
+                </li>
+              </ul>
+            </div>
+
+            {/* Company Column */}
+            <div>
+              <h4 className="text-sm lg:text-base font-semibold text-gray-900 dark:text-white mb-4">
+                {t.home.company}
+              </h4>
+              <ul className="space-y-3">
+                <li>
+                  <Link
+                    to="/about"
+                    className="text-sm lg:text-base text-gray-600 hover:text-primary dark:text-gray-400 dark:hover:text-primary-light transition-colors cursor-pointer"
+                  >
+                    {t.home.aboutUs}
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    to="/contact"
+                    className="text-sm lg:text-base text-gray-600 hover:text-primary dark:text-gray-400 dark:hover:text-primary-light transition-colors cursor-pointer"
+                  >
+                    {t.home.contact}
+                  </Link>
+                </li>
+                <li>
+                  <a
+                    href="mailto:support@makantak.com"
+                    className="text-sm lg:text-base text-gray-600 hover:text-primary dark:text-gray-400 dark:hover:text-primary-light transition-colors cursor-pointer"
+                  >
+                    support@makantak.com
+                  </a>
+                </li>
+                <li>
+                  <Link
+                    to="/privacy"
+                    className="text-sm lg:text-base text-gray-600 hover:text-primary dark:text-gray-400 dark:hover:text-primary-light transition-colors cursor-pointer"
+                  >
+                    {t.home.privacy}
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    to="/terms"
+                    className="text-sm lg:text-base text-gray-600 hover:text-primary dark:text-gray-400 dark:hover:text-primary-light transition-colors cursor-pointer"
+                  >
+                    {t.home.terms}
+                  </Link>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          {/* Bottom Bar */}
+          <div className="pt-8 border-t border-gray-200 dark:border-gray-800 flex flex-col sm:flex-row justify-between items-center gap-4">
+            <p className="text-sm lg:text-base text-gray-600 dark:text-gray-400">
+              {t.home.copyright}
+            </p>
+            
+            {/* Social Media */}
+            <div className="flex items-center gap-4">
+              <a
+                href="https://x.com/MakanTakMY"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-10 h-10 rounded-full bg-gray-100 dark:bg-gray-800 hover:bg-primary/10 dark:hover:bg-primary/20 flex items-center justify-center transition-colors duration-200 cursor-pointer"
+                aria-label={t.home.followUs}
+              >
+                <svg
+                  className="w-5 h-5 text-gray-700 dark:text-gray-300"
+                  fill="currentColor"
+                  viewBox="0 0 24 24"
+                  aria-hidden="true"
+                >
+                  <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+                </svg>
+              </a>
+            </div>
+          </div>
+        </div>
+      </footer>
 
       {/* Auth Modals */}
       <LoginModal 

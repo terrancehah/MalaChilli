@@ -117,14 +117,7 @@ export const contact = {
   
   businessInquiriesTitle: 'Pertanyaan Perniagaan',
   businessInquiriesDesc: 'Perkongsian restoran dan kerjasama',
-  businessInquiriesAddress: 'business@makantak.com',
-  
-  phoneSupportTitle: 'Sokongan Telefon',
-  phoneSupportDesc: 'Isnin-Jumaat, 9 PAGI-6 PETANG (GMT+8)',
-  phoneSupportNumber: '+60 12-345 6789',
-  
-  officeLocationTitle: 'Lokasi Pejabat',
-  officeLocationAddress: 'Kuala Lumpur, Malaysia',
+  businessInquiriesAddress: 'support@makantak.com',
   
   sendMessageTitle: 'Hantar Mesej Kepada Kami',
   nameLabel: 'Nama Anda',
