@@ -52,7 +52,7 @@ export default function HomePage() {
           <h1 className="text-5xl sm:text-6xl lg:text-7xl xl:text-8xl font-extrabold tracking-tight text-gray-900 dark:text-white mb-6 lg:mb-8">
             {t.home.title}
           </h1>
-          <p className="text-xl sm:text-2xl lg:text-3xl xl:text-4xl text-gray-600 dark:text-gray-300 mb-4 max-w-3xl mx-auto leading-relaxed">
+          <p className="text-lg sm:text-xl lg:text-2xl xl:text-3xl text-gray-600 dark:text-gray-300 mb-4 max-w-3xl mx-auto leading-relaxed">
             {t.home.tagline}
           </p>
           <p className="text-lg sm:text-xl lg:text-2xl xl:text-3xl text-gray-500 dark:text-gray-400 mb-12 lg:mb-16 max-w-2xl mx-auto">
