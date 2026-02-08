@@ -4,6 +4,7 @@ import * as customer from './customer';
 import { staffDashboard } from './staff';
 import { merchantDashboard } from './merchant';
 import * as legal from './legal';
+import { home } from './home';
 
 export const zh = {
   common,
@@ -13,4 +14,5 @@ export const zh = {
   staffDashboard,
   merchantDashboard,
   ...legal,
+  home,
 };

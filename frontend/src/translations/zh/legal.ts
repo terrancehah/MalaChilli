@@ -7,7 +7,7 @@ export const faq = {
   contactSupport: '联系支持',
   
   q1: '什么是MakanTak？',
-  a1: 'MakanTak是一个病毒式推荐折扣平台，奖励您与朋友分享。当您推荐某人并且他们进行购买时，您将获得虚拟货币，可用作下次访问的折扣！',
+  a1: 'MakanTak是一个推荐奖励平台，让您通过分享赚取优惠。当您推荐朋友消费时，您将获得虚拟货币，可在下次用餐时抵扣！',
   
   q2: '如何赚取虚拟货币？',
   a2Title: '您可以通过两种方式赚取虚拟货币：',
@@ -62,14 +62,14 @@ export const faq = {
 
 export const about = {
   title: '关于MakanTak',
-  subtitle: '通过病毒式推荐革新餐厅忠诚度',
+  subtitle: '通过推荐奖励革新餐厅会员计划',
   backToHome: '返回首页',
   
   missionTitle: '我们的使命',
   missionText: '通过双赢的推荐系统赋能餐厅和顾客，奖励分享，建立社区，让每个人的外出就餐更实惠。',
   
-  whatWeDoTitle: '我们做什么',
-  whatWeDoPara1: 'MakanTak是马来西亚首个专为餐厅设计的病毒式推荐折扣平台。我们帮助餐厅有机地增长客户群，同时奖励忠实客户传播信息。',
+  whatWeDoTitle: '我们的服务',
+  whatWeDoPara1: 'MakanTak是马来西亚首个专为餐厅设计的推荐奖励平台。我们帮助餐厅自然增长客户群，同时奖励忠实顾客分享推荐。',
   whatWeDoPara2: '与仅奖励个人购买的传统忠诚度计划不同，MakanTak创造了一个网络效应，让每个人都受益。当您分享推荐码并且您的朋友在餐厅用餐时，您会赚取虚拟货币。当他们的朋友用餐时，您再次赚取 - 最多3级！',
   
   coreValuesTitle: '我们的核心价值观',
@@ -116,15 +116,8 @@ export const contact = {
   emailSupportAddress: 'support@makantak.com',
   
   businessInquiriesTitle: '商务咨询',
-  businessInquiriesDesc: '餐厅合作伙伴关系和协作',
-  businessInquiriesAddress: 'business@makantak.com',
-  
-  phoneSupportTitle: '电话支持',
-  phoneSupportDesc: '周一至周五，上午9点至下午6点（GMT+8）',
-  phoneSupportNumber: '+60 12-345 6789',
-  
-  officeLocationTitle: '办公地点',
-  officeLocationAddress: '吉隆坡，马来西亚',
+  businessInquiriesDesc: '餐厅合作与商务洽谈',
+  businessInquiriesAddress: 'support@makantak.com',
   
   sendMessageTitle: '给我们发送消息',
   nameLabel: '您的姓名',

@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { Mail, MessageSquare, Phone, MapPin } from 'lucide-react';
+import { Mail, MessageSquare } from 'lucide-react';
 import { useState } from 'react';
 import { showSuccessToast, showErrorToast } from '../../components/ui/toast';
 import { getTranslation, type Language } from '../../translations';
@@ -99,37 +99,11 @@ export default function Contact() {
                 {t.contact.businessInquiriesDesc}
               </p>
               <a
-                href="mailto:business@makantak.com"
+                href="mailto:support@makantak.com"
                 className="text-primary hover:underline font-medium"
               >
                 {t.contact.businessInquiriesAddress}
               </a>
-            </div>
-
-            <div className="p-6 bg-card border border-border rounded-lg">
-              <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center mb-4">
-                <Phone className="h-6 w-6 text-primary" />
-              </div>
-              <h3 className="text-lg font-semibold text-foreground mb-2">{t.contact.phoneSupportTitle}</h3>
-              <p className="text-foreground/70 text-sm mb-3">
-                {t.contact.phoneSupportDesc}
-              </p>
-              <a
-                href="tel:+60123456789"
-                className="text-primary hover:underline font-medium"
-              >
-                {t.contact.phoneSupportNumber}
-              </a>
-            </div>
-
-            <div className="p-6 bg-card border border-border rounded-lg">
-              <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center mb-4">
-                <MapPin className="h-6 w-6 text-primary" />
-              </div>
-              <h3 className="text-lg font-semibold text-foreground mb-2">{t.contact.officeLocationTitle}</h3>
-              <p className="text-foreground/70 text-sm">
-                {t.contact.officeLocationAddress}
-              </p>
             </div>
           </div>
 
