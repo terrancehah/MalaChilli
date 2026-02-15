@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { LoginModal, RegisterModal } from '../components/auth';
 import { MerchantEnquiryForm } from '../components/merchant';
 import { SEO, LanguageSelector } from '../components/shared';
-import { ArrowRight, Gift, Percent, Share2, LayoutDashboard, Users, TrendingUp, Shield } from 'lucide-react';
+import { ArrowRight, Gift, Percent, Share2, LayoutDashboard, Users, TrendingUp, Shield, Check } from 'lucide-react';
 import { getTranslation } from '../translations';
 import { useLanguagePreference } from '../hooks/useLanguagePreference';
 
@@ -39,7 +39,7 @@ export default function HomePage() {
           <LanguageSelector language={language} onLanguageChange={setLanguage} />
           <button
             onClick={() => setShowLoginModal(true)}
-            className="px-6 py-2.5 text-base lg:text-lg font-semibold text-primary dark:text-primary-light hover:bg-primary/5 dark:hover:bg-gray-800 rounded-lg transition-colors cursor-pointer"
+            className="px-6 py-2.5 text-base lg:text-lg font-semibold text-primary dark:text-primary-light hover:bg-primary/5 dark:hover:bg-gray-800 rounded-lg transition-colors cursor-pointer focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 outline-none"
           >
             {t.home.login}
           </button>
@@ -63,20 +63,20 @@ export default function HomePage() {
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center w-full max-w-2xl mx-auto">
             {/* Primary CTA - Get Started with ping animation */}
             <div className="relative w-full sm:w-auto sm:flex-1 sm:max-w-[280px]">
-              <div className="absolute -inset-2 bg-primary rounded-full opacity-20" style={{animation: "ping 3s cubic-bezier(0, 0, 0.2, 1) infinite"}}></div>
+              <div className="absolute -inset-2 bg-primary rounded-full opacity-20 motion-safe:animate-[ping_3s_cubic-bezier(0,0,0.2,1)_infinite]"></div>
               <button
                 onClick={() => setShowRegisterModal(true)}
-                className="relative w-full px-10 py-5 bg-primary text-white text-lg lg:text-xl xl:text-2xl font-semibold rounded-full shadow-md hover:shadow-lg active:shadow-none active:scale-95 transition-all duration-200 flex items-center justify-center gap-3 group cursor-pointer"
+                className="relative w-full px-10 py-5 bg-primary text-white text-lg lg:text-xl xl:text-2xl font-semibold rounded-full shadow-md hover:shadow-lg active:opacity-90 transition-all duration-200 flex items-center justify-center gap-3 group cursor-pointer focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-primary outline-none"
               >
                 {t.home.getStarted}
-                <ArrowRight className="w-6 h-6 lg:w-7 lg:h-7 group-hover:translate-x-1 transition-transform" />
+                <ArrowRight className="w-6 h-6 lg:w-7 lg:h-7 motion-safe:group-hover:translate-x-1 transition-transform" />
               </button>
             </div>
             
             {/* Secondary CTA - Demo */}
             <Link
               to="/demo"
-              className="w-full sm:w-auto sm:flex-1 sm:max-w-[280px] px-10 py-5 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 text-lg lg:text-xl xl:text-2xl font-semibold rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 active:scale-95 transition-all duration-200 flex items-center justify-center gap-3 cursor-pointer"
+              className="w-full sm:w-auto sm:flex-1 sm:max-w-[280px] px-10 py-5 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 text-lg lg:text-xl xl:text-2xl font-semibold rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 active:opacity-90 transition-all duration-200 flex items-center justify-center gap-3 cursor-pointer focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 outline-none"
             >
               <LayoutDashboard className="w-6 h-6 lg:w-7 lg:h-7" />
               <span>{t.home.demo}</span>
@@ -87,8 +87,8 @@ export default function HomePage() {
         {/* Features Grid */}
         <div className="mt-20 sm:mt-24 grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8 max-w-6xl mx-auto">
           {/* Feature 1 */}
-          <div className="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-md hover:shadow-lg hover:-translate-y-1 transition-all duration-300 border border-gray-100 dark:border-gray-700">
-            <div className="w-14 h-14 bg-primary/10 rounded-xl flex items-center justify-center mb-6 text-primary group-hover:scale-110 transition-transform duration-300">
+          <div className="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 border border-gray-100 dark:border-gray-700 cursor-pointer focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 outline-none" tabIndex={0}>
+            <div className="w-14 h-14 bg-primary/10 rounded-xl flex items-center justify-center mb-6 text-primary motion-safe:group-hover:scale-110 transition-transform duration-300">
               <Percent className="w-7 h-7" />
             </div>
             <h3 className="text-xl lg:text-2xl xl:text-3xl font-bold mb-3 lg:mb-4 text-gray-900 dark:text-white">{t.home.feature1Title}</h3>
@@ -96,14 +96,14 @@ export default function HomePage() {
               {t.home.feature1Desc}
             </p>
             <div className="inline-flex items-center gap-2 text-sm lg:text-base font-semibold text-primary">
-              <span className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse"></span>
+              <span className="h-1.5 w-1.5 rounded-full bg-primary motion-safe:animate-pulse"></span>
               <span>{t.home.feature1Badge}</span>
             </div>
           </div>
           
           {/* Feature 2 */}
-          <div className="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-md hover:shadow-lg hover:-translate-y-1 transition-all duration-300 border border-gray-100 dark:border-gray-700">
-            <div className="w-14 h-14 bg-primary/10 rounded-xl flex items-center justify-center mb-6 text-primary group-hover:scale-110 transition-transform duration-300">
+          <div className="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 border border-gray-100 dark:border-gray-700 cursor-pointer focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 outline-none" tabIndex={0}>
+            <div className="w-14 h-14 bg-primary/10 rounded-xl flex items-center justify-center mb-6 text-primary motion-safe:group-hover:scale-110 transition-transform duration-300">
               <Share2 className="w-7 h-7" />
             </div>
             <h3 className="text-xl lg:text-2xl xl:text-3xl font-bold mb-3 lg:mb-4 text-gray-900 dark:text-white">{t.home.feature2Title}</h3>
@@ -111,14 +111,14 @@ export default function HomePage() {
               {t.home.feature2Desc}
             </p>
             <div className="inline-flex items-center gap-2 text-sm lg:text-base font-semibold text-primary">
-              <span className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse"></span>
+              <span className="h-1.5 w-1.5 rounded-full bg-primary motion-safe:animate-pulse"></span>
               <span>{t.home.feature2Badge}</span>
             </div>
           </div>
           
           {/* Feature 3 */}
-          <div className="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-md hover:shadow-lg hover:-translate-y-1 transition-all duration-300 border border-gray-100 dark:border-gray-700">
-            <div className="w-14 h-14 bg-primary/10 rounded-xl flex items-center justify-center mb-6 text-primary group-hover:scale-110 transition-transform duration-300">
+          <div className="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 border border-gray-100 dark:border-gray-700 cursor-pointer focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 outline-none" tabIndex={0}>
+            <div className="w-14 h-14 bg-primary/10 rounded-xl flex items-center justify-center mb-6 text-primary motion-safe:group-hover:scale-110 transition-transform duration-300">
               <Gift className="w-7 h-7" />
             </div>
             <h3 className="text-xl lg:text-2xl xl:text-3xl font-bold mb-3 lg:mb-4 text-gray-900 dark:text-white">{t.home.feature3Title}</h3>
@@ -126,7 +126,7 @@ export default function HomePage() {
               {t.home.feature3Desc}
             </p>
             <div className="inline-flex items-center gap-2 text-sm lg:text-base font-semibold text-primary">
-              <span className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse"></span>
+              <span className="h-1.5 w-1.5 rounded-full bg-primary motion-safe:animate-pulse"></span>
               <span>{t.home.feature3Badge}</span>
             </div>
           </div>
@@ -146,31 +146,31 @@ export default function HomePage() {
                 <ul className="space-y-3 lg:space-y-4 mb-8 lg:mb-10">
                   <li className="flex items-start gap-3">
                     <div className="w-6 h-6 lg:w-7 lg:h-7 rounded-full bg-white/20 flex items-center justify-center flex-shrink-0 mt-0.5">
-                      <span className="text-sm lg:text-base">✓</span>
+                      <Check className="w-3.5 h-3.5 lg:w-4 lg:h-4" />
                     </div>
                     <span className="text-base lg:text-lg xl:text-xl">{t.home.merchantPoint1}</span>
                   </li>
                   <li className="flex items-start gap-3">
                     <div className="w-6 h-6 lg:w-7 lg:h-7 rounded-full bg-white/20 flex items-center justify-center flex-shrink-0 mt-0.5">
-                      <span className="text-sm lg:text-base">✓</span>
+                      <Check className="w-3.5 h-3.5 lg:w-4 lg:h-4" />
                     </div>
                     <span className="text-base lg:text-lg xl:text-xl">{t.home.merchantPoint2}</span>
                   </li>
                   <li className="flex items-start gap-3">
                     <div className="w-6 h-6 lg:w-7 lg:h-7 rounded-full bg-white/20 flex items-center justify-center flex-shrink-0 mt-0.5">
-                      <span className="text-sm lg:text-base">✓</span>
+                      <Check className="w-3.5 h-3.5 lg:w-4 lg:h-4" />
                     </div>
                     <span className="text-base lg:text-lg xl:text-xl">{t.home.merchantPoint3}</span>
                   </li>
                 </ul>
                 <button
                   onClick={() => setShowMerchantEnquiry(true)}
-                  className="bg-white text-primary px-8 lg:px-10 py-4 lg:py-5 rounded-full font-bold text-lg lg:text-xl xl:text-2xl hover:bg-gray-50 active:scale-95 transition-all duration-200 shadow-lg"
+                  className="bg-white text-primary px-8 lg:px-10 py-4 lg:py-5 rounded-full font-bold text-lg lg:text-xl xl:text-2xl hover:bg-gray-50 active:opacity-90 transition-all duration-200 shadow-lg focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-primary outline-none"
                 >
                   {t.home.merchantCTA}
                 </button>
               </div>
-              <div className="hidden md:block h-full min-h-[400px] bg-cover bg-center" style={{backgroundImage: "url('https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=800&q=80')"}}>
+              <div className="hidden md:block h-full min-h-[400px] bg-cover bg-center" style={{backgroundImage: "url('https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=800&q=80')"}} role="img" aria-label="Restaurant interior with dining atmosphere">
                 <div className="w-full h-full bg-gradient-to-l from-transparent to-primary/20"></div>
               </div>
             </div>
