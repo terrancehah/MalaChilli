@@ -225,7 +225,7 @@ export default function StaffDashboard() {
       onRefresh={handleRefresh}
       pullingContent={
         <div className="flex justify-center py-4">
-          <div className="text-gray-600 text-sm flex items-center gap-2">
+          <div className="text-gray-600 text-xs sm:text-sm flex items-center gap-2">
             <Loader2 className="h-5 w-5 animate-spin text-primary" />
             Pull to refresh
           </div>
@@ -291,7 +291,7 @@ export default function StaffDashboard() {
         <div className="max-w-7xl mx-auto px-6 mt-6 space-y-6">
           {/* Quick Actions */}
           <div>
-            <h2 className="text-xl md:text-2xl font-bold text-foreground mb-4">
+            <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-foreground mb-4">
               {t.staffDashboard.quickActions}
             </h2>
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
@@ -302,7 +302,7 @@ export default function StaffDashboard() {
                 size="lg"
               >
                 <QrCode className="!h-12 !w-12 md:!h-14 md:!w-14 text-white group-hover:scale-110 transition-transform duration-300" />
-                <span className="text-base md:text-lg font-semibold text-white">
+                <span className="text-sm sm:text-base md:text-lg font-semibold text-white">
                   {t.staffDashboard.scanForCheckout}
                 </span>
               </Button>
@@ -315,7 +315,7 @@ export default function StaffDashboard() {
                 size="lg"
               >
                 <Package className="!h-12 !w-12 md:!h-14 md:!w-14 text-primary/80 group-hover:text-primary group-hover:scale-110 transition-all duration-300" />
-                <span className="text-base md:text-lg font-semibold text-primary-dark">
+                <span className="text-sm sm:text-base md:text-lg font-semibold text-primary-dark">
                   {t.staffDashboard.menuItems}
                 </span>
               </Button>
@@ -328,7 +328,7 @@ export default function StaffDashboard() {
                 size="lg"
               >
                 <Edit className="!h-12 !w-12 md:!h-14 md:!w-14 text-primary/80 group-hover:text-primary group-hover:scale-110 transition-all duration-300" />
-                <span className="text-base md:text-lg font-semibold text-primary-dark">
+                <span className="text-sm sm:text-base md:text-lg font-semibold text-primary-dark">
                   {t.staffDashboard.editCustomer}
                 </span>
               </Button>
@@ -341,7 +341,7 @@ export default function StaffDashboard() {
                 size="lg"
               >
                 <Camera className="!h-12 !w-12 md:!h-14 md:!w-14 text-primary/80 group-hover:text-primary group-hover:scale-110 transition-all duration-300" />
-                <span className="text-base md:text-lg font-semibold text-primary-dark">
+                <span className="text-sm sm:text-base md:text-lg font-semibold text-primary-dark">
                   {t.staffDashboard.scanReceipt}
                 </span>
               </Button>
@@ -354,7 +354,7 @@ export default function StaffDashboard() {
                 size="lg"
               >
                 <Receipt className="!h-12 !w-12 md:!h-14 md:!w-14 text-primary/80 group-hover:text-primary group-hover:scale-110 transition-all duration-300" />
-                <span className="text-base md:text-lg font-semibold text-primary-dark">
+                <span className="text-sm sm:text-base md:text-lg font-semibold text-primary-dark">
                   {t.staffDashboard.viewTransactions}
                 </span>
               </Button>

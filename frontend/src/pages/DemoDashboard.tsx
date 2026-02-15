@@ -239,7 +239,7 @@ export default function DemoDashboard() {
       />
       {/* Demo Banner - Enhanced with better visual hierarchy */}
       <div className="bg-gradient-to-r from-orange-100 to-orange-50 dark:from-orange-900/30 dark:to-orange-800/20 border-b border-orange-200 dark:border-orange-800 px-6 py-3.5 backdrop-blur-sm shadow-sm">
-        <p className="text-center text-sm text-orange-900 dark:text-orange-100 font-semibold tracking-wide">
+        <p className="text-center text-xs sm:text-sm text-orange-900 dark:text-orange-100 font-semibold tracking-wide">
           <span className="inline-flex items-center gap-2">
             <span className="h-2 w-2 rounded-full bg-orange-500 animate-pulse" />
             <strong>Demo Mode</strong> - This is a preview with sample data.
@@ -279,10 +279,10 @@ export default function DemoDashboard() {
         <div>
           <div className="flex items-center justify-between mb-5">
             <div className="space-y-1">
-              <h2 className="text-2xl font-display font-bold text-primary-dark tracking-tight">
+              <h2 className="text-xl sm:text-2xl font-display font-bold text-primary-dark tracking-tight">
                 🍽️ Promote Restaurants
               </h2>
-              <p className="text-sm text-gray-600 dark:text-gray-400 font-medium">
+              <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 font-medium">
                 Share codes for restaurants you've visited and earn rewards
               </p>
             </div>
@@ -306,10 +306,10 @@ export default function DemoDashboard() {
                   </div>
                   <div className="absolute top-0 left-1/2 -translate-x-1/2 h-20 w-20 rounded-full bg-primary/5 animate-ping" />
                 </div>
-                <p className="text-gray-700 dark:text-gray-300 text-base font-semibold mb-2">
+                <p className="text-gray-700 dark:text-gray-300 text-sm sm:text-base font-semibold mb-2">
                   No visited restaurants yet
                 </p>
-                <p className="text-sm text-gray-500 dark:text-gray-400 max-w-xs mx-auto leading-relaxed">
+                <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400 max-w-xs mx-auto leading-relaxed">
                   Visit a restaurant and make your first transaction to start promoting and earning rewards!
                 </p>
               </CardContent>
@@ -338,10 +338,10 @@ export default function DemoDashboard() {
         <div>
           <div className="flex items-center justify-between mb-5">
             <div className="space-y-1">
-              <h2 className="text-2xl font-display font-bold text-primary-dark tracking-tight">
+              <h2 className="text-xl sm:text-2xl font-display font-bold text-primary-dark tracking-tight">
                 📝 Recent Transactions
               </h2>
-              <p className="text-sm text-gray-600 dark:text-gray-400 font-medium">
+              <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 font-medium">
                 Track your dining history and rewards
               </p>
             </div>
@@ -360,7 +360,7 @@ export default function DemoDashboard() {
               <p className="text-sm text-gray-500 dark:text-gray-400 max-w-md mx-auto leading-relaxed">
                 Start dining at our partner restaurants to earn rewards and build your transaction history!
               </p>
-              <div className="mt-6 inline-flex items-center gap-2 text-xs text-primary font-medium">
+              <div className="mt-6 inline-flex items-center gap-2 text-xs sm:text-sm text-primary font-medium">
                 <span className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse" />
                 Ready to get started
               </div>
