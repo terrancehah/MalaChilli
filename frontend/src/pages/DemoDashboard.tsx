@@ -19,6 +19,7 @@ import {
 import { DashboardHeader } from "../components/shared/DashboardHeader";
 import { StatsCard } from "../components/shared/StatsCard";
 import { SEO } from "../components/shared";
+import { getTranslation } from "../translations";
 
 // TypeScript interfaces
 interface RestaurantCode {
@@ -69,45 +70,6 @@ const getTimeAgo = (dateString: string): string => {
   const months = Math.floor(diffInDays / 30);
   return months === 1 ? "1 month ago" : `${months} months ago`;
 };
-
-// Info modal content
-const RESTAURANT_INFO = [
-  {
-    text: "Visit a restaurant and make a transaction to unlock promotion for that restaurant",
-  },
-  {
-    text: "Generate your unique referral code for each restaurant you've visited",
-  },
-  {
-    text: "Share your referral link with friends via WhatsApp, Facebook, or copy the link",
-  },
-  {
-    text: "When someone uses your link and makes their first transaction at that restaurant, you both earn virtual currency",
-  },
-] as const;
-
-const CURRENCY_INFO = [
-  {
-    text: "<strong>Restaurant-Specific:</strong> Each restaurant has its own separate virtual currency balance",
-  },
-  {
-    text: "Earn virtual currency by referring friends to specific restaurants",
-  },
-  {
-    text: "Currency earned from one restaurant can only be redeemed at that same restaurant",
-  },
-  {
-    text: "This ensures fair distribution and prevents exploitation across different restaurants",
-  },
-  {
-    text: "<strong>Earned:</strong> Total virtual currency you've earned from referrals at this restaurant",
-    color: "green" as const,
-  },
-  {
-    text: "<strong>Redeemed:</strong> Total amount you've used for discounts at this restaurant",
-    color: "primary" as const,
-  },
-];
 
 // Sample user data for demo
 const demoUser = {
@@ -186,6 +148,9 @@ const mockVisitedRestaurants: VisitedRestaurant[] = [
 ];
 
 export default function DemoDashboard() {
+  // Get translations (demo uses English)
+  const t = getTranslation('en');
+  
   // Modal states
   const [showQR, setShowQR] = useState(false);
   const [showInfoModal, setShowInfoModal] = useState(false);
@@ -200,6 +165,23 @@ export default function DemoDashboard() {
     code: string;
     balance: number;
   } | null>(null);
+
+  // Info modal content from translations
+  const restaurantInfoItems = [
+    { text: t.dashboardInfo.restaurantInfo.item1 },
+    { text: t.dashboardInfo.restaurantInfo.item2 },
+    { text: t.dashboardInfo.restaurantInfo.item3 },
+    { text: t.dashboardInfo.restaurantInfo.item4 },
+  ];
+
+  const currencyInfoItems = [
+    { text: t.dashboardInfo.currencyInfo.item1 },
+    { text: t.dashboardInfo.currencyInfo.item2 },
+    { text: t.dashboardInfo.currencyInfo.item3 },
+    { text: t.dashboardInfo.currencyInfo.item4 },
+    { text: t.dashboardInfo.currencyInfo.item5, color: "green" as const },
+    { text: t.dashboardInfo.currencyInfo.item6, color: "primary" as const },
+  ];
 
   // Prevent body scroll when bottom sheet is open
   useEffect(() => {
@@ -398,15 +380,15 @@ export default function DemoDashboard() {
       <InfoModal
         isOpen={showInfoModal}
         onClose={() => setShowInfoModal(false)}
-        title="How It Works"
-        items={RESTAURANT_INFO}
+        title={t.dashboardInfo.restaurantInfo.title}
+        items={restaurantInfoItems}
       />
 
       <InfoModal
         isOpen={showCurrencyInfoModal}
         onClose={() => setShowCurrencyInfoModal(false)}
-        title="Restaurant-Specific Virtual Currency"
-        items={CURRENCY_INFO}
+        title={t.dashboardInfo.currencyInfo.title}
+        items={currencyInfoItems}
       />
 
       <SettingsPanel
