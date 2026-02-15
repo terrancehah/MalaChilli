@@ -170,7 +170,7 @@ export default function MerchantDashboard() {
       onRefresh={handleRefresh}
       pullingContent={
         <div className="flex justify-center py-4">
-          <div className="text-gray-600 text-sm flex items-center gap-2">
+          <div className="text-gray-600 text-xs sm:text-sm flex items-center gap-2">
             <Loader2 className="h-5 w-5 animate-spin text-primary" />
             Pull to refresh
           </div>

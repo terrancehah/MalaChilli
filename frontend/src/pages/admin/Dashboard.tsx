@@ -88,7 +88,7 @@ export default function AdminDashboard() {
       onRefresh={handleRefresh}
       pullingContent={
         <div className="flex justify-center py-4">
-          <div className="text-gray-600 text-sm flex items-center gap-2">
+          <div className="text-gray-600 text-xs sm:text-sm flex items-center gap-2">
             <Loader2 className="h-5 w-5 animate-spin text-primary" />
             Pull to refresh
           </div>
@@ -142,10 +142,10 @@ export default function AdminDashboard() {
             <Card>
               <CardContent className="p-6 flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-gray-500 font-medium">
+                  <p className="text-xs sm:text-sm text-gray-500 font-medium">
                     Total Users
                   </p>
-                  <h3 className="text-2xl font-bold text-gray-900 mt-1">
+                  <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mt-1">
                     {loading ? "..." : stats.totalUsers}
                   </h3>
                 </div>
@@ -158,8 +158,8 @@ export default function AdminDashboard() {
             <Card>
               <CardContent className="p-6 flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-gray-500 font-medium">Merchants</p>
-                  <h3 className="text-2xl font-bold text-gray-900 mt-1">
+                  <p className="text-xs sm:text-sm text-gray-500 font-medium">Merchants</p>
+                  <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mt-1">
                     {loading ? "..." : stats.totalMerchants}
                   </h3>
                 </div>
@@ -172,10 +172,10 @@ export default function AdminDashboard() {
             <Card>
               <CardContent className="p-6 flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-gray-500 font-medium">
+                  <p className="text-xs sm:text-sm text-gray-500 font-medium">
                     Staff Members
                   </p>
-                  <h3 className="text-2xl font-bold text-gray-900 mt-1">
+                  <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mt-1">
                     {loading ? "..." : stats.totalStaff}
                   </h3>
                 </div>
@@ -188,10 +188,10 @@ export default function AdminDashboard() {
             <Card>
               <CardContent className="p-6 flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-gray-500 font-medium">
+                  <p className="text-xs sm:text-sm text-gray-500 font-medium">
                     Total Transactions
                   </p>
-                  <h3 className="text-2xl font-bold text-gray-900 mt-1">
+                  <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mt-1">
                     {loading ? "..." : stats.totalTransactions}
                   </h3>
                 </div>
@@ -204,7 +204,7 @@ export default function AdminDashboard() {
 
           {/* Quick Actions */}
           <div className="mb-8">
-            <h2 className="text-xl md:text-2xl font-bold text-foreground mb-4">
+            <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-foreground mb-4">
               Management
             </h2>
             <div className="flex gap-4">

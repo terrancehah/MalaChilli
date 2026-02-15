@@ -400,7 +400,7 @@ export default function CustomerDashboard() {
       onRefresh={handleRefresh}
       pullingContent={
         <div className="flex justify-center py-4">
-          <div className="text-gray-600 text-sm flex items-center gap-2">
+          <div className="text-gray-600 text-xs sm:text-sm flex items-center gap-2">
             <Loader2 className="h-5 w-5 animate-spin text-primary" />
             Pull to refresh
           </div>
@@ -458,7 +458,7 @@ export default function CustomerDashboard() {
               <div className="flex items-start justify-between mb-3">
                 <div>
                   <div className="flex items-center gap-1 mb-1">
-                    <h2 className="text-xl font-bold text-foreground">
+                    <h2 className="text-lg sm:text-xl font-bold text-foreground">
                       {t.promoteRestaurants.title}
                     </h2>
                     <Button
@@ -471,7 +471,7 @@ export default function CustomerDashboard() {
                       <Info className="h-4 w-4 text-muted-foreground" />
                     </Button>
                   </div>
-                  <p className="text-sm text-muted-foreground">
+                  <p className="text-xs sm:text-sm text-muted-foreground">
                     {t.promoteRestaurants.subtitle}
                   </p>
                 </div>
@@ -531,7 +531,7 @@ export default function CustomerDashboard() {
             ) : restaurantCodes.length === 0 ? (
               <Card variant="default">
                 <CardContent className="p-12 text-center">
-                  <p className="text-lg font-semibold text-muted-foreground mb-2">
+                  <p className="text-base sm:text-lg font-semibold text-muted-foreground mb-2">
                     {t.promoteRestaurants.noRestaurants}
                   </p>
                   <p className="text-xs text-muted-foreground">
