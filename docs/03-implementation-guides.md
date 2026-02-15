@@ -3,7 +3,7 @@
 ## MakanTak - Developer Handbook
 
 **Document Type:** Implementation Guide  
-**Last Updated:** 2026-02-05 (Auth Security Enhancements)  
+**Last Updated:** 2026-02-16 (Responsive Typography Implementation)  
 **Covers:** Design System, Frontend Architecture, and Critical Feature Flows.
 
 ---
@@ -59,6 +59,37 @@ including typography, colors, spacing, components, and state patterns.
 * **Touch-Optimized:** Min 44px touch targets.
 * **Shadow Depth:** Use shadows to simulate physical button presses (`shadow-md` -> `shadow-sm` on press).
 * **QR Scanner:** `@yudiel/react-qr-scanner` library with 256x256px transparent cutout.
+
+### Responsive Typography Implementation (Feb 2026)
+
+**Overview:** All pages now use mobile-first responsive typography following industry best practices.
+
+**Implementation Pattern:**
+```tsx
+// Landing Page (Text-Heavy)
+<h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl">Hero Title</h1>
+<p className="text-base sm:text-lg">Body text</p>
+
+// Dashboard Pages (Interaction-Heavy)
+<h2 className="text-lg sm:text-xl md:text-2xl">Section Heading</h2>
+<p className="text-sm sm:text-base">Body text</p>
+```
+
+**Key Principles:**
+- **16px minimum** on mobile for body text (iOS requirement)
+- **2-3 breakpoints maximum** (sm, md, lg) - avoid excessive scaling
+- **Text-heavy pages** use larger base sizes (16-18px)
+- **Interaction-heavy pages** use smaller base sizes (14-16px)
+
+**Files Updated:**
+- `frontend/src/pages/HomePage.tsx` - Landing page typography
+- `frontend/src/pages/customer/Dashboard.tsx` - Customer dashboard
+- `frontend/src/pages/staff/Dashboard.tsx` - Staff dashboard
+- `frontend/src/pages/merchant/Dashboard.tsx` - Merchant dashboard
+- `frontend/src/pages/admin/Dashboard.tsx` - Admin dashboard
+- `frontend/src/pages/DemoDashboard.tsx` - Demo dashboard
+
+**Research Source:** LearnUI.design responsive typography guidelines
 
 ---
 

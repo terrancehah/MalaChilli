@@ -3,7 +3,7 @@
 ## MakanTak - Visual Design Standards
 
 **Document Type:** Design System Reference  
-**Last Updated:** 2025-12-25  
+**Last Updated:** 2026-02-16  
 **Status:** Active - All components should follow these standards
 
 ---
@@ -33,6 +33,41 @@
 |**Micro**|10px|`text-[10px]`|Badges, tags, fine print only|
 
 > **Rule:** Avoid arbitrary sizes. Use `text-[10px]` sparingly for badges/tags only.
+
+### Responsive Typography Implementation
+
+**Mobile-First Approach:** All typography follows a mobile-first responsive design pattern using Tailwind's breakpoint system.
+
+#### Landing Page (Text-Heavy Design)
+- **Hero Title**: `text-3xl sm:text-4xl md:text-5xl lg:text-6xl` (30px → 36px → 48px → 60px)
+- **Hero Tagline**: `text-lg sm:text-xl md:text-2xl` (18px → 20px → 24px)
+- **Section Titles**: `text-2xl sm:text-3xl md:text-4xl` (24px → 30px → 36px)
+- **Card Titles**: `text-lg sm:text-xl` (18px → 20px)
+- **Body Text**: `text-base sm:text-lg` (16px → 18px)
+- **Buttons**: `text-base sm:text-lg` (16px → 18px)
+- **Footer Links**: `text-xs sm:text-sm` (12px → 14px)
+
+#### Dashboard Pages (Interaction-Heavy Design)
+- **Section Headings**: `text-lg sm:text-xl md:text-2xl` (18px → 20px → 24px)
+- **Stats Values**: `text-xl sm:text-2xl` (20px → 24px)
+- **Stats Labels**: `text-xs sm:text-sm` (12px → 14px)
+- **Button Labels**: `text-sm sm:text-base md:text-lg` (14px → 16px → 18px)
+- **Body Text**: `text-sm sm:text-base` (14px → 16px)
+- **Captions**: `text-xs sm:text-sm` (12px → 14px)
+
+#### Breakpoints
+- **sm**: 640px (Mobile landscape, small tablets)
+- **md**: 768px (Tablets)
+- **lg**: 1024px (Desktop)
+
+#### Industry Standards Applied
+- **16px minimum** on mobile for body text (iOS requirement to prevent zoom on input focus)
+- **Text-heavy pages** (landing): Larger base sizes (16-18px body text)
+- **Interaction-heavy pages** (dashboards): Smaller base sizes (14-16px body text)
+- **Proper scaling**: 2-3 breakpoints maximum to avoid excessive complexity
+
+> **Implementation Date:** February 2026  
+> **Research Source:** LearnUI.design responsive typography guidelines
 
 ### Font Weights
 
