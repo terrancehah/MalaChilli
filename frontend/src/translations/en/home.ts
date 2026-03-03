@@ -3,7 +3,7 @@ export const home = {
   title: 'MakanTak',
   tagline: 'Earn rewards by sharing. Save on every meal.',
   subtitle: 'The viral restaurant discount platform.',
-  getStarted: 'Get Started',
+  getStarted: 'Join now',
   login: 'Login',
   demo: 'Demo',
   
@@ -26,7 +26,7 @@ export const home = {
   merchantPoint1: 'Max 8% marketing cost - only pay when customers dine',
   merchantPoint2: 'Build your own customer referral network',
   merchantPoint3: 'Track ROI with real-time analytics dashboard',
-  merchantCTA: 'Get Started',
+  merchantCTA: 'Partner with us',
   
   // About Section
   aboutTitle: 'Why MakanTak?',

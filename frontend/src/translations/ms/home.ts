@@ -3,7 +3,7 @@ export const home = {
   title: 'MakanTak',
   tagline: 'Peroleh ganjaran dengan berkongsi. Jimat setiap kali makan.',
   subtitle: 'Platform diskaun restoran yang viral.',
-  getStarted: 'Mulakan',
+  getStarted: 'Sertai sekarang',
   login: 'Log Masuk',
   demo: 'Demo',
   
@@ -26,7 +26,7 @@ export const home = {
   merchantPoint1: 'Kos pemasaran maksimum 8% - bayar hanya apabila pelanggan makan',
   merchantPoint2: 'Bina rangkaian rujukan pelanggan anda sendiri',
   merchantPoint3: 'Jejak ROI dengan papan pemuka analitik masa nyata',
-  merchantCTA: 'Mulakan',
+  merchantCTA: 'Rakan kongsi kami',
   
   // About Section
   aboutTitle: 'Mengapa MakanTak?',
