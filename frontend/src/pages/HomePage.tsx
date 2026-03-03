@@ -32,14 +32,15 @@ export default function HomePage() {
       
       {/* Header */}
       <header className="w-full px-8 sm:px-10 lg:px-12 py-4 flex justify-between items-center">
-        <Link to="/" className="text-2xl font-display font-bold text-gray-900 dark:text-white">
+        <Link to="/" className="flex items-center gap-2 text-2xl font-display font-bold text-gray-900 dark:text-white">
+          <img src="/logo.png" alt="MakanTak logo" className="h-8 w-8" />
           {t.home.title}
         </Link>
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-3">
           <LanguageSelector language={language} onLanguageChange={setLanguage} />
           <button
             onClick={() => setShowLoginModal(true)}
-            className="px-6 py-2.5 text-base font-semibold text-primary dark:text-primary-light hover:bg-primary/5 dark:hover:bg-gray-800 rounded-lg transition-colors cursor-pointer focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 outline-none"
+            className="px-2 py-2.5 w-min break-keep text-base font-semibold text-primary dark:text-primary-light hover:bg-primary/5 dark:hover:bg-gray-800 rounded-lg transition-colors cursor-pointer focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 outline-none"
           >
             {t.home.login}
           </button>
@@ -233,9 +234,12 @@ export default function HomePage() {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
             {/* Brand Column */}
             <div className="md:col-span-1">
-              <h3 className="text-base sm:text-lg font-bold text-gray-900 dark:text-white mb-3">
-                {t.home.title}
-              </h3>
+              <div className="flex items-center gap-2 mb-3">
+                <img src="/logo.png" alt="MakanTak logo" className="h-6 w-6" />
+                <h3 className="text-base sm:text-lg font-bold text-gray-900 dark:text-white">
+                  {t.home.title}
+                </h3>
+              </div>
               <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
                 {t.home.footerTagline}
               </p>

@@ -17,6 +17,7 @@
 ## 💡 Key Technical Skills Demonstrated
 
 ### Full-Stack Development
+
 - Type-safe React components with TypeScript
 - Responsive mobile-first UI with Tailwind CSS
 - Multi-language support (English, Bahasa Malaysia, Simplified Chinese)
@@ -24,12 +25,14 @@
 - RESTful API integration with Supabase client
 
 ### Database & Backend
+
 - Complex PostgreSQL schema design with relational integrity
 - Row-Level Security (RLS) policies for data isolation
 - JWT-based authentication with bcrypt password hashing
 - Database views and stored procedures for business logic
 
 ### Modern Development Practices
+
 - Component-driven development with shadcn/ui
 - Git workflow with feature branches
 - ESLint + Prettier for code quality
@@ -51,6 +54,7 @@
 ## 📱 Screenshots
 
 ### Total Virtual Currency Stats
+
 Centralized stats card showing total earnings and savings across all restaurants, giving users a complete overview of their loyalty rewards throughout their app lifecycle.
 
 <div align="center">
@@ -59,6 +63,7 @@ Centralized stats card showing total earnings and savings across all restaurants
 </div>
 
 ### Restaurant-Specific Transaction Details
+
 Minimal transaction details cards displaying transaction details, unrealised VC earnings, and applied discounts.
 
 <div align="center">
@@ -67,6 +72,7 @@ Minimal transaction details cards displaying transaction details, unrealised VC 
 </div>
 
 ### How It Works Modal
+
 Information modal explaining the restaurant promotion mechanism and virtual currency earning system.
 
 <div align="center">
@@ -75,6 +81,7 @@ Information modal explaining the restaurant promotion mechanism and virtual curr
 </div>
 
 ### Swipeable Share Bottom Sheet
+
 Mobile-optimized bottom sheet with organized sharing options: referral link, social media buttons (WhatsApp, Facebook), and promotion code.
 
 <div align="center">
@@ -86,7 +93,7 @@ Mobile-optimized bottom sheet with organized sharing options: referral link, soc
 
 ## � Contact
 
-For inquiries or support, reach us at: **support@makantak.com**
+For inquiries or support, reach us at: **<support@makantak.com>**
 
 ---
 

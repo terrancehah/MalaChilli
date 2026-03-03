@@ -245,6 +245,8 @@ export default function RegisterPage() {
 
       <div className="max-w-md w-full space-y-8 glass-modal dark:bg-gray-800 dark:border-gray-700 p-8 sm:p-10 relative z-10">
         <div className="text-center">
+          {/* Logo */}
+          <img src="/logo.png" alt="MakanTak logo" className="h-20 w-20 mx-auto mb-4" />
           <h2 className="text-3xl font-display font-bold text-primary-dark dark:text-primary-light">
             Create Account
           </h2>

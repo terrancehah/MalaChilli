@@ -17,6 +17,7 @@ export default function Register() {
         <div className="w-full max-w-md bg-white rounded-card shadow-2xl p-12">
           {/* Logo */}
           <div className="text-center mb-10">
+            <img src="/logo.png" alt="MakanTak logo" className="h-16 w-16 mx-auto mb-3" />
             <h1 className="font-display text-5xl mb-2">
               <span className="text-gray-900">Makan</span>
               <span className="text-primary">Tak</span>

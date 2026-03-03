@@ -3,7 +3,7 @@ export const home = {
   title: 'MakanTak',
   tagline: '分享赚奖励，每餐都省钱。',
   subtitle: '马来西亚餐厅推荐奖励平台。',
-  getStarted: '立即开始',
+  getStarted: '立即加入',
   login: '登录',
   demo: '演示',
   
@@ -26,7 +26,7 @@ export const home = {
   merchantPoint1: '最高8%营销成本 - 仅在顾客用餐时付费',
   merchantPoint2: '建立您自己的顾客推荐网络',
   merchantPoint3: '通过实时分析仪表板追踪投资回报率',
-  merchantCTA: '立即开始',
+  merchantCTA: '与我们合作',
   
   // About Section
   aboutTitle: '为什么选择MakanTak？',
