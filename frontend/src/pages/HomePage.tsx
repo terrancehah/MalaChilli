@@ -32,7 +32,7 @@ export default function HomePage() {
       
       {/* Header */}
       <header className="w-full px-8 sm:px-10 lg:px-12 py-4 flex justify-between items-center">
-        <Link to="/" className="flex items-center gap-2 text-2xl font-display font-bold text-gray-900 dark:text-white">
+        <Link to="/" className="flex items-center gap-2 text-2xl font-display font-bold text-primary dark:text-primary-light">
           <img src="/logo.png" alt="MakanTak logo" className="h-8 w-8" />
           {t.home.title}
         </Link>
@@ -50,7 +50,7 @@ export default function HomePage() {
       {/* Hero Section */}
       <div className="w-full px-8 sm:px-10 lg:px-12 pt-8 pb-8 sm:pt-16 sm:pb-16 lg:pt-20 lg:pb-20">
         <div className="text-center max-w-4xl mx-auto">
-          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight text-gray-900 dark:text-white mb-6">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight text-gray-900 dark:text-white mb-3">
             {t.home.title}
           </h1>
           <p className="text-lg sm:text-xl md:text-2xl text-gray-600 dark:text-gray-300 mb-2 max-w-3xl mx-auto leading-relaxed">
