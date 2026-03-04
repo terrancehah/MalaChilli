@@ -31,10 +31,10 @@ export default function HomePage() {
       <SEO title="Home" description="MakanTak - Share the savings, grow the community. The viral restaurant discount platform." />
       
       {/* Header */}
-      <header className="w-full px-6 sm:px-10 lg:px-12 py-4 flex justify-between items-center">
-        <Link to="/" className="flex items-center gap-1 sm:gap-2 text-3xl font-display font-bold text-primary dark:text-primary-light">
-          <img src="/logo.png" alt="MakanTak logo" className="h-12 w-12" />
-          <span className="mt-2">{t.home.title}</span>
+      <header className="w-full px-8 sm:px-10 lg:px-12 py-4 flex justify-between items-center">
+        <Link to="/" className="flex items-center gap-2 text-2xl font-display font-bold text-primary dark:text-primary-light">
+          <img src="/logo.png" alt="MakanTak logo" className="h-8 w-8" />
+          {t.home.title}
         </Link>
         <div className="flex items-center gap-3">
           <LanguageSelector language={language} onLanguageChange={setLanguage} />
