@@ -66,9 +66,10 @@ export default {
         },
       },
       fontFamily: {
-        sans: ["Inter", "sans-serif"],
-        display: ["Quicksand", "sans-serif"], // Friendly, rounded headings
-        cursive: ["Pacifico", "cursive"],
+        sans: ["Zain", "serif"],
+        display: ["Comforter", "cursive"],
+        cursive: ["The Nautigal", "cursive"],
+        montserrat: ["Montserrat", "sans-serif"],
       },
       borderRadius: {
         lg: "var(--radius)",

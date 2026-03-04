@@ -15,7 +15,7 @@
 |Usage|Font|Tailwind Class|
 |-------|------|----------------|
 |**Headings**|Quicksand|`font-display` (auto-applied via CSS)|
-|**Body Text**|Inter|`font-sans` (default)|
+|**Body Text**|Montserrat|`font-montserrat` (default)|
 |**Decorative**|Pacifico|`font-cursive`|
 
 ### Type Scale

@@ -1,4 +1,5 @@
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Quicksand:wght@500;600;700&family=Pacifico&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Comforter&family=Montserrat:ital,wght@0,100..900;1,100..900&family=The+Nautigal:wght@400;700&family=Yellowtail&family=Zain:ital,wght@0,200;0,300;0,400;0,700;0,800;0,900;1,300;1,400&display=swap");
+
 
 @tailwind base;
 @tailwind components;
@@ -81,7 +82,7 @@
   }
   body {
     @apply bg-background text-foreground;
-    font-family: "Inter", system-ui, sans-serif;
+    font-family: "Montserrat", system-ui, sans-serif;
     background-image: radial-gradient(
         circle at 10% 20%,
         rgba(245, 231, 198, 0.4) 0%, /* Beige */
@@ -100,7 +101,7 @@
   h4,
   h5,
   h6 {
-    font-family: "Quicksand", sans-serif;
+    font-family: "Zain", serif;
   }
 }
 
