@@ -27,7 +27,7 @@ export default function HomePage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-orange-50 via-amber-50 to-background dark:from-gray-900 dark:to-gray-950 font-sans overflow-x-hidden">
+    <div className="min-h-screen bg-gradient-to-b from-orange-50 via-amber-50 to-background dark:from-gray-900 dark:to-gray-950 font-montserrat overflow-x-hidden">
       <SEO title="Home" description="MakanTak - Share the savings, grow the community. The viral restaurant discount platform." />
       
       {/* Header */}
@@ -53,7 +53,7 @@ export default function HomePage() {
           <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight text-gray-900 dark:text-white mb-3">
             {t.home.title}
           </h1>
-          <p className="text-lg sm:text-xl md:text-2xl text-gray-600 dark:text-gray-300 mb-2 max-w-3xl mx-auto leading-relaxed">
+          <p className="text-lg sm:text-xl md:text-2xl text-gray-600 dark:text-gray-300 mb-2 max-w-3xl mx-auto leading-snug">
             {t.home.tagline}
           </p>
           <p className="text-base sm:text-lg text-gray-500 dark:text-gray-400 mb-12 max-w-2xl mx-auto">
@@ -235,9 +235,9 @@ export default function HomePage() {
             {/* Brand Column */}
             <div className="md:col-span-1">
               <div className="flex items-center gap-2 mb-3">
-                <img src="/logo.png" alt="MakanTak logo" className="h-6 w-6" />
-                <h3 className="text-base sm:text-lg font-bold text-gray-900 dark:text-white">
-                  {t.home.title}
+                <img src="/logo.png" alt="MakanTak logo" className="h-12 w-12"/>
+                <h3 className="text-2xl sm:text-lg font-display font-bold">
+                  <span className="flex mt-2 text-primary dark:text-primary-light">{t.home.title}</span>
                 </h3>
               </div>
               <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
@@ -250,7 +250,7 @@ export default function HomePage() {
 
             {/* For Customers Column */}
             <div>
-              <h4 className="text-sm font-semibold text-gray-900 dark:text-white mb-4">
+              <h4 className="text-base font-semibold text-gray-900 dark:text-white mb-4">
                 {t.home.forCustomers}
               </h4>
               <ul className="space-y-3">
@@ -275,7 +275,7 @@ export default function HomePage() {
 
             {/* For Restaurants Column */}
             <div>
-              <h4 className="text-sm font-semibold text-gray-900 dark:text-white mb-4">
+              <h4 className="text-base font-semibold text-gray-900 dark:text-white mb-4">
                 {t.home.forRestaurants}
               </h4>
               <ul className="space-y-3">
@@ -292,7 +292,7 @@ export default function HomePage() {
 
             {/* Company Column */}
             <div>
-              <h4 className="text-sm font-semibold text-gray-900 dark:text-white mb-4">
+              <h4 className="text-base font-semibold text-gray-900 dark:text-white mb-4">
                 {t.home.company}
               </h4>
               <ul className="space-y-3">
