@@ -11,6 +11,9 @@ export default defineConfig({
       '@': path.resolve(__dirname, './src'),
     },
   },
+  build: {
+    sourcemap: true, // Enable source maps for production debugging
+  },
   test: {
     // Vitest configuration
     globals: true,
