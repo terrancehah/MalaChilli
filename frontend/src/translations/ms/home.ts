@@ -54,6 +54,6 @@ export const home = {
   contact: 'Hubungi',
   privacy: 'Dasar Privasi',
   terms: 'Terma Perkhidmatan',
-  copyright: '© 2025 MakanTak. Hak cipta terpelihara.',
+  copyright: '© 2026 MakanTak. Hak cipta terpelihara.',
   followUs: 'Ikuti kami di X',
 };

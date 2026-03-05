@@ -54,6 +54,6 @@ export const home = {
   contact: '联系我们',
   privacy: '隐私政策',
   terms: '服务条款',
-  copyright: '© 2025 MakanTak. 版权所有。',
+  copyright: '© 2026 MakanTak. 版权所有。',
   followUs: '在X上关注我们',
 };

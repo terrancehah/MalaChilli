@@ -54,6 +54,6 @@ export const home = {
   contact: 'Contact',
   privacy: 'Privacy Policy',
   terms: 'Terms of Service',
-  copyright: '© 2025 MakanTak. All rights reserved.',
+  copyright: '© 2026 MakanTak. All rights reserved.',
   followUs: 'Follow us on X',
 };
