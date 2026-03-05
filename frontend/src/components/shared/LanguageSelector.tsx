@@ -44,7 +44,7 @@ export function LanguageSelector({
     <div className="relative z-50" ref={containerRef}>
       <button
         className={cn(
-          "h-12 flex items-center gap-2 px-4 py-2 text-sm bg-white hover:bg-gray-50 text-primary rounded-xl transition-all hover:-translate-y-0.5 border-0 shadow-lg",
+          "h-12 flex items-center gap-2 px-4 py-2 text-base bg-white hover:bg-gray-50 text-primary rounded-xl transition-all hover:-translate-y-0.5 border-0 shadow-lg",
           isOpen ? "sm:hidden" : "" // Hide on desktop when open
         )}
         onClick={() => setIsOpen(!isOpen)}

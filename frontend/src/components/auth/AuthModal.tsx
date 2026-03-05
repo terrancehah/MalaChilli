@@ -84,10 +84,9 @@ export function AuthModal({ isOpen, onClose, children, title }: AuthModalProps) 
           {title && (
             <div className="text-center mb-8">
               <h1 className="font-display text-4xl sm:text-5xl mb-2">
-                <span className="text-gray-900 dark:text-white">Makan</span>
-                <span className="text-primary">Tak</span>
+                <span className="text-primary">MakanTak</span>
               </h1>
-              <p className="text-sm text-gray-600 dark:text-gray-400">{title}</p>
+              <p className="text-base text-gray-600 dark:text-gray-400">{title}</p>
             </div>
           )}
           {children}

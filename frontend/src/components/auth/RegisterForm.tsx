@@ -263,7 +263,7 @@ export function RegisterForm({
       {/* Registration Form */}
       <form onSubmit={handleSubmit} className="space-y-5" noValidate>
         <div>
-          <label className="block text-sm font-medium text-gray-600 dark:text-gray-400 mb-1">
+          <label className="block text-base font-medium text-gray-600 dark:text-gray-400 mb-1">
             Full Name <span className="text-red-500">*</span>
           </label>
           <input
@@ -273,7 +273,7 @@ export function RegisterForm({
             value={formData.fullName}
             onChange={handleChange}
             onBlur={handleBlur}
-            className={` ${
+            className={` p-2 w-full bg-primary/5 ${
               touched.fullName && errors.fullName
                 ? "border-red-500 focus:border-red-500 focus:ring-red-500"
                 : "w-full"
@@ -285,7 +285,7 @@ export function RegisterForm({
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-600 dark:text-gray-400 mb-1">
+          <label className="block text-base font-medium text-gray-600 dark:text-gray-400 mb-1">
             Email <span className="text-red-500">*</span>
           </label>
           <input
@@ -295,7 +295,7 @@ export function RegisterForm({
             value={formData.email}
             onChange={handleChange}
             onBlur={handleBlur}
-            className={` ${
+            className={` p-2 w-full bg-primary/5 ${
               touched.email && errors.email
                 ? "border-red-500 focus:border-red-500 focus:ring-red-500"
                 : "w-full"
@@ -307,7 +307,7 @@ export function RegisterForm({
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-600 dark:text-gray-400 mb-1">
+          <label className="block text-base font-medium text-gray-600 dark:text-gray-400 mb-1">
             Password <span className="text-red-500">*</span>
           </label>
           <div className="relative">
@@ -318,7 +318,7 @@ export function RegisterForm({
               value={formData.password}
               onChange={handleChange}
               onBlur={handleBlur}
-              className={`pr-10 ${
+              className={`pr-10 p-2 w-full bg-primary/5  ${
                 touched.password && errors.password
                   ? "border-red-500 focus:border-red-500 focus:ring-red-500"
                   : "w-full"
@@ -354,7 +354,7 @@ export function RegisterForm({
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-600 dark:text-gray-400 mb-1">
+          <label className="block text-base font-medium text-gray-600 dark:text-gray-400 mb-1">
             Birthday <span className="text-red-500">*</span>
           </label>
           <input
@@ -363,7 +363,7 @@ export function RegisterForm({
             value={formData.birthday}
             onChange={handleChange}
             onBlur={handleBlur}
-            className={` ${
+            className={` p-2 w-full bg-primary/5 ${
               touched.birthday && errors.birthday
                 ? "border-red-500 focus:border-red-500 focus:ring-red-500"
                 : "w-full"
@@ -389,11 +389,11 @@ export function RegisterForm({
               checked={formData.agreedToTerms}
               onChange={handleChange}
               onBlur={handleBlur}
-              className="mt-1 h-4 w-4 text-primary border-gray-300 rounded focus:ring-primary"
+              className="mt-1 h-12 w-12 text-primary border-gray-300 rounded focus:ring-primary"
             />
             <label
               htmlFor="agreedToTerms"
-              className="ml-2 text-xs text-gray-600 dark:text-gray-400"
+              className="ml-2 text-sm text-gray-600 dark:text-gray-400"
             >
               I agree to the{" "}
               <Link
@@ -426,7 +426,7 @@ export function RegisterForm({
           disabled={loading}
           className="w-full bg-primary hover:bg-primary-dark text-white font-semibold py-3.5 px-8 rounded-pill transition-all duration-200 shadow-md hover:shadow-lg hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          {loading ? "Creating Account..." : "Sign Up Now!"}
+          {loading ? "Creating Account..." : "Sign Up"}
         </button>
       </form>
 
