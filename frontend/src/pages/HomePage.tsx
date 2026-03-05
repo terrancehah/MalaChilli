@@ -87,16 +87,17 @@ export default function HomePage() {
 
         {/* Features Grid */}
         <div className="mt-20 sm:mt-24 grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8 max-w-6xl mx-auto">
+
           {/* Feature 1 */}
           <div className="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 border border-gray-100 dark:border-gray-700 cursor-pointer focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 outline-none" tabIndex={0}>
             <div className="w-14 h-14 bg-primary/10 rounded-xl flex items-center justify-center mb-6 text-primary motion-safe:group-hover:scale-110 transition-transform duration-300">
               <Percent className="w-7 h-7" />
             </div>
-            <h3 className="text-lg sm:text-xl font-bold mb-3 text-gray-900 dark:text-white">{t.home.feature1Title}</h3>
+            <h3 className="text-xl sm:text-2xl font-bold mb-3 text-gray-900 dark:text-white">{t.home.feature1Title}</h3>
             <p className="text-base sm:text-lg text-gray-600 dark:text-gray-300 leading-relaxed mb-4">
               {t.home.feature1Desc}
             </p>
-            <div className="inline-flex items-center gap-2 text-xs sm:text-sm font-semibold text-primary">
+            <div className="inline-flex items-center gap-2 text-sm sm:text-base font-semibold text-primary">
               <span className="h-1.5 w-1.5 rounded-full bg-primary motion-safe:animate-pulse"></span>
               <span>{t.home.feature1Badge}</span>
             </div>
@@ -107,11 +108,11 @@ export default function HomePage() {
             <div className="w-14 h-14 bg-primary/10 rounded-xl flex items-center justify-center mb-6 text-primary motion-safe:group-hover:scale-110 transition-transform duration-300">
               <Share2 className="w-7 h-7" />
             </div>
-            <h3 className="text-lg sm:text-xl font-bold mb-3 text-gray-900 dark:text-white">{t.home.feature2Title}</h3>
+            <h3 className="text-xl sm:text-2xl font-bold mb-3 text-gray-900 dark:text-white">{t.home.feature2Title}</h3>
             <p className="text-base sm:text-lg text-gray-600 dark:text-gray-300 leading-relaxed mb-4">
               {t.home.feature2Desc}
             </p>
-            <div className="inline-flex items-center gap-2 text-xs sm:text-sm font-semibold text-primary">
+            <div className="inline-flex items-center gap-2 text-sm sm:text-base font-semibold text-primary">
               <span className="h-1.5 w-1.5 rounded-full bg-primary motion-safe:animate-pulse"></span>
               <span>{t.home.feature2Badge}</span>
             </div>
@@ -122,11 +123,11 @@ export default function HomePage() {
             <div className="w-14 h-14 bg-primary/10 rounded-xl flex items-center justify-center mb-6 text-primary motion-safe:group-hover:scale-110 transition-transform duration-300">
               <Gift className="w-7 h-7" />
             </div>
-            <h3 className="text-lg sm:text-xl font-bold mb-3 text-gray-900 dark:text-white">{t.home.feature3Title}</h3>
+            <h3 className="text-xl sm:text-2xl font-bold mb-3 text-gray-900 dark:text-white">{t.home.feature3Title}</h3>
             <p className="text-base sm:text-lg text-gray-600 dark:text-gray-300 leading-relaxed mb-4">
               {t.home.feature3Desc}
             </p>
-            <div className="inline-flex items-center gap-2 text-xs sm:text-sm font-semibold text-primary">
+            <div className="inline-flex items-center gap-2 text-sm sm:text-base font-semibold text-primary">
               <span className="h-1.5 w-1.5 rounded-full bg-primary motion-safe:animate-pulse"></span>
               <span>{t.home.feature3Badge}</span>
             </div>
@@ -166,7 +167,7 @@ export default function HomePage() {
                 </ul>
                 <button
                   onClick={() => setShowMerchantEnquiry(true)}
-                  className="bg-white text-primary px-8 py-4 rounded-full font-bold text-base sm:text-lg hover:bg-gray-50 active:opacity-90 transition-all duration-200 shadow-lg focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-primary outline-none"
+                  className="bg-white text-primary-light hover:text-primary px-8 py-4 rounded-full font-bold text-base sm:text-lg hover:bg-gray-50 active:opacity-90 hover:shadow-md hover:translate-y-1 transition-all duration-200 shadow-xl focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-primary outline-none"
                 >
                   {t.home.merchantCTA}
                 </button>
@@ -184,7 +185,7 @@ export default function HomePage() {
             <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4">
               {t.home.aboutTitle}
             </h2>
-            <p className="text-base sm:text-lg text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
+            <p className="text-lg sm:text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
               {t.home.aboutSubtitle}
             </p>
           </div>
@@ -231,41 +232,42 @@ export default function HomePage() {
       <footer className="bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800 mt-24">
         <div className="max-w-6xl mx-auto px-8 sm:px-10 lg:px-12 py-12">
           {/* Footer Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8 justify-around w-fit">
+
             {/* Brand Column */}
             <div className="md:col-span-1">
-              <div className="flex items-center gap-2 mb-3">
-                <img src="/logo.png" alt="MakanTak logo" className="h-12 w-12"/>
-                <h3 className="text-2xl sm:text-lg font-display font-bold">
-                  <span className="flex mt-2 text-primary dark:text-primary-light">{t.home.title}</span>
-                </h3>
-              </div>
-              <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
-                {t.home.footerTagline}
-              </p>
-              <p className="text-sm text-gray-600 dark:text-gray-400">
-                {t.home.footerDesc}
-              </p>
+                {/* Brand Name and Logo */}
+                <div className="flex items-center gap-2 mb-3">
+                    <img src="/logo.png" alt="MakanTak logo" className="h-12 w-12"/>
+                    <h3 className="text-3xl sm:text-2xl font-display font-bold">
+                    <span className="flex mt-2 text-primary dark:text-primary-light">{t.home.title}</span>
+                    </h3>
+                </div>
+                <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 mb-4">
+                    {t.home.footerTagline}
+                </p>
+                <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">
+                    {t.home.footerDesc}
+                </p>
             </div>
 
             {/* For Customers Column */}
             <div>
-              <h4 className="text-base font-semibold text-gray-900 dark:text-white mb-4">
+              <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
                 {t.home.forCustomers}
               </h4>
               <ul className="space-y-3">
-                <li>
+                <li className="flex flex-col gap-3 text-sm sm:text-base">
                   <Link
                     to="/demo"
-                    className="text-xs sm:text-sm text-gray-600 hover:text-primary dark:text-gray-400 dark:hover:text-primary-light transition-colors cursor-pointer"
+                    className="text-gray-600 hover:text-primary dark:text-gray-400 dark:hover:text-primary-light transition-colors cursor-pointer"
                   >
                     {t.home.demoLink}
                   </Link>
-                </li>
-                <li>
+
                   <Link
                     to="/faq"
-                    className="text-xs sm:text-sm text-gray-600 hover:text-primary dark:text-gray-400 dark:hover:text-primary-light transition-colors cursor-pointer"
+                    className="text-gray-600 hover:text-primary dark:text-gray-400 dark:hover:text-primary-light transition-colors cursor-pointer"
                   >
                     {t.home.faqLink}
                   </Link>
@@ -275,14 +277,14 @@ export default function HomePage() {
 
             {/* For Restaurants Column */}
             <div>
-              <h4 className="text-base font-semibold text-gray-900 dark:text-white mb-4">
+              <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
                 {t.home.forRestaurants}
               </h4>
               <ul className="space-y-3">
-                <li>
+                <li className="flex flex-col gap-3 text-sm sm:text-base">
                   <button
                     onClick={() => setShowMerchantEnquiry(true)}
-                    className="text-xs sm:text-sm text-gray-600 hover:text-primary dark:text-gray-400 dark:hover:text-primary-light transition-colors cursor-pointer text-left"
+                    className="text-gray-600 hover:text-primary dark:text-gray-400 dark:hover:text-primary-light transition-colors cursor-pointer text-left"
                   >
                     {t.home.merchantEnquiry}
                   </button>
@@ -292,46 +294,38 @@ export default function HomePage() {
 
             {/* Company Column */}
             <div>
-              <h4 className="text-base font-semibold text-gray-900 dark:text-white mb-4">
+              <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
                 {t.home.company}
               </h4>
               <ul className="space-y-3">
-                <li>
+                <li className="flex flex-col gap-3 text-sm sm:text-base">
                   <Link
                     to="/about"
-                    className="text-xs sm:text-sm text-gray-600 hover:text-primary dark:text-gray-400 dark:hover:text-primary-light transition-colors cursor-pointer"
+                    className="text-gray-600 hover:text-primary dark:text-gray-400 dark:hover:text-primary-light transition-colors cursor-pointer"
                   >
                     {t.home.aboutUs}
                   </Link>
-                </li>
-                <li>
                   <Link
                     to="/contact"
-                    className="text-xs sm:text-sm text-gray-600 hover:text-primary dark:text-gray-400 dark:hover:text-primary-light transition-colors cursor-pointer"
+                    className="text-gray-600 hover:text-primary dark:text-gray-400 dark:hover:text-primary-light transition-colors cursor-pointer"
                   >
                     {t.home.contact}
                   </Link>
-                </li>
-                <li>
                   <a
                     href="mailto:support@makantak.com"
-                    className="text-xs sm:text-sm text-gray-600 hover:text-primary dark:text-gray-400 dark:hover:text-primary-light transition-colors cursor-pointer"
+                    className="text-gray-600 hover:text-primary dark:text-gray-400 dark:hover:text-primary-light transition-colors cursor-pointer"
                   >
                     support@makantak.com
                   </a>
-                </li>
-                <li>
                   <Link
                     to="/privacy"
-                    className="text-xs sm:text-sm text-gray-600 hover:text-primary dark:text-gray-400 dark:hover:text-primary-light transition-colors cursor-pointer"
+                    className="text-gray-600 hover:text-primary dark:text-gray-400 dark:hover:text-primary-light transition-colors cursor-pointer"
                   >
                     {t.home.privacy}
                   </Link>
-                </li>
-                <li>
                   <Link
                     to="/terms"
-                    className="text-xs sm:text-sm text-gray-600 hover:text-primary dark:text-gray-400 dark:hover:text-primary-light transition-colors cursor-pointer"
+                    className="text-gray-600 hover:text-primary dark:text-gray-400 dark:hover:text-primary-light transition-colors cursor-pointer"
                   >
                     {t.home.terms}
                   </Link>

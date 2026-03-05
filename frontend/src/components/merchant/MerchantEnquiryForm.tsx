@@ -83,10 +83,10 @@ export function MerchantEnquiryForm({ isOpen, onClose }: MerchantEnquiryFormProp
           {/* Header */}
           <div className="sticky top-0 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 p-6 flex items-center justify-between">
             <div>
-              <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
+              <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
                 Partner With MakanTak
-              </h2>
-              <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+              </h1>
+              <p className="text-base text-gray-600 dark:text-gray-400 mt-1">
                 Fill out the form below and we'll get back to you within 24 hours
               </p>
             </div>
@@ -102,7 +102,7 @@ export function MerchantEnquiryForm({ isOpen, onClose }: MerchantEnquiryFormProp
           <form onSubmit={handleSubmit} className="p-6 space-y-5">
             {/* Restaurant Name */}
             <div>
-              <label htmlFor="restaurantName" className="block text-sm font-semibold text-gray-900 dark:text-white mb-2">
+              <label htmlFor="restaurantName" className="block text-base font-semibold text-gray-900 dark:text-white mb-2">
                 Restaurant Name *
               </label>
               <input
@@ -119,7 +119,7 @@ export function MerchantEnquiryForm({ isOpen, onClose }: MerchantEnquiryFormProp
 
             {/* Contact Name */}
             <div>
-              <label htmlFor="contactName" className="block text-sm font-semibold text-gray-900 dark:text-white mb-2">
+              <label htmlFor="contactName" className="block text-base font-semibold text-gray-900 dark:text-white mb-2">
                 Contact Name *
               </label>
               <input
@@ -137,7 +137,7 @@ export function MerchantEnquiryForm({ isOpen, onClose }: MerchantEnquiryFormProp
             {/* Email and Phone Grid */}
             <div className="grid md:grid-cols-2 gap-5">
               <div>
-                <label htmlFor="email" className="block text-sm font-semibold text-gray-900 dark:text-white mb-2">
+                <label htmlFor="email" className="block text-base font-semibold text-gray-900 dark:text-white mb-2">
                   Email *
                 </label>
                 <input
@@ -153,7 +153,7 @@ export function MerchantEnquiryForm({ isOpen, onClose }: MerchantEnquiryFormProp
               </div>
 
               <div>
-                <label htmlFor="phone" className="block text-sm font-semibold text-gray-900 dark:text-white mb-2">
+                <label htmlFor="phone" className="block text-base font-semibold text-gray-900 dark:text-white mb-2">
                   Phone Number *
                 </label>
                 <input
@@ -171,7 +171,7 @@ export function MerchantEnquiryForm({ isOpen, onClose }: MerchantEnquiryFormProp
 
             {/* Message */}
             <div>
-              <label htmlFor="message" className="block text-sm font-semibold text-gray-900 dark:text-white mb-2">
+              <label htmlFor="message" className="block text-base font-semibold text-gray-900 dark:text-white mb-2">
                 Message
               </label>
               <textarea
@@ -188,7 +188,7 @@ export function MerchantEnquiryForm({ isOpen, onClose }: MerchantEnquiryFormProp
             {/* Status Messages */}
             {submitStatus === 'success' && (
               <div className="p-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg">
-                <p className="text-sm text-green-800 dark:text-green-200 font-medium">
+                <p className="text-base text-green-800 dark:text-green-200 font-medium">
                   Thank you! Your enquiry has been sent successfully.
                 </p>
               </div>
@@ -196,7 +196,7 @@ export function MerchantEnquiryForm({ isOpen, onClose }: MerchantEnquiryFormProp
 
             {submitStatus === 'error' && (
               <div className="p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
-                <p className="text-sm text-red-800 dark:text-red-200 font-medium">
+                <p className="text-base text-red-800 dark:text-red-200 font-medium">
                   Something went wrong. Please try again or email us directly at support@makantak.com
                 </p>
               </div>
