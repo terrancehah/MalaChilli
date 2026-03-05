@@ -32,9 +32,9 @@ export default function HomePage() {
       
       {/* Header */}
       <header className="w-full px-8 sm:px-10 lg:px-12 py-4 flex justify-between items-center">
-        <Link to="/" className="flex items-center gap-2 text-2xl font-display font-bold text-primary dark:text-primary-light">
-          <img src="/logo.png" alt="MakanTak logo" className="h-8 w-8" />
-          {t.home.title}
+        <Link to="/" className="flex items-center gap-1 text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-display font-bold text-primary dark:text-primary-light">
+          <img src="/logo.png" alt="MakanTak logo" className="h-12 w-12" />
+          <span className='mt-2'>{t.home.title}</span>
         </Link>
         <div className="flex items-center gap-3">
           <LanguageSelector language={language} onLanguageChange={setLanguage} />
@@ -50,7 +50,7 @@ export default function HomePage() {
       {/* Hero Section */}
       <div className="w-full px-8 sm:px-10 lg:px-12 pt-8 pb-8 sm:pt-16 sm:pb-16 lg:pt-20 lg:pb-20">
         <div className="text-center max-w-4xl mx-auto">
-          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight text-gray-900 dark:text-white mb-3">
+          <h1 className="text-5xl md:text-6xl lg:text-7xl font-display font-extrabold tracking-tight text-primary dark:text-primary-light mb-3">
             {t.home.title}
           </h1>
           <p className="text-lg sm:text-xl md:text-2xl text-gray-600 dark:text-gray-300 mb-2 max-w-3xl mx-auto leading-snug">
@@ -69,7 +69,7 @@ export default function HomePage() {
                 onClick={() => setShowRegisterModal(true)}
                 className="relative w-full px-10 py-5 bg-primary text-white text-base sm:text-lg font-semibold rounded-full shadow-md hover:shadow-lg active:opacity-90 transition-all duration-200 flex items-center justify-center gap-3 group cursor-pointer focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-primary outline-none"
               >
-                {t.home.getStarted}
+                <span className='pl-3'>{t.home.getStarted}</span>
                 <ArrowRight className="w-6 h-6 lg:w-7 lg:h-7 motion-safe:group-hover:translate-x-1 transition-transform" />
               </button>
             </div>
@@ -86,7 +86,7 @@ export default function HomePage() {
         </div>
 
         {/* Features Grid */}
-        <div className="mt-20 sm:mt-24 grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8 max-w-6xl mx-auto">
+        <div className="mt-20 sm:mt-24 grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8 max-w-6xl mx-auto">
 
           {/* Feature 1 */}
           <div className="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 border border-gray-100 dark:border-gray-700 cursor-pointer focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 outline-none" tabIndex={0}>
@@ -142,10 +142,10 @@ export default function HomePage() {
                 <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4">
                   {t.home.merchantTitle}
                 </h2>
-                <p className="text-lg sm:text-xl mb-6 opacity-95">
+                <p className="text-lg sm:text-xl mb-6 opacity-95 text-justify">
                   {t.home.merchantSubtitle}
                 </p>
-                <ul className="space-y-3 lg:space-y-4 mb-8 lg:mb-10">
+                <ul className="space-y-3 lg:space-y-4 mb-8 lg:mb-10 text-justify">
                   <li className="flex items-start gap-3">
                     <div className="w-6 h-6 lg:w-7 lg:h-7 rounded-full bg-white/20 flex items-center justify-center flex-shrink-0 mt-0.5">
                       <Check className="w-3.5 h-3.5 lg:w-4 lg:h-4" />
@@ -172,7 +172,7 @@ export default function HomePage() {
                   {t.home.merchantCTA}
                 </button>
               </div>
-              <div className="hidden md:block h-full min-h-[400px] bg-cover bg-center" style={{backgroundImage: "url('https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=800&q=80')"}} role="img" aria-label="Restaurant interior with dining atmosphere">
+              <div className="hidden md:block h-full min-h-[400px] bg-cover bg-center" style={{backgroundImage: "url('/restaurant.jpeg')"}} role="img" aria-label="Restaurant interior with dining atmosphere">
                 <div className="w-full h-full bg-gradient-to-l from-transparent to-primary/20"></div>
               </div>
             </div>
@@ -190,7 +190,7 @@ export default function HomePage() {
             </p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-8">
+          <div className="grid lg:grid-cols-3 gap-8">
             {/* About Card 1 */}
             <div className="bg-white dark:bg-gray-800 p-8 rounded-2xl border border-gray-100 dark:border-gray-700 text-center">
               <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-6">
@@ -232,7 +232,7 @@ export default function HomePage() {
       <footer className="bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800 mt-24">
         <div className="max-w-6xl mx-auto px-8 sm:px-10 lg:px-12 py-12">
           {/* Footer Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8 justify-around w-fit">
+          <div className="grid grid-cols-1 lg:grid-cols-4 gap-7 mb-8 justify-around w-fit">
 
             {/* Brand Column */}
             <div className="md:col-span-1">
@@ -243,21 +243,21 @@ export default function HomePage() {
                     <span className="flex mt-2 text-primary dark:text-primary-light">{t.home.title}</span>
                     </h3>
                 </div>
-                <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 mb-4">
+                <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
                     {t.home.footerTagline}
                 </p>
-                <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">
+                <p className="text-sm text-gray-600 dark:text-gray-400">
                     {t.home.footerDesc}
                 </p>
             </div>
 
             {/* For Customers Column */}
             <div>
-              <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+              <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
                 {t.home.forCustomers}
               </h4>
               <ul className="space-y-3">
-                <li className="flex flex-col gap-3 text-sm sm:text-base">
+                <li className="flex flex-col gap-2 text-sm sm:text-base">
                   <Link
                     to="/demo"
                     className="text-gray-600 hover:text-primary dark:text-gray-400 dark:hover:text-primary-light transition-colors cursor-pointer"
@@ -277,11 +277,11 @@ export default function HomePage() {
 
             {/* For Restaurants Column */}
             <div>
-              <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+              <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
                 {t.home.forRestaurants}
               </h4>
               <ul className="space-y-3">
-                <li className="flex flex-col gap-3 text-sm sm:text-base">
+                <li className="flex flex-col gap-2 text-sm sm:text-base">
                   <button
                     onClick={() => setShowMerchantEnquiry(true)}
                     className="text-gray-600 hover:text-primary dark:text-gray-400 dark:hover:text-primary-light transition-colors cursor-pointer text-left"
@@ -294,11 +294,11 @@ export default function HomePage() {
 
             {/* Company Column */}
             <div>
-              <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+              <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
                 {t.home.company}
               </h4>
               <ul className="space-y-3">
-                <li className="flex flex-col gap-3 text-sm sm:text-base">
+                <li className="flex flex-col gap-2 text-sm sm:text-base">
                   <Link
                     to="/about"
                     className="text-gray-600 hover:text-primary dark:text-gray-400 dark:hover:text-primary-light transition-colors cursor-pointer"
