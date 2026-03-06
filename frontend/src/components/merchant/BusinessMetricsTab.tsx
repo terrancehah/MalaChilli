@@ -2,13 +2,7 @@ import { useState, useEffect } from "react";
 import { supabase } from "../../lib/supabase";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { Skeleton } from "../ui/skeleton";
-import {
-  DollarSign,
-  TrendingUp,
-  PieChart,
-  CreditCard,
-  Award,
-} from "lucide-react";
+import { DollarSign, TrendingUp, PieChart, CreditCard, Award } from "lucide-react";
 import type {
   DashboardSummary,
   RevenueAnalytics,
@@ -25,17 +19,12 @@ interface BusinessMetricsTabProps {
   language: Language;
 }
 
-export function BusinessMetricsTab({
-  restaurantId,
-  summary,
-  language,
-}: BusinessMetricsTabProps) {
+export function BusinessMetricsTab({ restaurantId, summary, language }: BusinessMetricsTabProps) {
   const t = getTranslation(language);
   const [loading, setLoading] = useState(true);
   const [revenueData, setRevenueData] = useState<RevenueAnalytics[]>([]);
   const [uplineRewards, setUplineRewards] = useState<UplineRewardsStats[]>([]);
-  const [discountBreakdown, setDiscountBreakdown] =
-    useState<DiscountBreakdown | null>(null);
+  const [discountBreakdown, setDiscountBreakdown] = useState<DiscountBreakdown | null>(null);
 
   useEffect(() => {
     const fetchBusinessData = async () => {
@@ -109,10 +98,7 @@ export function BusinessMetricsTab({
   const avgBillAmount = businessMetrics?.avg_bill_amount || 0;
 
   // Calculate ROI (simplified: revenue increase vs discount cost)
-  const roi =
-    totalDiscounts > 0
-      ? ((totalRevenue - totalDiscounts) / totalDiscounts).toFixed(1)
-      : "0";
+  const roi = totalDiscounts > 0 ? ((totalRevenue - totalDiscounts) / totalDiscounts).toFixed(1) : "0";
 
   return (
     <div className="space-y-4 sm:space-y-6">
@@ -139,9 +125,7 @@ export function BusinessMetricsTab({
                   maximumFractionDigits: 2,
                 })}
               </p>
-              <p className="text-xs text-muted-foreground">
-                {t.merchantDashboard.businessMetrics.last30Days}
-              </p>
+              <p className="text-xs text-muted-foreground">{t.merchantDashboard.businessMetrics.last30Days}</p>
             </div>
           </CardContent>
         </Card>
@@ -168,8 +152,7 @@ export function BusinessMetricsTab({
                 })}
               </p>
               <p className="text-xs text-muted-foreground">
-                {((netRevenue / totalRevenue) * 100).toFixed(1)}%{" "}
-                {t.merchantDashboard.businessMetrics.ofGross}
+                {((netRevenue / totalRevenue) * 100).toFixed(1)}% {t.merchantDashboard.businessMetrics.ofGross}
               </p>
             </div>
           </CardContent>
@@ -183,20 +166,15 @@ export function BusinessMetricsTab({
               {t.merchantDashboard.businessMetrics.totalTransactions}
               <InfoButton
                 title={t.merchantDashboard.businessMetrics.totalTransactions}
-                description={
-                  t.merchantDashboard.businessMetrics.totalTransactionsInfo
-                }
+                description={t.merchantDashboard.businessMetrics.totalTransactionsInfo}
               />
             </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="space-y-1">
-              <p className="text-2xl md:text-3xl font-bold text-foreground">
-                {totalTransactions}
-              </p>
+              <p className="text-2xl md:text-3xl font-bold text-foreground">{totalTransactions}</p>
               <p className="text-xs text-muted-foreground">
-                {t.merchantDashboard.businessMetrics.avg}: RM{" "}
-                {avgBillAmount.toFixed(2)}
+                {t.merchantDashboard.businessMetrics.avg}: RM {avgBillAmount.toFixed(2)}
               </p>
             </div>
           </CardContent>
@@ -212,12 +190,8 @@ export function BusinessMetricsTab({
           </CardHeader>
           <CardContent>
             <div className="space-y-1">
-              <p className="text-2xl md:text-3xl font-bold text-blue-600">
-                {roi}:1
-              </p>
-              <p className="text-xs text-muted-foreground">
-                {t.merchantDashboard.businessMetrics.revenueVsDiscount}
-              </p>
+              <p className="text-2xl md:text-3xl font-bold text-blue-600">{roi}:1</p>
+              <p className="text-xs text-muted-foreground">{t.merchantDashboard.businessMetrics.revenueVsDiscount}</p>
             </div>
           </CardContent>
         </Card>
@@ -231,9 +205,7 @@ export function BusinessMetricsTab({
             {t.merchantDashboard.businessMetrics.discountBreakdown}
             <InfoButton
               title={t.merchantDashboard.businessMetrics.discountBreakdown}
-              description={
-                t.merchantDashboard.businessMetrics.discountBreakdownInfo
-              }
+              description={t.merchantDashboard.businessMetrics.discountBreakdownInfo}
             />
           </CardTitle>
         </CardHeader>
@@ -242,14 +214,10 @@ export function BusinessMetricsTab({
             {/* Total Discounts Summary */}
             <div className="flex items-center justify-between p-4 rounded-lg bg-muted/50">
               <div>
-                <p className="text-sm text-muted-foreground">
-                  {t.merchantDashboard.businessMetrics.totalDiscounts}
-                </p>
+                <p className="text-sm text-muted-foreground">{t.merchantDashboard.businessMetrics.totalDiscounts}</p>
                 <p className="text-xl md:text-2xl font-bold text-foreground">
                   RM{" "}
-                  {(
-                    discountBreakdown?.total_discount || totalDiscounts
-                  ).toLocaleString("en-MY", {
+                  {(discountBreakdown?.total_discount || totalDiscounts).toLocaleString("en-MY", {
                     minimumFractionDigits: 2,
                     maximumFractionDigits: 2,
                   })}
@@ -261,11 +229,7 @@ export function BusinessMetricsTab({
                 </p>
                 <p className="text-xl md:text-2xl font-bold text-orange-600">
                   {totalRevenue > 0
-                    ? (
-                        ((discountBreakdown?.total_discount || totalDiscounts) /
-                          totalRevenue) *
-                        100
-                      ).toFixed(1)
+                    ? (((discountBreakdown?.total_discount || totalDiscounts) / totalRevenue) * 100).toFixed(1)
                     : "0.0"}
                   %
                 </p>
@@ -286,10 +250,7 @@ export function BusinessMetricsTab({
                   </div>
                   <p className="text-xl font-bold text-foreground">
                     RM{" "}
-                    {discountBreakdown.guaranteed_discount_total.toLocaleString(
-                      "en-MY",
-                      { minimumFractionDigits: 2 }
-                    )}
+                    {discountBreakdown.guaranteed_discount_total.toLocaleString("en-MY", { minimumFractionDigits: 2 })}
                   </p>
                   <p className="text-xs text-muted-foreground mt-1">
                     {t.merchantDashboard.businessMetrics.firstTimeDiscount}
@@ -301,16 +262,10 @@ export function BusinessMetricsTab({
                     <p className="text-sm font-medium text-muted-foreground">
                       {t.merchantDashboard.businessMetrics.vcRedeemed}
                     </p>
-                    <p className="text-sm font-bold text-purple-600">
-                      {discountBreakdown.vc_percentage.toFixed(1)}%
-                    </p>
+                    <p className="text-sm font-bold text-purple-600">{discountBreakdown.vc_percentage.toFixed(1)}%</p>
                   </div>
                   <p className="text-xl font-bold text-foreground">
-                    RM{" "}
-                    {discountBreakdown.vc_redeemed_total.toLocaleString(
-                      "en-MY",
-                      { minimumFractionDigits: 2 }
-                    )}
+                    RM {discountBreakdown.vc_redeemed_total.toLocaleString("en-MY", { minimumFractionDigits: 2 })}
                   </p>
                   <p className="text-xs text-muted-foreground mt-1">
                     {t.merchantDashboard.businessMetrics.virtualCurrencyRedeemed}
@@ -342,19 +297,12 @@ export function BusinessMetricsTab({
           ) : (
             <div className="space-y-3">
               {uplineRewards.map((reward) => (
-                <div
-                  key={reward.upline_level}
-                  className="flex items-center justify-between p-4 rounded-lg bg-muted/50"
-                >
+                <div key={reward.upline_level} className="flex items-center justify-between p-4 rounded-lg bg-muted/50">
                   <div>
-                    <p className="font-semibold text-foreground">
-                      Level {reward.upline_level}
-                    </p>
+                    <p className="font-semibold text-foreground">Level {reward.upline_level}</p>
                     <p className="text-xs text-muted-foreground">
-                      {reward.unique_recipients}{" "}
-                      {t.merchantDashboard.businessMetrics.recipients} •{" "}
-                      {reward.reward_count}{" "}
-                      {t.merchantDashboard.businessMetrics.rewards}
+                      {reward.unique_recipients} {t.merchantDashboard.businessMetrics.recipients} •{" "}
+                      {reward.reward_count} {t.merchantDashboard.businessMetrics.rewards}
                     </p>
                   </div>
                   <div className="text-right">
@@ -365,8 +313,7 @@ export function BusinessMetricsTab({
                       })}
                     </p>
                     <p className="text-xs text-muted-foreground">
-                      {t.merchantDashboard.businessMetrics.avgReward}: RM{" "}
-                      {reward.avg_reward_amount.toFixed(2)}
+                      {t.merchantDashboard.businessMetrics.avgReward}: RM {reward.avg_reward_amount.toFixed(2)}
                     </p>
                   </div>
                 </div>
@@ -374,9 +321,7 @@ export function BusinessMetricsTab({
 
               {/* Total */}
               <div className="flex items-center justify-between p-4 rounded-lg bg-primary/10 border-2 border-primary/20">
-                <p className="font-bold text-foreground">
-                  {t.merchantDashboard.businessMetrics.totalPaid}
-                </p>
+                <p className="font-bold text-foreground">{t.merchantDashboard.businessMetrics.totalPaid}</p>
                 <p className="text-2xl font-bold text-primary">
                   RM{" "}
                   {uplineRewards
@@ -401,9 +346,7 @@ export function BusinessMetricsTab({
       {/* Coming Soon */}
       <Card className="border-border/50 bg-muted/30">
         <CardContent className="p-6 text-center">
-          <p className="text-sm text-muted-foreground">
-            {t.merchantDashboard.businessMetrics.comingSoon}
-          </p>
+          <p className="text-sm text-muted-foreground">{t.merchantDashboard.businessMetrics.comingSoon}</p>
         </CardContent>
       </Card>
     </div>

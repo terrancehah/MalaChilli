@@ -18,16 +18,7 @@ import {
   EditCustomerSheet,
   ReceiptOCRSheet,
 } from "../../components/staff";
-import {
-  Settings,
-  QrCode,
-  Receipt,
-  CheckCircle,
-  AlertCircle,
-  Package,
-  Edit,
-  Camera,
-} from "lucide-react";
+import { Settings, QrCode, Receipt, CheckCircle, AlertCircle, Package, Edit, Camera } from "lucide-react";
 import { DashboardHeader } from "../../components/shared/DashboardHeader";
 import PullToRefresh from "react-simple-pull-to-refresh";
 import { Loader2 } from "lucide-react";
@@ -114,9 +105,7 @@ export default function StaffDashboard() {
 
       // Check if today is customer's birthday
       const today = new Date();
-      const customerBirthday = customer.birthday
-        ? new Date(customer.birthday)
-        : null;
+      const customerBirthday = customer.birthday ? new Date(customer.birthday) : null;
       const isBirthdayToday =
         customerBirthday &&
         customerBirthday.getMonth() === today.getMonth() &&
@@ -160,24 +149,20 @@ export default function StaffDashboard() {
   };
 
   // Handle checkout submission
-  const handleCheckoutSubmit = async (data: {
-    billAmount: number;
-    redeemAmount: number;
-  }) => {
+  const handleCheckoutSubmit = async (data: { billAmount: number; redeemAmount: number }) => {
     if (!customerData || !user?.id) return;
 
     try {
       // Call the process_checkout_transaction function
-      const { data: transactionResult, error: transactionError } =
-        await supabase.rpc("process_checkout_transaction", {
-          p_customer_id: customerData.id,
-          p_branch_id: user.branch_id,
-          p_staff_id: user.id,
-          p_bill_amount: data.billAmount,
-          p_virtual_currency_redeemed: data.redeemAmount,
-          p_receipt_photo_url: null,
-          p_saved_code_id: null,
-        });
+      const { data: transactionResult, error: transactionError } = await supabase.rpc("process_checkout_transaction", {
+        p_customer_id: customerData.id,
+        p_branch_id: user.branch_id,
+        p_staff_id: user.id,
+        p_bill_amount: data.billAmount,
+        p_virtual_currency_redeemed: data.redeemAmount,
+        p_receipt_photo_url: null,
+        p_saved_code_id: null,
+      });
 
       if (transactionError) throw transactionError;
 
@@ -250,10 +235,7 @@ export default function StaffDashboard() {
           subtitle={user?.full_name || user?.email || t.staffDashboard.title}
           actions={
             <>
-              <LanguageSelector
-                language={language}
-                onLanguageChange={setLanguage}
-              />
+              <LanguageSelector language={language} onLanguageChange={setLanguage} />
               <Button
                 variant="secondary"
                 size="icon"
@@ -271,9 +253,7 @@ export default function StaffDashboard() {
           <div className="fixed top-20 left-1/2 -translate-x-1/2 z-50 animate-in slide-in-from-top duration-300">
             <Alert className="bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-800 shadow-lg min-w-[320px]">
               <CheckCircle className="h-4 w-4 text-green-600 dark:text-green-400" />
-              <AlertDescription className="text-green-800 dark:text-green-200 font-medium">
-                {success}
-              </AlertDescription>
+              <AlertDescription className="text-green-800 dark:text-green-200 font-medium">{success}</AlertDescription>
             </Alert>
           </div>
         )}
@@ -281,9 +261,7 @@ export default function StaffDashboard() {
           <div className="fixed top-20 left-1/2 -translate-x-1/2 z-50 animate-in slide-in-from-top duration-300">
             <Alert className="bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-800 shadow-lg min-w-[320px]">
               <AlertCircle className="h-4 w-4 text-red-600 dark:text-red-400" />
-              <AlertDescription className="text-red-800 dark:text-red-200 font-medium">
-                {error}
-              </AlertDescription>
+              <AlertDescription className="text-red-800 dark:text-red-200 font-medium">{error}</AlertDescription>
             </Alert>
           </div>
         )}
@@ -431,18 +409,14 @@ export default function StaffDashboard() {
             onUpdate={async () => {
               // Refresh customer data from database
               try {
-                const { data: updatedCustomer, error: fetchError } =
-                  await supabase
-                    .from("users")
-                    .select("id, full_name, email, referral_code, birthday")
-                    .eq("id", customerData.id)
-                    .single();
+                const { data: updatedCustomer, error: fetchError } = await supabase
+                  .from("users")
+                  .select("id, full_name, email, referral_code, birthday")
+                  .eq("id", customerData.id)
+                  .single();
 
                 if (fetchError) {
-                  console.error(
-                    "Failed to fetch updated customer:",
-                    fetchError
-                  );
+                  console.error("Failed to fetch updated customer:", fetchError);
                   setError(t.staffDashboard.ocr.refreshError);
                   setTimeout(() => setError(""), 3000);
                   return;
@@ -492,45 +466,31 @@ export default function StaffDashboard() {
             // If matched transaction found, update it with OCR data
             if (data.matchedTransaction) {
               try {
-                const { error: updateError } = await supabase.rpc(
-                  "update_transaction_with_receipt",
-                  {
-                    p_transaction_id: data.matchedTransaction.id,
-                    p_receipt_photo_url: null, // TODO: Upload photo to storage first
-                    p_ocr_data: {
-                      extraction: data.extraction,
-                      matched_items: data.matchedItems,
-                      extraction_timestamp: new Date().toISOString(),
-                      ocr_version: "gemini-2.5-flash",
-                    },
-                  }
-                );
+                const { error: updateError } = await supabase.rpc("update_transaction_with_receipt", {
+                  p_transaction_id: data.matchedTransaction.id,
+                  p_receipt_photo_url: null, // TODO: Upload photo to storage first
+                  p_ocr_data: {
+                    extraction: data.extraction,
+                    matched_items: data.matchedItems,
+                    extraction_timestamp: new Date().toISOString(),
+                    ocr_version: "gemini-2.5-flash",
+                  },
+                });
 
                 if (updateError) throw updateError;
 
-                const timeDiff = Math.abs(
-                  data.matchedTransaction.time_diff_minutes
-                );
-                const timeDiffText =
-                  timeDiff < 1 ? "<1 min" : `${Math.round(timeDiff)} mins`;
+                const timeDiff = Math.abs(data.matchedTransaction.time_diff_minutes);
+                const timeDiffText = timeDiff < 1 ? "<1 min" : `${Math.round(timeDiff)} mins`;
 
                 setSuccess(
                   t.staffDashboard.ocr.linkSuccess
-                    .replace(
-                      "{customer}",
-                      data.matchedTransaction.customer_name
-                    )
+                    .replace("{customer}", data.matchedTransaction.customer_name)
                     .replace("{timeDiff}", timeDiffText)
                     .replace("{items}", data.extraction.items.length.toString())
-                    .replace(
-                      "{confidence}",
-                      data.extraction.confidence.toString()
-                    )
+                    .replace("{confidence}", data.extraction.confidence.toString())
                 );
               } catch (err: any) {
-                setError(
-                  t.staffDashboard.ocr.linkError.replace("{error}", err.message)
-                );
+                setError(t.staffDashboard.ocr.linkError.replace("{error}", err.message));
                 setTimeout(() => setError(""), 5000);
               }
             } else {
@@ -544,10 +504,7 @@ export default function StaffDashboard() {
                 t.staffDashboard.ocr.scanSuccess
                   .replace("{amount}", data.amount.toFixed(2))
                   .replace("{itemsText}", itemsText)
-                  .replace(
-                    "{confidence}",
-                    data.extraction.confidence.toString()
-                  )
+                  .replace("{confidence}", data.extraction.confidence.toString())
               );
             }
 

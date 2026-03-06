@@ -1,5 +1,5 @@
-import { Toaster as HotToaster, toast as hotToast } from 'react-hot-toast';
-import { CheckCircle, AlertCircle, AlertTriangle, Info, X } from 'lucide-react';
+import { Toaster as HotToaster, toast as hotToast } from "react-hot-toast";
+import { CheckCircle, AlertCircle, AlertTriangle, Info, X } from "lucide-react";
 
 /**
  * Toast Provider Component
@@ -13,32 +13,32 @@ export function ToastProvider() {
       toastOptions={{
         duration: 4000,
         style: {
-          padding: '16px',
-          borderRadius: '12px',
-          fontSize: '14px',
+          padding: "16px",
+          borderRadius: "12px",
+          fontSize: "14px",
           fontWeight: 500,
-          maxWidth: '400px',
+          maxWidth: "400px",
         },
         // Default success styling
         success: {
           style: {
-            background: 'hsl(var(--primary))',
-            color: 'hsl(var(--primary-foreground))',
+            background: "hsl(var(--primary))",
+            color: "hsl(var(--primary-foreground))",
           },
           iconTheme: {
-            primary: 'hsl(var(--primary-foreground))',
-            secondary: 'hsl(var(--primary))',
+            primary: "hsl(var(--primary-foreground))",
+            secondary: "hsl(var(--primary))",
           },
         },
         // Default error styling
         error: {
           style: {
-            background: 'hsl(var(--destructive))',
-            color: 'hsl(var(--destructive-foreground))',
+            background: "hsl(var(--destructive))",
+            color: "hsl(var(--destructive-foreground))",
           },
           iconTheme: {
-            primary: 'hsl(var(--destructive-foreground))',
-            secondary: 'hsl(var(--destructive))',
+            primary: "hsl(var(--destructive-foreground))",
+            secondary: "hsl(var(--destructive))",
           },
         },
       }}
@@ -62,15 +62,15 @@ export function showSuccessToast(message: string, options?: ToastOptions) {
     (t) => (
       <div
         className={`flex items-center gap-3 p-4 bg-primary text-primary-foreground rounded-xl shadow-lg max-w-sm ${
-          t.visible ? 'animate-in fade-in slide-in-from-top-2 duration-300' : 'animate-out fade-out slide-out-to-top-2 duration-300'
+          t.visible
+            ? "animate-in fade-in slide-in-from-top-2 duration-300"
+            : "animate-out fade-out slide-out-to-top-2 duration-300"
         }`}
       >
         <CheckCircle className="h-5 w-5 flex-shrink-0" />
         <div className="flex-1 min-w-0">
           <p className="text-sm font-medium">{message}</p>
-          {options?.description && (
-            <p className="text-xs opacity-90 mt-0.5">{options.description}</p>
-          )}
+          {options?.description && <p className="text-xs opacity-90 mt-0.5">{options.description}</p>}
         </div>
         <button
           onClick={() => hotToast.dismiss(t.id)}
@@ -93,15 +93,15 @@ export function showErrorToast(message: string, options?: ToastOptions) {
     (t) => (
       <div
         className={`flex items-center gap-3 p-4 bg-destructive text-destructive-foreground rounded-xl shadow-lg max-w-sm ${
-          t.visible ? 'animate-in fade-in slide-in-from-top-2 duration-300' : 'animate-out fade-out slide-out-to-top-2 duration-300'
+          t.visible
+            ? "animate-in fade-in slide-in-from-top-2 duration-300"
+            : "animate-out fade-out slide-out-to-top-2 duration-300"
         }`}
       >
         <AlertCircle className="h-5 w-5 flex-shrink-0" />
         <div className="flex-1 min-w-0">
           <p className="text-sm font-medium">{message}</p>
-          {options?.description && (
-            <p className="text-xs opacity-90 mt-0.5">{options.description}</p>
-          )}
+          {options?.description && <p className="text-xs opacity-90 mt-0.5">{options.description}</p>}
         </div>
         <button
           onClick={() => hotToast.dismiss(t.id)}
@@ -124,15 +124,15 @@ export function showWarningToast(message: string, options?: ToastOptions) {
     (t) => (
       <div
         className={`flex items-center gap-3 p-4 bg-amber-500 text-white rounded-xl shadow-lg max-w-sm ${
-          t.visible ? 'animate-in fade-in slide-in-from-top-2 duration-300' : 'animate-out fade-out slide-out-to-top-2 duration-300'
+          t.visible
+            ? "animate-in fade-in slide-in-from-top-2 duration-300"
+            : "animate-out fade-out slide-out-to-top-2 duration-300"
         }`}
       >
         <AlertTriangle className="h-5 w-5 flex-shrink-0" />
         <div className="flex-1 min-w-0">
           <p className="text-sm font-medium">{message}</p>
-          {options?.description && (
-            <p className="text-xs opacity-90 mt-0.5">{options.description}</p>
-          )}
+          {options?.description && <p className="text-xs opacity-90 mt-0.5">{options.description}</p>}
         </div>
         <button
           onClick={() => hotToast.dismiss(t.id)}
@@ -155,15 +155,15 @@ export function showInfoToast(message: string, options?: ToastOptions) {
     (t) => (
       <div
         className={`flex items-center gap-3 p-4 bg-blue-600 text-white rounded-xl shadow-lg max-w-sm ${
-          t.visible ? 'animate-in fade-in slide-in-from-top-2 duration-300' : 'animate-out fade-out slide-out-to-top-2 duration-300'
+          t.visible
+            ? "animate-in fade-in slide-in-from-top-2 duration-300"
+            : "animate-out fade-out slide-out-to-top-2 duration-300"
         }`}
       >
         <Info className="h-5 w-5 flex-shrink-0" />
         <div className="flex-1 min-w-0">
           <p className="text-sm font-medium">{message}</p>
-          {options?.description && (
-            <p className="text-xs opacity-90 mt-0.5">{options.description}</p>
-          )}
+          {options?.description && <p className="text-xs opacity-90 mt-0.5">{options.description}</p>}
         </div>
         <button
           onClick={() => hotToast.dismiss(t.id)}
@@ -195,13 +195,13 @@ export function dismissToast(toastId?: string) {
 export function showLoadingToast(message: string) {
   return hotToast.loading(message, {
     style: {
-      padding: '16px',
-      borderRadius: '12px',
-      fontSize: '14px',
+      padding: "16px",
+      borderRadius: "12px",
+      fontSize: "14px",
       fontWeight: 500,
-      background: 'hsl(var(--background))',
-      color: 'hsl(var(--foreground))',
-      border: '1px solid hsl(var(--border))',
+      background: "hsl(var(--background))",
+      color: "hsl(var(--foreground))",
+      border: "1px solid hsl(var(--border))",
     },
   });
 }
@@ -209,14 +209,9 @@ export function showLoadingToast(message: string) {
 /**
  * Update an existing toast (useful for loading → success/error transitions)
  */
-export function updateToast(
-  toastId: string, 
-  type: 'success' | 'error', 
-  message: string,
-  options?: ToastOptions
-) {
+export function updateToast(toastId: string, type: "success" | "error", message: string, options?: ToastOptions) {
   hotToast.dismiss(toastId);
-  if (type === 'success') {
+  if (type === "success") {
     return showSuccessToast(message, options);
   } else {
     return showErrorToast(message, options);

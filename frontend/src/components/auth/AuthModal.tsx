@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react';
-import { X } from 'lucide-react';
+import { useEffect, useState } from "react";
+import { X } from "lucide-react";
 
 interface AuthModalProps {
   isOpen: boolean;
@@ -20,33 +20,33 @@ export function AuthModal({ isOpen, onClose, children, title }: AuthModalProps) 
   useEffect(() => {
     if (isOpen) {
       setShouldRender(true);
-      document.body.style.overflow = 'hidden';
+      document.body.style.overflow = "hidden";
       requestAnimationFrame(() => {
         setIsAnimating(true);
       });
     } else {
       setIsAnimating(false);
-      document.body.style.overflow = 'unset';
+      document.body.style.overflow = "unset";
       const timer = setTimeout(() => {
         setShouldRender(false);
       }, 200); // Match transition duration
       return () => clearTimeout(timer);
     }
     return () => {
-      document.body.style.overflow = 'unset';
+      document.body.style.overflow = "unset";
     };
   }, [isOpen]);
 
   // Handle escape key press
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === 'Escape' && isOpen) {
+      if (e.key === "Escape" && isOpen) {
         onClose();
       }
     };
 
-    document.addEventListener('keydown', handleEscape);
-    return () => document.removeEventListener('keydown', handleEscape);
+    document.addEventListener("keydown", handleEscape);
+    return () => document.removeEventListener("keydown", handleEscape);
   }, [isOpen, onClose]);
 
   if (!shouldRender) return null;
@@ -54,7 +54,7 @@ export function AuthModal({ isOpen, onClose, children, title }: AuthModalProps) 
   return (
     <div
       className={`fixed inset-0 z-50 flex items-center justify-center p-4 transition-opacity duration-200 ${
-        isAnimating ? 'opacity-100' : 'opacity-0'
+        isAnimating ? "opacity-100" : "opacity-0"
       }`}
       onClick={onClose}
       aria-modal="true"
@@ -66,7 +66,7 @@ export function AuthModal({ isOpen, onClose, children, title }: AuthModalProps) 
       {/* Modal Content */}
       <div
         className={`relative w-full max-w-md bg-white dark:bg-gray-800 rounded-card shadow-2xl transition-all duration-200 ${
-          isAnimating ? 'scale-100 opacity-100' : 'scale-95 opacity-0'
+          isAnimating ? "scale-100 opacity-100" : "scale-95 opacity-0"
         }`}
         onClick={(e) => e.stopPropagation()}
       >

@@ -1,8 +1,8 @@
-import { Card, CardContent } from '../ui/card';
-import { Badge } from '../ui/badge';
-import { User, Wallet, Gift } from 'lucide-react';
-import { formatCurrency } from '../../lib/utils';
-import { getTranslation, type Language } from '../../translations';
+import { Card, CardContent } from "../ui/card";
+import { Badge } from "../ui/badge";
+import { User, Wallet, Gift } from "lucide-react";
+import { formatCurrency } from "../../lib/utils";
+import { getTranslation, type Language } from "../../translations";
 
 interface CustomerInfoCardProps {
   customerName: string;
@@ -16,12 +16,12 @@ interface CustomerInfoCardProps {
  * Customer information card for staff checkout
  * Styled similar to VirtualCurrencyCard for consistency
  */
-export function CustomerInfoCard({ 
-  customerName, 
-  referralCode, 
-  walletBalance, 
+export function CustomerInfoCard({
+  customerName,
+  referralCode,
+  walletBalance,
   isFirstVisit,
-  language = 'en'
+  language = "en",
 }: CustomerInfoCardProps) {
   const t = getTranslation(language);
   return (
@@ -34,12 +34,8 @@ export function CustomerInfoCard({
               <User className="h-4 w-4 text-muted-foreground" />
               <p className="text-sm text-muted-foreground">{t.staffDashboard.customer}</p>
             </div>
-            <h3 className="text-xl font-bold text-foreground mb-1">
-              {customerName}
-            </h3>
-            <p className="text-xs text-muted-foreground font-mono">
-              {referralCode}
-            </p>
+            <h3 className="text-xl font-bold text-foreground mb-1">{customerName}</h3>
+            <p className="text-xs text-muted-foreground font-mono">{referralCode}</p>
           </div>
           {isFirstVisit && (
             <Badge className="bg-green-100 text-green-800 dark:bg-green-800/40 dark:text-green-300 border-0">
@@ -56,9 +52,7 @@ export function CustomerInfoCard({
           </div>
           <div className="flex-1">
             <p className="text-xs text-muted-foreground mb-0.5">Virtual Currency Balance</p>
-            <p className="text-2xl font-bold text-foreground">
-              {formatCurrency(walletBalance)}
-            </p>
+            <p className="text-2xl font-bold text-foreground">{formatCurrency(walletBalance)}</p>
           </div>
         </div>
 

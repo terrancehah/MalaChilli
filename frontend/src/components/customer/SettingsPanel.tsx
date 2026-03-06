@@ -121,10 +121,7 @@ export function SettingsPanel({
       onLanguageChange={onLanguageChange}
       footer={
         onDeleteAccount && (
-          <div
-            ref={deleteConfirmRef}
-            className="py-4 border-t border-border"
-          >
+          <div ref={deleteConfirmRef} className="py-4 border-t border-border">
             {!showDeleteConfirm ? (
               <Button
                 variant="destructive"
@@ -135,20 +132,14 @@ export function SettingsPanel({
                 {t.settings.deleteAccount}
               </Button>
             ) : (
-              <div
-                className="bg-destructive/5 border border-destructive/20 rounded-lg p-4 animate-in fade-in zoom-in-95 duration-200"
-              >
+              <div className="bg-destructive/5 border border-destructive/20 rounded-lg p-4 animate-in fade-in zoom-in-95 duration-200">
                 <div className="flex items-start gap-3 mb-3">
                   <div className="p-2 bg-destructive/10 rounded-full shrink-0">
                     <AlertTriangle className="h-5 w-5 text-destructive" />
                   </div>
                   <div>
-                    <h4 className="font-bold text-destructive text-sm">
-                      {t.settings.deleteConfirmTitle}
-                    </h4>
-                    <p className="text-xs text-muted-foreground mt-1 leading-relaxed">
-                      {t.settings.deleteConfirmDesc}
-                    </p>
+                    <h4 className="font-bold text-destructive text-sm">{t.settings.deleteConfirmTitle}</h4>
+                    <p className="text-xs text-muted-foreground mt-1 leading-relaxed">{t.settings.deleteConfirmDesc}</p>
                   </div>
                 </div>
 
@@ -178,9 +169,7 @@ export function SettingsPanel({
     >
       {/* Profile Section */}
       <div className="mb-6">
-        <h4 className="text-base font-bold text-foreground mb-4">
-          {t.settings.profile}
-        </h4>
+        <h4 className="text-base font-bold text-foreground mb-4">{t.settings.profile}</h4>
 
         {/* Success/Error Message */}
         {message && (
@@ -204,14 +193,10 @@ export function SettingsPanel({
           >
             <div className="p-3 flex items-center justify-between">
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-semibold text-foreground mb-2">
-                  {t.settings.name}
-                </p>
+                <p className="text-sm font-semibold text-foreground mb-2">{t.settings.name}</p>
 
                 {!isEditingName && (
-                  <p className="text-sm text-muted-foreground">
-                    {user.full_name || t.settings.notSet}
-                  </p>
+                  <p className="text-sm text-muted-foreground">{user.full_name || t.settings.notSet}</p>
                 )}
 
                 {/* Input and Buttons */}
@@ -275,17 +260,13 @@ export function SettingsPanel({
 
           {/* Email Field */}
           <div className="p-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm">
-            <p className="text-sm font-semibold text-foreground mb-2">
-              {t.settings.email}
-            </p>
+            <p className="text-sm font-semibold text-foreground mb-2">{t.settings.email}</p>
             <p className="text-sm text-muted-foreground">{user.email}</p>
           </div>
 
           {/* Member Since */}
           <div className="p-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm">
-            <p className="text-sm font-semibold text-foreground mb-2">
-              {t.settings.memberSince}
-            </p>
+            <p className="text-sm font-semibold text-foreground mb-2">{t.settings.memberSince}</p>
             <p className="text-sm text-muted-foreground">{memberSince}</p>
           </div>
         </div>

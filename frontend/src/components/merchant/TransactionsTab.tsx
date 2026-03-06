@@ -1,18 +1,9 @@
 import { useState, useEffect } from "react";
 import { supabase } from "../../lib/supabase";
-import {
-  Card,
-  CardContent,
-} from "../ui/card";
+import { Card, CardContent } from "../ui/card";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
-import {
-  Search,
-  Download,
-  ChevronLeft,
-  ChevronRight,
-  FileText,
-} from "lucide-react";
+import { Search, Download, ChevronLeft, ChevronRight, FileText } from "lucide-react";
 import { getTranslation, type Language } from "../../translations";
 import { format } from "date-fns";
 
@@ -41,17 +32,14 @@ interface TransactionsTabProps {
   language: Language;
 }
 
-export function TransactionsTab({
-  restaurantId,
-  language,
-}: TransactionsTabProps) {
+export function TransactionsTab({ restaurantId, language }: TransactionsTabProps) {
   // Cast to any to avoid TS error while type inference updates
   const t = getTranslation(language) as any;
   const [loading, setLoading] = useState(true);
   const [transactions, setTransactions] = useState<TransactionWithDetails[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [dateRange, setDateRange] = useState<"today" | "7d" | "30d" | "all">("30d");
-  
+
   // Pagination
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
@@ -94,7 +82,7 @@ export function TransactionsTab({
           { count: "exact" }
         )
         // Filter by restaurant indirectly via branches
-        .eq("branch.restaurant_id", restaurantId); 
+        .eq("branch.restaurant_id", restaurantId);
 
       // Apply Date Filter
       const now = new Date();
@@ -111,16 +99,16 @@ export function TransactionsTab({
 
       // Apply Search
       if (debouncedSearch) {
-         // Simple ID search if it looks like a UUID
-         if (debouncedSearch.length > 20) {
-             query = query.eq("id", debouncedSearch);
-         }
+        // Simple ID search if it looks like a UUID
+        if (debouncedSearch.length > 20) {
+          query = query.eq("id", debouncedSearch);
+        }
       }
 
       // Pagination
       const from = (page - 1) * itemsPerPage;
       const to = from + itemsPerPage - 1;
-      
+
       // We need to order by date desc
       query = query.order("transaction_date", { ascending: false }).range(from, to);
 
@@ -143,7 +131,7 @@ export function TransactionsTab({
           branch: Array.isArray(tx.branch) ? tx.branch[0] : tx.branch,
           staff: Array.isArray(tx.staff) ? tx.staff[0] : tx.staff,
         }));
-      
+
       setTransactions(formattedData);
       if (count) {
         setTotalCount(count);
@@ -192,7 +180,7 @@ export function TransactionsTab({
               </button>
             ))}
           </div>
-          
+
           <Button variant="outline" size="icon" title="Export CSV" disabled>
             <Download className="h-4 w-4" />
           </Button>
@@ -220,13 +208,27 @@ export function TransactionsTab({
                   // Skeleton Rows
                   Array.from({ length: 5 }).map((_, i) => (
                     <tr key={i} className="animate-pulse">
-                      <td className="px-4 py-3"><div className="h-4 w-24 bg-muted rounded"></div></td>
-                      <td className="px-4 py-3"><div className="h-4 w-32 bg-muted rounded"></div></td>
-                      <td className="px-4 py-3"><div className="h-4 w-20 bg-muted rounded"></div></td>
-                      <td className="px-4 py-3"><div className="h-4 w-16 bg-muted rounded ml-auto"></div></td>
-                      <td className="px-4 py-3"><div className="h-4 w-12 bg-muted rounded ml-auto"></div></td>
-                      <td className="px-4 py-3"><div className="h-4 w-16 bg-muted rounded ml-auto"></div></td>
-                      <td className="px-4 py-3"><div className="h-4 w-16 bg-muted rounded mx-auto"></div></td>
+                      <td className="px-4 py-3">
+                        <div className="h-4 w-24 bg-muted rounded"></div>
+                      </td>
+                      <td className="px-4 py-3">
+                        <div className="h-4 w-32 bg-muted rounded"></div>
+                      </td>
+                      <td className="px-4 py-3">
+                        <div className="h-4 w-20 bg-muted rounded"></div>
+                      </td>
+                      <td className="px-4 py-3">
+                        <div className="h-4 w-16 bg-muted rounded ml-auto"></div>
+                      </td>
+                      <td className="px-4 py-3">
+                        <div className="h-4 w-12 bg-muted rounded ml-auto"></div>
+                      </td>
+                      <td className="px-4 py-3">
+                        <div className="h-4 w-16 bg-muted rounded ml-auto"></div>
+                      </td>
+                      <td className="px-4 py-3">
+                        <div className="h-4 w-16 bg-muted rounded mx-auto"></div>
+                      </td>
                     </tr>
                   ))
                 ) : transactions.length === 0 ? (
@@ -251,22 +253,16 @@ export function TransactionsTab({
                         <p className="font-medium text-foreground truncate max-w-[150px]">
                           {tx.customer?.full_name || "Unknown"}
                         </p>
-                        <p className="text-xs text-muted-foreground truncate max-w-[150px]">
-                          {tx.customer?.email}
-                        </p>
+                        <p className="text-xs text-muted-foreground truncate max-w-[150px]">{tx.customer?.email}</p>
                       </td>
-                      <td className="px-4 py-3 text-muted-foreground">
-                        {tx.branch?.name}
-                      </td>
+                      <td className="px-4 py-3 text-muted-foreground">{tx.branch?.name}</td>
                       <td className="px-4 py-3 text-right font-medium text-foreground">
                         RM {tx.bill_amount.toFixed(2)}
                       </td>
                       <td className="px-4 py-3 text-right text-red-500">
                         {tx.total_discount > 0 ? `-RM ${tx.total_discount.toFixed(2)}` : "-"}
                       </td>
-                      <td className="px-4 py-3 text-right font-bold text-green-600">
-                        RM {tx.final_amount.toFixed(2)}
-                      </td>
+                      <td className="px-4 py-3 text-right font-bold text-green-600">RM {tx.final_amount.toFixed(2)}</td>
                       <td className="px-4 py-3 text-center">
                         {tx.is_first_transaction && (
                           <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300">
@@ -274,9 +270,9 @@ export function TransactionsTab({
                           </span>
                         )}
                         {!tx.is_first_transaction && (
-                           <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-300">
-                           {t.merchantDashboard.transactions.status.returning}
-                         </span>
+                          <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-300">
+                            {t.merchantDashboard.transactions.status.returning}
+                          </span>
                         )}
                       </td>
                     </tr>
@@ -291,23 +287,15 @@ export function TransactionsTab({
       {/* Pagination */}
       <div className="flex items-center justify-between border-t border-border/50 pt-4">
         <p className="text-sm text-muted-foreground">
-          {t.merchantDashboard.transactions.showing} <span className="font-medium">{transactions.length}</span> {t.merchantDashboard.transactions.of} <span className="font-medium">{totalCount}</span> {t.merchantDashboard.transactions.results}
+          {t.merchantDashboard.transactions.showing} <span className="font-medium">{transactions.length}</span>{" "}
+          {t.merchantDashboard.transactions.of} <span className="font-medium">{totalCount}</span>{" "}
+          {t.merchantDashboard.transactions.results}
         </p>
         <div className="flex gap-2">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => handlePageChange(page - 1)}
-            disabled={page === 1}
-          >
+          <Button variant="outline" size="sm" onClick={() => handlePageChange(page - 1)} disabled={page === 1}>
             <ChevronLeft className="h-4 w-4" />
           </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => handlePageChange(page + 1)}
-            disabled={page >= totalPages}
-          >
+          <Button variant="outline" size="sm" onClick={() => handlePageChange(page + 1)} disabled={page >= totalPages}>
             <ChevronRight className="h-4 w-4" />
           </Button>
         </div>

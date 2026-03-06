@@ -1,10 +1,10 @@
-import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../../contexts/AuthContext';
-import { supabase } from '../../lib/supabase';
-import { Button } from '../../components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
-import { ArrowLeft, Plus, Edit, Trash2, Building2, MapPin, Phone } from 'lucide-react';
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../contexts/AuthContext";
+import { supabase } from "../../lib/supabase";
+import { Button } from "../../components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "../../components/ui/card";
+import { ArrowLeft, Plus, Edit, Trash2, Building2, MapPin, Phone } from "lucide-react";
 
 interface Branch {
   id: string;
@@ -29,16 +29,16 @@ export default function BranchesManagement() {
         setLoading(true);
 
         const { data } = await supabase
-          .from('branches')
-          .select('*')
-          .eq('restaurant_id', user.restaurant_id)
-          .order('created_at', { ascending: false });
+          .from("branches")
+          .select("*")
+          .eq("restaurant_id", user.restaurant_id)
+          .order("created_at", { ascending: false });
 
         if (data) {
           setBranches(data);
         }
       } catch (error) {
-        console.error('Error fetching branches:', error);
+        console.error("Error fetching branches:", error);
       } finally {
         setLoading(false);
       }
@@ -48,45 +48,35 @@ export default function BranchesManagement() {
   }, [user]);
 
   const handleDeactivate = async (branchId: string) => {
-    if (!confirm('Are you sure you want to deactivate this branch?')) return;
+    if (!confirm("Are you sure you want to deactivate this branch?")) return;
 
     try {
-      const { error } = await supabase
-        .from('branches')
-        .update({ is_active: false })
-        .eq('id', branchId);
+      const { error } = await supabase.from("branches").update({ is_active: false }).eq("id", branchId);
 
       if (error) throw error;
 
-      setBranches(branches.map(b => 
-        b.id === branchId ? { ...b, is_active: false } : b
-      ));
+      setBranches(branches.map((b) => (b.id === branchId ? { ...b, is_active: false } : b)));
     } catch (error) {
-      console.error('Error deactivating branch:', error);
-      alert('Failed to deactivate branch');
+      console.error("Error deactivating branch:", error);
+      alert("Failed to deactivate branch");
     }
   };
 
   const handleReactivate = async (branchId: string) => {
     try {
-      const { error } = await supabase
-        .from('branches')
-        .update({ is_active: true })
-        .eq('id', branchId);
+      const { error } = await supabase.from("branches").update({ is_active: true }).eq("id", branchId);
 
       if (error) throw error;
 
-      setBranches(branches.map(b => 
-        b.id === branchId ? { ...b, is_active: true } : b
-      ));
+      setBranches(branches.map((b) => (b.id === branchId ? { ...b, is_active: true } : b)));
     } catch (error) {
-      console.error('Error reactivating branch:', error);
-      alert('Failed to reactivate branch');
+      console.error("Error reactivating branch:", error);
+      alert("Failed to reactivate branch");
     }
   };
 
-  const activeBranches = branches.filter(b => b.is_active);
-  const inactiveBranches = branches.filter(b => !b.is_active);
+  const activeBranches = branches.filter((b) => b.is_active);
+  const inactiveBranches = branches.filter((b) => !b.is_active);
 
   return (
     <div className="min-h-screen bg-background pb-6">
@@ -96,18 +86,14 @@ export default function BranchesManagement() {
           <Button
             variant="secondary"
             size="sm"
-            onClick={() => navigate('/merchant/dashboard')}
+            onClick={() => navigate("/merchant/dashboard")}
             className="bg-white/20 hover:bg-white/30 text-primary-foreground border-0"
           >
             <ArrowLeft className="h-4 w-4" />
           </Button>
           <div>
-            <h1 className="text-xl sm:text-2xl font-bold text-primary-foreground mb-1">
-              Manage Branches
-            </h1>
-            <p className="text-primary-foreground/80 text-sm">
-              Add and manage restaurant branches
-            </p>
+            <h1 className="text-xl sm:text-2xl font-bold text-primary-foreground mb-1">Manage Branches</h1>
+            <p className="text-primary-foreground/80 text-sm">Add and manage restaurant branches</p>
           </div>
         </div>
       </div>
@@ -145,10 +131,7 @@ export default function BranchesManagement() {
         </div>
 
         {/* Add Branch Button */}
-        <Button
-          onClick={() => navigate('/merchant/branches/add')}
-          className="w-full"
-        >
+        <Button onClick={() => navigate("/merchant/branches/add")} className="w-full">
           <Plus className="h-4 w-4 mr-2" />
           Add New Branch
         </Button>
@@ -195,11 +178,7 @@ export default function BranchesManagement() {
                       >
                         <Edit className="h-4 w-4" />
                       </Button>
-                      <Button
-                        variant="destructive"
-                        size="sm"
-                        onClick={() => handleDeactivate(branch.id)}
-                      >
+                      <Button variant="destructive" size="sm" onClick={() => handleDeactivate(branch.id)}>
                         <Trash2 className="h-4 w-4" />
                       </Button>
                     </div>
@@ -233,12 +212,7 @@ export default function BranchesManagement() {
                         <p className="text-xs text-red-600">Deactivated</p>
                       </div>
                     </div>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => handleReactivate(branch.id)}
-                      className="ml-4"
-                    >
+                    <Button variant="outline" size="sm" onClick={() => handleReactivate(branch.id)} className="ml-4">
                       Reactivate
                     </Button>
                   </div>

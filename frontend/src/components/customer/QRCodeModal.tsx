@@ -13,13 +13,7 @@ interface QRCodeModalProps {
   language?: Language;
 }
 
-export function QRCodeModal({
-  isOpen,
-  onClose,
-  userId,
-  userName,
-  language = "en",
-}: QRCodeModalProps) {
+export function QRCodeModal({ isOpen, onClose, userId, userName, language = "en" }: QRCodeModalProps) {
   const t = getTranslation(language);
   const [isAnimating, setIsAnimating] = useState(false);
   const [shouldRender, setShouldRender] = useState(false);
@@ -60,12 +54,8 @@ export function QRCodeModal({
           {/* Header */}
           <div className="relative mb-6">
             <div className="text-center">
-              <h3 className="text-xl font-bold text-foreground mb-2">
-                {t.qrCode.title}
-              </h3>
-              <p className="text-sm text-muted-foreground">
-                {t.qrCode.subtitle}
-              </p>
+              <h3 className="text-xl font-bold text-foreground mb-2">{t.qrCode.title}</h3>
+              <p className="text-sm text-muted-foreground">{t.qrCode.subtitle}</p>
             </div>
             <button
               onClick={onClose}

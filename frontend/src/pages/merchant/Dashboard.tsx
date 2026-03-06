@@ -5,14 +5,7 @@ import { supabase } from "../../lib/supabase";
 import { Button } from "../../components/ui/button";
 import { Card, CardContent } from "../../components/ui/card";
 import { Skeleton, HeaderSkeleton } from "../../components/ui/skeleton";
-import {
-  Settings,
-  Share2,
-  DollarSign,
-  Users as UsersIcon,
-  Briefcase,
-  Loader2,
-} from "lucide-react";
+import { Settings, Share2, DollarSign, Users as UsersIcon, Briefcase, Loader2 } from "lucide-react";
 import type { DashboardSummary } from "../../types/analytics.types";
 import { getTranslation } from "../../translations";
 
@@ -93,9 +86,7 @@ export default function MerchantDashboard() {
         // Call the get_dashboard_summary RPC function
         const { data, error } = await supabase.rpc("get_dashboard_summary", {
           p_restaurant_id: restaurantId,
-          p_start_date: new Date(
-            Date.now() - 30 * 24 * 60 * 60 * 1000
-          ).toISOString(), // Last 30 days
+          p_start_date: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString(), // Last 30 days
           p_end_date: new Date().toISOString(),
         });
 
@@ -152,9 +143,7 @@ export default function MerchantDashboard() {
     // Refresh the summary data
     const { data, error } = await supabase.rpc("get_dashboard_summary", {
       p_restaurant_id: restaurantId,
-      p_start_date: new Date(
-        Date.now() - 30 * 24 * 60 * 60 * 1000
-      ).toISOString(), // Last 30 days
+      p_start_date: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString(), // Last 30 days
       p_end_date: new Date().toISOString(),
     });
 
@@ -195,10 +184,7 @@ export default function MerchantDashboard() {
           subtitle={user?.full_name || user?.email || ""}
           actions={
             <>
-              <LanguageSelector
-                language={language}
-                onLanguageChange={setLanguage}
-              />
+              <LanguageSelector language={language} onLanguageChange={setLanguage} />
               <Button
                 variant="secondary"
                 size="icon"
@@ -230,9 +216,7 @@ export default function MerchantDashboard() {
               className="h-10 whitespace-nowrap flex-shrink-0 px-3 sm:px-4 gap-1"
             >
               <Share2 className="h-4 w-4 mr-1" />
-              <span className="text-xs sm:text-sm">
-                {t.merchantDashboard.tabs.viralPerformance}
-              </span>
+              <span className="text-xs sm:text-sm">{t.merchantDashboard.tabs.viralPerformance}</span>
             </Button>
             <Button
               onClick={() => setActiveTab("business")}
@@ -240,9 +224,7 @@ export default function MerchantDashboard() {
               className="h-10 whitespace-nowrap flex-shrink-0 px-3 sm:px-4 gap-1"
             >
               <DollarSign className="h-4 w-4 mr-1" />
-              <span className="text-xs sm:text-sm">
-                {t.merchantDashboard.tabs.businessMetrics}
-              </span>
+              <span className="text-xs sm:text-sm">{t.merchantDashboard.tabs.businessMetrics}</span>
             </Button>
             <Button
               onClick={() => setActiveTab("customers")}
@@ -250,37 +232,21 @@ export default function MerchantDashboard() {
               className="h-10 whitespace-nowrap flex-shrink-0 px-3 sm:px-4 gap-1"
             >
               <UsersIcon className="h-4 w-4 mr-1" />
-              <span className="text-xs sm:text-sm">
-                {t.merchantDashboard.tabs.customerInsights}
-              </span>
+              <span className="text-xs sm:text-sm">{t.merchantDashboard.tabs.customerInsights}</span>
             </Button>
           </div>
 
           {/* Tab Content */}
           {activeTab === "viral" && (
-            <ViralPerformanceTab
-              restaurantId={restaurantId!}
-              summary={summary}
-              language={language}
-            />
+            <ViralPerformanceTab restaurantId={restaurantId!} summary={summary} language={language} />
           )}
           {activeTab === "business" && (
-            <BusinessMetricsTab
-              restaurantId={restaurantId!}
-              summary={summary}
-              language={language}
-            />
+            <BusinessMetricsTab restaurantId={restaurantId!} summary={summary} language={language} />
           )}
           {activeTab === "customers" && (
-            <CustomerInsightsTab
-              restaurantId={restaurantId!}
-              summary={summary}
-              language={language}
-            />
+            <CustomerInsightsTab restaurantId={restaurantId!} summary={summary} language={language} />
           )}
-          {activeTab === "transactions" && (
-            <TransactionsTab restaurantId={restaurantId!} language={language} />
-          )}
+          {activeTab === "transactions" && <TransactionsTab restaurantId={restaurantId!} language={language} />}
         </div>
 
         {/* Management Panel */}

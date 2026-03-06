@@ -1,8 +1,8 @@
-import { useState, useEffect } from 'react';
-import { X, User, Calendar, Cake } from 'lucide-react';
-import { Button } from '../ui/button';
-import { getTranslation, type Language } from '../../translations';
-import { supabase } from '../../lib/supabase';
+import { useState, useEffect } from "react";
+import { X, User, Calendar, Cake } from "lucide-react";
+import { Button } from "../ui/button";
+import { getTranslation, type Language } from "../../translations";
+import { supabase } from "../../lib/supabase";
 
 interface EditCustomerSheetProps {
   isOpen: boolean;
@@ -17,46 +17,52 @@ interface EditCustomerSheetProps {
   language?: Language;
 }
 
-export function EditCustomerSheet({ isOpen, onClose, customerData, onUpdate, language = 'en' }: EditCustomerSheetProps) {
+export function EditCustomerSheet({
+  isOpen,
+  onClose,
+  customerData,
+  onUpdate,
+  language = "en",
+}: EditCustomerSheetProps) {
   const t = getTranslation(language);
-  const [fullName, setFullName] = useState(customerData.full_name || '');
-  const [birthday, setBirthday] = useState(customerData.birthday || '');
+  const [fullName, setFullName] = useState(customerData.full_name || "");
+  const [birthday, setBirthday] = useState(customerData.birthday || "");
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
 
   // Update local state when customerData prop changes
   useEffect(() => {
-    setFullName(customerData.full_name || '');
-    setBirthday(customerData.birthday || '');
+    setFullName(customerData.full_name || "");
+    setBirthday(customerData.birthday || "");
   }, [customerData]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError('');
+    setError("");
     setIsSubmitting(true);
 
     try {
       const { error: updateError } = await supabase
-        .from('users')
+        .from("users")
         .update({
           full_name: fullName.trim(),
           birthday: birthday || null,
         })
-        .eq('id', customerData.id);
+        .eq("id", customerData.id);
 
       if (updateError) {
-        console.error('Update error:', updateError);
+        console.error("Update error:", updateError);
         throw updateError;
       }
 
       // Call onUpdate to refresh parent data
       await onUpdate();
-      
+
       // Close the sheet
       onClose();
     } catch (err: any) {
-      console.error('Failed to update customer:', err);
-      setError(err.message || 'Failed to update customer details. You may not have permission to edit this customer.');
+      console.error("Failed to update customer:", err);
+      setError(err.message || "Failed to update customer details. You may not have permission to edit this customer.");
     } finally {
       setIsSubmitting(false);
     }
@@ -67,10 +73,7 @@ export function EditCustomerSheet({ isOpen, onClose, customerData, onUpdate, lan
   return (
     <div className="fixed inset-0 z-50 flex items-end md:items-center md:justify-center animate-in fade-in duration-200">
       {/* Backdrop */}
-      <div 
-        className="absolute inset-0 bg-black/50 backdrop-blur-sm transition-opacity"
-        onClick={onClose}
-      />
+      <div className="absolute inset-0 bg-black/50 backdrop-blur-sm transition-opacity" onClick={onClose} />
 
       {/* Sheet */}
       <div className="relative w-full md:max-w-lg bg-background rounded-t-3xl md:rounded-2xl shadow-xl max-h-[90vh] overflow-y-auto animate-in slide-in-from-bottom md:zoom-in-95 duration-300">
@@ -90,12 +93,7 @@ export function EditCustomerSheet({ isOpen, onClose, customerData, onUpdate, lan
               <p className="text-sm text-muted-foreground">{customerData.email}</p>
             </div>
           </div>
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={onClose}
-            className="h-8 w-8 rounded-lg"
-          >
+          <Button variant="ghost" size="icon" onClick={onClose} className="h-8 w-8 rounded-lg">
             <X className="h-5 w-5" />
           </Button>
         </div>
@@ -139,9 +137,7 @@ export function EditCustomerSheet({ isOpen, onClose, customerData, onUpdate, lan
               />
               <Calendar className="absolute right-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
             </div>
-            <p className="text-xs text-muted-foreground">
-              Birthday helps us send special rewards
-            </p>
+            <p className="text-xs text-muted-foreground">Birthday helps us send special rewards</p>
           </div>
 
           {/* Action Buttons */}
@@ -160,7 +156,7 @@ export function EditCustomerSheet({ isOpen, onClose, customerData, onUpdate, lan
               className="flex-1 h-11 bg-primary hover:bg-primary/90 rounded-xl"
               disabled={isSubmitting}
             >
-              {isSubmitting ? 'Saving...' : 'Save Changes'}
+              {isSubmitting ? "Saving..." : "Save Changes"}
             </Button>
           </div>
         </form>

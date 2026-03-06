@@ -1,6 +1,6 @@
-import type { ReactNode } from 'react';
-import { Navigate } from 'react-router-dom';
-import { useAuth } from '../../contexts/AuthContext';
+import type { ReactNode } from "react";
+import { Navigate } from "react-router-dom";
+import { useAuth } from "../../contexts/AuthContext";
 
 interface ProtectedRouteProps {
   children: ReactNode;
@@ -9,7 +9,7 @@ interface ProtectedRouteProps {
 
 /**
  * ProtectedRoute component - Restricts access based on user authentication and role
- * 
+ *
  * Usage:
  * <ProtectedRoute allowedRoles={['staff']}>
  *   <StaffDashboard />
@@ -36,13 +36,13 @@ export function ProtectedRoute({ children, allowedRoles }: ProtectedRouteProps) 
   if (!allowedRoles.includes(user.role)) {
     // Redirect based on user's actual role
     switch (user.role) {
-      case 'customer':
+      case "customer":
         return <Navigate to="/customer/dashboard" replace />;
-      case 'staff':
+      case "staff":
         return <Navigate to="/staff/dashboard" replace />;
-      case 'merchant':
+      case "merchant":
         return <Navigate to="/merchant/dashboard" replace />;
-      case 'admin':
+      case "admin":
         return <Navigate to="/admin/dashboard" replace />;
       default:
         return <Navigate to="/login" replace />;

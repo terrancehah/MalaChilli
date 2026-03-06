@@ -65,9 +65,7 @@ export function InfoModal({ isOpen, onClose, title, items }: InfoModalProps) {
         <div className="p-6">
           {/* Header */}
           <div className="relative mb-6">
-            <h3 className="text-xl font-bold text-foreground leading-none pt-2">
-              {title}
-            </h3>
+            <h3 className="text-xl font-bold text-foreground leading-none pt-2">{title}</h3>
             <button
               onClick={onClose}
               className="absolute top-0 right-0 h-6 w-6 p-0 hover:bg-muted rounded-md transition-colors flex items-center justify-center"
@@ -82,9 +80,7 @@ export function InfoModal({ isOpen, onClose, title, items }: InfoModalProps) {
             <ul className="space-y-2 text-foreground">
               {items.map((item, index) => (
                 <li key={index} className="flex items-start gap-2">
-                  <span className={`mt-0.5 ${getColorClass(item.color)}`}>
-                    •
-                  </span>
+                  <span className={`mt-0.5 ${getColorClass(item.color)}`}>•</span>
                   <span dangerouslySetInnerHTML={{ __html: item.text }} />
                 </li>
               ))}

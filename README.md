@@ -37,6 +37,7 @@
 - Git workflow with feature branches
 - ESLint + Prettier for code quality
 - Environment-based configuration management
+- Consistent code formatting with automated tooling
 
 ---
 

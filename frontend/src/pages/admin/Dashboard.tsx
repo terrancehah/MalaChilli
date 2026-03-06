@@ -32,9 +32,7 @@ export default function AdminDashboard() {
         setLoading(true);
 
         // Fetch user counts by role
-        const { data: users, error: userError } = await supabase
-          .from("users")
-          .select("role");
+        const { data: users, error: userError } = await supabase.from("users").select("role");
 
         if (userError) throw userError;
 
@@ -45,8 +43,7 @@ export default function AdminDashboard() {
         if (txError) throw txError;
 
         const totalUsers = users?.length || 0;
-        const totalMerchants =
-          users?.filter((u) => u.role === "merchant").length || 0;
+        const totalMerchants = users?.filter((u) => u.role === "merchant").length || 0;
         const totalStaff = users?.filter((u) => u.role === "staff").length || 0;
 
         setStats({
@@ -110,10 +107,7 @@ export default function AdminDashboard() {
           subtitle="System Control Center"
           actions={
             <>
-              <LanguageSelector
-                language={language}
-                onLanguageChange={setLanguage}
-              />
+              <LanguageSelector language={language} onLanguageChange={setLanguage} />
               <Button
                 variant="secondary"
                 size="icon"
@@ -142,9 +136,7 @@ export default function AdminDashboard() {
             <Card>
               <CardContent className="p-6 flex items-center justify-between">
                 <div>
-                  <p className="text-xs sm:text-sm text-gray-500 font-medium">
-                    Total Users
-                  </p>
+                  <p className="text-xs sm:text-sm text-gray-500 font-medium">Total Users</p>
                   <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mt-1">
                     {loading ? "..." : stats.totalUsers}
                   </h3>
@@ -172,9 +164,7 @@ export default function AdminDashboard() {
             <Card>
               <CardContent className="p-6 flex items-center justify-between">
                 <div>
-                  <p className="text-xs sm:text-sm text-gray-500 font-medium">
-                    Staff Members
-                  </p>
+                  <p className="text-xs sm:text-sm text-gray-500 font-medium">Staff Members</p>
                   <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mt-1">
                     {loading ? "..." : stats.totalStaff}
                   </h3>
@@ -188,9 +178,7 @@ export default function AdminDashboard() {
             <Card>
               <CardContent className="p-6 flex items-center justify-between">
                 <div>
-                  <p className="text-xs sm:text-sm text-gray-500 font-medium">
-                    Total Transactions
-                  </p>
+                  <p className="text-xs sm:text-sm text-gray-500 font-medium">Total Transactions</p>
                   <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mt-1">
                     {loading ? "..." : stats.totalTransactions}
                   </h3>
@@ -204,9 +192,7 @@ export default function AdminDashboard() {
 
           {/* Quick Actions */}
           <div className="mb-8">
-            <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-foreground mb-4">
-              Management
-            </h2>
+            <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-foreground mb-4">Management</h2>
             <div className="flex gap-4">
               <Button
                 onClick={() => navigate("/admin/users")}

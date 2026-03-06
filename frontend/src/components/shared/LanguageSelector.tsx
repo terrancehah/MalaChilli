@@ -8,10 +8,7 @@ interface LanguageSelectorProps {
   onLanguageChange: (lang: Language) => void;
 }
 
-export function LanguageSelector({
-  language,
-  onLanguageChange,
-}: LanguageSelectorProps) {
+export function LanguageSelector({ language, onLanguageChange }: LanguageSelectorProps) {
   const [isOpen, setIsOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -24,10 +21,7 @@ export function LanguageSelector({
   // Close when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (
-        containerRef.current &&
-        !containerRef.current.contains(event.target as Node)
-      ) {
+      if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
         setIsOpen(false);
       }
     };
@@ -51,14 +45,8 @@ export function LanguageSelector({
         title="Change Language"
       >
         <Globe className="h-5 w-5" />
-        <span className="hidden sm:inline font-medium">
-          {languages.find((l) => l.code === language)?.label}
-        </span>
-        <ChevronDown
-          className={`h-4 w-4 transition-transform duration-200 ${
-            isOpen ? "rotate-180" : ""
-          }`}
-        />
+        <span className="hidden sm:inline font-medium">{languages.find((l) => l.code === language)?.label}</span>
+        <ChevronDown className={`h-4 w-4 transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`} />
       </button>
 
       {isOpen && (
@@ -69,9 +57,7 @@ export function LanguageSelector({
               onClick={() => handleSelect(lang.code)}
               className={cn(
                 "w-full text-left px-4 py-3 text-sm transition-colors hover:bg-gray-50",
-                language === lang.code
-                  ? "text-primary font-bold bg-primary/10"
-                  : "text-gray-700"
+                language === lang.code ? "text-primary font-bold bg-primary/10" : "text-gray-700"
               )}
             >
               {lang.label}

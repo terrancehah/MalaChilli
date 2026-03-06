@@ -1,11 +1,11 @@
-import { useState, useRef, useEffect } from 'react';
-import { Button } from '../ui/button';
-import { X, Upload, Camera, Loader2, CheckCircle, AlertCircle, Package } from 'lucide-react';
-import { supabase } from '../../lib/supabase';
-import { extractReceiptWithGemini } from '../../lib/geminiOCR';
-import { batchMatchItems } from '../../lib/fuzzyMatch';
-import type { OCRExtractionResult, MenuItem, MatchedMenuItem } from '../../types/ocr.types';
-import { getTranslation, type Language } from '../../translations';
+import { useState, useRef, useEffect } from "react";
+import { Button } from "../ui/button";
+import { X, Upload, Camera, Loader2, CheckCircle, AlertCircle, Package } from "lucide-react";
+import { supabase } from "../../lib/supabase";
+import { extractReceiptWithGemini } from "../../lib/geminiOCR";
+import { batchMatchItems } from "../../lib/fuzzyMatch";
+import type { OCRExtractionResult, MenuItem, MatchedMenuItem } from "../../types/ocr.types";
+import { getTranslation, type Language } from "../../translations";
 
 interface ReceiptOCRSheetProps {
   isOpen: boolean;
@@ -22,24 +22,18 @@ interface ReceiptOCRSheetProps {
       time_diff_minutes: number;
     };
   }) => void;
-  restaurantId: string | null;  // Staff's restaurant ID for filtering menu items
+  restaurantId: string | null; // Staff's restaurant ID for filtering menu items
   language?: Language;
 }
 
-export function ReceiptOCRSheet({
-  isOpen,
-  onClose,
-  onExtracted,
-  restaurantId,
-  language = 'en'
-}: ReceiptOCRSheetProps) {
+export function ReceiptOCRSheet({ isOpen, onClose, onExtracted, restaurantId, language = "en" }: ReceiptOCRSheetProps) {
   const t = getTranslation(language);
   const [isProcessing, setIsProcessing] = useState(false);
-  const [extractedText, setExtractedText] = useState('');
+  const [extractedText, setExtractedText] = useState("");
   const [extraction, setExtraction] = useState<OCRExtractionResult | null>(null);
   const [matchedItems, setMatchedItems] = useState<MatchedMenuItem[]>([]);
   const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
   const [progress, setProgress] = useState(0);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const cameraInputRef = useRef<HTMLInputElement>(null);
@@ -55,30 +49,30 @@ export function ReceiptOCRSheet({
   const loadMenuItems = async () => {
     try {
       if (!restaurantId) {
-        console.warn('No restaurant ID provided - OCR matching disabled');
+        console.warn("No restaurant ID provided - OCR matching disabled");
         return;
       }
 
       const { data, error: fetchError } = await supabase
-        .from('menu_items')
-        .select('id, name, category, price, unit, is_available')
-        .eq('restaurant_id', restaurantId)  // Filter by staff's restaurant
-        .eq('is_available', true)
-        .eq('is_active', true);
+        .from("menu_items")
+        .select("id, name, category, price, unit, is_available")
+        .eq("restaurant_id", restaurantId) // Filter by staff's restaurant
+        .eq("is_available", true)
+        .eq("is_active", true);
 
       if (fetchError) throw fetchError;
       setMenuItems(data || []);
       console.log(`Loaded ${data?.length || 0} menu items for restaurant ${restaurantId}`);
     } catch (err) {
-      console.error('Failed to load menu items:', err);
+      console.error("Failed to load menu items:", err);
     }
   };
 
   // Process image with Gemini Vision API
   const processImage = async (file: File) => {
     setIsProcessing(true);
-    setError('');
-    setExtractedText('');
+    setError("");
+    setExtractedText("");
     setExtraction(null);
     setMatchedItems([]);
     setProgress(0);
@@ -88,16 +82,16 @@ export function ReceiptOCRSheet({
       const extractionResult = await extractReceiptWithGemini(file, (progress) => {
         setProgress(progress);
       });
-      
+
       setExtractedText(extractionResult.rawText);
       setExtraction(extractionResult);
-      
+
       // Match items with menu database
       if (extractionResult.items.length > 0 && menuItems.length > 0) {
         const matches = batchMatchItems(extractionResult.items, menuItems, 60);
-        
+
         const matchedItemsList: MatchedMenuItem[] = matches
-          .filter(m => m.match !== null)
+          .filter((m) => m.match !== null)
           .map((m) => ({
             menuItemId: m.match!.menuItem.id,
             menuItemName: m.match!.menuItem.name,
@@ -106,48 +100,46 @@ export function ReceiptOCRSheet({
             quantity: m.ocrItem.quantity,
             unitPrice: m.ocrItem.unitPrice,
             total: m.ocrItem.total,
-            lineNumber: m.ocrItem.lineNumber
+            lineNumber: m.ocrItem.lineNumber,
           }));
-        
+
         setMatchedItems(matchedItemsList);
       }
-      
+
       // Find matching transaction by date/time and amount
       if (extractionResult.dateTime && extractionResult.totals.total > 0 && restaurantId) {
         try {
           const transactionDateTime = `${extractionResult.dateTime.date} ${extractionResult.dateTime.time}`;
-          
-          const { data: matchingTransactions, error: searchError } = await supabase
-            .rpc('find_transaction_by_receipt', {
-              p_restaurant_id: restaurantId,
-              p_transaction_date: transactionDateTime,
-              p_total_amount: extractionResult.totals.subtotal, // Use subtotal for matching
-              p_time_tolerance_minutes: 30
-            });
+
+          const { data: matchingTransactions, error: searchError } = await supabase.rpc("find_transaction_by_receipt", {
+            p_restaurant_id: restaurantId,
+            p_transaction_date: transactionDateTime,
+            p_total_amount: extractionResult.totals.subtotal, // Use subtotal for matching
+            p_time_tolerance_minutes: 30,
+          });
 
           if (!searchError && matchingTransactions && matchingTransactions.length > 0) {
             // Use the closest match (first result)
             const match = matchingTransactions[0];
-            console.log('Found matching transaction:', match);
+            console.log("Found matching transaction:", match);
             // Store matched transaction for confirmation
             setExtraction({
               ...extractionResult,
-              matchedTransaction: match
+              matchedTransaction: match,
             } as any);
           }
         } catch (err) {
-          console.error('Error finding matching transaction:', err);
+          console.error("Error finding matching transaction:", err);
           // Continue anyway - not critical
         }
       }
-      
-      if (extractionResult.totals.total === 0 && extractionResult.items.length === 0) {
-        setError('Could not extract receipt data. Please try again with a clearer image.');
-      }
 
+      if (extractionResult.totals.total === 0 && extractionResult.items.length === 0) {
+        setError("Could not extract receipt data. Please try again with a clearer image.");
+      }
     } catch (err: any) {
-      console.error('Gemini OCR Error:', err);
-      setError(err.message || 'Failed to process receipt. Please try again or enter amount manually.');
+      console.error("Gemini OCR Error:", err);
+      setError(err.message || "Failed to process receipt. Please try again or enter amount manually.");
     } finally {
       setIsProcessing(false);
       setProgress(0);
@@ -169,7 +161,7 @@ export function ReceiptOCRSheet({
         amount: extraction.totals.total,
         extraction,
         matchedItems,
-        matchedTransaction: (extraction as any).matchedTransaction
+        matchedTransaction: (extraction as any).matchedTransaction,
       });
       handleClose();
     }
@@ -177,10 +169,10 @@ export function ReceiptOCRSheet({
 
   // Handle close
   const handleClose = () => {
-    setExtractedText('');
+    setExtractedText("");
     setExtraction(null);
     setMatchedItems([]);
-    setError('');
+    setError("");
     setProgress(0);
     onClose();
   };
@@ -190,10 +182,7 @@ export function ReceiptOCRSheet({
   return (
     <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center animate-in fade-in duration-200">
       {/* Backdrop */}
-      <div
-        className="absolute inset-0 bg-black/50 backdrop-blur-sm transition-opacity"
-        onClick={handleClose}
-      />
+      <div className="absolute inset-0 bg-black/50 backdrop-blur-sm transition-opacity" onClick={handleClose} />
 
       {/* Sheet */}
       <div className="relative bg-background w-full sm:max-w-lg sm:rounded-2xl rounded-t-3xl shadow-2xl max-h-[90vh] overflow-y-auto animate-in slide-in-from-bottom sm:zoom-in-95 duration-300">
@@ -211,9 +200,7 @@ export function ReceiptOCRSheet({
         {/* Content */}
         <div className="p-6 space-y-6">
           {/* Instructions */}
-          <div className="text-center text-sm text-muted-foreground">
-            Upload or take a photo of the receipt
-          </div>
+          <div className="text-center text-sm text-muted-foreground">Upload or take a photo of the receipt</div>
 
           {/* Upload Buttons - Show when not processing OR when there's an error */}
           {(!isProcessing || error) && !extraction && (
@@ -241,13 +228,7 @@ export function ReceiptOCRSheet({
           )}
 
           {/* Hidden file inputs */}
-          <input
-            ref={fileInputRef}
-            type="file"
-            accept="image/*"
-            onChange={handleFileSelect}
-            className="hidden"
-          />
+          <input ref={fileInputRef} type="file" accept="image/*" onChange={handleFileSelect} className="hidden" />
           <input
             ref={cameraInputRef}
             type="file"
@@ -262,18 +243,11 @@ export function ReceiptOCRSheet({
             <div className="flex flex-col items-center gap-4 py-8">
               <Loader2 className="h-12 w-12 text-primary animate-spin" />
               <div className="text-center">
-                <p className="text-sm font-semibold text-foreground mb-2">
-                  {t.staffDashboard.processing}
-                </p>
-                <p className="text-xs text-muted-foreground">
-                  {progress}% complete
-                </p>
+                <p className="text-sm font-semibold text-foreground mb-2">{t.staffDashboard.processing}</p>
+                <p className="text-xs text-muted-foreground">{progress}% complete</p>
               </div>
               <div className="w-full max-w-xs bg-muted rounded-full h-2 overflow-hidden">
-                <div
-                  className="bg-primary h-full transition-all duration-300"
-                  style={{ width: `${progress}%` }}
-                />
+                <div className="bg-primary h-full transition-all duration-300" style={{ width: `${progress}%` }} />
               </div>
             </div>
           )}
@@ -301,16 +275,17 @@ export function ReceiptOCRSheet({
                     <Package className="h-4 w-4" />
                     <span>{extraction.items.length} items detected</span>
                     {matchedItems.length > 0 && (
-                      <span className="text-xs text-muted-foreground ml-auto">
-                        {matchedItems.length} matched
-                      </span>
+                      <span className="text-xs text-muted-foreground ml-auto">{matchedItems.length} matched</span>
                     )}
                   </div>
                   <div className="space-y-2 max-h-48 overflow-y-auto">
                     {extraction.items.map((item, idx) => {
-                      const matched = matchedItems.find(m => m.lineNumber === item.lineNumber);
+                      const matched = matchedItems.find((m) => m.lineNumber === item.lineNumber);
                       return (
-                        <div key={idx} className="flex justify-between items-start text-xs bg-background rounded-lg p-2">
+                        <div
+                          key={idx}
+                          className="flex justify-between items-start text-xs bg-background rounded-lg p-2"
+                        >
                           <div className="flex-1">
                             <p className="font-medium text-foreground">{item.name}</p>
                             {matched && (
@@ -321,7 +296,9 @@ export function ReceiptOCRSheet({
                           </div>
                           <div className="text-right ml-2">
                             <p className="font-semibold text-foreground">RM {item.total.toFixed(2)}</p>
-                            <p className="text-xs text-muted-foreground">{item.quantity}x @ RM{item.unitPrice.toFixed(2)}</p>
+                            <p className="text-xs text-muted-foreground">
+                              {item.quantity}x @ RM{item.unitPrice.toFixed(2)}
+                            </p>
                           </div>
                         </div>
                       );
@@ -351,17 +328,10 @@ export function ReceiptOCRSheet({
 
               {/* Action Buttons */}
               <div className="flex gap-3">
-                <Button
-                  onClick={handleClose}
-                  variant="outline"
-                  className="flex-1"
-                >
+                <Button onClick={handleClose} variant="outline" className="flex-1">
                   Cancel
                 </Button>
-                <Button
-                  onClick={handleConfirm}
-                  className="flex-1 bg-primary hover:bg-primary/90"
-                >
+                <Button onClick={handleConfirm} className="flex-1 bg-primary hover:bg-primary/90">
                   Confirm & Use Data
                 </Button>
               </div>
@@ -374,19 +344,11 @@ export function ReceiptOCRSheet({
               <div className="flex items-start gap-3 p-4 bg-red-50 dark:bg-red-900/20 rounded-xl border border-red-200 dark:border-red-800">
                 <AlertCircle className="h-5 w-5 text-red-600 dark:text-red-400 flex-shrink-0 mt-0.5" />
                 <div className="flex-1">
-                  <p className="text-sm font-semibold text-red-800 dark:text-red-200 mb-1">
-                    Detection Failed
-                  </p>
-                  <p className="text-xs text-red-700 dark:text-red-300">
-                    {error}
-                  </p>
+                  <p className="text-sm font-semibold text-red-800 dark:text-red-200 mb-1">Detection Failed</p>
+                  <p className="text-xs text-red-700 dark:text-red-300">{error}</p>
                 </div>
               </div>
-              <Button
-                onClick={() => setError('')}
-                variant="outline"
-                className="w-full"
-              >
+              <Button onClick={() => setError("")} variant="outline" className="w-full">
                 Try Again
               </Button>
             </div>

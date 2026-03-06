@@ -1,8 +1,8 @@
-import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
-import { ChartContainer, ChartTooltip, ChartTooltipContent } from '../ui/chart';
-import { Area, AreaChart, Bar, BarChart, CartesianGrid, XAxis, YAxis } from 'recharts';
-import { TrendingUp, Users, Link2 } from 'lucide-react';
-import { getTranslation, type Language } from '../../translations';
+import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
+import { ChartContainer, ChartTooltip, ChartTooltipContent } from "../ui/chart";
+import { Area, AreaChart, Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts";
+import { TrendingUp, Users, Link2 } from "lucide-react";
+import { getTranslation, type Language } from "../../translations";
 
 interface ViralPerformanceChartsProps {
   savedCodesPipeline?: {
@@ -19,19 +19,33 @@ interface ViralPerformanceChartsProps {
   language: Language;
 }
 
-export function ViralPerformanceCharts({ 
+export function ViralPerformanceCharts({
   savedCodesPipeline,
   networkGrowthData = [],
-  language
+  language,
 }: ViralPerformanceChartsProps) {
   const t = getTranslation(language);
-  
+
   // Prepare saved codes data for bar chart
-  const savedCodesData = savedCodesPipeline ? [
-    { name: t.merchantDashboard.viralPerformance.totalSaved, value: savedCodesPipeline.total_saved_codes, fill: 'hsl(var(--chart-1))' },
-    { name: t.merchantDashboard.viralPerformance.awaitingVisit, value: savedCodesPipeline.unused_codes, fill: 'hsl(var(--chart-3))' },
-    { name: t.merchantDashboard.viralPerformance.converted, value: savedCodesPipeline.converted_codes, fill: 'hsl(var(--chart-2))' },
-  ] : [];
+  const savedCodesData = savedCodesPipeline
+    ? [
+        {
+          name: t.merchantDashboard.viralPerformance.totalSaved,
+          value: savedCodesPipeline.total_saved_codes,
+          fill: "hsl(var(--chart-1))",
+        },
+        {
+          name: t.merchantDashboard.viralPerformance.awaitingVisit,
+          value: savedCodesPipeline.unused_codes,
+          fill: "hsl(var(--chart-3))",
+        },
+        {
+          name: t.merchantDashboard.viralPerformance.converted,
+          value: savedCodesPipeline.converted_codes,
+          fill: "hsl(var(--chart-2))",
+        },
+      ]
+    : [];
 
   const chartConfig = {
     total_customers: {
@@ -59,22 +73,13 @@ export function ViralPerformanceCharts({
             <ChartContainer config={chartConfig} className="h-[200px] w-full">
               <BarChart data={savedCodesData}>
                 <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
-                <XAxis 
-                  dataKey="name" 
-                  tick={{ fontSize: 12 }}
-                  tickLine={false}
-                  axisLine={false}
-                />
-                <YAxis 
-                  tick={{ fontSize: 12 }}
-                  tickLine={false}
-                  axisLine={false}
-                />
+                <XAxis dataKey="name" tick={{ fontSize: 12 }} tickLine={false} axisLine={false} />
+                <YAxis tick={{ fontSize: 12 }} tickLine={false} axisLine={false} />
                 <ChartTooltip content={<ChartTooltipContent />} />
                 <Bar dataKey="value" radius={[8, 8, 0, 0]} />
               </BarChart>
             </ChartContainer>
-            
+
             {/* Conversion Rate Badge */}
             <div className="mt-4 flex items-center justify-center gap-2 text-sm">
               <div className="flex items-center gap-1 text-green-600">
@@ -101,26 +106,17 @@ export function ViralPerformanceCharts({
               <AreaChart data={networkGrowthData}>
                 <defs>
                   <linearGradient id="fillCustomers" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="hsl(var(--chart-1))" stopOpacity={0.8}/>
-                    <stop offset="95%" stopColor="hsl(var(--chart-1))" stopOpacity={0.1}/>
+                    <stop offset="5%" stopColor="hsl(var(--chart-1))" stopOpacity={0.8} />
+                    <stop offset="95%" stopColor="hsl(var(--chart-1))" stopOpacity={0.1} />
                   </linearGradient>
                   <linearGradient id="fillSharers" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="hsl(var(--chart-2))" stopOpacity={0.8}/>
-                    <stop offset="95%" stopColor="hsl(var(--chart-2))" stopOpacity={0.1}/>
+                    <stop offset="5%" stopColor="hsl(var(--chart-2))" stopOpacity={0.8} />
+                    <stop offset="95%" stopColor="hsl(var(--chart-2))" stopOpacity={0.1} />
                   </linearGradient>
                 </defs>
                 <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
-                <XAxis 
-                  dataKey="date" 
-                  tick={{ fontSize: 12 }}
-                  tickLine={false}
-                  axisLine={false}
-                />
-                <YAxis 
-                  tick={{ fontSize: 12 }}
-                  tickLine={false}
-                  axisLine={false}
-                />
+                <XAxis dataKey="date" tick={{ fontSize: 12 }} tickLine={false} axisLine={false} />
+                <YAxis tick={{ fontSize: 12 }} tickLine={false} axisLine={false} />
                 <ChartTooltip content={<ChartTooltipContent />} />
                 <Area
                   type="monotone"

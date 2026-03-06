@@ -55,13 +55,10 @@ export default function RegisterPage() {
         }
 
         // Validate referral code for this restaurant
-        const { data: validation, error: validationError } = await supabase.rpc(
-          "validate_referral_code",
-          {
-            p_referral_code: referralCode,
-            p_restaurant_id: restaurant.id,
-          }
-        );
+        const { data: validation, error: validationError } = await supabase.rpc("validate_referral_code", {
+          p_referral_code: referralCode,
+          p_restaurant_id: restaurant.id,
+        });
 
         if (validationError) {
           console.error("Validation error:", validationError);
@@ -105,7 +102,7 @@ export default function RegisterPage() {
     setError("");
 
     // Check rate limit before attempting signup
-    const rateLimitError = checkRateLimit('signup');
+    const rateLimitError = checkRateLimit("signup");
     if (rateLimitError) {
       setError(rateLimitError);
       return;
@@ -149,21 +146,15 @@ export default function RegisterPage() {
       });
 
       // If there's a valid referral code, save it
-      if (
-        codeValidation?.valid &&
-        codeValidation.restaurantId &&
-        codeValidation.uplineUserId
-      ) {
+      if (codeValidation?.valid && codeValidation.restaurantId && codeValidation.uplineUserId) {
         try {
-          const { error: saveError } = await supabase
-            .from("saved_referral_codes")
-            .insert({
-              user_id: userData.id,
-              restaurant_id: codeValidation.restaurantId,
-              referral_code: referralCode,
-              upline_user_id: codeValidation.uplineUserId,
-              is_used: false,
-            });
+          const { error: saveError } = await supabase.from("saved_referral_codes").insert({
+            user_id: userData.id,
+            restaurant_id: codeValidation.restaurantId,
+            referral_code: referralCode,
+            upline_user_id: codeValidation.uplineUserId,
+            is_used: false,
+          });
 
           if (saveError) {
             console.error("Failed to save referral code:", saveError);
@@ -176,13 +167,13 @@ export default function RegisterPage() {
       }
 
       // Clear rate limit on successful signup
-      clearRateLimit('signup');
+      clearRateLimit("signup");
       // Success! Show email confirmation message
       setEmailSent(true);
     } catch (err: any) {
       // Record failed attempt for rate limiting
-      recordAttempt('signup');
-      const remaining = getRemainingAttempts('signup');
+      recordAttempt("signup");
+      const remaining = getRemainingAttempts("signup");
       const baseError = err.message || "Failed to create account";
       if (remaining <= 1 && remaining > 0) {
         setError(`${baseError}. ${remaining} attempt remaining.`);
@@ -200,31 +191,16 @@ export default function RegisterPage() {
       <div className="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 relative overflow-hidden bg-gray-50 dark:bg-gray-900">
         <div className="max-w-md w-full glass-modal dark:bg-gray-800 dark:border-gray-700 p-8 text-center relative z-10">
           <div className="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-green-100 dark:bg-green-900/30 mb-4">
-            <svg
-              className="h-8 w-8 text-green-600"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M5 13l4 4L19 7"
-              />
+            <svg className="h-8 w-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
             </svg>
           </div>
-          <h2 className="text-3xl font-display font-bold text-gray-900 dark:text-white mb-4">
-            Check your email!
-          </h2>
-          <p className="text-gray-600 dark:text-gray-400 mb-2">
-            We've sent a confirmation link to:
-          </p>
+          <h2 className="text-3xl font-display font-bold text-gray-900 dark:text-white mb-4">Check your email!</h2>
+          <p className="text-gray-600 dark:text-gray-400 mb-2">We've sent a confirmation link to:</p>
           <p className="text-lg font-semibold text-primary mb-6">{email}</p>
           <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4 mb-6">
             <p className="text-sm text-blue-800 dark:text-blue-300">
-              Click the link in the email to verify your account. Then you can
-              sign in to access your dashboard.
+              Click the link in the email to verify your account. Then you can sign in to access your dashboard.
             </p>
           </div>
           <Link to="/login" className="w-full btn-primary flex justify-center">
@@ -247,18 +223,14 @@ export default function RegisterPage() {
         <div className="text-center">
           {/* Logo */}
           <img src="/logo.png" alt="MakanTak logo" className="h-20 w-20 mx-auto mb-4" />
-          <h2 className="text-3xl font-display font-bold text-primary-dark dark:text-primary-light">
-            Create Account
-          </h2>
+          <h2 className="text-3xl font-display font-bold text-primary-dark dark:text-primary-light">Create Account</h2>
 
           {/* Referral Code Validation Status */}
           {referralCode && (
             <div className="mt-4">
               {validatingCode ? (
                 <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 animate-pulse">
-                  <p className="text-sm text-blue-800 text-center">
-                    🔍 Validating referral code...
-                  </p>
+                  <p className="text-sm text-blue-800 text-center">🔍 Validating referral code...</p>
                 </div>
               ) : codeValidation?.valid ? (
                 <div className="bg-green-50 border border-green-200 rounded-lg p-3 transform transition-all duration-500 hover:scale-105">
@@ -268,18 +240,13 @@ export default function RegisterPage() {
                       5% OFF at <strong>{codeValidation.restaurantName}</strong>
                     </span>
                   </p>
-                  <p className="text-xs text-green-700 text-center mt-1">
-                    Referred by: {codeValidation.uplineName}
-                  </p>
+                  <p className="text-xs text-green-700 text-center mt-1">Referred by: {codeValidation.uplineName}</p>
                 </div>
               ) : codeValidation?.error ? (
                 <div className="bg-red-50 border border-red-200 rounded-lg p-3">
-                  <p className="text-sm text-red-800 text-center font-medium">
-                    ❌ {codeValidation.error}
-                  </p>
+                  <p className="text-sm text-red-800 text-center font-medium">❌ {codeValidation.error}</p>
                   <p className="text-xs text-red-700 text-center mt-1">
-                    You can still register, but the referral code won't be
-                    saved.
+                    You can still register, but the referral code won't be saved.
                   </p>
                 </div>
               ) : null}
@@ -288,10 +255,7 @@ export default function RegisterPage() {
 
           <p className="mt-4 text-sm text-gray-600 dark:text-gray-400">
             Already have an account?{" "}
-            <Link
-              to="/login"
-              className="font-semibold text-primary hover:text-primary-dark transition-colors"
-            >
+            <Link to="/login" className="font-semibold text-primary hover:text-primary-dark transition-colors">
               Sign in
             </Link>
           </p>
@@ -300,12 +264,7 @@ export default function RegisterPage() {
         <form className="mt-8 space-y-5" onSubmit={handleSubmit}>
           {error && (
             <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-400 px-4 py-3 rounded-lg text-sm flex items-center">
-              <svg
-                className="w-5 h-5 mr-2"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
+              <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
@@ -338,10 +297,7 @@ export default function RegisterPage() {
             </div>
 
             <div>
-              <label
-                htmlFor="email"
-                className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 ml-1"
-              >
+              <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 ml-1">
                 Email address
               </label>
               <input
@@ -374,9 +330,7 @@ export default function RegisterPage() {
                 max={new Date().toISOString().split("T")[0]}
                 className="glass-input w-full"
               />
-              <p className="mt-1 text-xs text-gray-500 dark:text-gray-400 ml-1">
-                You must be 18 or older
-              </p>
+              <p className="mt-1 text-xs text-gray-500 dark:text-gray-400 ml-1">You must be 18 or older</p>
             </div>
 
             <div>
@@ -407,12 +361,27 @@ export default function RegisterPage() {
                 >
                   {showPassword ? (
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"
+                      />
                     </svg>
                   ) : (
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                      />
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                      />
                     </svg>
                   )}
                 </button>
@@ -447,12 +416,27 @@ export default function RegisterPage() {
                 >
                   {showConfirmPassword ? (
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"
+                      />
                     </svg>
                   ) : (
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                      />
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                      />
                     </svg>
                   )}
                 </button>
@@ -461,11 +445,7 @@ export default function RegisterPage() {
           </div>
 
           <div>
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full btn-primary flex justify-center items-center"
-            >
+            <button type="submit" disabled={loading} className="w-full btn-primary flex justify-center items-center">
               {loading ? (
                 <svg
                   className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
@@ -473,14 +453,7 @@ export default function RegisterPage() {
                   fill="none"
                   viewBox="0 0 24 24"
                 >
-                  <circle
-                    className="opacity-25"
-                    cx="12"
-                    cy="12"
-                    r="10"
-                    stroke="currentColor"
-                    strokeWidth="4"
-                  ></circle>
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                   <path
                     className="opacity-75"
                     fill="currentColor"

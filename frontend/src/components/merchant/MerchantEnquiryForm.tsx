@@ -1,6 +1,6 @@
-import { useState } from 'react';
-import { Button } from '../ui/button';
-import { X } from 'lucide-react';
+import { useState } from "react";
+import { Button } from "../ui/button";
+import { X } from "lucide-react";
 
 interface MerchantEnquiryFormProps {
   isOpen: boolean;
@@ -9,56 +9,56 @@ interface MerchantEnquiryFormProps {
 
 export function MerchantEnquiryForm({ isOpen, onClose }: MerchantEnquiryFormProps) {
   const [formData, setFormData] = useState({
-    restaurantName: '',
-    contactName: '',
-    email: '',
-    phone: '',
-    message: '',
+    restaurantName: "",
+    contactName: "",
+    email: "",
+    phone: "",
+    message: "",
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
+  const [submitStatus, setSubmitStatus] = useState<"idle" | "success" | "error">("idle");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-    setSubmitStatus('idle');
+    setSubmitStatus("idle");
 
     try {
       // Create mailto link with form data
       const subject = encodeURIComponent(`Partnership Enquiry - ${formData.restaurantName}`);
       const body = encodeURIComponent(
         `Restaurant Name: ${formData.restaurantName}\n` +
-        `Contact Name: ${formData.contactName}\n` +
-        `Email: ${formData.email}\n` +
-        `Phone: ${formData.phone}\n\n` +
-        `Message:\n${formData.message}`
+          `Contact Name: ${formData.contactName}\n` +
+          `Email: ${formData.email}\n` +
+          `Phone: ${formData.phone}\n\n` +
+          `Message:\n${formData.message}`
       );
-      
+
       // Open mailto link
       window.location.href = `mailto:support@makantak.com?subject=${subject}&body=${body}`;
-      
-      setSubmitStatus('success');
+
+      setSubmitStatus("success");
       setTimeout(() => {
         onClose();
         setFormData({
-          restaurantName: '',
-          contactName: '',
-          email: '',
-          phone: '',
-          message: '',
+          restaurantName: "",
+          contactName: "",
+          email: "",
+          phone: "",
+          message: "",
         });
-        setSubmitStatus('idle');
+        setSubmitStatus("idle");
       }, 2000);
     } catch (error) {
-      console.error('Error submitting form:', error);
-      setSubmitStatus('error');
+      console.error("Error submitting form:", error);
+      setSubmitStatus("error");
     } finally {
       setIsSubmitting(false);
     }
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
       [e.target.name]: e.target.value,
     }));
@@ -69,10 +69,7 @@ export function MerchantEnquiryForm({ isOpen, onClose }: MerchantEnquiryFormProp
   return (
     <>
       {/* Backdrop */}
-      <div
-        className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50"
-        onClick={onClose}
-      />
+      <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50" onClick={onClose} />
 
       {/* Modal */}
       <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
@@ -83,9 +80,7 @@ export function MerchantEnquiryForm({ isOpen, onClose }: MerchantEnquiryFormProp
           {/* Header */}
           <div className="sticky top-0 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 p-6 flex items-center justify-between">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
-                Partner With MakanTak
-              </h1>
+              <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Partner With MakanTak</h1>
               <p className="text-base text-gray-600 dark:text-gray-400 mt-1">
                 Fill out the form below and we'll get back to you within 24 hours
               </p>
@@ -102,7 +97,10 @@ export function MerchantEnquiryForm({ isOpen, onClose }: MerchantEnquiryFormProp
           <form onSubmit={handleSubmit} className="p-6 space-y-5">
             {/* Restaurant Name */}
             <div>
-              <label htmlFor="restaurantName" className="block text-base font-semibold text-gray-900 dark:text-white mb-2">
+              <label
+                htmlFor="restaurantName"
+                className="block text-base font-semibold text-gray-900 dark:text-white mb-2"
+              >
                 Restaurant Name *
               </label>
               <input
@@ -186,7 +184,7 @@ export function MerchantEnquiryForm({ isOpen, onClose }: MerchantEnquiryFormProp
             </div>
 
             {/* Status Messages */}
-            {submitStatus === 'success' && (
+            {submitStatus === "success" && (
               <div className="p-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg">
                 <p className="text-base text-green-800 dark:text-green-200 font-medium">
                   Thank you! Your enquiry has been sent successfully.
@@ -194,7 +192,7 @@ export function MerchantEnquiryForm({ isOpen, onClose }: MerchantEnquiryFormProp
               </div>
             )}
 
-            {submitStatus === 'error' && (
+            {submitStatus === "error" && (
               <div className="p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
                 <p className="text-base text-red-800 dark:text-red-200 font-medium">
                   Something went wrong. Please try again or email us directly at support@makantak.com
@@ -204,21 +202,11 @@ export function MerchantEnquiryForm({ isOpen, onClose }: MerchantEnquiryFormProp
 
             {/* Submit Button */}
             <div className="flex gap-3 pt-2">
-              <Button
-                type="button"
-                variant="outline"
-                onClick={onClose}
-                disabled={isSubmitting}
-                className="flex-1"
-              >
+              <Button type="button" variant="outline" onClick={onClose} disabled={isSubmitting} className="flex-1">
                 Cancel
               </Button>
-              <Button
-                type="submit"
-                disabled={isSubmitting}
-                className="flex-1 bg-primary hover:bg-primary/90"
-              >
-                {isSubmitting ? 'Sending...' : 'Send Enquiry'}
+              <Button type="submit" disabled={isSubmitting} className="flex-1 bg-primary hover:bg-primary/90">
+                {isSubmitting ? "Sending..." : "Send Enquiry"}
               </Button>
             </div>
           </form>

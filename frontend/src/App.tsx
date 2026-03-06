@@ -53,10 +53,7 @@ function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          <Route
-            path="/join/:restaurantSlug/:referralCode"
-            element={<JoinPage />}
-          />
+          <Route path="/join/:restaurantSlug/:referralCode" element={<JoinPage />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/reset-password" element={<ResetPassword />} />
           <Route path="/auth/verify-email" element={<VerifyEmail />} />
@@ -176,10 +173,7 @@ function App() {
           <Route path="/demo" element={<DemoDashboard />} />
 
           {/* Backward compatibility - redirect old /dashboard to customer dashboard */}
-          <Route
-            path="/dashboard"
-            element={<Navigate to="/customer/dashboard" replace />}
-          />
+          <Route path="/dashboard" element={<Navigate to="/customer/dashboard" replace />} />
 
           {/* Catch all - redirect to home */}
           <Route path="*" element={<Navigate to="/" replace />} />

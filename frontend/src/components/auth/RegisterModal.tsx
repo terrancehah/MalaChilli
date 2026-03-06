@@ -1,5 +1,5 @@
-import { AuthModal } from './AuthModal';
-import { RegisterForm } from './RegisterForm';
+import { AuthModal } from "./AuthModal";
+import { RegisterForm } from "./RegisterForm";
 
 interface RegisterModalProps {
   isOpen: boolean;
@@ -15,7 +15,7 @@ interface RegisterModalProps {
 export function RegisterModal({ isOpen, onClose, onSwitchToLogin, referralCode }: RegisterModalProps) {
   return (
     <AuthModal isOpen={isOpen} onClose={onClose} title="Join and start saving!">
-      <RegisterForm 
+      <RegisterForm
         onSuccess={onClose}
         showLoginLink={true}
         onSwitchToLogin={onSwitchToLogin}

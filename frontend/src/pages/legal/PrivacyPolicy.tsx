@@ -1,9 +1,12 @@
-import { SEO } from '../../components/shared/SEO';
+import { SEO } from "../../components/shared/SEO";
 
 export default function PrivacyPolicy() {
   return (
     <div className="min-h-screen bg-background">
-      <SEO title="Privacy Policy" description="MakanTak Privacy Policy - How we collect, use, and protect your personal information." />
+      <SEO
+        title="Privacy Policy"
+        description="MakanTak Privacy Policy - How we collect, use, and protect your personal information."
+      />
       <div className="max-w-4xl mx-auto px-4 py-8">
         {/* Header */}
         <div className="mb-8">
@@ -17,7 +20,9 @@ export default function PrivacyPolicy() {
           <section>
             <h2 className="text-xl font-bold text-foreground mb-3">1. Introduction</h2>
             <p className="text-foreground leading-relaxed">
-              MakanTak ("we", "our", or "us") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our viral restaurant discount platform.
+              MakanTak ("we", "our", or "us") is committed to protecting your privacy. This Privacy Policy explains how
+              we collect, use, disclose, and safeguard your information when you use our viral restaurant discount
+              platform.
             </p>
             <p className="text-foreground leading-relaxed mt-2">
               This policy complies with the Personal Data Protection Act 2010 (PDPA) of Malaysia.
@@ -27,7 +32,7 @@ export default function PrivacyPolicy() {
           {/* Information We Collect */}
           <section>
             <h2 className="text-xl font-bold text-foreground mb-3">2. Information We Collect</h2>
-            
+
             <h3 className="text-lg font-semibold text-foreground mb-2">2.1 Personal Information</h3>
             <p className="text-foreground leading-relaxed">We collect the following personal information:</p>
             <ul className="list-disc pl-6 space-y-1 text-foreground">
@@ -75,16 +80,15 @@ export default function PrivacyPolicy() {
           <section>
             <h2 className="text-xl font-bold text-foreground mb-3">4. Information Sharing</h2>
             <p className="text-foreground leading-relaxed">We share your information with:</p>
-            
+
             <h3 className="text-lg font-semibold text-foreground mb-2 mt-3">4.1 Restaurant Partners</h3>
             <p className="text-foreground leading-relaxed">
-              We share your name and transaction details with restaurants where you make purchases to facilitate discount redemption and service delivery.
+              We share your name and transaction details with restaurants where you make purchases to facilitate
+              discount redemption and service delivery.
             </p>
 
             <h3 className="text-lg font-semibold text-foreground mb-2 mt-3">4.2 Service Providers</h3>
-            <p className="text-foreground leading-relaxed">
-              We use third-party services for:
-            </p>
+            <p className="text-foreground leading-relaxed">We use third-party services for:</p>
             <ul className="list-disc pl-6 space-y-1 text-foreground">
               <li>Authentication and database (Supabase)</li>
               <li>Email delivery (for notifications)</li>
@@ -115,14 +119,27 @@ export default function PrivacyPolicy() {
             <h2 className="text-xl font-bold text-foreground mb-3">6. Your Rights (PDPA)</h2>
             <p className="text-foreground leading-relaxed">Under the PDPA, you have the right to:</p>
             <ul className="list-disc pl-6 space-y-1 text-foreground">
-              <li><strong>Access:</strong> Request a copy of your personal data</li>
-              <li><strong>Correction:</strong> Request correction of inaccurate data</li>
-              <li><strong>Deletion:</strong> Request deletion of your account and data</li>
-              <li><strong>Withdrawal:</strong> Withdraw consent for data processing</li>
-              <li><strong>Complaint:</strong> Lodge a complaint with the Personal Data Protection Commissioner</li>
+              <li>
+                <strong>Access:</strong> Request a copy of your personal data
+              </li>
+              <li>
+                <strong>Correction:</strong> Request correction of inaccurate data
+              </li>
+              <li>
+                <strong>Deletion:</strong> Request deletion of your account and data
+              </li>
+              <li>
+                <strong>Withdrawal:</strong> Withdraw consent for data processing
+              </li>
+              <li>
+                <strong>Complaint:</strong> Lodge a complaint with the Personal Data Protection Commissioner
+              </li>
             </ul>
             <p className="text-foreground leading-relaxed mt-3">
-              To exercise these rights, contact us at: <a href="mailto:privacy@makantak.com" className="text-primary hover:underline">privacy@makantak.com</a>
+              To exercise these rights, contact us at:{" "}
+              <a href="mailto:privacy@makantak.com" className="text-primary hover:underline">
+                privacy@makantak.com
+              </a>
             </p>
           </section>
 
@@ -130,7 +147,9 @@ export default function PrivacyPolicy() {
           <section>
             <h2 className="text-xl font-bold text-foreground mb-3">7. Data Retention</h2>
             <p className="text-foreground leading-relaxed">
-              We retain your personal data for as long as your account is active or as needed to provide services. After account deletion, we may retain certain information for legal compliance and fraud prevention purposes for up to 7 years.
+              We retain your personal data for as long as your account is active or as needed to provide services. After
+              account deletion, we may retain certain information for legal compliance and fraud prevention purposes for
+              up to 7 years.
             </p>
           </section>
 
@@ -138,7 +157,8 @@ export default function PrivacyPolicy() {
           <section>
             <h2 className="text-xl font-bold text-foreground mb-3">8. Cookies and Tracking</h2>
             <p className="text-foreground leading-relaxed">
-              We use essential cookies for authentication and session management. We do not use third-party advertising cookies. You can control cookies through your browser settings.
+              We use essential cookies for authentication and session management. We do not use third-party advertising
+              cookies. You can control cookies through your browser settings.
             </p>
           </section>
 
@@ -146,7 +166,9 @@ export default function PrivacyPolicy() {
           <section>
             <h2 className="text-xl font-bold text-foreground mb-3">9. Children's Privacy</h2>
             <p className="text-foreground leading-relaxed">
-              Our service is not intended for users under 18 years of age. We do not knowingly collect personal information from children. If you believe we have collected information from a child, please contact us immediately.
+              Our service is not intended for users under 18 years of age. We do not knowingly collect personal
+              information from children. If you believe we have collected information from a child, please contact us
+              immediately.
             </p>
           </section>
 
@@ -154,7 +176,9 @@ export default function PrivacyPolicy() {
           <section>
             <h2 className="text-xl font-bold text-foreground mb-3">10. Changes to This Policy</h2>
             <p className="text-foreground leading-relaxed">
-              We may update this Privacy Policy from time to time. We will notify you of significant changes via email or prominent notice on our platform. Your continued use after changes constitutes acceptance of the updated policy.
+              We may update this Privacy Policy from time to time. We will notify you of significant changes via email
+              or prominent notice on our platform. Your continued use after changes constitutes acceptance of the
+              updated policy.
             </p>
           </section>
 
@@ -165,19 +189,22 @@ export default function PrivacyPolicy() {
               If you have questions about this Privacy Policy or our data practices, contact us at:
             </p>
             <div className="mt-3 text-foreground">
-              <p><strong>Email:</strong> privacy@makantak.com</p>
-              <p><strong>Address:</strong> [Your Business Address]</p>
-              <p><strong>Data Protection Officer:</strong> [DPO Name and Contact]</p>
+              <p>
+                <strong>Email:</strong> privacy@makantak.com
+              </p>
+              <p>
+                <strong>Address:</strong> [Your Business Address]
+              </p>
+              <p>
+                <strong>Data Protection Officer:</strong> [DPO Name and Contact]
+              </p>
             </div>
           </section>
         </div>
 
         {/* Back Button */}
         <div className="mt-8">
-          <button
-            onClick={() => window.history.back()}
-            className="text-primary hover:underline"
-          >
+          <button onClick={() => window.history.back()} className="text-primary hover:underline">
             ← Back
           </button>
         </div>

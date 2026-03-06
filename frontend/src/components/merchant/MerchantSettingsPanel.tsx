@@ -64,10 +64,7 @@ export function MerchantSettingsPanel({
 
     setIsSaving(true);
     try {
-      const { error } = await supabase
-        .from("users")
-        .update({ full_name: editedName })
-        .eq("id", user!.id);
+      const { error } = await supabase.from("users").update({ full_name: editedName }).eq("id", user!.id);
 
       if (error) throw error;
 
@@ -98,9 +95,7 @@ export function MerchantSettingsPanel({
     >
       {/* Profile Section */}
       <div className="mb-6">
-        <h4 className="text-base font-bold text-foreground mb-4">
-          {t.settings.profile}
-        </h4>
+        <h4 className="text-base font-bold text-foreground mb-4">{t.settings.profile}</h4>
 
         {/* Success/Error Message */}
         {message && (
@@ -124,14 +119,10 @@ export function MerchantSettingsPanel({
           >
             <div className="p-3 flex items-center justify-between">
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-semibold text-foreground mb-2">
-                  {t.settings.name}
-                </p>
+                <p className="text-sm font-semibold text-foreground mb-2">{t.settings.name}</p>
 
                 {!isEditingName && (
-                  <p className="text-sm text-muted-foreground">
-                    {user?.full_name || t.settings.notSet}
-                  </p>
+                  <p className="text-sm text-muted-foreground">{user?.full_name || t.settings.notSet}</p>
                 )}
 
                 {/* Input and Buttons */}
@@ -195,27 +186,21 @@ export function MerchantSettingsPanel({
 
           {/* Email Field */}
           <div className="p-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm">
-            <p className="text-sm font-semibold text-foreground mb-2">
-              {t.settings.email}
-            </p>
+            <p className="text-sm font-semibold text-foreground mb-2">{t.settings.email}</p>
             <p className="text-sm text-muted-foreground">{user?.email}</p>
           </div>
 
           {/* Restaurant Name */}
           {restaurantName && (
             <div className="p-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm">
-              <p className="text-sm font-semibold text-foreground mb-2">
-                {t.settings.restaurant}
-              </p>
+              <p className="text-sm font-semibold text-foreground mb-2">{t.settings.restaurant}</p>
               <p className="text-sm text-muted-foreground">{restaurantName}</p>
             </div>
           )}
 
           {/* Member Since */}
           <div className="p-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm">
-            <p className="text-sm font-semibold text-foreground mb-2">
-              {t.settings.memberSince}
-            </p>
+            <p className="text-sm font-semibold text-foreground mb-2">{t.settings.memberSince}</p>
             <p className="text-sm text-muted-foreground">{memberSince}</p>
           </div>
         </div>

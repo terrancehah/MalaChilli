@@ -38,13 +38,7 @@ interface Transaction {
 interface RestaurantCardProps {
   restaurant: Restaurant;
   getTimeAgo: (date: string) => string;
-  onShare: (
-    name: string,
-    slug: string,
-    code: string,
-    balance: number,
-    totalSpent: number
-  ) => void;
+  onShare: (name: string, slug: string, code: string, balance: number, totalSpent: number) => void;
   language?: Language;
   transactions?: Transaction[];
   onTransactionClick?: (transaction: Transaction) => void;
@@ -77,23 +71,16 @@ export function RestaurantCard({
   }, 0);
 
   return (
-    <Card
-      variant="default"
-      className="hover:shadow-lg transition-all duration-300"
-    >
+    <Card variant="default" className="hover:shadow-lg transition-all duration-300">
       <CardContent className="p-4">
         <div className="flex items-start justify-between mb-3">
           <div className="flex-1">
-            <h3 className="text-lg font-bold text-foreground">
-              {restaurant.restaurant.name}
-            </h3>
+            <h3 className="text-lg font-bold text-foreground">{restaurant.restaurant.name}</h3>
             {restaurant.total_visits && restaurant.last_visit_date && (
               <p className="text-xs text-muted-foreground mt-0.5">
                 {restaurant.total_visits}{" "}
-                {restaurant.total_visits === 1
-                  ? t.restaurantCard.visit
-                  : t.restaurantCard.visits}{" "}
-                • Last: {getTimeAgo(restaurant.last_visit_date)}
+                {restaurant.total_visits === 1 ? t.restaurantCard.visit : t.restaurantCard.visits} • Last:{" "}
+                {getTimeAgo(restaurant.last_visit_date)}
               </p>
             )}
           </div>
@@ -109,12 +96,8 @@ export function RestaurantCard({
         <div className="bg-primary/5 rounded-lg p-3 mb-3">
           <div className="flex items-center justify-between mb-2">
             <div>
-              <p className="text-xs text-muted-foreground leading-tight">
-                {t.restaurantCard.vcBalance}
-              </p>
-              <p className="text-xl font-bold text-foreground leading-tight">
-                {formatCurrency(balance)}
-              </p>
+              <p className="text-xs text-muted-foreground leading-tight">{t.restaurantCard.vcBalance}</p>
+              <p className="text-xl font-bold text-foreground leading-tight">{formatCurrency(balance)}</p>
             </div>
             {/* Unrealized Earnings - FOMO Badge */}
             {totalUnrealizedEarnings > 0 && (
@@ -157,18 +140,13 @@ export function RestaurantCard({
               <span>
                 {t.restaurantCard.recentActivity} ({transactions.length})
               </span>
-              {showTransactions ? (
-                <ChevronUp className="h-4 w-4" />
-              ) : (
-                <ChevronDown className="h-4 w-4" />
-              )}
+              {showTransactions ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
             </button>
 
             {showTransactions && (
               <div className="space-y-2 mt-2">
                 {transactions.map((transaction) => {
-                  const potentialEarningPerLevel =
-                    transaction.bill_amount * 0.01;
+                  const potentialEarningPerLevel = transaction.bill_amount * 0.01;
                   const totalPotentialEarning = potentialEarningPerLevel * 3;
                   const hasEarnings = transaction.vc_earned > 0;
 
@@ -184,9 +162,7 @@ export function RestaurantCard({
                           <p className="text-xs text-muted-foreground">
                             {(() => {
                               const date = new Date(transaction.created_at);
-                              const malaysiaTime = new Date(
-                                date.getTime() + 8 * 60 * 60 * 1000
-                              );
+                              const malaysiaTime = new Date(date.getTime() + 8 * 60 * 60 * 1000);
                               return malaysiaTime.toLocaleString("en-MY", {
                                 day: "numeric",
                                 month: "short",
@@ -198,9 +174,7 @@ export function RestaurantCard({
                         </div>
                         <div className="text-right flex items-center gap-2">
                           <div>
-                            <p className="text-sm font-bold text-foreground">
-                              RM {transaction.bill_amount}
-                            </p>
+                            <p className="text-sm font-bold text-foreground">RM {transaction.bill_amount}</p>
                             {transaction.is_first_transaction && (
                               <p className="text-xs text-green-600 dark:text-green-400">
                                 {t.recentTransactions.firstVisit}
@@ -224,9 +198,7 @@ export function RestaurantCard({
                         )}
                         {transaction.virtual_currency_redeemed > 0 && (
                           <span className="flex items-center gap-1">
-                            <span className="text-primary">
-                              -RM {transaction.virtual_currency_redeemed}
-                            </span>
+                            <span className="text-primary">-RM {transaction.virtual_currency_redeemed}</span>
                             <span>{t.recentTransactions.vcUsed}</span>
                           </span>
                         )}

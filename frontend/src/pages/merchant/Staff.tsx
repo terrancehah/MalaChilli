@@ -1,10 +1,10 @@
-import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../../contexts/AuthContext';
-import { supabase } from '../../lib/supabase';
-import { Button } from '../../components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
-import { ArrowLeft, UserPlus, Edit, Trash2, Users } from 'lucide-react';
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../contexts/AuthContext";
+import { supabase } from "../../lib/supabase";
+import { Button } from "../../components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "../../components/ui/card";
+import { ArrowLeft, UserPlus, Edit, Trash2, Users } from "lucide-react";
 
 interface StaffMember {
   id: string;
@@ -37,10 +37,10 @@ export default function StaffManagement() {
 
         // Fetch branches
         const { data: branchesData } = await supabase
-          .from('branches')
-          .select('id, name')
-          .eq('restaurant_id', user.restaurant_id)
-          .eq('is_active', true);
+          .from("branches")
+          .select("id, name")
+          .eq("restaurant_id", user.restaurant_id)
+          .eq("is_active", true);
 
         if (branchesData) {
           setBranches(branchesData);
@@ -48,29 +48,31 @@ export default function StaffManagement() {
 
         // Fetch staff members
         const { data: staffData } = await supabase
-          .from('users')
-          .select(`
+          .from("users")
+          .select(
+            `
             id,
             full_name,
             email,
             branch_id,
             created_at,
             is_deleted
-          `)
-          .eq('restaurant_id', user.restaurant_id)
-          .eq('role', 'staff')
-          .order('created_at', { ascending: false });
+          `
+          )
+          .eq("restaurant_id", user.restaurant_id)
+          .eq("role", "staff")
+          .order("created_at", { ascending: false });
 
         if (staffData) {
           // Map branch names to staff
-          const staffWithBranches = staffData.map(s => ({
+          const staffWithBranches = staffData.map((s) => ({
             ...s,
-            branch_name: branchesData?.find(b => b.id === s.branch_id)?.name || 'Unassigned'
+            branch_name: branchesData?.find((b) => b.id === s.branch_id)?.name || "Unassigned",
           }));
           setStaff(staffWithBranches);
         }
       } catch (error) {
-        console.error('Error fetching staff:', error);
+        console.error("Error fetching staff:", error);
       } finally {
         setLoading(false);
       }
@@ -80,47 +82,37 @@ export default function StaffManagement() {
   }, [user]);
 
   const handleDeactivate = async (staffId: string) => {
-    if (!confirm('Are you sure you want to deactivate this staff member?')) return;
+    if (!confirm("Are you sure you want to deactivate this staff member?")) return;
 
     try {
-      const { error } = await supabase
-        .from('users')
-        .update({ is_deleted: true })
-        .eq('id', staffId);
+      const { error } = await supabase.from("users").update({ is_deleted: true }).eq("id", staffId);
 
       if (error) throw error;
 
       // Refresh staff list
-      setStaff(staff.map(s => 
-        s.id === staffId ? { ...s, is_deleted: true } : s
-      ));
+      setStaff(staff.map((s) => (s.id === staffId ? { ...s, is_deleted: true } : s)));
     } catch (error) {
-      console.error('Error deactivating staff:', error);
-      alert('Failed to deactivate staff member');
+      console.error("Error deactivating staff:", error);
+      alert("Failed to deactivate staff member");
     }
   };
 
   const handleReactivate = async (staffId: string) => {
     try {
-      const { error } = await supabase
-        .from('users')
-        .update({ is_deleted: false })
-        .eq('id', staffId);
+      const { error } = await supabase.from("users").update({ is_deleted: false }).eq("id", staffId);
 
       if (error) throw error;
 
       // Refresh staff list
-      setStaff(staff.map(s => 
-        s.id === staffId ? { ...s, is_deleted: false } : s
-      ));
+      setStaff(staff.map((s) => (s.id === staffId ? { ...s, is_deleted: false } : s)));
     } catch (error) {
-      console.error('Error reactivating staff:', error);
-      alert('Failed to reactivate staff member');
+      console.error("Error reactivating staff:", error);
+      alert("Failed to reactivate staff member");
     }
   };
 
-  const activeStaff = staff.filter(s => !s.is_deleted);
-  const inactiveStaff = staff.filter(s => s.is_deleted);
+  const activeStaff = staff.filter((s) => !s.is_deleted);
+  const inactiveStaff = staff.filter((s) => s.is_deleted);
 
   return (
     <div className="min-h-screen bg-background pb-6">
@@ -130,18 +122,14 @@ export default function StaffManagement() {
           <Button
             variant="secondary"
             size="sm"
-            onClick={() => navigate('/merchant/dashboard')}
+            onClick={() => navigate("/merchant/dashboard")}
             className="bg-white/20 hover:bg-white/30 text-primary-foreground border-0"
           >
             <ArrowLeft className="h-4 w-4" />
           </Button>
           <div>
-            <h1 className="text-xl sm:text-2xl font-bold text-primary-foreground mb-1">
-              Manage Staff
-            </h1>
-            <p className="text-primary-foreground/80 text-sm">
-              Add and manage staff accounts
-            </p>
+            <h1 className="text-xl sm:text-2xl font-bold text-primary-foreground mb-1">Manage Staff</h1>
+            <p className="text-primary-foreground/80 text-sm">Add and manage staff accounts</p>
           </div>
         </div>
       </div>
@@ -179,10 +167,7 @@ export default function StaffManagement() {
         </div>
 
         {/* Add Staff Button */}
-        <Button
-          onClick={() => navigate('/merchant/staff/add')}
-          className="w-full"
-        >
+        <Button onClick={() => navigate("/merchant/staff/add")} className="w-full">
           <UserPlus className="h-4 w-4 mr-2" />
           Add New Staff Member
         </Button>
@@ -209,23 +194,13 @@ export default function StaffManagement() {
                     <div>
                       <p className="font-semibold text-foreground">{member.full_name}</p>
                       <p className="text-sm text-muted-foreground">{member.email}</p>
-                      <p className="text-xs text-muted-foreground mt-1">
-                        Branch: {member.branch_name}
-                      </p>
+                      <p className="text-xs text-muted-foreground mt-1">Branch: {member.branch_name}</p>
                     </div>
                     <div className="flex items-center gap-2">
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => navigate(`/merchant/staff/edit/${member.id}`)}
-                      >
+                      <Button variant="outline" size="sm" onClick={() => navigate(`/merchant/staff/edit/${member.id}`)}>
                         <Edit className="h-4 w-4" />
                       </Button>
-                      <Button
-                        variant="destructive"
-                        size="sm"
-                        onClick={() => handleDeactivate(member.id)}
-                      >
+                      <Button variant="destructive" size="sm" onClick={() => handleDeactivate(member.id)}>
                         <Trash2 className="h-4 w-4" />
                       </Button>
                     </div>
@@ -254,11 +229,7 @@ export default function StaffManagement() {
                       <p className="text-sm text-muted-foreground">{member.email}</p>
                       <p className="text-xs text-red-600">Deactivated</p>
                     </div>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => handleReactivate(member.id)}
-                    >
+                    <Button variant="outline" size="sm" onClick={() => handleReactivate(member.id)}>
                       Reactivate
                     </Button>
                   </div>

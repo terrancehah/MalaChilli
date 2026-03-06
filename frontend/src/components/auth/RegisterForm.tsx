@@ -17,12 +17,7 @@ interface RegisterFormProps {
  * Reusable registration form component
  * Can be used in both modal and standalone page contexts
  */
-export function RegisterForm({
-  onSuccess,
-  showLoginLink = true,
-  onSwitchToLogin,
-  referralCode,
-}: RegisterFormProps) {
+export function RegisterForm({ onSuccess, showLoginLink = true, onSwitchToLogin, referralCode }: RegisterFormProps) {
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
@@ -54,15 +49,13 @@ export function RegisterForm({
     switch (name) {
       case "fullName":
         if (!value.trim()) return "Full name is required";
-        if (value.trim().length < 2)
-          return "Full name must be at least 2 characters";
+        if (value.trim().length < 2) return "Full name must be at least 2 characters";
         return "";
 
       case "email":
         if (!value.trim()) return "Email is required";
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(value))
-          return "Please enter a valid email address";
+        if (!emailRegex.test(value)) return "Please enter a valid email address";
         return "";
 
       case "password":
@@ -78,10 +71,7 @@ export function RegisterForm({
         const today = new Date();
         let age = today.getFullYear() - birthDate.getFullYear();
         const monthDiff = today.getMonth() - birthDate.getMonth();
-        if (
-          monthDiff < 0 ||
-          (monthDiff === 0 && today.getDate() < birthDate.getDate())
-        ) {
+        if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
           age--;
         }
         if (age < 18) return "You must be at least 18 years old";
@@ -89,8 +79,7 @@ export function RegisterForm({
         return "";
 
       case "agreedToTerms":
-        if (!value || value === "false")
-          return "You must agree to the Terms and Privacy Policy";
+        if (!value || value === "false") return "You must agree to the Terms and Privacy Policy";
         return "";
 
       default:
@@ -102,7 +91,7 @@ export function RegisterForm({
     e.preventDefault();
 
     // Check rate limit before attempting signup
-    const rateLimitError = checkRateLimit('signup');
+    const rateLimitError = checkRateLimit("signup");
     if (rateLimitError) {
       showErrorToast(rateLimitError);
       return;
@@ -123,10 +112,7 @@ export function RegisterForm({
       email: validateField("email", formData.email),
       password: validateField("password", formData.password),
       birthday: validateField("birthday", formData.birthday),
-      agreedToTerms: validateField(
-        "agreedToTerms",
-        String(formData.agreedToTerms)
-      ),
+      agreedToTerms: validateField("agreedToTerms", String(formData.agreedToTerms)),
     };
 
     setErrors(newErrors);
@@ -173,7 +159,7 @@ export function RegisterForm({
       */
 
       // Clear rate limit on successful signup
-      clearRateLimit('signup');
+      clearRateLimit("signup");
       showSuccessToast("Account created successfully!", { description: "Redirecting..." });
 
       // Call onSuccess callback if provided (for modal close)
@@ -187,18 +173,14 @@ export function RegisterForm({
       }, 1500);
     } catch (err: any) {
       // Record failed attempt for rate limiting
-      recordAttempt('signup');
-      const remaining = getRemainingAttempts('signup');
-      
+      recordAttempt("signup");
+      const remaining = getRemainingAttempts("signup");
+
       // Handle specific error cases
       let errorMessage = "Failed to create account. Please try again.";
 
-      if (
-        err.message?.includes("already registered") ||
-        err.message?.includes("already exists")
-      ) {
-        errorMessage =
-          "This email is already registered. Please login or use a different email.";
+      if (err.message?.includes("already registered") || err.message?.includes("already exists")) {
+        errorMessage = "This email is already registered. Please login or use a different email.";
       } else if (err.message?.includes("Invalid email")) {
         errorMessage = "Please enter a valid email address.";
       } else if (err.message?.includes("Password")) {
@@ -231,10 +213,7 @@ export function RegisterForm({
     if (touched[name as keyof typeof touched]) {
       setErrors({
         ...errors,
-        [name]: validateField(
-          name,
-          type === "checkbox" ? String(checked) : value
-        ),
+        [name]: validateField(name, type === "checkbox" ? String(checked) : value),
       });
     }
   };
@@ -274,14 +253,10 @@ export function RegisterForm({
             onChange={handleChange}
             onBlur={handleBlur}
             className={` p-2 w-full bg-primary/5 ${
-              touched.fullName && errors.fullName
-                ? "border-red-500 focus:border-red-500 focus:ring-red-500"
-                : "w-full"
+              touched.fullName && errors.fullName ? "border-red-500 focus:border-red-500 focus:ring-red-500" : "w-full"
             }`}
           />
-          {touched.fullName && errors.fullName && (
-            <p className="text-red-500 text-xs mt-1">{errors.fullName}</p>
-          )}
+          {touched.fullName && errors.fullName && <p className="text-red-500 text-xs mt-1">{errors.fullName}</p>}
         </div>
 
         <div>
@@ -296,14 +271,10 @@ export function RegisterForm({
             onChange={handleChange}
             onBlur={handleBlur}
             className={` p-2 w-full bg-primary/5 ${
-              touched.email && errors.email
-                ? "border-red-500 focus:border-red-500 focus:ring-red-500"
-                : "w-full"
+              touched.email && errors.email ? "border-red-500 focus:border-red-500 focus:ring-red-500" : "w-full"
             }`}
           />
-          {touched.email && errors.email && (
-            <p className="text-red-500 text-xs mt-1">{errors.email}</p>
-          )}
+          {touched.email && errors.email && <p className="text-red-500 text-xs mt-1">{errors.email}</p>}
         </div>
 
         <div>
@@ -333,24 +304,33 @@ export function RegisterForm({
             >
               {showPassword ? (
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"
+                  />
                 </svg>
               ) : (
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                  />
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                  />
                 </svg>
               )}
             </button>
           </div>
-          {touched.password && errors.password && (
-            <p className="text-red-500 text-xs mt-1">{errors.password}</p>
-          )}
-          {!errors.password && (
-            <p className="text-gray-500 dark:text-gray-400 text-xs mt-1">
-              Minimum 8 characters
-            </p>
-          )}
+          {touched.password && errors.password && <p className="text-red-500 text-xs mt-1">{errors.password}</p>}
+          {!errors.password && <p className="text-gray-500 dark:text-gray-400 text-xs mt-1">Minimum 8 characters</p>}
         </div>
 
         <div>
@@ -364,19 +344,11 @@ export function RegisterForm({
             onChange={handleChange}
             onBlur={handleBlur}
             className={` p-2 w-full bg-primary/5 ${
-              touched.birthday && errors.birthday
-                ? "border-red-500 focus:border-red-500 focus:ring-red-500"
-                : "w-full"
+              touched.birthday && errors.birthday ? "border-red-500 focus:border-red-500 focus:ring-red-500" : "w-full"
             }`}
           />
-          {touched.birthday && errors.birthday && (
-            <p className="text-red-500 text-xs mt-1">{errors.birthday}</p>
-          )}
-          {!errors.birthday && (
-            <p className="text-gray-500 dark:text-gray-400 text-xs mt-1">
-              You must be 18 or older
-            </p>
-          )}
+          {touched.birthday && errors.birthday && <p className="text-red-500 text-xs mt-1">{errors.birthday}</p>}
+          {!errors.birthday && <p className="text-gray-500 dark:text-gray-400 text-xs mt-1">You must be 18 or older</p>}
         </div>
 
         {/* PDPA Consent Checkbox */}
@@ -391,28 +363,16 @@ export function RegisterForm({
               onBlur={handleBlur}
               className="mt-1 h-12 w-12 text-primary border-gray-300 rounded focus:ring-primary"
             />
-            <label
-              htmlFor="agreedToTerms"
-              className="ml-2 text-sm text-gray-600 dark:text-gray-400"
-            >
+            <label htmlFor="agreedToTerms" className="ml-2 text-sm text-gray-600 dark:text-gray-400">
               I agree to the{" "}
-              <Link
-                to="/terms"
-                target="_blank"
-                className="text-primary hover:underline font-medium"
-              >
+              <Link to="/terms" target="_blank" className="text-primary hover:underline font-medium">
                 Terms of Service
               </Link>{" "}
               and{" "}
-              <Link
-                to="/privacy"
-                target="_blank"
-                className="text-primary hover:underline font-medium"
-              >
+              <Link to="/privacy" target="_blank" className="text-primary hover:underline font-medium">
                 Privacy Policy
               </Link>
-              , and consent to the collection and use of my personal data as
-              described.
+              , and consent to the collection and use of my personal data as described.
               <span className="text-red-500 ml-1">*</span>
             </label>
           </div>
@@ -435,17 +395,11 @@ export function RegisterForm({
         <p className="text-center text-sm text-gray-600 dark:text-gray-400 mt-6">
           Already have an account?{" "}
           {onSwitchToLogin ? (
-            <button
-              onClick={onSwitchToLogin}
-              className="text-primary hover:text-primary-dark font-medium underline"
-            >
+            <button onClick={onSwitchToLogin} className="text-primary hover:text-primary-dark font-medium underline">
               Login
             </button>
           ) : (
-            <Link
-              to="/login"
-              className="text-primary hover:text-primary-dark font-medium underline"
-            >
+            <Link to="/login" className="text-primary hover:text-primary-dark font-medium underline">
               Login
             </Link>
           )}

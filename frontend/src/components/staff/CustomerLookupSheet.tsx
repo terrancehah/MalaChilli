@@ -1,9 +1,9 @@
-import { useState } from 'react';
-import { X, Search, QrCode, User, Mail, Loader2 } from 'lucide-react';
-import { Button } from '../ui/button';
-import { Input } from '../ui/input';
-import { getTranslation, type Language } from '../../translations';
-import { supabase } from '../../lib/supabase';
+import { useState } from "react";
+import { X, Search, QrCode, User, Mail, Loader2 } from "lucide-react";
+import { Button } from "../ui/button";
+import { Input } from "../ui/input";
+import { getTranslation, type Language } from "../../translations";
+import { supabase } from "../../lib/supabase";
 
 interface CustomerLookupSheetProps {
   isOpen: boolean;
@@ -19,20 +19,26 @@ interface CustomerLookupSheetProps {
   language?: Language;
 }
 
-export function CustomerLookupSheet({ isOpen, onClose, onCustomerFound, onScanQR, language = 'en' }: CustomerLookupSheetProps) {
+export function CustomerLookupSheet({
+  isOpen,
+  onClose,
+  onCustomerFound,
+  onScanQR,
+  language = "en",
+}: CustomerLookupSheetProps) {
   const t = getTranslation(language);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState<any[]>([]);
   const [isSearching, setIsSearching] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
 
   const handleSearch = async () => {
     if (!searchQuery.trim()) {
-      setError('Please enter a search term');
+      setError("Please enter a search term");
       return;
     }
 
-    setError('');
+    setError("");
     setIsSearching(true);
     setSearchResults([]);
 
@@ -41,9 +47,9 @@ export function CustomerLookupSheet({ isOpen, onClose, onCustomerFound, onScanQR
 
       // Search by name, email, or referral code
       const { data, error: searchError } = await supabase
-        .from('users')
-        .select('id, full_name, email, referral_code, birthday')
-        .eq('role', 'customer')
+        .from("users")
+        .select("id, full_name, email, referral_code, birthday")
+        .eq("role", "customer")
         .or(`full_name.ilike.%${query}%,email.ilike.%${query}%,referral_code.ilike.%${query}%`)
         .limit(10);
 
@@ -55,7 +61,7 @@ export function CustomerLookupSheet({ isOpen, onClose, onCustomerFound, onScanQR
         setSearchResults(data);
       }
     } catch (err: any) {
-      setError(err.message || 'Failed to search customers');
+      setError(err.message || "Failed to search customers");
     } finally {
       setIsSearching(false);
     }
@@ -65,13 +71,13 @@ export function CustomerLookupSheet({ isOpen, onClose, onCustomerFound, onScanQR
     onCustomerFound(customer);
     onClose();
     // Reset state
-    setSearchQuery('');
+    setSearchQuery("");
     setSearchResults([]);
-    setError('');
+    setError("");
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter') {
+    if (e.key === "Enter") {
       handleSearch();
     }
   };
@@ -81,10 +87,7 @@ export function CustomerLookupSheet({ isOpen, onClose, onCustomerFound, onScanQR
   return (
     <div className="fixed inset-0 z-50 flex items-end md:items-center md:justify-center animate-in fade-in duration-200">
       {/* Backdrop */}
-      <div 
-        className="absolute inset-0 bg-black/50 backdrop-blur-sm transition-opacity"
-        onClick={onClose}
-      />
+      <div className="absolute inset-0 bg-black/50 backdrop-blur-sm transition-opacity" onClick={onClose} />
 
       {/* Sheet */}
       <div className="relative w-full md:max-w-2xl bg-background rounded-t-3xl md:rounded-2xl shadow-xl max-h-[85vh] overflow-y-auto animate-in slide-in-from-bottom md:zoom-in-95 duration-300">
@@ -104,12 +107,7 @@ export function CustomerLookupSheet({ isOpen, onClose, onCustomerFound, onScanQR
               <p className="text-sm text-muted-foreground">{t.staffDashboard.searchByEmail}</p>
             </div>
           </div>
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={onClose}
-            className="h-8 w-8 rounded-lg"
-          >
+          <Button variant="ghost" size="icon" onClick={onClose} className="h-8 w-8 rounded-lg">
             <X className="h-5 w-5" />
           </Button>
         </div>
@@ -158,11 +156,7 @@ export function CustomerLookupSheet({ isOpen, onClose, onCustomerFound, onScanQR
                 disabled={isSearching}
                 className="h-12 px-6 bg-primary hover:bg-primary/90 rounded-xl"
               >
-                {isSearching ? (
-                  <Loader2 className="h-4 w-4 animate-spin" />
-                ) : (
-                  t.staffDashboard.search
-                )}
+                {isSearching ? <Loader2 className="h-4 w-4 animate-spin" /> : t.staffDashboard.search}
               </Button>
             </div>
 
@@ -177,7 +171,8 @@ export function CustomerLookupSheet({ isOpen, onClose, onCustomerFound, onScanQR
           {searchResults.length > 0 && (
             <div className="space-y-2">
               <p className="text-sm font-semibold text-foreground">
-                Found {searchResults.length} {t.staffDashboard.customer}{searchResults.length !== 1 ? 's' : ''}
+                Found {searchResults.length} {t.staffDashboard.customer}
+                {searchResults.length !== 1 ? "s" : ""}
               </p>
               <div className="space-y-2 max-h-96 overflow-y-auto">
                 {searchResults.map((customer) => (

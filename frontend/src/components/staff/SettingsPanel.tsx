@@ -61,11 +61,7 @@ export function SettingsPanel({
 
       // Fetch branch name if available
       if (user.branch_id) {
-        const { data: branch } = await supabase
-          .from("branches")
-          .select("name")
-          .eq("id", user.branch_id)
-          .single();
+        const { data: branch } = await supabase.from("branches").select("name").eq("id", user.branch_id).single();
 
         if (branch) {
           setBranchName(branch.name);
@@ -87,28 +83,18 @@ export function SettingsPanel({
     >
       {/* Profile Section */}
       <div className="mb-6">
-        <h4 className="text-base font-bold text-foreground mb-4">
-          {t.settings.profile}
-        </h4>
+        <h4 className="text-base font-bold text-foreground mb-4">{t.settings.profile}</h4>
         <div className="space-y-3">
           <div className="p-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm">
-            <p className="text-sm font-semibold text-foreground mb-2">
-              {t.settings.name}
-            </p>
-            <p className="text-sm text-muted-foreground">
-              {user.full_name || t.settings.notSet}
-            </p>
+            <p className="text-sm font-semibold text-foreground mb-2">{t.settings.name}</p>
+            <p className="text-sm text-muted-foreground">{user.full_name || t.settings.notSet}</p>
           </div>
           <div className="p-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm">
-            <p className="text-sm font-semibold text-foreground mb-2">
-              {t.settings.email}
-            </p>
+            <p className="text-sm font-semibold text-foreground mb-2">{t.settings.email}</p>
             <p className="text-sm text-muted-foreground">{user.email}</p>
           </div>
           <div className="p-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm">
-            <p className="text-sm font-semibold text-foreground mb-2">
-              {t.settings.memberSince}
-            </p>
+            <p className="text-sm font-semibold text-foreground mb-2">{t.settings.memberSince}</p>
             <p className="text-sm text-muted-foreground">{memberSince}</p>
           </div>
         </div>
@@ -123,22 +109,16 @@ export function SettingsPanel({
               <div className="p-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm">
                 <div className="flex items-center gap-2 mb-2">
                   <Building2 className="h-4 w-4 text-primary" />
-                  <p className="text-sm font-semibold text-foreground">
-                    Restaurant
-                  </p>
+                  <p className="text-sm font-semibold text-foreground">Restaurant</p>
                 </div>
-                <p className="text-sm text-muted-foreground">
-                  {restaurantName}
-                </p>
+                <p className="text-sm text-muted-foreground">{restaurantName}</p>
               </div>
             )}
             {branchName && (
               <div className="p-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm">
                 <div className="flex items-center gap-2 mb-2">
                   <MapPin className="h-4 w-4 text-primary" />
-                  <p className="text-sm font-semibold text-foreground">
-                    Branch
-                  </p>
+                  <p className="text-sm font-semibold text-foreground">Branch</p>
                 </div>
                 <p className="text-sm text-muted-foreground">{branchName}</p>
               </div>

@@ -1,6 +1,6 @@
-import { Users, Building2, Settings as SettingsIcon, ChevronRight } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
-import { getTranslation, type Language } from '../../translations';
+import { Users, Building2, Settings as SettingsIcon, ChevronRight } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { getTranslation, type Language } from "../../translations";
 
 interface ManagementPanelProps {
   isOpen: boolean;
@@ -9,12 +9,7 @@ interface ManagementPanelProps {
   language: Language;
 }
 
-export function ManagementPanel({ 
-  isOpen, 
-  onClose, 
-  restaurantName,
-  language
-}: ManagementPanelProps) {
+export function ManagementPanel({ isOpen, onClose, restaurantName, language }: ManagementPanelProps) {
   const navigate = useNavigate();
   const t = getTranslation(language);
 
@@ -27,8 +22,8 @@ export function ManagementPanel({
       description: t.merchantDashboard.management.manageStaffDesc,
       onClick: () => {
         onClose();
-        navigate('/merchant/staff');
-      }
+        navigate("/merchant/staff");
+      },
     },
     {
       icon: Building2,
@@ -36,8 +31,8 @@ export function ManagementPanel({
       description: t.merchantDashboard.management.manageBranchesDesc,
       onClick: () => {
         onClose();
-        navigate('/merchant/branches');
-      }
+        navigate("/merchant/branches");
+      },
     },
     {
       icon: SettingsIcon,
@@ -45,21 +40,21 @@ export function ManagementPanel({
       description: t.merchantDashboard.management.restaurantSettingsDesc,
       onClick: () => {
         onClose();
-        navigate('/merchant/settings');
-      }
-    }
+        navigate("/merchant/settings");
+      },
+    },
   ];
 
   return (
     <div
       className={`fixed inset-0 z-50 transition-opacity duration-300 ${
-        isOpen ? 'bg-black/60' : 'bg-transparent pointer-events-none'
+        isOpen ? "bg-black/60" : "bg-transparent pointer-events-none"
       }`}
       onClick={onClose}
     >
       <div
         className={`fixed bottom-0 left-0 right-0 z-50 bg-background rounded-t-2xl transition-transform duration-300 ${
-          isOpen ? 'translate-y-0' : 'translate-y-full'
+          isOpen ? "translate-y-0" : "translate-y-full"
         }`}
         onClick={(e) => e.stopPropagation()}
       >
@@ -71,11 +66,7 @@ export function ManagementPanel({
         {/* Header */}
         <div className="px-6 py-4 border-b border-border">
           <h2 className="text-lg font-bold text-foreground">{t.merchantDashboard.management.title}</h2>
-          {restaurantName && (
-            <p className="text-sm text-muted-foreground mt-1">
-              {restaurantName}
-            </p>
-          )}
+          {restaurantName && <p className="text-sm text-muted-foreground mt-1">{restaurantName}</p>}
         </div>
 
         {/* Menu Items */}

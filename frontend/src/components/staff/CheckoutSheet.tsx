@@ -1,12 +1,12 @@
-import { useState, useEffect } from 'react';
-import { Button } from '../ui/button';
-import { Input } from '../ui/input';
-import { Label } from '../ui/label';
-import { Separator } from '../ui/separator';
-import { X, Plus, Minus, Loader2, CheckCircle } from 'lucide-react';
-import { CustomerInfoCard } from './CustomerInfoCard';
-import { formatCurrency } from '../../lib/utils';
-import { getTranslation, type Language } from '../../translations';
+import { useState, useEffect } from "react";
+import { Button } from "../ui/button";
+import { Input } from "../ui/input";
+import { Label } from "../ui/label";
+import { Separator } from "../ui/separator";
+import { X, Plus, Minus, Loader2, CheckCircle } from "lucide-react";
+import { CustomerInfoCard } from "./CustomerInfoCard";
+import { formatCurrency } from "../../lib/utils";
+import { getTranslation, type Language } from "../../translations";
 
 interface CheckoutSheetProps {
   isOpen: boolean;
@@ -19,26 +19,23 @@ interface CheckoutSheetProps {
   walletBalance: number;
   isFirstVisit: boolean;
   language?: Language;
-  onSubmit: (data: {
-    billAmount: number;
-    redeemAmount: number;
-  }) => Promise<void>;
+  onSubmit: (data: { billAmount: number; redeemAmount: number }) => Promise<void>;
 }
 
-export function CheckoutSheet({ 
-  isOpen, 
-  onClose, 
-  customerData, 
-  walletBalance, 
+export function CheckoutSheet({
+  isOpen,
+  onClose,
+  customerData,
+  walletBalance,
   isFirstVisit,
-  language = 'en',
-  onSubmit 
+  language = "en",
+  onSubmit,
 }: CheckoutSheetProps) {
   const t = getTranslation(language);
-  const [billAmount, setBillAmount] = useState('');
+  const [billAmount, setBillAmount] = useState("");
   const [redeemAmount, setRedeemAmount] = useState(0);
   const [loading, setLoading] = useState(false);
-  
+
   // Calculations
   const [guaranteedDiscount, setGuaranteedDiscount] = useState(0);
   const [totalDiscount, setTotalDiscount] = useState(0);
@@ -55,23 +52,23 @@ export function CheckoutSheet({
   // Calculate discounts whenever bill amount or redeem amount changes
   useEffect(() => {
     const bill = parseFloat(billAmount) || 0;
-    
+
     if (bill > 0) {
       // First visit discount: 5% of bill
       const guaranteed = isFirstVisit ? bill * 0.05 : 0;
-      
+
       // Max redeemable: 20% of bill or available balance, whichever is lower
-      const maxRedeem = Math.min(bill * 0.20, walletBalance);
+      const maxRedeem = Math.min(bill * 0.2, walletBalance);
       const redeem = Math.min(maxRedeem, redeemAmount);
-      
+
       const total = guaranteed + redeem;
       const final = Math.max(0, bill - total);
-      
+
       setGuaranteedDiscount(guaranteed);
       setMaxRedeemable(maxRedeem);
       setTotalDiscount(total);
       setFinalAmount(final);
-      
+
       // Adjust redeem amount if it exceeds max
       if (redeemAmount > maxRedeem) {
         setRedeemAmount(maxRedeem);
@@ -88,20 +85,20 @@ export function CheckoutSheet({
   useEffect(() => {
     if (isOpen) {
       setShouldRender(true);
-      document.body.style.overflow = 'hidden';
+      document.body.style.overflow = "hidden";
       requestAnimationFrame(() => {
         setIsAnimating(true);
       });
     } else {
       setIsAnimating(false);
-      document.body.style.overflow = 'unset';
+      document.body.style.overflow = "unset";
       const timer = setTimeout(() => {
         setShouldRender(false);
       }, 300); // Match transition duration
       return () => clearTimeout(timer);
     }
     return () => {
-      document.body.style.overflow = 'unset';
+      document.body.style.overflow = "unset";
     };
   }, [isOpen]);
 
@@ -114,7 +111,6 @@ export function CheckoutSheet({
       setTouchCurrent(touchStart);
     }
   };
-
 
   const handleIncreaseRedeem = () => {
     const step = 1; // RM 1 increment
@@ -136,21 +132,21 @@ export function CheckoutSheet({
 
   const handleSubmit = async () => {
     if (!billAmount || parseFloat(billAmount) <= 0) return;
-    
+
     setLoading(true);
     try {
       await onSubmit({
         billAmount: parseFloat(billAmount),
-        redeemAmount
+        redeemAmount,
       });
-      
+
       // Reset form
-      setBillAmount('');
+      setBillAmount("");
       setRedeemAmount(0);
-      
+
       onClose();
     } catch (error) {
-      console.error('Checkout error:', error);
+      console.error("Checkout error:", error);
     } finally {
       setLoading(false);
     }
@@ -161,22 +157,25 @@ export function CheckoutSheet({
   return (
     <>
       {/* Backdrop */}
-      <div 
+      <div
         className={`fixed inset-0 bg-black/50 backdrop-blur-sm z-50 transition-opacity duration-300 overflow-hidden ${
-          isAnimating ? 'opacity-100' : 'opacity-0'
+          isAnimating ? "opacity-100" : "opacity-0"
         }`}
         onClick={onClose}
-        style={{ touchAction: 'none' }}
+        style={{ touchAction: "none" }}
       />
-      
+
       {/* Bottom Sheet */}
-      <div 
+      <div
         className="fixed inset-x-0 bottom-0 z-50 transition-transform duration-300 ease-out"
         style={{
-          transform: isDragging && touchCurrent > touchStart 
-            ? `translateY(${touchCurrent - touchStart}px)` 
-            : isAnimating ? 'translateY(0)' : 'translateY(100%)',
-          transition: isDragging ? 'none' : 'transform 0.3s ease-out'
+          transform:
+            isDragging && touchCurrent > touchStart
+              ? `translateY(${touchCurrent - touchStart}px)`
+              : isAnimating
+                ? "translateY(0)"
+                : "translateY(100%)",
+          transition: isDragging ? "none" : "transform 0.3s ease-out",
         }}
         onTouchStart={(e) => {
           setTouchStart(e.targetTouches[0].clientY);
@@ -203,18 +202,14 @@ export function CheckoutSheet({
             >
               <X className="h-5 w-5 text-muted-foreground" />
             </button>
-            
+
             {/* Handle Bar */}
             <div className="w-12 h-1.5 bg-muted rounded-full mx-auto mb-4"></div>
-            
+
             {/* Header */}
             <div className="mb-5">
-              <h3 className="text-xl font-bold text-foreground mb-1">
-                {t.staffDashboard.checkout}
-              </h3>
-              <p className="text-sm text-muted-foreground">
-                {t.staffDashboard.enterBillAmount}
-              </p>
+              <h3 className="text-xl font-bold text-foreground mb-1">{t.staffDashboard.checkout}</h3>
+              <p className="text-sm text-muted-foreground">{t.staffDashboard.enterBillAmount}</p>
             </div>
 
             {/* Customer Info Card */}
@@ -234,9 +229,7 @@ export function CheckoutSheet({
                 {t.staffDashboard.billAmount}
               </Label>
               <div className="relative">
-                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">
-                  RM
-                </span>
+                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">RM</span>
                 <Input
                   id="bill-amount"
                   type="number"
@@ -255,14 +248,12 @@ export function CheckoutSheet({
             {parseFloat(billAmount) > 0 && (
               <div className="mb-5">
                 <div className="flex items-center justify-between mb-2">
-                  <Label className="text-sm font-semibold">
-                    {t.staffDashboard.redeemAmount}
-                  </Label>
+                  <Label className="text-sm font-semibold">{t.staffDashboard.redeemAmount}</Label>
                   <span className="text-xs text-muted-foreground">
                     {t.staffDashboard.maxRedeemable}: {formatCurrency(maxRedeemable)}
                   </span>
                 </div>
-                
+
                 <div className="flex items-center gap-2">
                   <Button
                     type="button"
@@ -274,11 +265,9 @@ export function CheckoutSheet({
                   >
                     <Minus className="h-5 w-5" />
                   </Button>
-                  
+
                   <div className="relative flex-1">
-                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">
-                      RM
-                    </span>
+                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">RM</span>
                     <Input
                       type="number"
                       inputMode="decimal"
@@ -290,7 +279,7 @@ export function CheckoutSheet({
                       max={maxRedeemable}
                     />
                   </div>
-                  
+
                   <Button
                     type="button"
                     variant="outline"
@@ -313,42 +302,31 @@ export function CheckoutSheet({
                   {isFirstVisit && (
                     <div className="flex justify-between">
                       <span className="text-muted-foreground">{t.staffDashboard.discount}</span>
-                      <span className="font-semibold text-green-600">
-                        -{formatCurrency(guaranteedDiscount)}
-                      </span>
+                      <span className="font-semibold text-green-600">-{formatCurrency(guaranteedDiscount)}</span>
                     </div>
                   )}
                   {redeemAmount > 0 && (
                     <div className="flex justify-between">
                       <span className="text-muted-foreground">{t.staffDashboard.vcRedeemed}</span>
-                      <span className="font-semibold text-primary">
-                        -{formatCurrency(redeemAmount)}
-                      </span>
+                      <span className="font-semibold text-primary">-{formatCurrency(redeemAmount)}</span>
                     </div>
                   )}
                   <Separator className="my-2" />
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">{t.staffDashboard.originalAmount}</span>
-                    <span className="font-semibold">
-                      {formatCurrency(parseFloat(billAmount))}
-                    </span>
+                    <span className="font-semibold">{formatCurrency(parseFloat(billAmount))}</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">{t.staffDashboard.discount}</span>
-                    <span className="font-semibold">
-                      -{formatCurrency(totalDiscount)}
-                    </span>
+                    <span className="font-semibold">-{formatCurrency(totalDiscount)}</span>
                   </div>
                   <div className="flex justify-between text-base">
                     <span className="font-bold">{t.staffDashboard.finalAmount}</span>
-                    <span className="font-bold text-primary text-lg">
-                      {formatCurrency(finalAmount)}
-                    </span>
+                    <span className="font-bold text-primary text-lg">{formatCurrency(finalAmount)}</span>
                   </div>
                 </div>
               </div>
             )}
-
 
             {/* Submit Button */}
             <Button

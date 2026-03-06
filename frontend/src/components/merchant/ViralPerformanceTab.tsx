@@ -2,22 +2,12 @@ import { useState, useEffect } from "react";
 import { supabase } from "../../lib/supabase";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { Skeleton } from "../ui/skeleton";
-import {
-  Target,
-  Users,
-  TrendingUp,
-  TrendingDown,
-  Share2,
-} from "lucide-react";
-import type {
-  DashboardSummary,
-  CustomerSharingStats,
-  SavedCodesPipeline,
-} from "../../types/analytics.types";
+import { Target, Users, TrendingUp, TrendingDown, Share2 } from "lucide-react";
+import type { DashboardSummary, CustomerSharingStats, SavedCodesPipeline } from "../../types/analytics.types";
 import { getTranslation, type Language } from "../../translations";
 import { InfoButton } from "../shared";
 
-import { ViralPerformanceCharts } from './ViralPerformanceCharts';
+import { ViralPerformanceCharts } from "./ViralPerformanceCharts";
 
 interface ViralPerformanceTabProps {
   restaurantId: string;
@@ -25,16 +15,11 @@ interface ViralPerformanceTabProps {
   language: Language;
 }
 
-export function ViralPerformanceTab({
-  restaurantId,
-  summary,
-  language,
-}: ViralPerformanceTabProps) {
+export function ViralPerformanceTab({ restaurantId, summary, language }: ViralPerformanceTabProps) {
   const t = getTranslation(language);
   const [loading, setLoading] = useState(true);
   const [topSharers, setTopSharers] = useState<CustomerSharingStats[]>([]);
-  const [savedCodesPipeline, setSavedCodesPipeline] =
-    useState<SavedCodesPipeline | null>(null);
+  const [savedCodesPipeline, setSavedCodesPipeline] = useState<SavedCodesPipeline | null>(null);
 
   useEffect(() => {
     const fetchViralData = async () => {
@@ -101,9 +86,7 @@ export function ViralPerformanceTab({
               </span>
               <InfoButton
                 title={t.merchantDashboard.viralPerformance.viralityCoefficient}
-                description={
-                  t.merchantDashboard.viralPerformance.viralityCoefficientInfo
-                }
+                description={t.merchantDashboard.viralPerformance.viralityCoefficientInfo}
               />
             </div>
             <div className="flex items-baseline gap-2">
@@ -120,8 +103,8 @@ export function ViralPerformanceTab({
               {viralMetrics && viralMetrics.virality_coefficient >= 2
                 ? t.merchantDashboard.viralPerformance.exponentialGrowth
                 : viralMetrics && viralMetrics.virality_coefficient >= 1
-                ? t.merchantDashboard.viralPerformance.steadyGrowth
-                : t.merchantDashboard.viralPerformance.belowViralThreshold}
+                  ? t.merchantDashboard.viralPerformance.steadyGrowth
+                  : t.merchantDashboard.viralPerformance.belowViralThreshold}
             </p>
           </CardContent>
         </Card>
@@ -139,18 +122,12 @@ export function ViralPerformanceTab({
                   </span>
                   <InfoButton
                     title={t.merchantDashboard.viralPerformance.networkSize}
-                    description={
-                      t.merchantDashboard.viralPerformance.networkSizeInfo
-                    }
+                    description={t.merchantDashboard.viralPerformance.networkSizeInfo}
                   />
                 </div>
-                <p className="text-2xl md:text-3xl font-bold text-foreground">
-                  {viralMetrics?.total_downlines || 0}
-                </p>
+                <p className="text-2xl md:text-3xl font-bold text-foreground">{viralMetrics?.total_downlines || 0}</p>
                 <p className="text-xs text-muted-foreground mt-1">
-                  <span className="font-semibold text-foreground">
-                    {viralMetrics?.total_sharers || 0}
-                  </span>{" "}
+                  <span className="font-semibold text-foreground">{viralMetrics?.total_sharers || 0}</span>{" "}
                   {t.merchantDashboard.viralPerformance.activeSharersCount}
                 </p>
               </div>
@@ -164,29 +141,21 @@ export function ViralPerformanceTab({
                   </span>
                   <InfoButton
                     title={t.merchantDashboard.viralPerformance.networkDepth}
-                    description={
-                      t.merchantDashboard.viralPerformance.networkDepthInfo
-                    }
+                    description={t.merchantDashboard.viralPerformance.networkDepthInfo}
                   />
                 </div>
                 <div className="space-y-1">
                   <div className="flex justify-between text-sm">
                     <span className="text-muted-foreground">L1:</span>
-                    <span className="font-semibold">
-                      {viralMetrics?.network_depth.level_1 || 0}
-                    </span>
+                    <span className="font-semibold">{viralMetrics?.network_depth.level_1 || 0}</span>
                   </div>
                   <div className="flex justify-between text-sm">
                     <span className="text-muted-foreground">L2:</span>
-                    <span className="font-semibold">
-                      {viralMetrics?.network_depth.level_2 || 0}
-                    </span>
+                    <span className="font-semibold">{viralMetrics?.network_depth.level_2 || 0}</span>
                   </div>
                   <div className="flex justify-between text-sm">
                     <span className="text-muted-foreground">L3:</span>
-                    <span className="font-semibold">
-                      {viralMetrics?.network_depth.level_3 || 0}
-                    </span>
+                    <span className="font-semibold">{viralMetrics?.network_depth.level_3 || 0}</span>
                   </div>
                 </div>
               </div>
@@ -233,32 +202,26 @@ export function ViralPerformanceTab({
                         index === 0
                           ? "bg-yellow-100 text-yellow-700"
                           : index === 1
-                          ? "bg-gray-100 text-gray-700"
-                          : index === 2
-                          ? "bg-orange-100 text-orange-700"
-                          : "bg-muted text-muted-foreground"
+                            ? "bg-gray-100 text-gray-700"
+                            : index === 2
+                              ? "bg-orange-100 text-orange-700"
+                              : "bg-muted text-muted-foreground"
                       }
                     `}
                     >
                       {index + 1}
                     </div>
                     <div>
-                      <p className="font-semibold text-sm">
-                        {sharer.full_name}
-                      </p>
-                      <p className="text-xs text-muted-foreground">
-                        {sharer.referral_code}
-                      </p>
+                      <p className="font-semibold text-sm">{sharer.full_name}</p>
+                      <p className="text-xs text-muted-foreground">{sharer.referral_code}</p>
                     </div>
                   </div>
                   <div className="text-right">
                     <p className="font-bold text-foreground">
-                      {sharer.total_downlines}{" "}
-                      {t.merchantDashboard.viralPerformance.downlines}
+                      {sharer.total_downlines} {t.merchantDashboard.viralPerformance.downlines}
                     </p>
                     <p className="text-xs text-muted-foreground">
-                      RM {sharer.total_earned.toFixed(2)}{" "}
-                      {t.merchantDashboard.viralPerformance.earned}
+                      RM {sharer.total_earned.toFixed(2)} {t.merchantDashboard.viralPerformance.earned}
                     </p>
                   </div>
                 </div>
@@ -271,9 +234,7 @@ export function ViralPerformanceTab({
       {/* Coming Soon */}
       <Card className="border-border/50 bg-muted/30">
         <CardContent className="p-6 text-center">
-          <p className="text-sm text-muted-foreground">
-            {t.merchantDashboard.viralPerformance.comingSoon}
-          </p>
+          <p className="text-sm text-muted-foreground">{t.merchantDashboard.viralPerformance.comingSoon}</p>
         </CardContent>
       </Card>
     </div>

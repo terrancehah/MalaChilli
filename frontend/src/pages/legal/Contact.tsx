@@ -1,31 +1,31 @@
-import { Link } from 'react-router-dom';
-import { Mail, MessageSquare } from 'lucide-react';
-import { useState } from 'react';
-import { showSuccessToast, showErrorToast } from '../../components/ui/toast';
-import { getTranslation, type Language } from '../../translations';
-import { LanguageSelector, SEO } from '../../components/shared';
+import { Link } from "react-router-dom";
+import { Mail, MessageSquare } from "lucide-react";
+import { useState } from "react";
+import { showSuccessToast, showErrorToast } from "../../components/ui/toast";
+import { getTranslation, type Language } from "../../translations";
+import { LanguageSelector, SEO } from "../../components/shared";
 
 export default function Contact() {
-  const [language, setLanguage] = useState<Language>('en');
+  const [language, setLanguage] = useState<Language>("en");
   const t = getTranslation(language);
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    subject: '',
-    message: ''
+    name: "",
+    email: "",
+    subject: "",
+    message: "",
   });
   const [loading, setLoading] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value,
     });
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     // Basic validation
     if (!formData.name || !formData.email || !formData.subject || !formData.message) {
       showErrorToast(t.contact.fillAllFields);
@@ -37,16 +37,16 @@ export default function Contact() {
     try {
       // TODO: Implement actual email sending via Supabase Edge Function
       // For now, just show success message
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+
       showSuccessToast(t.contact.messageSent);
-      
+
       // Reset form
       setFormData({
-        name: '',
-        email: '',
-        subject: '',
-        message: ''
+        name: "",
+        email: "",
+        subject: "",
+        message: "",
       });
     } catch (error) {
       showErrorToast(t.contact.messageFailed);
@@ -57,7 +57,10 @@ export default function Contact() {
 
   return (
     <div className="min-h-screen bg-background">
-      <SEO title={t.contact.title} description="Get in touch with the MakanTak team for support, business inquiries, or feedback." />
+      <SEO
+        title={t.contact.title}
+        description="Get in touch with the MakanTak team for support, business inquiries, or feedback."
+      />
       <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8">
         {/* Header */}
         <div className="mb-8">
@@ -79,13 +82,8 @@ export default function Contact() {
                 <Mail className="h-6 w-6 text-primary" />
               </div>
               <h3 className="text-lg font-semibold text-foreground mb-2">{t.contact.emailSupportTitle}</h3>
-              <p className="text-foreground/70 text-sm mb-3">
-                {t.contact.emailSupportDesc}
-              </p>
-              <a
-                href="mailto:support@makantak.com"
-                className="text-primary hover:underline font-medium"
-              >
+              <p className="text-foreground/70 text-sm mb-3">{t.contact.emailSupportDesc}</p>
+              <a href="mailto:support@makantak.com" className="text-primary hover:underline font-medium">
                 {t.contact.emailSupportAddress}
               </a>
             </div>
@@ -95,13 +93,8 @@ export default function Contact() {
                 <MessageSquare className="h-6 w-6 text-primary" />
               </div>
               <h3 className="text-lg font-semibold text-foreground mb-2">{t.contact.businessInquiriesTitle}</h3>
-              <p className="text-foreground/70 text-sm mb-3">
-                {t.contact.businessInquiriesDesc}
-              </p>
-              <a
-                href="mailto:support@makantak.com"
-                className="text-primary hover:underline font-medium"
-              >
+              <p className="text-foreground/70 text-sm mb-3">{t.contact.businessInquiriesDesc}</p>
+              <a href="mailto:support@makantak.com" className="text-primary hover:underline font-medium">
                 {t.contact.businessInquiriesAddress}
               </a>
             </div>
@@ -111,7 +104,7 @@ export default function Contact() {
           <div className="lg:col-span-2">
             <div className="p-8 bg-card border border-border rounded-lg">
               <h2 className="text-2xl font-bold text-foreground mb-6">{t.contact.sendMessageTitle}</h2>
-              
+
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div>
                   <label htmlFor="name" className="block text-sm font-medium text-foreground mb-2">

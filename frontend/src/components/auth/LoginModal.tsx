@@ -1,5 +1,5 @@
-import { AuthModal } from './AuthModal';
-import { LoginForm } from './LoginForm';
+import { AuthModal } from "./AuthModal";
+import { LoginForm } from "./LoginForm";
 
 interface LoginModalProps {
   isOpen: boolean;
@@ -14,11 +14,7 @@ interface LoginModalProps {
 export function LoginModal({ isOpen, onClose, onSwitchToSignUp }: LoginModalProps) {
   return (
     <AuthModal isOpen={isOpen} onClose={onClose} title="Welcome back!">
-      <LoginForm 
-        onSuccess={onClose}
-        showSignUpLink={true}
-        onSwitchToSignUp={onSwitchToSignUp}
-      />
+      <LoginForm onSuccess={onClose} showSignUpLink={true} onSwitchToSignUp={onSwitchToSignUp} />
     </AuthModal>
   );
 }

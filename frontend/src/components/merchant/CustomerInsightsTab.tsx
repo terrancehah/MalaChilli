@@ -3,21 +3,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { Skeleton } from "../ui/skeleton";
 import { Button } from "../ui/button";
 import { supabase } from "../../lib/supabase";
-import type {
-  DashboardSummary,
-  CustomerSegmentation,
-  CustomerAcquisitionSource,
-} from "../../types/analytics.types";
-import {
-  Users,
-  UserPlus,
-  TrendingUp,
-  AlertTriangle,
-  Award,
-  Target,
-  PieChart,
-  X,
-} from "lucide-react";
+import type { DashboardSummary, CustomerSegmentation, CustomerAcquisitionSource } from "../../types/analytics.types";
+import { Users, UserPlus, TrendingUp, AlertTriangle, Award, Target, PieChart, X } from "lucide-react";
 import { getTranslation, type Language } from "../../translations";
 import { InfoButton } from "../shared";
 
@@ -36,22 +23,14 @@ interface CustomerDetail {
   days_since_last_visit: number;
 }
 
-export function CustomerInsightsTab({
-  restaurantId,
-  summary,
-  language,
-}: CustomerInsightsTabProps) {
+export function CustomerInsightsTab({ restaurantId, summary, language }: CustomerInsightsTabProps) {
   const t = getTranslation(language);
   const [loading, setLoading] = useState(true);
   const [customers, setCustomers] = useState<CustomerSegmentation[]>([]);
-  const [acquisitionData, setAcquisitionData] = useState<
-    CustomerAcquisitionSource[]
-  >([]);
+  const [acquisitionData, setAcquisitionData] = useState<CustomerAcquisitionSource[]>([]);
   const [showModal, setShowModal] = useState(false);
   const [selectedSegment, setSelectedSegment] = useState<string>("");
-  const [filteredCustomers, setFilteredCustomers] = useState<CustomerDetail[]>(
-    []
-  );
+  const [filteredCustomers, setFilteredCustomers] = useState<CustomerDetail[]>([]);
   const [loadingCustomers, setLoadingCustomers] = useState(false);
 
   // Helper function to translate RFM segment names
@@ -59,8 +38,7 @@ export function CustomerInsightsTab({
     const segmentMap: Record<string, string> = {
       Champions: t.merchantDashboard.customerInsights.segmentChampions,
       "Loyal Customers": t.merchantDashboard.customerInsights.segmentLoyal,
-      "Potential Loyalists":
-        t.merchantDashboard.customerInsights.segmentPotentialLoyalists,
+      "Potential Loyalists": t.merchantDashboard.customerInsights.segmentPotentialLoyalists,
       "New Customers": t.merchantDashboard.customerInsights.segmentNewCustomers,
       Promising: t.merchantDashboard.customerInsights.segmentPromising,
       "At Risk": t.merchantDashboard.customerInsights.segmentAtRisk,
@@ -75,14 +53,11 @@ export function CustomerInsightsTab({
     const segmentInfoMap: Record<string, string> = {
       Champions: t.merchantDashboard.customerInsights.segmentChampionsInfo,
       "Loyal Customers": t.merchantDashboard.customerInsights.segmentLoyalInfo,
-      "Potential Loyalists":
-        t.merchantDashboard.customerInsights.segmentPotentialLoyalistsInfo,
-      "New Customers":
-        t.merchantDashboard.customerInsights.segmentNewCustomersInfo,
+      "Potential Loyalists": t.merchantDashboard.customerInsights.segmentPotentialLoyalistsInfo,
+      "New Customers": t.merchantDashboard.customerInsights.segmentNewCustomersInfo,
       Promising: t.merchantDashboard.customerInsights.segmentPromisingInfo,
       "At Risk": t.merchantDashboard.customerInsights.segmentAtRiskInfo,
-      "Cant Lose Them":
-        t.merchantDashboard.customerInsights.segmentCantLoseThemInfo,
+      "Cant Lose Them": t.merchantDashboard.customerInsights.segmentCantLoseThemInfo,
       Hibernating: t.merchantDashboard.customerInsights.segmentHibernatingInfo,
     };
     return segmentInfoMap[segment] || "";
@@ -94,9 +69,7 @@ export function CustomerInsightsTab({
     try {
       const { data, error } = await supabase
         .from("customer_segmentation")
-        .select(
-          "customer_id, full_name, total_visits, total_spent, rfm_segment, days_since_last_visit"
-        )
+        .select("customer_id, full_name, total_visits, total_spent, rfm_segment, days_since_last_visit")
         .eq("restaurant_id", restaurantId)
         .eq("rfm_segment", segment)
         .order("total_spent", { ascending: false });
@@ -183,28 +156,17 @@ export function CustomerInsightsTab({
   const promising = rfmSegments?.Promising || 0;
 
   // Calculate acquisition stats
-  const referralAcquired = acquisitionData.filter(
-    (a) => a.acquisition_source === "referral"
-  ).length;
-  const walkInAcquired = acquisitionData.filter(
-    (a) => a.acquisition_source === "walk_in"
-  ).length;
+  const referralAcquired = acquisitionData.filter((a) => a.acquisition_source === "referral").length;
+  const walkInAcquired = acquisitionData.filter((a) => a.acquisition_source === "walk_in").length;
   const referralPercentage =
-    acquisitionData.length > 0
-      ? ((referralAcquired / acquisitionData.length) * 100).toFixed(1)
-      : "0";
+    acquisitionData.length > 0 ? ((referralAcquired / acquisitionData.length) * 100).toFixed(1) : "0";
 
   // Top customers by spend
   const topCustomers = customers.slice(0, 10);
 
   // At-risk customers (based on RFM)
   const atRiskList = customers
-    .filter(
-      (c) =>
-        c.rfm_segment === "At Risk" ||
-        c.rfm_segment === "Cant Lose Them" ||
-        c.rfm_segment === "Hibernating"
-    )
+    .filter((c) => c.rfm_segment === "At Risk" || c.rfm_segment === "Cant Lose Them" || c.rfm_segment === "Hibernating")
     .slice(0, 10);
 
   return (
@@ -219,17 +181,13 @@ export function CustomerInsightsTab({
               {t.merchantDashboard.customerInsights.totalCustomers}
               <InfoButton
                 title={t.merchantDashboard.customerInsights.totalCustomers}
-                description={
-                  t.merchantDashboard.customerInsights.totalCustomersInfo
-                }
+                description={t.merchantDashboard.customerInsights.totalCustomersInfo}
               />
             </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="space-y-1">
-              <p className="text-2xl md:text-3xl font-bold text-foreground">
-                {totalCustomers}
-              </p>
+              <p className="text-2xl md:text-3xl font-bold text-foreground">{totalCustomers}</p>
               <p className="text-xs text-muted-foreground">
                 {activeCustomers} {t.merchantDashboard.customerInsights.active} (
                 {((activeCustomers / totalCustomers) * 100).toFixed(0)}%)
@@ -246,17 +204,13 @@ export function CustomerInsightsTab({
               {t.merchantDashboard.customerInsights.activeCustomers}
               <InfoButton
                 title={t.merchantDashboard.customerInsights.activeCustomers}
-                description={
-                  t.merchantDashboard.customerInsights.activeCustomersInfo
-                }
+                description={t.merchantDashboard.customerInsights.activeCustomersInfo}
               />
             </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="space-y-1">
-              <p className="text-2xl md:text-3xl font-bold text-green-600">
-                {activeCustomers}
-              </p>
+              <p className="text-2xl md:text-3xl font-bold text-green-600">{activeCustomers}</p>
               <p className="text-xs text-muted-foreground">
                 {language === "zh"
                   ? `(${t.merchantDashboard.customerInsights.ofTotal} ${(
@@ -285,13 +239,10 @@ export function CustomerInsightsTab({
           </CardHeader>
           <CardContent>
             <div className="space-y-1">
-              <p className="text-2xl md:text-3xl font-bold text-green-600">
-                {referralPercentage}%
-              </p>
+              <p className="text-2xl md:text-3xl font-bold text-green-600">{referralPercentage}%</p>
               <p className="text-xs text-muted-foreground">
-                {t.merchantDashboard.customerInsights.fromReferrals} (
-                {referralAcquired} {t.merchantDashboard.customerInsights.customers}
-                )
+                {t.merchantDashboard.customerInsights.fromReferrals} ({referralAcquired}{" "}
+                {t.merchantDashboard.customerInsights.customers})
               </p>
             </div>
           </CardContent>
@@ -305,20 +256,14 @@ export function CustomerInsightsTab({
               {t.merchantDashboard.customerInsights.avgLifetimeValue}
               <InfoButton
                 title={t.merchantDashboard.customerInsights.avgLifetimeValue}
-                description={
-                  t.merchantDashboard.customerInsights.avgLifetimeValueInfo
-                }
+                description={t.merchantDashboard.customerInsights.avgLifetimeValueInfo}
               />
             </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="space-y-1">
-              <p className="text-2xl md:text-3xl font-bold text-blue-600">
-                RM {avgLifetimeValue.toFixed(2)}
-              </p>
-              <p className="text-xs text-muted-foreground">
-                {t.merchantDashboard.customerInsights.perCustomer}
-              </p>
+              <p className="text-2xl md:text-3xl font-bold text-blue-600">RM {avgLifetimeValue.toFixed(2)}</p>
+              <p className="text-xs text-muted-foreground">{t.merchantDashboard.customerInsights.perCustomer}</p>
             </div>
           </CardContent>
         </Card>
@@ -331,17 +276,13 @@ export function CustomerInsightsTab({
               {t.merchantDashboard.customerInsights.atRiskCustomers}
               <InfoButton
                 title={t.merchantDashboard.customerInsights.atRiskCustomers}
-                description={
-                  t.merchantDashboard.customerInsights.atRiskCustomersInfo
-                }
+                description={t.merchantDashboard.customerInsights.atRiskCustomersInfo}
               />
             </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="space-y-1">
-              <p className="text-2xl md:text-3xl font-bold text-orange-600">
-                {atRiskCustomers}
-              </p>
+              <p className="text-2xl md:text-3xl font-bold text-orange-600">{atRiskCustomers}</p>
               <p className="text-xs text-muted-foreground">
                 {language === "zh"
                   ? `${t.merchantDashboard.customerInsights.ofTotal} ${(
@@ -365,9 +306,7 @@ export function CustomerInsightsTab({
             {t.merchantDashboard.customerInsights.rfmSegmentation}
             <InfoButton
               title={t.merchantDashboard.customerInsights.rfmSegmentation}
-              description={
-                t.merchantDashboard.customerInsights.rfmSegmentationInfo
-              }
+              description={t.merchantDashboard.customerInsights.rfmSegmentationInfo}
             />
           </CardTitle>
           <p className="text-xs text-muted-foreground mt-1">
@@ -385,9 +324,7 @@ export function CustomerInsightsTab({
                 {t.merchantDashboard.customerInsights.champions}
               </p>
               <p className="text-2xl font-bold text-yellow-600">{champions}</p>
-              <p className="text-xs text-muted-foreground mt-1">
-                {t.merchantDashboard.customerInsights.championsDesc}
-              </p>
+              <p className="text-xs text-muted-foreground mt-1">{t.merchantDashboard.customerInsights.championsDesc}</p>
             </div>
 
             {/* Loyal Customers */}
@@ -398,12 +335,8 @@ export function CustomerInsightsTab({
               <p className="text-xs font-medium text-muted-foreground mb-1">
                 {t.merchantDashboard.customerInsights.loyal}
               </p>
-              <p className="text-2xl font-bold text-blue-600">
-                {loyalCustomers}
-              </p>
-              <p className="text-xs text-muted-foreground mt-1">
-                {t.merchantDashboard.customerInsights.loyalDesc}
-              </p>
+              <p className="text-2xl font-bold text-blue-600">{loyalCustomers}</p>
+              <p className="text-xs text-muted-foreground mt-1">{t.merchantDashboard.customerInsights.loyalDesc}</p>
             </div>
 
             {/* Potential Loyalists */}
@@ -414,12 +347,8 @@ export function CustomerInsightsTab({
               <p className="text-xs font-medium text-muted-foreground mb-1">
                 {t.merchantDashboard.customerInsights.potential}
               </p>
-              <p className="text-2xl font-bold text-green-600">
-                {potentialLoyalists}
-              </p>
-              <p className="text-xs text-muted-foreground mt-1">
-                {t.merchantDashboard.customerInsights.potentialDesc}
-              </p>
+              <p className="text-2xl font-bold text-green-600">{potentialLoyalists}</p>
+              <p className="text-xs text-muted-foreground mt-1">{t.merchantDashboard.customerInsights.potentialDesc}</p>
             </div>
 
             {/* New Customers */}
@@ -430,9 +359,7 @@ export function CustomerInsightsTab({
               <p className="text-xs font-medium text-muted-foreground mb-1">
                 {t.merchantDashboard.customerInsights.newCustomers}
               </p>
-              <p className="text-2xl font-bold text-purple-600">
-                {newCustomers}
-              </p>
+              <p className="text-2xl font-bold text-purple-600">{newCustomers}</p>
               <p className="text-xs text-muted-foreground mt-1">
                 {t.merchantDashboard.customerInsights.newCustomersDesc}
               </p>
@@ -446,12 +373,8 @@ export function CustomerInsightsTab({
               <p className="text-xs font-medium text-muted-foreground mb-1">
                 {t.merchantDashboard.customerInsights.atRisk}
               </p>
-              <p className="text-2xl font-bold text-orange-600">
-                {atRiskSegment}
-              </p>
-              <p className="text-xs text-muted-foreground mt-1">
-                {t.merchantDashboard.customerInsights.atRiskDesc}
-              </p>
+              <p className="text-2xl font-bold text-orange-600">{atRiskSegment}</p>
+              <p className="text-xs text-muted-foreground mt-1">{t.merchantDashboard.customerInsights.atRiskDesc}</p>
             </div>
 
             {/* Can't Lose Them */}
@@ -463,9 +386,7 @@ export function CustomerInsightsTab({
                 {t.merchantDashboard.customerInsights.cantLose}
               </p>
               <p className="text-2xl font-bold text-red-600">{cantLoseThem}</p>
-              <p className="text-xs text-muted-foreground mt-1">
-                {t.merchantDashboard.customerInsights.cantLoseDesc}
-              </p>
+              <p className="text-xs text-muted-foreground mt-1">{t.merchantDashboard.customerInsights.cantLoseDesc}</p>
             </div>
 
             {/* Hibernating */}
@@ -491,9 +412,7 @@ export function CustomerInsightsTab({
                 {t.merchantDashboard.customerInsights.promising}
               </p>
               <p className="text-2xl font-bold text-teal-600">{promising}</p>
-              <p className="text-xs text-muted-foreground mt-1">
-                {t.merchantDashboard.customerInsights.promisingDesc}
-              </p>
+              <p className="text-xs text-muted-foreground mt-1">{t.merchantDashboard.customerInsights.promisingDesc}</p>
             </div>
           </div>
         </CardContent>
@@ -506,9 +425,7 @@ export function CustomerInsightsTab({
             <PieChart className="h-5 w-5" />
             {t.merchantDashboard.customerInsights.customerAcquisitionSources}
             <InfoButton
-              title={
-                t.merchantDashboard.customerInsights.customerAcquisitionSources
-              }
+              title={t.merchantDashboard.customerInsights.customerAcquisitionSources}
               description={t.merchantDashboard.customerInsights.fromReferrals}
             />
           </CardTitle>
@@ -519,9 +436,7 @@ export function CustomerInsightsTab({
               <p className="text-sm font-medium text-muted-foreground mb-2">
                 {t.merchantDashboard.customerInsights.referrals}
               </p>
-              <p className="text-3xl font-bold text-green-600">
-                {referralAcquired}
-              </p>
+              <p className="text-3xl font-bold text-green-600">{referralAcquired}</p>
               <p className="text-xs text-muted-foreground mt-1">
                 {language === "zh"
                   ? `${t.merchantDashboard.customerInsights.ofTotal} ${referralPercentage}%`
@@ -532,14 +447,12 @@ export function CustomerInsightsTab({
               <p className="text-sm font-medium text-muted-foreground mb-2">
                 {t.merchantDashboard.customerInsights.walkIns}
               </p>
-              <p className="text-3xl font-bold text-blue-600">
-                {walkInAcquired}
-              </p>
+              <p className="text-3xl font-bold text-blue-600">{walkInAcquired}</p>
               <p className="text-xs text-muted-foreground mt-1">
                 {language === "zh"
-                  ? `${t.merchantDashboard.customerInsights.ofTotal} ${(
-                      100 - parseFloat(referralPercentage)
-                    ).toFixed(1)}%`
+                  ? `${t.merchantDashboard.customerInsights.ofTotal} ${(100 - parseFloat(referralPercentage)).toFixed(
+                      1
+                    )}%`
                   : `${(100 - parseFloat(referralPercentage)).toFixed(1)}% ${
                       t.merchantDashboard.customerInsights.ofTotal
                     }`}
@@ -581,32 +494,25 @@ export function CustomerInsightsTab({
                         index === 0
                           ? "bg-yellow-100 text-yellow-700"
                           : index === 1
-                          ? "bg-gray-100 text-gray-700"
-                          : index === 2
-                          ? "bg-orange-100 text-orange-700"
-                          : "bg-muted text-muted-foreground"
+                            ? "bg-gray-100 text-gray-700"
+                            : index === 2
+                              ? "bg-orange-100 text-orange-700"
+                              : "bg-muted text-muted-foreground"
                       }
                     `}
                     >
                       {index + 1}
                     </div>
                     <div>
-                      <p className="font-semibold text-sm">
-                        {customer.full_name}
-                      </p>
+                      <p className="font-semibold text-sm">{customer.full_name}</p>
                       <p className="text-xs text-muted-foreground">
-                        {customer.total_visits}{" "}
-                        {t.merchantDashboard.customerInsights.visits}
+                        {customer.total_visits} {t.merchantDashboard.customerInsights.visits}
                       </p>
                     </div>
                   </div>
                   <div className="text-right">
-                    <p className="font-bold text-foreground">
-                      RM {customer.total_spent.toFixed(2)}
-                    </p>
-                    <p className="text-xs text-muted-foreground">
-                      {translateSegment(customer.rfm_segment)}
-                    </p>
+                    <p className="font-bold text-foreground">RM {customer.total_spent.toFixed(2)}</p>
+                    <p className="text-xs text-muted-foreground">{translateSegment(customer.rfm_segment)}</p>
                   </div>
                 </div>
               ))}
@@ -636,23 +542,16 @@ export function CustomerInsightsTab({
                   className="flex items-center justify-between p-3 rounded-lg bg-orange-50 dark:bg-orange-900/20 border border-orange-200 dark:border-orange-800"
                 >
                   <div>
-                    <p className="font-semibold text-sm">
-                      {customer.full_name}
-                    </p>
+                    <p className="font-semibold text-sm">{customer.full_name}</p>
                     <p className="text-xs text-muted-foreground">
-                      {t.merchantDashboard.customerInsights.lastVisit}:{" "}
-                      {customer.days_since_last_visit}{" "}
-                      {t.merchantDashboard.customerInsights.daysAgo} •{" "}
-                      {translateSegment(customer.rfm_segment)}
+                      {t.merchantDashboard.customerInsights.lastVisit}: {customer.days_since_last_visit}{" "}
+                      {t.merchantDashboard.customerInsights.daysAgo} • {translateSegment(customer.rfm_segment)}
                     </p>
                   </div>
                   <div className="text-right">
-                    <p className="font-bold text-foreground">
-                      RM {customer.total_spent.toFixed(2)}
-                    </p>
+                    <p className="font-bold text-foreground">RM {customer.total_spent.toFixed(2)}</p>
                     <p className="text-xs text-muted-foreground">
-                      {customer.total_visits}{" "}
-                      {t.merchantDashboard.customerInsights.visits}
+                      {customer.total_visits} {t.merchantDashboard.customerInsights.visits}
                     </p>
                   </div>
                 </div>
@@ -668,9 +567,7 @@ export function CustomerInsightsTab({
       {/* Coming Soon */}
       <Card className="border-border/50 bg-muted/30">
         <CardContent className="p-6 text-center">
-          <p className="text-sm text-muted-foreground">
-            {t.merchantDashboard.customerInsights.comingSoon}
-          </p>
+          <p className="text-sm text-muted-foreground">{t.merchantDashboard.customerInsights.comingSoon}</p>
         </CardContent>
       </Card>
 
@@ -696,12 +593,8 @@ export function CustomerInsightsTab({
 
             {/* Modal Header */}
             <div className="p-4 pr-12 border-b border-border">
-              <h2 className="text-lg font-semibold">
-                {translateSegment(selectedSegment)}
-              </h2>
-              <p className="text-sm text-muted-foreground mt-1">
-                {getSegmentInfo(selectedSegment)}
-              </p>
+              <h2 className="text-lg font-semibold">{translateSegment(selectedSegment)}</h2>
+              <p className="text-sm text-muted-foreground mt-1">{getSegmentInfo(selectedSegment)}</p>
             </div>
 
             {/* Modal Content */}
@@ -724,24 +617,16 @@ export function CustomerInsightsTab({
                       className="flex items-center justify-between p-4 rounded-lg bg-muted/50 hover:bg-muted transition-colors"
                     >
                       <div>
-                        <p className="font-semibold text-sm">
-                          {customer.full_name}
-                        </p>
+                        <p className="font-semibold text-sm">{customer.full_name}</p>
                         <p className="text-xs text-muted-foreground">
-                          {customer.total_visits}{" "}
-                          {t.merchantDashboard.customerInsights.visits} •
-                          {t.merchantDashboard.customerInsights.lastVisit}:{" "}
-                          {customer.days_since_last_visit}{" "}
+                          {customer.total_visits} {t.merchantDashboard.customerInsights.visits} •
+                          {t.merchantDashboard.customerInsights.lastVisit}: {customer.days_since_last_visit}{" "}
                           {t.merchantDashboard.customerInsights.daysAgo}
                         </p>
                       </div>
                       <div className="text-right">
-                        <p className="font-bold text-foreground">
-                          RM {customer.total_spent.toFixed(2)}
-                        </p>
-                        <p className="text-xs text-muted-foreground">
-                          {translateSegment(customer.rfm_segment)}
-                        </p>
+                        <p className="font-bold text-foreground">RM {customer.total_spent.toFixed(2)}</p>
+                        <p className="text-xs text-muted-foreground">{translateSegment(customer.rfm_segment)}</p>
                       </div>
                     </div>
                   ))}

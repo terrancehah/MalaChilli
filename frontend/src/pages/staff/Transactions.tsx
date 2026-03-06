@@ -1,15 +1,15 @@
-import { useState, useEffect, useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../../contexts/AuthContext';
-import { supabase } from '../../lib/supabase';
-import { Button } from '../../components/ui/button';
-import { Card, CardContent } from '../../components/ui/card';
-import { Skeleton, CardSkeleton } from '../../components/ui/skeleton';
-import { ArrowLeft, Receipt, ArrowDown, ArrowUp, Calendar } from 'lucide-react';
-import { getTranslation } from '../../translations';
-import { LanguageSelector } from '../../components/shared';
-import { TransactionDetailSheet } from '../../components/staff';
-import { useLanguagePreference } from '../../hooks/useLanguagePreference';
+import { useState, useEffect, useCallback } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../contexts/AuthContext";
+import { supabase } from "../../lib/supabase";
+import { Button } from "../../components/ui/button";
+import { Card, CardContent } from "../../components/ui/card";
+import { Skeleton, CardSkeleton } from "../../components/ui/skeleton";
+import { ArrowLeft, Receipt, ArrowDown, ArrowUp, Calendar } from "lucide-react";
+import { getTranslation } from "../../translations";
+import { LanguageSelector } from "../../components/shared";
+import { TransactionDetailSheet } from "../../components/staff";
+import { useLanguagePreference } from "../../hooks/useLanguagePreference";
 
 interface Transaction {
   id: string;
@@ -22,7 +22,7 @@ interface Transaction {
   is_first_transaction: boolean;
   ocr_processed: boolean;
   ocr_data: any;
-  status: 'completed' | 'voided';
+  status: "completed" | "voided";
   customer: {
     full_name: string;
     email: string;
@@ -36,9 +36,9 @@ export default function StaffTransactions() {
   const t = getTranslation(language);
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [loading, setLoading] = useState(true);
-  const [dateRange, setDateRange] = useState<'1' | '7' | '30' | 'all'>('7');
-  const [sortBy, setSortBy] = useState<'date' | 'amount'>('date');
-  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
+  const [dateRange, setDateRange] = useState<"1" | "7" | "30" | "all">("7");
+  const [sortBy, setSortBy] = useState<"date" | "amount">("date");
+  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
   const [selectedTransaction, setSelectedTransaction] = useState<Transaction | null>(null);
   const [showDetailSheet, setShowDetailSheet] = useState(false);
 
@@ -47,8 +47,8 @@ export default function StaffTransactions() {
 
     try {
       let startDate: Date | undefined;
-      
-      if (dateRange !== 'all') {
+
+      if (dateRange !== "all") {
         startDate = new Date();
         const days = parseInt(dateRange);
         startDate.setDate(startDate.getDate() - days);
@@ -56,8 +56,9 @@ export default function StaffTransactions() {
       }
 
       let query = supabase
-        .from('transactions')
-        .select(`
+        .from("transactions")
+        .select(
+          `
           id,
           created_at,
           transaction_date,
@@ -73,44 +74,43 @@ export default function StaffTransactions() {
             full_name,
             email
           )
-        `)
-        .eq('branch_id', user.branch_id);
+        `
+        )
+        .eq("branch_id", user.branch_id);
 
       if (startDate) {
-        query = query.gte('created_at', startDate.toISOString());
+        query = query.gte("created_at", startDate.toISOString());
       }
 
-      const { data, error } = await query.order('created_at', { ascending: false });
+      const { data, error } = await query.order("created_at", { ascending: false });
 
       if (error) throw error;
-      
+
       // Transform data
       let transformedData = (data || []).map((transaction: any) => ({
         ...transaction,
-        customer: Array.isArray(transaction.customer) 
-          ? transaction.customer[0] || null 
-          : transaction.customer
+        customer: Array.isArray(transaction.customer) ? transaction.customer[0] || null : transaction.customer,
       }));
-      
+
       // Apply sorting
       transformedData.sort((a: Transaction, b: Transaction) => {
         let comparison = 0;
-        
+
         switch (sortBy) {
-          case 'date':
+          case "date":
             comparison = new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
             break;
-          case 'amount':
+          case "amount":
             comparison = parseFloat(b.bill_amount) - parseFloat(a.bill_amount);
             break;
         }
-        
-        return sortOrder === 'desc' ? comparison : -comparison;
+
+        return sortOrder === "desc" ? comparison : -comparison;
       });
-      
+
       setTransactions(transformedData);
     } catch (error) {
-      console.error('Error fetching transactions:', error);
+      console.error("Error fetching transactions:", error);
     } finally {
       setLoading(false);
     }
@@ -123,19 +123,19 @@ export default function StaffTransactions() {
   const formatDateTime = (timestamp: string) => {
     const date = new Date(timestamp);
     // Convert to Malaysia timezone (UTC+8)
-    const malaysiaTime = new Date(date.getTime() + (8 * 60 * 60 * 1000));
-    
+    const malaysiaTime = new Date(date.getTime() + 8 * 60 * 60 * 1000);
+
     return {
-      date: malaysiaTime.toLocaleDateString('en-MY', {
-        day: 'numeric',
-        month: 'short',
-        year: 'numeric'
+      date: malaysiaTime.toLocaleDateString("en-MY", {
+        day: "numeric",
+        month: "short",
+        year: "numeric",
       }),
-      time: malaysiaTime.toLocaleTimeString('en-MY', { 
-        hour: '2-digit', 
-        minute: '2-digit',
-        hour12: true 
-      })
+      time: malaysiaTime.toLocaleTimeString("en-MY", {
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: true,
+      }),
     };
   };
 
@@ -169,7 +169,7 @@ export default function StaffTransactions() {
           <Button
             variant="ghost"
             size="sm"
-            onClick={() => navigate('/staff/dashboard')}
+            onClick={() => navigate("/staff/dashboard")}
             className="text-primary-foreground hover:bg-white/20"
           >
             <ArrowLeft className="h-5 w-5" />
@@ -179,7 +179,8 @@ export default function StaffTransactions() {
               {t.staffDashboard.transactions}
             </h1>
             <p className="text-primary-foreground/80 text-sm">
-              {transactions.length} {t.staffDashboard.transaction}{transactions.length !== 1 ? 's' : ''}
+              {transactions.length} {t.staffDashboard.transaction}
+              {transactions.length !== 1 ? "s" : ""}
             </p>
           </div>
           <LanguageSelector language={language} onLanguageChange={setLanguage} />
@@ -196,18 +197,18 @@ export default function StaffTransactions() {
               <span className="text-sm font-medium hidden sm:block">{t.staffDashboard.period}:</span>
               <div className="flex gap-1 flex-wrap">
                 {[
-                  { value: '1', label: '1D', labelFull: t.staffDashboard.oneDay },
-                  { value: '7', label: '7D', labelFull: t.staffDashboard.sevenDays },
-                  { value: '30', label: '30D', labelFull: t.staffDashboard.thirtyDays },
-                  { value: 'all', label: t.staffDashboard.all, labelFull: t.staffDashboard.all }
+                  { value: "1", label: "1D", labelFull: t.staffDashboard.oneDay },
+                  { value: "7", label: "7D", labelFull: t.staffDashboard.sevenDays },
+                  { value: "30", label: "30D", labelFull: t.staffDashboard.thirtyDays },
+                  { value: "all", label: t.staffDashboard.all, labelFull: t.staffDashboard.all },
                 ].map((option) => (
                   <button
                     key={option.value}
                     onClick={() => setDateRange(option.value as any)}
                     className={`px-2 sm:px-3 py-1 text-xs sm:text-sm rounded-md transition-colors ${
                       dateRange === option.value
-                        ? 'bg-primary text-primary-foreground'
-                        : 'bg-muted text-muted-foreground hover:bg-muted/80'
+                        ? "bg-primary text-primary-foreground"
+                        : "bg-muted text-muted-foreground hover:bg-muted/80"
                     }`}
                     title={option.labelFull}
                   >
@@ -222,29 +223,28 @@ export default function StaffTransactions() {
               <span className="text-sm font-medium hidden sm:block">{t.staffDashboard.sortBy}:</span>
               <div className="flex gap-1">
                 {[
-                  { value: 'date', label: t.staffDashboard.date },
-                  { value: 'amount', label: t.staffDashboard.amount }
+                  { value: "date", label: t.staffDashboard.date },
+                  { value: "amount", label: t.staffDashboard.amount },
                 ].map((option) => (
                   <button
                     key={option.value}
                     onClick={() => {
                       if (sortBy === option.value) {
-                        setSortOrder(sortOrder === 'desc' ? 'asc' : 'desc');
+                        setSortOrder(sortOrder === "desc" ? "asc" : "desc");
                       } else {
                         setSortBy(option.value as any);
-                        setSortOrder('desc');
+                        setSortOrder("desc");
                       }
                     }}
                     className={`px-2 sm:px-3 py-1 text-xs sm:text-sm rounded-md transition-colors flex items-center gap-1 ${
                       sortBy === option.value
-                        ? 'bg-primary text-primary-foreground'
-                        : 'bg-muted text-muted-foreground hover:bg-muted/80'
+                        ? "bg-primary text-primary-foreground"
+                        : "bg-muted text-muted-foreground hover:bg-muted/80"
                     }`}
                   >
                     <span>{option.label}</span>
-                    {sortBy === option.value && (
-                      sortOrder === 'desc' ? <ArrowDown className="h-3 w-3" /> : <ArrowUp className="h-3 w-3" />
-                    )}
+                    {sortBy === option.value &&
+                      (sortOrder === "desc" ? <ArrowDown className="h-3 w-3" /> : <ArrowUp className="h-3 w-3" />)}
                   </button>
                 ))}
               </div>
@@ -260,17 +260,15 @@ export default function StaffTransactions() {
               <div className="h-16 w-16 rounded-full bg-muted mx-auto mb-4 flex items-center justify-center">
                 <Receipt className="h-8 w-8 text-muted-foreground" />
               </div>
-              <p className="text-muted-foreground text-sm">
-                {t.staffDashboard.noTransactions}
-              </p>
+              <p className="text-muted-foreground text-sm">{t.staffDashboard.noTransactions}</p>
             </CardContent>
           </Card>
         ) : (
           transactions.map((transaction) => (
-            <Card 
-              key={transaction.id} 
+            <Card
+              key={transaction.id}
               className={`border-border/50 cursor-pointer hover:border-primary/50 transition-colors active:scale-[0.98] ${
-                transaction.status === 'voided' ? 'opacity-60 bg-muted/20' : ''
+                transaction.status === "voided" ? "opacity-60 bg-muted/20" : ""
               }`}
               onClick={() => {
                 setSelectedTransaction(transaction);
@@ -281,10 +279,12 @@ export default function StaffTransactions() {
                 <div className="flex items-start justify-between">
                   <div className="flex-1">
                     <div className="flex items-center gap-2 mb-1">
-                      <p className={`font-semibold text-foreground ${transaction.status === 'voided' ? 'line-through decoration-destructive' : ''}`}>
+                      <p
+                        className={`font-semibold text-foreground ${transaction.status === "voided" ? "line-through decoration-destructive" : ""}`}
+                      >
                         {transaction.customer?.full_name || transaction.customer?.email}
                       </p>
-                      {transaction.status === 'voided' && (
+                      {transaction.status === "voided" && (
                         <span className="text-xs font-bold uppercase bg-destructive/10 text-destructive px-1.5 py-0.5 rounded">
                           {t.staffDashboard.detailVoided}
                         </span>
@@ -298,23 +298,25 @@ export default function StaffTransactions() {
                     <div className="flex items-center gap-2 mt-2 text-xs">
                       {parseFloat(transaction.guaranteed_discount_amount) > 0 && (
                         <span className="text-green-600 dark:text-green-400">
-                          {t.staffDashboard.discount}: RM {parseFloat(transaction.guaranteed_discount_amount).toFixed(2)}
+                          {t.staffDashboard.discount}: RM{" "}
+                          {parseFloat(transaction.guaranteed_discount_amount).toFixed(2)}
                         </span>
                       )}
                       {parseFloat(transaction.virtual_currency_redeemed) > 0 && (
                         <span className="text-blue-600 dark:text-blue-400">
-                          {t.staffDashboard.vcRedeemed}: RM {parseFloat(transaction.virtual_currency_redeemed).toFixed(2)}
+                          {t.staffDashboard.vcRedeemed}: RM{" "}
+                          {parseFloat(transaction.virtual_currency_redeemed).toFixed(2)}
                         </span>
                       )}
                     </div>
                   </div>
                   <div className="text-right">
-                    <p className={`font-bold text-foreground text-lg ${transaction.status === 'voided' ? 'line-through text-muted-foreground' : ''}`}>
+                    <p
+                      className={`font-bold text-foreground text-lg ${transaction.status === "voided" ? "line-through text-muted-foreground" : ""}`}
+                    >
                       RM {parseFloat(transaction.bill_amount).toFixed(2)}
                     </p>
-                    <p className="text-xs text-muted-foreground">
-                      {t.staffDashboard.totalAmount}
-                    </p>
+                    <p className="text-xs text-muted-foreground">{t.staffDashboard.totalAmount}</p>
                   </div>
                 </div>
               </CardContent>

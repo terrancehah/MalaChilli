@@ -1,12 +1,12 @@
-import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../../contexts/AuthContext';
-import { supabase } from '../../lib/supabase';
-import { Button } from '../../components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
-import { Input } from '../../components/ui/input';
-import { Label } from '../../components/ui/label';
-import { ArrowLeft, Save, Building2, Percent, Clock, DollarSign } from 'lucide-react';
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../contexts/AuthContext";
+import { supabase } from "../../lib/supabase";
+import { Button } from "../../components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "../../components/ui/card";
+import { Input } from "../../components/ui/input";
+import { Label } from "../../components/ui/label";
+import { ArrowLeft, Save, Building2, Percent, Clock, DollarSign } from "lucide-react";
 
 interface RestaurantSettings {
   id: string;
@@ -33,11 +33,7 @@ export default function RestaurantSettings() {
       try {
         setLoading(true);
 
-        const { data, error } = await supabase
-          .from('restaurants')
-          .select('*')
-          .eq('id', user.restaurant_id)
-          .single();
+        const { data, error } = await supabase.from("restaurants").select("*").eq("id", user.restaurant_id).single();
 
         if (error) throw error;
 
@@ -45,7 +41,7 @@ export default function RestaurantSettings() {
           setSettings(data);
         }
       } catch (error) {
-        console.error('Error fetching settings:', error);
+        console.error("Error fetching settings:", error);
       } finally {
         setLoading(false);
       }
@@ -61,7 +57,7 @@ export default function RestaurantSettings() {
       setSaving(true);
 
       const { error } = await supabase
-        .from('restaurants')
+        .from("restaurants")
         .update({
           name: settings.name,
           description: settings.description,
@@ -69,16 +65,16 @@ export default function RestaurantSettings() {
           upline_reward_percent: settings.upline_reward_percent,
           max_redemption_percent: settings.max_redemption_percent,
           virtual_currency_expiry_days: settings.virtual_currency_expiry_days,
-          updated_at: new Date().toISOString()
+          updated_at: new Date().toISOString(),
         })
-        .eq('id', settings.id);
+        .eq("id", settings.id);
 
       if (error) throw error;
 
-      alert('Settings saved successfully!');
+      alert("Settings saved successfully!");
     } catch (error) {
-      console.error('Error saving settings:', error);
-      alert('Failed to save settings');
+      console.error("Error saving settings:", error);
+      alert("Failed to save settings");
     } finally {
       setSaving(false);
     }
@@ -108,18 +104,14 @@ export default function RestaurantSettings() {
           <Button
             variant="secondary"
             size="sm"
-            onClick={() => navigate('/merchant/dashboard')}
+            onClick={() => navigate("/merchant/dashboard")}
             className="bg-white/20 hover:bg-white/30 text-primary-foreground border-0"
           >
             <ArrowLeft className="h-4 w-4" />
           </Button>
           <div>
-            <h1 className="text-xl sm:text-2xl font-bold text-primary-foreground mb-1">
-              Restaurant Settings
-            </h1>
-            <p className="text-primary-foreground/80 text-sm">
-              Configure your restaurant preferences
-            </p>
+            <h1 className="text-xl sm:text-2xl font-bold text-primary-foreground mb-1">Restaurant Settings</h1>
+            <p className="text-primary-foreground/80 text-sm">Configure your restaurant preferences</p>
           </div>
         </div>
       </div>
@@ -146,22 +138,15 @@ export default function RestaurantSettings() {
 
             <div>
               <Label htmlFor="slug">URL Slug (Read-only)</Label>
-              <Input
-                id="slug"
-                value={settings.slug}
-                disabled
-                className="bg-muted"
-              />
-              <p className="text-xs text-muted-foreground mt-1">
-                Used in referral links: /join/{settings.slug}/CODE
-              </p>
+              <Input id="slug" value={settings.slug} disabled className="bg-muted" />
+              <p className="text-xs text-muted-foreground mt-1">Used in referral links: /join/{settings.slug}/CODE</p>
             </div>
 
             <div>
               <Label htmlFor="description">Description (Optional)</Label>
               <textarea
                 id="description"
-                value={settings.description || ''}
+                value={settings.description || ""}
                 onChange={(e) => setSettings({ ...settings, description: e.target.value })}
                 placeholder="Brief description of your restaurant"
                 className="w-full min-h-[80px] px-3 py-2 rounded-md border border-input bg-background text-sm"
@@ -188,14 +173,14 @@ export default function RestaurantSettings() {
                 max="100"
                 step="0.1"
                 value={settings.guaranteed_discount_percent}
-                onChange={(e) => setSettings({ 
-                  ...settings, 
-                  guaranteed_discount_percent: parseFloat(e.target.value) 
-                })}
+                onChange={(e) =>
+                  setSettings({
+                    ...settings,
+                    guaranteed_discount_percent: parseFloat(e.target.value),
+                  })
+                }
               />
-              <p className="text-xs text-muted-foreground mt-1">
-                Discount given to first-time customers (default: 5%)
-              </p>
+              <p className="text-xs text-muted-foreground mt-1">Discount given to first-time customers (default: 5%)</p>
             </div>
 
             <div>
@@ -207,10 +192,12 @@ export default function RestaurantSettings() {
                 max="100"
                 step="0.1"
                 value={settings.upline_reward_percent}
-                onChange={(e) => setSettings({ 
-                  ...settings, 
-                  upline_reward_percent: parseFloat(e.target.value) 
-                })}
+                onChange={(e) =>
+                  setSettings({
+                    ...settings,
+                    upline_reward_percent: parseFloat(e.target.value),
+                  })
+                }
               />
               <p className="text-xs text-muted-foreground mt-1">
                 Percentage given to each upline (Level 1, 2, 3) per transaction (default: 1%)
@@ -226,10 +213,12 @@ export default function RestaurantSettings() {
                 max="100"
                 step="0.1"
                 value={settings.max_redemption_percent}
-                onChange={(e) => setSettings({ 
-                  ...settings, 
-                  max_redemption_percent: parseFloat(e.target.value) 
-                })}
+                onChange={(e) =>
+                  setSettings({
+                    ...settings,
+                    max_redemption_percent: parseFloat(e.target.value),
+                  })
+                }
               />
               <p className="text-xs text-muted-foreground mt-1">
                 Maximum % of bill that can be paid with Virtual Currency (default: 20%)
@@ -254,10 +243,12 @@ export default function RestaurantSettings() {
                 type="number"
                 min="1"
                 value={settings.virtual_currency_expiry_days}
-                onChange={(e) => setSettings({ 
-                  ...settings, 
-                  virtual_currency_expiry_days: parseInt(e.target.value) 
-                })}
+                onChange={(e) =>
+                  setSettings({
+                    ...settings,
+                    virtual_currency_expiry_days: parseInt(e.target.value),
+                  })
+                }
               />
               <p className="text-xs text-muted-foreground mt-1">
                 Number of days before earned Virtual Currency expires (default: 30 days)
@@ -267,13 +258,9 @@ export default function RestaurantSettings() {
         </Card>
 
         {/* Save Button */}
-        <Button
-          onClick={handleSave}
-          disabled={saving}
-          className="w-full"
-        >
+        <Button onClick={handleSave} disabled={saving} className="w-full">
           <Save className="h-4 w-4 mr-2" />
-          {saving ? 'Saving...' : 'Save Settings'}
+          {saving ? "Saving..." : "Save Settings"}
         </Button>
 
         {/* Info Card */}

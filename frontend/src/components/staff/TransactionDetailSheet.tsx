@@ -1,9 +1,9 @@
-import { useState, useEffect } from 'react';
-import { X, Clock, Receipt, DollarSign, User, Package, CheckCircle, AlertCircle, AlertTriangle } from 'lucide-react';
-import { Button } from '../ui/button';
-import { supabase } from '../../lib/supabase';
-import { showSuccessToast, showErrorToast } from '../ui/toast';
-import { getTranslation, type Language } from '../../translations';
+import { useState, useEffect } from "react";
+import { X, Clock, Receipt, DollarSign, User, Package, CheckCircle, AlertCircle, AlertTriangle } from "lucide-react";
+import { Button } from "../ui/button";
+import { supabase } from "../../lib/supabase";
+import { showSuccessToast, showErrorToast } from "../ui/toast";
+import { getTranslation, type Language } from "../../translations";
 
 interface TransactionDetailSheetProps {
   isOpen: boolean;
@@ -13,12 +13,12 @@ interface TransactionDetailSheetProps {
   language?: Language;
 }
 
-export function TransactionDetailSheet({ 
-  isOpen, 
-  onClose, 
+export function TransactionDetailSheet({
+  isOpen,
+  onClose,
   onVoidSuccess,
   transaction,
-  language = 'en'
+  language = "en",
 }: TransactionDetailSheetProps) {
   const t = getTranslation(language);
   const [touchStart, setTouchStart] = useState(0);
@@ -26,33 +26,33 @@ export function TransactionDetailSheet({
   const [isDragging, setIsDragging] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false);
   const [shouldRender, setShouldRender] = useState(false);
-  
+
   // Void State
   const [showVoidConfirm, setShowVoidConfirm] = useState(false);
-  const [voidReason, setVoidReason] = useState('');
+  const [voidReason, setVoidReason] = useState("");
   const [isVoiding, setIsVoiding] = useState(false);
 
   useEffect(() => {
     if (isOpen) {
       setShouldRender(true);
       setShowVoidConfirm(false);
-      setVoidReason('');
+      setVoidReason("");
       // Prevent body scroll
-      document.body.style.overflow = 'hidden';
+      document.body.style.overflow = "hidden";
       requestAnimationFrame(() => {
         setIsAnimating(true);
       });
     } else {
       setIsAnimating(false);
-      document.body.style.overflow = 'unset';
+      document.body.style.overflow = "unset";
       const timer = setTimeout(() => {
         setShouldRender(false);
       }, 300);
       return () => clearTimeout(timer);
     }
-    
+
     return () => {
-      document.body.style.overflow = 'unset';
+      document.body.style.overflow = "unset";
     };
   }, [isOpen]);
 
@@ -64,9 +64,9 @@ export function TransactionDetailSheet({
 
     try {
       setIsVoiding(true);
-      const { error } = await supabase.rpc('void_transaction', {
+      const { error } = await supabase.rpc("void_transaction", {
         p_transaction_id: transaction.id,
-        p_reason: voidReason
+        p_reason: voidReason,
       });
 
       if (error) throw error;
@@ -75,7 +75,7 @@ export function TransactionDetailSheet({
       if (onVoidSuccess) onVoidSuccess();
       else onClose();
     } catch (error) {
-      console.error('Error voiding transaction:', error);
+      console.error("Error voiding transaction:", error);
       showErrorToast(t.common.error);
     } finally {
       setIsVoiding(false);
@@ -106,20 +106,20 @@ export function TransactionDetailSheet({
   if (!shouldRender || !transaction) return null;
 
   const translateY = isDragging && touchCurrent > touchStart ? touchCurrent - touchStart : 0;
-  
+
   // Parse OCR data if available
   const ocrData = transaction.ocr_data;
   const hasOCR = transaction.ocr_processed && ocrData;
   const ocrItems = hasOCR ? ocrData.extraction?.items || [] : [];
   const ocrConfidence = hasOCR ? ocrData.extraction?.confidence || 0 : 0;
-  const isVoided = transaction.status === 'voided';
+  const isVoided = transaction.status === "voided";
 
   return (
     <>
       {/* Backdrop */}
       <div
         className={`fixed inset-0 bg-black/50 backdrop-blur-sm z-50 transition-opacity duration-300 ${
-          isAnimating ? 'opacity-100' : 'opacity-0'
+          isAnimating ? "opacity-100" : "opacity-0"
         }`}
         onClick={onClose}
       />
@@ -127,11 +127,11 @@ export function TransactionDetailSheet({
       {/* Bottom Sheet */}
       <div
         className={`fixed bottom-0 left-0 right-0 bg-background rounded-t-3xl shadow-2xl z-50 transition-transform duration-300 ease-out ${
-          isAnimating ? 'translate-y-0' : 'translate-y-full'
+          isAnimating ? "translate-y-0" : "translate-y-full"
         }`}
         style={{
-          transform: `translateY(${isAnimating ? translateY : '100%'}px)`,
-          maxHeight: '90vh',
+          transform: `translateY(${isAnimating ? translateY : "100%"}px)`,
+          maxHeight: "90vh",
         }}
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
@@ -165,7 +165,9 @@ export function TransactionDetailSheet({
                   </span>
                 )}
               </div>
-              <h2 className={`text-2xl font-bold text-foreground ${isVoided ? 'line-through text-muted-foreground' : ''}`}>
+              <h2
+                className={`text-2xl font-bold text-foreground ${isVoided ? "line-through text-muted-foreground" : ""}`}
+              >
                 RM {parseFloat(transaction.final_amount || transaction.bill_amount).toFixed(2)}
               </h2>
               <div className="flex items-center gap-2 mt-1 text-sm text-muted-foreground">
@@ -182,11 +184,9 @@ export function TransactionDetailSheet({
               </div>
               <div className="space-y-1">
                 <p className="text-sm font-medium text-foreground">
-                  {transaction.customer?.full_name || 'Unknown Customer'}
+                  {transaction.customer?.full_name || "Unknown Customer"}
                 </p>
-                <p className="text-xs text-muted-foreground">
-                  {transaction.customer?.email || 'No email'}
-                </p>
+                <p className="text-xs text-muted-foreground">{transaction.customer?.email || "No email"}</p>
               </div>
             </div>
 
@@ -199,29 +199,33 @@ export function TransactionDetailSheet({
               <div className="space-y-2">
                 <div className="flex justify-between text-sm">
                   <span className="text-muted-foreground">{t.staffDashboard.billAmount}</span>
-                  <span className={`font-medium text-foreground ${isVoided ? 'line-through' : ''}`}>
+                  <span className={`font-medium text-foreground ${isVoided ? "line-through" : ""}`}>
                     RM {parseFloat(transaction.bill_amount).toFixed(2)}
                   </span>
                 </div>
                 {parseFloat(transaction.guaranteed_discount_amount || 0) > 0 && (
                   <div className="flex justify-between text-sm">
-                    <span className="text-muted-foreground">{t.transactionDetail?.guaranteedDiscount || 'Discount'}</span>
-                    <span className={`font-medium text-green-600 ${isVoided ? 'line-through text-green-600/50' : ''}`}>
+                    <span className="text-muted-foreground">
+                      {t.transactionDetail?.guaranteedDiscount || "Discount"}
+                    </span>
+                    <span className={`font-medium text-green-600 ${isVoided ? "line-through text-green-600/50" : ""}`}>
                       -RM {parseFloat(transaction.guaranteed_discount_amount).toFixed(2)}
                     </span>
                   </div>
                 )}
                 {parseFloat(transaction.virtual_currency_redeemed || 0) > 0 && (
                   <div className="flex justify-between text-sm">
-                    <span className="text-muted-foreground">{t.transactionDetail?.vcRedeemed || 'VC Redeemed'}</span>
-                    <span className={`font-medium text-green-600 ${isVoided ? 'line-through text-green-600/50' : ''}`}>
+                    <span className="text-muted-foreground">{t.transactionDetail?.vcRedeemed || "VC Redeemed"}</span>
+                    <span className={`font-medium text-green-600 ${isVoided ? "line-through text-green-600/50" : ""}`}>
                       -RM {parseFloat(transaction.virtual_currency_redeemed).toFixed(2)}
                     </span>
                   </div>
                 )}
                 <div className="pt-2 border-t border-border flex justify-between">
                   <span className="text-sm font-semibold text-foreground">{t.staffDashboard.finalAmount}</span>
-                  <span className={`text-sm font-bold text-foreground ${isVoided ? 'line-through text-muted-foreground' : ''}`}>
+                  <span
+                    className={`text-sm font-bold text-foreground ${isVoided ? "line-through text-muted-foreground" : ""}`}
+                  >
                     RM {parseFloat(transaction.final_amount || transaction.bill_amount).toFixed(2)}
                   </span>
                 </div>
@@ -258,9 +262,7 @@ export function TransactionDetailSheet({
                           <span className="text-foreground">{item.name}</span>
                           <span className="text-muted-foreground ml-2">×{item.quantity}</span>
                         </div>
-                        <span className="font-medium text-foreground">
-                          RM {item.total.toFixed(2)}
-                        </span>
+                        <span className="font-medium text-foreground">RM {item.total.toFixed(2)}</span>
                       </div>
                     ))}
                   </div>
@@ -293,12 +295,10 @@ export function TransactionDetailSheet({
                   </div>
                   <div>
                     <h3 className="text-sm font-bold text-destructive">{t.staffDashboard.voidConfirmTitle}</h3>
-                    <p className="text-xs text-muted-foreground mt-1">
-                      {t.staffDashboard.voidConfirmDesc}
-                    </p>
+                    <p className="text-xs text-muted-foreground mt-1">{t.staffDashboard.voidConfirmDesc}</p>
                   </div>
                 </div>
-                
+
                 <div className="space-y-3">
                   <div>
                     <label className="text-xs font-medium text-foreground mb-1 block">
@@ -313,18 +313,18 @@ export function TransactionDetailSheet({
                       autoFocus
                     />
                   </div>
-                  
+
                   <div className="flex gap-2">
-                    <Button 
-                      variant="outline" 
+                    <Button
+                      variant="outline"
                       className="flex-1"
                       onClick={() => setShowVoidConfirm(false)}
                       disabled={isVoiding}
                     >
                       {t.staffDashboard.cancelVoid}
                     </Button>
-                    <Button 
-                      variant="destructive" 
+                    <Button
+                      variant="destructive"
                       className="flex-1"
                       onClick={handleVoidTransaction}
                       disabled={isVoiding || !voidReason.trim()}
@@ -346,11 +346,7 @@ export function TransactionDetailSheet({
                     {t.staffDashboard.voidTransaction}
                   </Button>
                 )}
-                <Button
-                  onClick={onClose}
-                  variant="outline"
-                  className="w-full"
-                >
+                <Button onClick={onClose} variant="outline" className="w-full">
                   {t.common.close}
                 </Button>
               </div>

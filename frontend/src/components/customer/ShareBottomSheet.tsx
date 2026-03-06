@@ -30,12 +30,7 @@ interface ShareBottomSheetProps {
   language?: Language;
 }
 
-export function ShareBottomSheet({
-  isOpen,
-  onClose,
-  restaurant,
-  language = "en",
-}: ShareBottomSheetProps) {
+export function ShareBottomSheet({ isOpen, onClose, restaurant, language = "en" }: ShareBottomSheetProps) {
   const t = getTranslation(language);
   const [copied, setCopied] = useState<string | null>(null);
   const [touchStart, setTouchStart] = useState(0);
@@ -76,9 +71,7 @@ export function ShareBottomSheet({
 
   const handleShareWhatsApp = () => {
     const link = `${window.location.origin}/join/${restaurant.slug}/${restaurant.code}`;
-    const message = t.shareSheet.shareMessage
-      .replace("{restaurant}", restaurant.name)
-      .replace("{link}", link);
+    const message = t.shareSheet.shareMessage.replace("{restaurant}", restaurant.name).replace("{link}", link);
     const url = `https://wa.me/?text=${encodeURIComponent(message)}`;
     window.open(url, "_blank");
     onClose();
@@ -86,9 +79,7 @@ export function ShareBottomSheet({
 
   const handleShareFacebook = () => {
     const link = `${window.location.origin}/join/${restaurant.slug}/${restaurant.code}`;
-    const url = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
-      link
-    )}`;
+    const url = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(link)}`;
     window.open(url, "_blank");
     onClose();
   };
@@ -140,8 +131,8 @@ export function ShareBottomSheet({
             isDragging && touchCurrent > touchStart
               ? `translateY(${touchCurrent - touchStart}px)`
               : isAnimating
-              ? "translateY(0)"
-              : "translateY(100%)",
+                ? "translateY(0)"
+                : "translateY(100%)",
           transition: isDragging ? "none" : "transform 0.3s ease-out",
         }}
         onTouchStart={(e) => {
@@ -178,26 +169,17 @@ export function ShareBottomSheet({
               <h3 className="text-xl font-bold text-foreground mb-1">
                 {t.shareSheet.title} {restaurant.name}
               </h3>
-              <p className="text-sm text-muted-foreground">
-                {t.shareSheet.subtitle}
-              </p>
+              <p className="text-sm text-muted-foreground">{t.shareSheet.subtitle}</p>
             </div>
 
             {/* Referral Link Section */}
             <div className="mb-5">
-              <label className="text-sm font-medium text-foreground mb-2 block">
-                {t.shareSheet.referralLink}
-              </label>
+              <label className="text-sm font-medium text-foreground mb-2 block">{t.shareSheet.referralLink}</label>
               <div className="bg-muted/50 rounded-lg p-4 border border-border/50">
                 <p className="text-xs font-mono text-muted-foreground break-all leading-relaxed mb-3">
-                  {window.location.origin}/join/{restaurant.slug}/
-                  {restaurant.code}
+                  {window.location.origin}/join/{restaurant.slug}/{restaurant.code}
                 </p>
-                <Button
-                  onClick={handleCopyLink}
-                  className="w-full bg-primary hover:bg-primary/90"
-                  size="lg"
-                >
+                <Button onClick={handleCopyLink} className="w-full bg-primary hover:bg-primary/90" size="lg">
                   {copied === "link" ? (
                     <>
                       <Check className="h-4 w-4 mr-2" />
@@ -215,9 +197,7 @@ export function ShareBottomSheet({
 
             {/* Social Share Options */}
             <div className="mb-5">
-              <label className="text-sm font-medium text-foreground mb-2 block">
-                {t.shareSheet.shareViaSocial}
-              </label>
+              <label className="text-sm font-medium text-foreground mb-2 block">{t.shareSheet.shareViaSocial}</label>
               <div className="grid grid-cols-3 gap-3">
                 <Button
                   variant="outline"
@@ -248,20 +228,11 @@ export function ShareBottomSheet({
 
             {/* Promotion Code Section */}
             <div className="mb-4">
-              <label className="text-sm font-medium text-foreground mb-2 block">
-                {t.shareSheet.promotionCode}
-              </label>
+              <label className="text-sm font-medium text-foreground mb-2 block">{t.shareSheet.promotionCode}</label>
               <div className="bg-muted/50 rounded-lg p-2.5 border border-border/50">
                 <div className="flex items-center justify-between gap-3">
-                  <code className="text-base font-mono text-foreground flex-1">
-                    {restaurant.code}
-                  </code>
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    onClick={handleCopyCode}
-                    className="shrink-0"
-                  >
+                  <code className="text-base font-mono text-foreground flex-1">{restaurant.code}</code>
+                  <Button size="sm" variant="outline" onClick={handleCopyCode} className="shrink-0">
                     {copied === "code" ? (
                       <>
                         <Check className="h-4 w-4 mr-1" />

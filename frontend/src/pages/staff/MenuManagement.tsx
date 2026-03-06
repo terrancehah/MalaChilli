@@ -1,12 +1,12 @@
-import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { MenuItemManagement } from '../../components/staff';
-import { supabase } from '../../lib/supabase';
-import type { Language } from '../../translations';
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { MenuItemManagement } from "../../components/staff";
+import { supabase } from "../../lib/supabase";
+import type { Language } from "../../translations";
 
 export function MenuManagement() {
   const navigate = useNavigate();
-  const [language, setLanguage] = useState<Language>('en');
+  const [language, setLanguage] = useState<Language>("en");
   const [restaurantId, setRestaurantId] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -16,23 +16,21 @@ export function MenuManagement() {
 
   const loadStaffInfo = async () => {
     try {
-      const { data: { user } } = await supabase.auth.getUser();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
       if (!user) {
-        navigate('/staff/login');
+        navigate("/staff/login");
         return;
       }
 
-      const { data } = await supabase
-        .from('users')
-        .select('restaurant_id')
-        .eq('id', user.id)
-        .single();
+      const { data } = await supabase.from("users").select("restaurant_id").eq("id", user.id).single();
 
       if (data?.restaurant_id) {
         setRestaurantId(data.restaurant_id);
       }
     } catch (error) {
-      console.error('Error loading staff info:', error);
+      console.error("Error loading staff info:", error);
     } finally {
       setIsLoading(false);
     }
@@ -61,9 +59,9 @@ export function MenuManagement() {
 
   return (
     <div className="min-h-screen bg-background">
-      <MenuItemManagement 
-        restaurantId={restaurantId} 
-        onBack={() => navigate('/staff/dashboard')}
+      <MenuItemManagement
+        restaurantId={restaurantId}
+        onBack={() => navigate("/staff/dashboard")}
         language={language}
         onLanguageChange={setLanguage}
       />

@@ -1,8 +1,7 @@
-import { LoginForm } from '../../components/auth';
-import { SEO } from '../../components/shared';
+import { LoginForm } from "../../components/auth";
+import { SEO } from "../../components/shared";
 
 export default function Login() {
-
   return (
     <>
       <SEO title="Login" description="Login to your MakanTak account." />

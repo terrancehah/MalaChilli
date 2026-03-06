@@ -1,7 +1,7 @@
-import { Button } from '../ui/button';
-import { X, CheckCircle, Cake } from 'lucide-react';
-import { useState, useEffect } from 'react';
-import { getTranslation, type Language } from '../../translations';
+import { Button } from "../ui/button";
+import { X, CheckCircle, Cake } from "lucide-react";
+import { useState, useEffect } from "react";
+import { getTranslation, type Language } from "../../translations";
 
 interface CustomerVerifiedModalProps {
   isOpen: boolean;
@@ -26,7 +26,7 @@ export function CustomerVerifiedModal({
   referralCode,
   isBirthday,
   isFirstVisit,
-  language = 'en'
+  language = "en",
 }: CustomerVerifiedModalProps) {
   const t = getTranslation(language);
   const [isAnimating, setIsAnimating] = useState(false);
@@ -52,15 +52,15 @@ export function CustomerVerifiedModal({
   if (!shouldRender) return null;
 
   return (
-    <div 
+    <div
       className={`fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4 transition-opacity duration-200 ${
-        isAnimating ? 'opacity-100' : 'opacity-0'
+        isAnimating ? "opacity-100" : "opacity-0"
       }`}
       onClick={onClose}
     >
       <div
         className={`bg-background rounded-2xl max-w-sm w-full shadow-2xl border border-border transition-all duration-200 ${
-          isAnimating ? 'scale-100 opacity-100' : 'scale-95 opacity-0'
+          isAnimating ? "scale-100 opacity-100" : "scale-95 opacity-0"
         }`}
         onClick={(e) => e.stopPropagation()}
       >
@@ -85,10 +85,8 @@ export function CustomerVerifiedModal({
 
           {/* Content */}
           <div className="text-center mb-6">
-            <h3 className="text-xl font-bold text-foreground mb-3">
-              {t.staffDashboard.customerVerified}
-            </h3>
-            
+            <h3 className="text-xl font-bold text-foreground mb-3">{t.staffDashboard.customerVerified}</h3>
+
             {/* Badges */}
             <div className="flex gap-2 justify-center mb-3">
               {isBirthday && (
@@ -107,18 +105,12 @@ export function CustomerVerifiedModal({
             <p className="text-lg font-semibold text-foreground mb-1">
               {t.staffDashboard.welcomeBack}, {customerName}!
             </p>
-            <p className="text-sm text-muted-foreground font-mono">
-              {referralCode}
-            </p>
+            <p className="text-sm text-muted-foreground font-mono">{referralCode}</p>
           </div>
 
           {/* Action Buttons */}
           <div className="space-y-2">
-            <Button
-              onClick={onContinue}
-              className="w-full bg-primary hover:bg-primary/90 h-11"
-              size="lg"
-            >
+            <Button onClick={onContinue} className="w-full bg-primary hover:bg-primary/90 h-11" size="lg">
               {t.staffDashboard.continueToCheckout}
             </Button>
           </div>

@@ -1,10 +1,10 @@
-import { useState, useEffect } from 'react';
-import { Scanner } from '@yudiel/react-qr-scanner';
-import { Button } from '../ui/button';
-import { Input } from '../ui/input';
-import { Label } from '../ui/label';
-import { X, Keyboard } from 'lucide-react';
-import { getTranslation, type Language } from '../../translations';
+import { useState, useEffect } from "react";
+import { Scanner } from "@yudiel/react-qr-scanner";
+import { Button } from "../ui/button";
+import { Input } from "../ui/input";
+import { Label } from "../ui/label";
+import { X, Keyboard } from "lucide-react";
+import { getTranslation, type Language } from "../../translations";
 
 interface QRScannerSheetProps {
   isOpen: boolean;
@@ -13,9 +13,9 @@ interface QRScannerSheetProps {
   language?: Language;
 }
 
-export function QRScannerSheet({ isOpen, onClose, onScanSuccess, language = 'en' }: QRScannerSheetProps) {
+export function QRScannerSheet({ isOpen, onClose, onScanSuccess, language = "en" }: QRScannerSheetProps) {
   const t = getTranslation(language);
-  const [manualCode, setManualCode] = useState('');
+  const [manualCode, setManualCode] = useState("");
   const [showManualInput, setShowManualInput] = useState(false);
   const [touchStart, setTouchStart] = useState(0);
   const [touchCurrent, setTouchCurrent] = useState(0);
@@ -27,20 +27,20 @@ export function QRScannerSheet({ isOpen, onClose, onScanSuccess, language = 'en'
   useEffect(() => {
     if (isOpen) {
       setShouldRender(true);
-      document.body.style.overflow = 'hidden';
+      document.body.style.overflow = "hidden";
       requestAnimationFrame(() => {
         setIsAnimating(true);
       });
     } else {
       setIsAnimating(false);
-      document.body.style.overflow = 'unset';
+      document.body.style.overflow = "unset";
       const timer = setTimeout(() => {
         setShouldRender(false);
       }, 300); // Match transition duration
       return () => clearTimeout(timer);
     }
     return () => {
-      document.body.style.overflow = 'unset';
+      document.body.style.overflow = "unset";
     };
   }, [isOpen]);
 
@@ -65,7 +65,7 @@ export function QRScannerSheet({ isOpen, onClose, onScanSuccess, language = 'en'
   const handleManualSubmit = () => {
     if (manualCode.trim()) {
       onScanSuccess(manualCode.trim());
-      setManualCode('');
+      setManualCode("");
       onClose();
     }
   };
@@ -79,24 +79,25 @@ export function QRScannerSheet({ isOpen, onClose, onScanSuccess, language = 'en'
   return (
     <>
       {/* Backdrop */}
-      <div 
+      <div
         className={`fixed inset-0 bg-black/50 backdrop-blur-sm z-50 transition-opacity duration-300 overflow-hidden ${
-          isAnimating ? 'opacity-100' : 'opacity-0'
+          isAnimating ? "opacity-100" : "opacity-0"
         }`}
         onClick={onClose}
-        style={{ touchAction: 'none' }}
+        style={{ touchAction: "none" }}
       />
-      
+
       {/* Bottom Sheet (Mobile) / Split View (iPad Landscape) */}
-      <div 
+      <div
         className="fixed inset-x-0 bottom-0 md:landscape:inset-y-0 md:landscape:left-0 md:landscape:right-auto md:landscape:w-[60%] z-50 transition-transform duration-300 ease-out"
         style={{
-          transform: isDragging && touchCurrent > touchStart 
-            ? `translateY(${touchCurrent - touchStart}px)` 
-            : isAnimating 
-              ? 'translateY(0) translateX(0)' 
-              : 'translateY(100%) md:landscape:translateY(0) md:landscape:translateX(-100%)',
-          transition: isDragging ? 'none' : 'transform 0.3s ease-out'
+          transform:
+            isDragging && touchCurrent > touchStart
+              ? `translateY(${touchCurrent - touchStart}px)`
+              : isAnimating
+                ? "translateY(0) translateX(0)"
+                : "translateY(100%) md:landscape:translateY(0) md:landscape:translateX(-100%)",
+          transition: isDragging ? "none" : "transform 0.3s ease-out",
         }}
         onTouchStart={(e) => {
           setTouchStart(e.targetTouches[0].clientY);
@@ -123,17 +124,15 @@ export function QRScannerSheet({ isOpen, onClose, onScanSuccess, language = 'en'
             >
               <X className="h-5 w-5 text-muted-foreground" />
             </button>
-            
+
             {/* Handle Bar (Mobile Only) */}
             <div className="w-12 h-1.5 bg-muted rounded-full mx-auto mb-4 md:landscape:hidden"></div>
-            
+
             {/* Header */}
             <div className="mb-5">
-              <h3 className="text-xl font-bold text-foreground mb-1">
-                {t.staffDashboard.scanQR}
-              </h3>
+              <h3 className="text-xl font-bold text-foreground mb-1">{t.staffDashboard.scanQR}</h3>
               <p className="text-sm text-muted-foreground">
-                {showManualInput ? 'Enter customer code manually' : 'Point your camera at the customer\'s QR code'}
+                {showManualInput ? "Enter customer code manually" : "Point your camera at the customer's QR code"}
               </p>
             </div>
 
@@ -144,26 +143,26 @@ export function QRScannerSheet({ isOpen, onClose, onScanSuccess, language = 'en'
                 <div className="relative bg-black rounded-2xl overflow-hidden h-[400px] md:landscape:h-[500px]">
                   <Scanner
                     onScan={handleScan}
-                    onError={(error) => console.error('Scanner error:', error)}
+                    onError={(error) => console.error("Scanner error:", error)}
                     constraints={{
-                      facingMode: 'environment',
+                      facingMode: "environment",
                     }}
                     styles={{
                       container: {
-                        width: '100%',
-                        height: '100%',
+                        width: "100%",
+                        height: "100%",
                       },
                       video: {
-                        width: '100%',
-                        height: '100%',
-                        objectFit: 'cover',
+                        width: "100%",
+                        height: "100%",
+                        objectFit: "cover",
                       },
                     }}
                     components={{
                       finder: false,
                     }}
                   />
-                  
+
                   {/* Custom Corner Brackets Overlay */}
                   <div className="absolute inset-0 pointer-events-none flex items-center justify-center">
                     <div className="relative w-64 h-64">
@@ -181,9 +180,7 @@ export function QRScannerSheet({ isOpen, onClose, onScanSuccess, language = 'en'
 
                 {/* Instructions */}
                 <div className="mt-4 text-center">
-                  <p className="text-sm text-muted-foreground">
-                    Align the QR code within the frame
-                  </p>
+                  <p className="text-sm text-muted-foreground">Align the QR code within the frame</p>
                 </div>
               </div>
             ) : (
@@ -214,14 +211,9 @@ export function QRScannerSheet({ isOpen, onClose, onScanSuccess, language = 'en'
             )}
 
             {/* Toggle Input Mode */}
-            <Button
-              onClick={toggleInputMode}
-              variant="outline"
-              className="w-full"
-              size="lg"
-            >
+            <Button onClick={toggleInputMode} variant="outline" className="w-full" size="lg">
               <Keyboard className="h-5 w-5 mr-2" />
-              {showManualInput ? 'Switch to Camera' : 'Enter Code Manually'}
+              {showManualInput ? "Switch to Camera" : "Enter Code Manually"}
             </Button>
           </div>
         </div>

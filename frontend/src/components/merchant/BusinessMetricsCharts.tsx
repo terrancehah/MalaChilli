@@ -1,11 +1,11 @@
-import { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
-import { Button } from '../ui/button';
-import { ChartContainer, ChartTooltip, ChartTooltipContent } from '../ui/chart';
-import { Line, LineChart, CartesianGrid, XAxis, YAxis, Legend } from 'recharts';
-import { TrendingUp } from 'lucide-react';
-import { getTranslation, type Language } from '../../translations';
-import { InfoButton } from '../shared';
+import { useState } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
+import { Button } from "../ui/button";
+import { ChartContainer, ChartTooltip, ChartTooltipContent } from "../ui/chart";
+import { Line, LineChart, CartesianGrid, XAxis, YAxis, Legend } from "recharts";
+import { TrendingUp } from "lucide-react";
+import { getTranslation, type Language } from "../../translations";
+import { InfoButton } from "../shared";
 
 interface BusinessMetricsChartsProps {
   revenueData?: Array<{
@@ -17,13 +17,10 @@ interface BusinessMetricsChartsProps {
   language: Language;
 }
 
-export function BusinessMetricsCharts({ 
-  revenueData = [],
-  language
-}: BusinessMetricsChartsProps) {
+export function BusinessMetricsCharts({ revenueData = [], language }: BusinessMetricsChartsProps) {
   const t = getTranslation(language);
   const [revenuePeriod, setRevenuePeriod] = useState<7 | 14 | 30>(14);
-  
+
   const chartConfig = {
     gross_revenue: {
       label: t.merchantDashboard.businessMetrics.totalRevenue,
@@ -41,7 +38,7 @@ export function BusinessMetricsCharts({
 
   // Get revenue data based on selected period
   const recentRevenue = revenueData.slice(0, revenuePeriod).reverse();
-  
+
   // Calculate total revenue for each period
   const revenue7d = revenueData.slice(0, 7).reduce((sum, d) => sum + d.gross_revenue, 0);
   const revenue14d = revenueData.slice(0, 14).reduce((sum, d) => sum + d.gross_revenue, 0);
@@ -57,16 +54,16 @@ export function BusinessMetricsCharts({
               <CardTitle className="text-sm sm:text-base flex items-center gap-2">
                 <TrendingUp className="h-4 w-4 sm:h-5 sm:w-5" />
                 {t.merchantDashboard.businessMetrics.revenueOverTime}
-                <InfoButton 
+                <InfoButton
                   title={t.merchantDashboard.businessMetrics.revenueOverTime}
                   description={t.merchantDashboard.businessMetrics.revenueOverTimeInfo}
                 />
               </CardTitle>
-              
+
               {/* Period Filter Buttons */}
               <div className="flex gap-1">
                 <Button
-                  variant={revenuePeriod === 7 ? 'default' : 'outline'}
+                  variant={revenuePeriod === 7 ? "default" : "outline"}
                   size="sm"
                   onClick={() => setRevenuePeriod(7)}
                   className="h-8 px-3 text-xs"
@@ -74,7 +71,7 @@ export function BusinessMetricsCharts({
                   {t.merchantDashboard.businessMetrics.days7}
                 </Button>
                 <Button
-                  variant={revenuePeriod === 14 ? 'default' : 'outline'}
+                  variant={revenuePeriod === 14 ? "default" : "outline"}
                   size="sm"
                   onClick={() => setRevenuePeriod(14)}
                   className="h-8 px-3 text-xs"
@@ -82,7 +79,7 @@ export function BusinessMetricsCharts({
                   {t.merchantDashboard.businessMetrics.days14}
                 </Button>
                 <Button
-                  variant={revenuePeriod === 30 ? 'default' : 'outline'}
+                  variant={revenuePeriod === 30 ? "default" : "outline"}
                   size="sm"
                   onClick={() => setRevenuePeriod(30)}
                   className="h-8 px-3 text-xs"
@@ -91,25 +88,31 @@ export function BusinessMetricsCharts({
                 </Button>
               </div>
             </div>
-            
+
             {/* Revenue Summary */}
             <div className="grid grid-cols-3 gap-3 sm:gap-4 text-center">
-              <div className={`p-2 rounded-lg transition-colors ${revenuePeriod === 7 ? 'bg-primary/10' : 'bg-muted/30'}`}>
+              <div
+                className={`p-2 rounded-lg transition-colors ${revenuePeriod === 7 ? "bg-primary/10" : "bg-muted/30"}`}
+              >
                 <p className="text-xs text-muted-foreground">{t.merchantDashboard.businessMetrics.last7Days}</p>
                 <p className="text-sm sm:text-lg font-bold text-foreground">
-                  RM {revenue7d.toLocaleString('en-MY', { minimumFractionDigits: 2 })}
+                  RM {revenue7d.toLocaleString("en-MY", { minimumFractionDigits: 2 })}
                 </p>
               </div>
-              <div className={`p-2 rounded-lg transition-colors ${revenuePeriod === 14 ? 'bg-primary/10' : 'bg-muted/30'}`}>
+              <div
+                className={`p-2 rounded-lg transition-colors ${revenuePeriod === 14 ? "bg-primary/10" : "bg-muted/30"}`}
+              >
                 <p className="text-xs text-muted-foreground">{t.merchantDashboard.businessMetrics.last14Days}</p>
                 <p className="text-sm sm:text-lg font-bold text-foreground">
-                  RM {revenue14d.toLocaleString('en-MY', { minimumFractionDigits: 2 })}
+                  RM {revenue14d.toLocaleString("en-MY", { minimumFractionDigits: 2 })}
                 </p>
               </div>
-              <div className={`p-2 rounded-lg transition-colors ${revenuePeriod === 30 ? 'bg-primary/10' : 'bg-muted/30'}`}>
+              <div
+                className={`p-2 rounded-lg transition-colors ${revenuePeriod === 30 ? "bg-primary/10" : "bg-muted/30"}`}
+              >
                 <p className="text-xs text-muted-foreground">{t.merchantDashboard.businessMetrics.last30Days}</p>
                 <p className="text-sm sm:text-lg font-bold text-foreground">
-                  RM {revenue30d.toLocaleString('en-MY', { minimumFractionDigits: 2 })}
+                  RM {revenue30d.toLocaleString("en-MY", { minimumFractionDigits: 2 })}
                 </p>
               </div>
             </div>
@@ -119,13 +122,13 @@ export function BusinessMetricsCharts({
               <LineChart data={recentRevenue}>
                 <defs>
                   <linearGradient id="colorGross" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="hsl(var(--chart-1))" stopOpacity={0.3}/>
-                    <stop offset="95%" stopColor="hsl(var(--chart-1))" stopOpacity={0}/>
+                    <stop offset="5%" stopColor="hsl(var(--chart-1))" stopOpacity={0.3} />
+                    <stop offset="95%" stopColor="hsl(var(--chart-1))" stopOpacity={0} />
                   </linearGradient>
                 </defs>
                 <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
-                <XAxis 
-                  dataKey="date" 
+                <XAxis
+                  dataKey="date"
                   tick={{ fontSize: 11 }}
                   tickLine={false}
                   axisLine={false}
@@ -133,27 +136,26 @@ export function BusinessMetricsCharts({
                   textAnchor="end"
                   height={60}
                 />
-                <YAxis 
+                <YAxis
                   tick={{ fontSize: 11 }}
                   tickLine={false}
                   axisLine={false}
                   tickFormatter={(value) => `RM${value}`}
                 />
-                <ChartTooltip 
-                  content={<ChartTooltipContent 
-                    formatter={(value) => `RM ${Number(value).toLocaleString('en-MY', { minimumFractionDigits: 2 })}`}
-                  />} 
+                <ChartTooltip
+                  content={
+                    <ChartTooltipContent
+                      formatter={(value) => `RM ${Number(value).toLocaleString("en-MY", { minimumFractionDigits: 2 })}`}
+                    />
+                  }
                 />
-                <Legend 
-                  wrapperStyle={{ fontSize: '12px', paddingTop: '10px' }}
-                  iconType="line"
-                />
+                <Legend wrapperStyle={{ fontSize: "12px", paddingTop: "10px" }} iconType="line" />
                 <Line
                   type="monotone"
                   dataKey="gross_revenue"
                   stroke="hsl(var(--chart-1))"
                   strokeWidth={3}
-                  dot={{ fill: 'hsl(var(--chart-1))', r: 4 }}
+                  dot={{ fill: "hsl(var(--chart-1))", r: 4 }}
                   activeDot={{ r: 6 }}
                 />
                 <Line
@@ -162,14 +164,13 @@ export function BusinessMetricsCharts({
                   stroke="hsl(var(--chart-2))"
                   strokeWidth={2}
                   strokeDasharray="5 5"
-                  dot={{ fill: 'hsl(var(--chart-2))', r: 3 }}
+                  dot={{ fill: "hsl(var(--chart-2))", r: 3 }}
                 />
               </LineChart>
             </ChartContainer>
           </CardContent>
         </Card>
       )}
-
     </div>
   );
 }

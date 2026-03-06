@@ -1,7 +1,7 @@
-import { Info, X } from 'lucide-react';
-import { useState } from 'react';
-import { Button } from '../ui/button';
-import { Card } from '../ui/card';
+import { Info, X } from "lucide-react";
+import { useState } from "react";
+import { Button } from "../ui/button";
+import { Card } from "../ui/card";
 
 interface InfoButtonProps {
   title: string;
@@ -17,12 +17,7 @@ export function InfoButton({ title, description }: InfoButtonProps) {
 
   return (
     <>
-      <Button
-        variant="ghost"
-        size="icon"
-        className="h-5 w-5 p-0 hover:bg-transparent"
-        onClick={() => setIsOpen(true)}
-      >
+      <Button variant="ghost" size="icon" className="h-5 w-5 p-0 hover:bg-transparent" onClick={() => setIsOpen(true)}>
         <Info className="h-4 w-4 text-muted-foreground hover:text-foreground transition-colors" />
       </Button>
 
@@ -42,11 +37,9 @@ export function InfoButton({ title, description }: InfoButtonProps) {
             >
               <X className="h-4 w-4 text-muted-foreground" />
             </button>
-            
+
             <h3 className="text-lg font-semibold mb-4 pr-8">{title}</h3>
-            <div className="text-sm text-muted-foreground leading-relaxed whitespace-pre-line">
-              {description}
-            </div>
+            <div className="text-sm text-muted-foreground leading-relaxed whitespace-pre-line">{description}</div>
           </Card>
         </div>
       )}

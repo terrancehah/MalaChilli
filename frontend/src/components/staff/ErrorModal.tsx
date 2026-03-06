@@ -1,6 +1,6 @@
-import { Button } from '../ui/button';
-import { AlertCircle, X } from 'lucide-react';
-import { useState, useEffect } from 'react';
+import { Button } from "../ui/button";
+import { AlertCircle, X } from "lucide-react";
+import { useState, useEffect } from "react";
 
 interface ErrorModalProps {
   isOpen: boolean;
@@ -9,12 +9,7 @@ interface ErrorModalProps {
   message: string;
 }
 
-export function ErrorModal({
-  isOpen,
-  onClose,
-  title = 'Error',
-  message
-}: ErrorModalProps) {
+export function ErrorModal({ isOpen, onClose, title = "Error", message }: ErrorModalProps) {
   const [isAnimating, setIsAnimating] = useState(false);
   const [shouldRender, setShouldRender] = useState(false);
 
@@ -35,7 +30,7 @@ export function ErrorModal({
       {/* Backdrop */}
       <div
         className={`absolute inset-0 bg-black transition-opacity duration-300 ${
-          isAnimating ? 'opacity-50' : 'opacity-0'
+          isAnimating ? "opacity-50" : "opacity-0"
         }`}
         onClick={onClose}
       />
@@ -43,7 +38,7 @@ export function ErrorModal({
       {/* Modal */}
       <div
         className={`relative bg-background rounded-2xl shadow-2xl max-w-md w-full p-6 transition-all duration-300 ${
-          isAnimating ? 'opacity-100 scale-100' : 'opacity-0 scale-95'
+          isAnimating ? "opacity-100 scale-100" : "opacity-0 scale-95"
         }`}
       >
         {/* Close Button */}
@@ -62,21 +57,13 @@ export function ErrorModal({
         </div>
 
         {/* Title */}
-        <h2 className="text-2xl font-bold text-center text-foreground mb-2">
-          {title}
-        </h2>
+        <h2 className="text-2xl font-bold text-center text-foreground mb-2">{title}</h2>
 
         {/* Message */}
-        <p className="text-center text-sm text-muted-foreground mb-6 whitespace-pre-line">
-          {message}
-        </p>
+        <p className="text-center text-sm text-muted-foreground mb-6 whitespace-pre-line">{message}</p>
 
         {/* Action Button */}
-        <Button
-          onClick={onClose}
-          variant="outline"
-          className="w-full h-12 border-2 font-semibold rounded-xl"
-        >
+        <Button onClick={onClose} variant="outline" className="w-full h-12 border-2 font-semibold rounded-xl">
           Close
         </Button>
       </div>

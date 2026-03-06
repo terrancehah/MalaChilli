@@ -1,8 +1,8 @@
-import { createContext, useContext, useEffect, useState } from 'react';
-import type { ReactNode } from 'react';
-import type { Session } from '@supabase/supabase-js';
-import { supabase } from '../lib/supabase';
-import type { User } from '../types/database.types';
+import { createContext, useContext, useEffect, useState } from "react";
+import type { ReactNode } from "react";
+import type { Session } from "@supabase/supabase-js";
+import { supabase } from "../lib/supabase";
+import type { User } from "../types/database.types";
 import {
   signUpUser,
   signInUser,
@@ -11,7 +11,7 @@ import {
   fetchUserProfile as fetchUserProfileAPI,
   updateUserProfile,
   deleteUser,
-} from '../services/api';
+} from "../services/api";
 
 interface AuthContextType {
   user: User | null;
@@ -64,7 +64,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const userData = await fetchUserProfileAPI(userId);
       setUser(userData);
     } catch (error) {
-      console.error('Error fetching user profile:', error);
+      console.error("Error fetching user profile:", error);
     } finally {
       setLoading(false);
     }
@@ -72,14 +72,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const signUp = async (email: string, password: string, userData: Partial<User>): Promise<{ id: string }> => {
     const result = await signUpUser(email, password, userData);
-    
+
     // Only fetch profile if email is confirmed, otherwise user needs to verify first
     // Check session to see if email was auto-confirmed
-    const { data: { session } } = await supabase.auth.getSession();
+    const {
+      data: { session },
+    } = await supabase.auth.getSession();
     if (session?.user?.email_confirmed_at) {
       await fetchUserProfile(result.id);
     }
-    
+
     return result;
   };
 
@@ -129,7 +131,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 export function useAuth() {
   const context = useContext(AuthContext);
   if (context === undefined) {
-    throw new Error('useAuth must be used within an AuthProvider');
+    throw new Error("useAuth must be used within an AuthProvider");
   }
   return context;
 }

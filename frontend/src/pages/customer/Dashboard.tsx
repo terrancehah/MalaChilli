@@ -4,24 +4,9 @@ import { useNavigate } from "react-router-dom";
 import { supabase } from "../../lib/supabase";
 import { Card, CardContent } from "../../components/ui/card";
 import { Button } from "../../components/ui/button";
-import {
-  Info,
-  QrCode as QrCodeIcon,
-  Settings,
-  TrendingUp,
-  Users,
-  Gift,
-  ArrowDown,
-  ArrowUp,
-} from "lucide-react";
+import { Info, QrCode as QrCodeIcon, Settings, TrendingUp, Users, Gift, ArrowDown, ArrowUp } from "lucide-react";
 import { getTranslation } from "../../translations";
-import {
-  QRCodeModal,
-  InfoModal,
-  SettingsPanel,
-  ShareBottomSheet,
-  RestaurantCard,
-} from "../../components/customer";
+import { QRCodeModal, InfoModal, SettingsPanel, ShareBottomSheet, RestaurantCard } from "../../components/customer";
 import { TransactionDetailSheet } from "../../components/customer/TransactionDetailSheet";
 import { DashboardHeader } from "../../components/shared/DashboardHeader";
 import { StatsCard } from "../../components/shared/StatsCard";
@@ -78,9 +63,7 @@ export default function CustomerDashboard() {
     balance: number;
     totalSpent?: number;
   } | null>(null);
-  const [selectedTransaction, setSelectedTransaction] = useState<any | null>(
-    null
-  );
+  const [selectedTransaction, setSelectedTransaction] = useState<any | null>(null);
   const [showTransactionSheet, setShowTransactionSheet] = useState(false);
 
   // Language preference with database persistence
@@ -99,18 +82,13 @@ export default function CustomerDashboard() {
 
     if (diffInDays === 0) return t.timeAgo.today;
     if (diffInDays === 1) return t.timeAgo.yesterday;
-    if (diffInDays < 7)
-      return t.timeAgo.daysAgo.replace("{count}", diffInDays.toString());
+    if (diffInDays < 7) return t.timeAgo.daysAgo.replace("{count}", diffInDays.toString());
     if (diffInDays < 30) {
       const weeks = Math.floor(diffInDays / 7);
-      return weeks === 1
-        ? t.timeAgo.weekAgo
-        : t.timeAgo.weeksAgo.replace("{count}", weeks.toString());
+      return weeks === 1 ? t.timeAgo.weekAgo : t.timeAgo.weeksAgo.replace("{count}", weeks.toString());
     }
     const months = Math.floor(diffInDays / 30);
-    return months === 1
-      ? t.timeAgo.monthAgo
-      : t.timeAgo.monthsAgo.replace("{count}", months.toString());
+    return months === 1 ? t.timeAgo.monthAgo : t.timeAgo.monthsAgo.replace("{count}", months.toString());
   };
 
   // Info modal content constructed from translations
@@ -187,9 +165,7 @@ export default function CustomerDashboard() {
           .eq("upline_id", user.id);
 
         if (referralError) throw referralError;
-        const uniqueReferrals = new Set(
-          (referralData || []).map((r) => r.downline_id)
-        ).size;
+        const uniqueReferrals = new Set((referralData || []).map((r) => r.downline_id)).size;
         setTotalReferred(uniqueReferrals);
 
         // Create wallet balance map by restaurant_id (restaurant-specific VC)
@@ -230,39 +206,35 @@ export default function CustomerDashboard() {
         if (codesError) throw codesError;
 
         // Transform and merge data with VC balances
-        const transformedCodes: RestaurantCode[] = (codesData || []).map(
-          (item: any) => {
-            const visitInfo = visitHistoryMap.get(item.restaurant_id);
-            const walletInfo = walletMap.get(item.restaurant_id);
-            return {
-              id: item.id,
-              restaurant_id: item.restaurant_id,
-              referral_code: item.referral_code,
-              restaurant: item.restaurants || {
-                name: "Unknown",
-                slug: "unknown",
-              },
-              total_visits: visitInfo?.total_visits,
-              first_visit_date: visitInfo?.first_visit_date,
-              last_visit_date: visitInfo?.last_visit_date,
-              balance: walletInfo?.balance,
-              earned: walletInfo?.earned,
-              redeemed: walletInfo?.redeemed,
-            };
-          }
-        );
+        const transformedCodes: RestaurantCode[] = (codesData || []).map((item: any) => {
+          const visitInfo = visitHistoryMap.get(item.restaurant_id);
+          const walletInfo = walletMap.get(item.restaurant_id);
+          return {
+            id: item.id,
+            restaurant_id: item.restaurant_id,
+            referral_code: item.referral_code,
+            restaurant: item.restaurants || {
+              name: "Unknown",
+              slug: "unknown",
+            },
+            total_visits: visitInfo?.total_visits,
+            first_visit_date: visitInfo?.first_visit_date,
+            last_visit_date: visitInfo?.last_visit_date,
+            balance: walletInfo?.balance,
+            earned: walletInfo?.earned,
+            redeemed: walletInfo?.redeemed,
+          };
+        });
 
         setRestaurantCodes(transformedCodes);
 
         // Calculate totals across all restaurants
         const totalEarnedAmount = (walletData || []).reduce(
-          (sum: number, wallet: any) =>
-            sum + (parseFloat(wallet.total_earned) || 0),
+          (sum: number, wallet: any) => sum + (parseFloat(wallet.total_earned) || 0),
           0
         );
         const totalRedeemedAmount = (walletData || []).reduce(
-          (sum: number, wallet: any) =>
-            sum + (parseFloat(wallet.total_redeemed) || 0),
+          (sum: number, wallet: any) => sum + (parseFloat(wallet.total_redeemed) || 0),
           0
         );
 
@@ -270,11 +242,10 @@ export default function CustomerDashboard() {
         setTotalRedeemed(totalRedeemedAmount);
 
         // Fetch recent transactions with VC earned
-        const { data: transactionsData, error: transactionsError } =
-          await supabase
-            .from("transactions")
-            .select(
-              `
+        const { data: transactionsData, error: transactionsError } = await supabase
+          .from("transactions")
+          .select(
+            `
             id,
             bill_amount,
             guaranteed_discount_amount,
@@ -290,10 +261,10 @@ export default function CustomerDashboard() {
               )
             )
           `
-            )
-            .eq("customer_id", user.id)
-            .order("created_at", { ascending: false })
-            .limit(10);
+          )
+          .eq("customer_id", user.id)
+          .order("created_at", { ascending: false })
+          .limit(10);
 
         if (transactionsError) throw transactionsError;
 
@@ -307,10 +278,7 @@ export default function CustomerDashboard() {
               .eq("related_transaction_id", transaction.id)
               .eq("transaction_type", "earn");
 
-            const totalVCEarned = (vcEarned || []).reduce(
-              (sum, vc) => sum + parseFloat(vc.amount),
-              0
-            );
+            const totalVCEarned = (vcEarned || []).reduce((sum, vc) => sum + parseFloat(vc.amount), 0);
 
             return {
               ...transaction,
@@ -345,13 +313,7 @@ export default function CustomerDashboard() {
     }
   };
 
-  const handleShare = (
-    name: string,
-    slug: string,
-    code: string,
-    balance: number = 0,
-    totalSpent: number = 0
-  ) => {
+  const handleShare = (name: string, slug: string, code: string, balance: number = 0, totalSpent: number = 0) => {
     setSelectedRestaurant({ name, slug, code, balance, totalSpent });
     setShowShareSheet(true);
   };
@@ -359,9 +321,7 @@ export default function CustomerDashboard() {
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
-        <div className="text-gray-600 dark:text-gray-400">
-          {t.common.loading}
-        </div>
+        <div className="text-gray-600 dark:text-gray-400">{t.common.loading}</div>
       </div>
     );
   }
@@ -374,9 +334,7 @@ export default function CustomerDashboard() {
     {
       label: t.stats.totalEarned,
       value: `RM ${totalEarned.toFixed(2)}`,
-      icon: (
-        <TrendingUp className="h-5 w-5 text-green-600 dark:text-green-400" />
-      ),
+      icon: <TrendingUp className="h-5 w-5 text-green-600 dark:text-green-400" />,
     },
     {
       label: t.stats.totalReferred,
@@ -416,19 +374,13 @@ export default function CustomerDashboard() {
       }
     >
       <div className="min-h-screen pb-6">
-        <SEO
-          title="Dashboard"
-          description="View your savings, rewards, and restaurant codes."
-        />
+        <SEO title="Dashboard" description="View your savings, rewards, and restaurant codes." />
         <DashboardHeader
           title={t.profile.welcome}
           subtitle={user.full_name || user.email}
           actions={
             <>
-              <LanguageSelector
-                language={language}
-                onLanguageChange={setLanguage}
-              />
+              <LanguageSelector language={language} onLanguageChange={setLanguage} />
               <Button
                 variant="secondary"
                 size="icon"
@@ -458,9 +410,7 @@ export default function CustomerDashboard() {
               <div className="flex items-start justify-between mb-3">
                 <div>
                   <div className="flex items-center gap-1 mb-1">
-                    <h2 className="text-lg sm:text-xl font-bold text-foreground">
-                      {t.promoteRestaurants.title}
-                    </h2>
+                    <h2 className="text-lg sm:text-xl font-bold text-foreground">{t.promoteRestaurants.title}</h2>
                     <Button
                       variant="ghost"
                       size="sm"
@@ -471,9 +421,7 @@ export default function CustomerDashboard() {
                       <Info className="h-4 w-4 text-muted-foreground" />
                     </Button>
                   </div>
-                  <p className="text-xs sm:text-sm text-muted-foreground">
-                    {t.promoteRestaurants.subtitle}
-                  </p>
+                  <p className="text-xs sm:text-sm text-muted-foreground">{t.promoteRestaurants.subtitle}</p>
                 </div>
               </div>
               <div className="flex w-fit ml-auto gap-1 bg-muted p-1 rounded-lg">
@@ -494,11 +442,7 @@ export default function CustomerDashboard() {
                 >
                   <span>{t.restaurantSorting.recent}</span>
                   {sortBy === "recent" &&
-                    (sortOrder === "desc" ? (
-                      <ArrowDown className="h-3 w-3" />
-                    ) : (
-                      <ArrowUp className="h-3 w-3" />
-                    ))}
+                    (sortOrder === "desc" ? <ArrowDown className="h-3 w-3" /> : <ArrowUp className="h-3 w-3" />)}
                 </button>
                 <button
                   onClick={() => {
@@ -517,11 +461,7 @@ export default function CustomerDashboard() {
                 >
                   <span>{t.restaurantSorting.balance}</span>
                   {sortBy === "balance" &&
-                    (sortOrder === "desc" ? (
-                      <ArrowDown className="h-3 w-3" />
-                    ) : (
-                      <ArrowUp className="h-3 w-3" />
-                    ))}
+                    (sortOrder === "desc" ? <ArrowDown className="h-3 w-3" /> : <ArrowUp className="h-3 w-3" />)}
                 </button>
               </div>
             </div>
@@ -534,9 +474,7 @@ export default function CustomerDashboard() {
                   <p className="text-base sm:text-lg font-semibold text-muted-foreground mb-2">
                     {t.promoteRestaurants.noRestaurants}
                   </p>
-                  <p className="text-xs text-muted-foreground">
-                    {t.promoteRestaurants.noRestaurantsDesc}
-                  </p>
+                  <p className="text-xs text-muted-foreground">{t.promoteRestaurants.noRestaurantsDesc}</p>
                 </CardContent>
               </Card>
             ) : (
@@ -550,16 +488,14 @@ export default function CustomerDashboard() {
                     } else {
                       // Sort by recent (last_visit_date)
                       comparison =
-                        new Date(b.last_visit_date || 0).getTime() -
-                        new Date(a.last_visit_date || 0).getTime();
+                        new Date(b.last_visit_date || 0).getTime() - new Date(a.last_visit_date || 0).getTime();
                     }
                     return sortOrder === "desc" ? comparison : -comparison;
                   })
                   .map((code) => {
                     // Filter transactions for this restaurant
                     const restaurantTransactions = recentTransactions.filter(
-                      (t: any) =>
-                        t.branches.restaurants.slug === code.restaurant.slug
+                      (t: any) => t.branches.restaurants.slug === code.restaurant.slug
                     );
 
                     return (

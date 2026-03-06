@@ -1,21 +1,8 @@
 import { useState, useEffect } from "react";
 import { Card, CardContent } from "../components/ui/card";
 import { Button } from "../components/ui/button";
-import {
-  Sparkles,
-  Share2,
-  Info,
-  QrCode as QrCodeIcon,
-  Settings,
-  Receipt,
-} from "lucide-react";
-import {
-  QRCodeModal,
-  InfoModal,
-  SettingsPanel,
-  ShareBottomSheet,
-  RestaurantCard,
-} from "../components/customer";
+import { Sparkles, Share2, Info, QrCode as QrCodeIcon, Settings, Receipt } from "lucide-react";
+import { QRCodeModal, InfoModal, SettingsPanel, ShareBottomSheet, RestaurantCard } from "../components/customer";
 import { DashboardHeader } from "../components/shared/DashboardHeader";
 import { StatsCard } from "../components/shared/StatsCard";
 import { SEO } from "../components/shared";
@@ -105,9 +92,7 @@ const mockRestaurantCodes: RestaurantCode[] = [
       slug: "nasi-lemak-corner",
     },
     total_visits: 5,
-    first_visit_date: new Date(
-      Date.now() - 5 * 24 * 60 * 60 * 1000
-    ).toISOString(), // 5 days ago
+    first_visit_date: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString(), // 5 days ago
     balance: 0,
     earned: 0,
     redeemed: 0,
@@ -121,9 +106,7 @@ const mockRestaurantCodes: RestaurantCode[] = [
       slug: "mamas-kitchen",
     },
     total_visits: 2,
-    first_visit_date: new Date(
-      Date.now() - 14 * 24 * 60 * 60 * 1000
-    ).toISOString(), // 2 weeks ago
+    first_visit_date: new Date(Date.now() - 14 * 24 * 60 * 60 * 1000).toISOString(), // 2 weeks ago
     balance: 0,
     earned: 0,
     redeemed: 0,
@@ -149,8 +132,8 @@ const mockVisitedRestaurants: VisitedRestaurant[] = [
 
 export default function DemoDashboard() {
   // Get translations (demo uses English)
-  const t = getTranslation('en');
-  
+  const t = getTranslation("en");
+
   // Modal states
   const [showQR, setShowQR] = useState(false);
   const [showInfoModal, setShowInfoModal] = useState(false);
@@ -203,12 +186,7 @@ export default function DemoDashboard() {
     console.log("Demo mode: Name editing not available", name);
   };
 
-  const handleShare = (
-    name: string,
-    slug: string,
-    code: string,
-    balance: number = 0
-  ) => {
+  const handleShare = (name: string, slug: string, code: string, balance: number = 0) => {
     setSelectedRestaurant({ name, slug, code, balance });
     setShowShareSheet(true);
   };
@@ -233,10 +211,7 @@ export default function DemoDashboard() {
 
   return (
     <div className="min-h-screen pb-6 bg-gradient-to-b from-background to-background/80">
-      <SEO
-        title="Demo Dashboard"
-        description="Experience the MakanTak dashboard in demo mode."
-      />
+      <SEO title="Demo Dashboard" description="Experience the MakanTak dashboard in demo mode." />
       {/* Demo Banner - Enhanced with better visual hierarchy */}
       <div className="bg-gradient-to-r from-orange-100 to-orange-50 dark:from-orange-900/30 dark:to-orange-800/20 border-b border-orange-200 dark:border-orange-800 px-6 py-3.5 backdrop-blur-sm shadow-sm">
         <p className="text-center text-xs sm:text-sm text-orange-900 dark:text-orange-100 font-semibold tracking-wide">
@@ -323,11 +298,7 @@ export default function DemoDashboard() {
                   className="animate-in fade-in slide-in-from-bottom-4 duration-300"
                   style={{ animationDelay: `${index * 100}ms` }}
                 >
-                  <RestaurantCard
-                    restaurant={code}
-                    getTimeAgo={getTimeAgo}
-                    onShare={handleShare}
-                  />
+                  <RestaurantCard restaurant={code} getTimeAgo={getTimeAgo} onShare={handleShare} />
                 </div>
               ))}
             </div>
@@ -347,16 +318,17 @@ export default function DemoDashboard() {
             </div>
           </div>
 
-          <Card variant="glass" className="border-0 overflow-hidden group hover:shadow-lg transition-shadow duration-300">
+          <Card
+            variant="glass"
+            className="border-0 overflow-hidden group hover:shadow-lg transition-shadow duration-300"
+          >
             <CardContent className="p-12 text-center">
               <div className="relative">
                 <div className="h-20 w-20 rounded-full bg-gradient-to-br from-primary/20 to-orange-100 dark:to-orange-900/20 mx-auto mb-5 flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
                   <Receipt className="h-10 w-10 text-primary" />
                 </div>
               </div>
-              <p className="text-gray-700 dark:text-gray-300 text-base font-semibold mb-2">
-                No transactions yet
-              </p>
+              <p className="text-gray-700 dark:text-gray-300 text-base font-semibold mb-2">No transactions yet</p>
               <p className="text-sm text-gray-500 dark:text-gray-400 max-w-md mx-auto leading-relaxed">
                 Start dining at our partner restaurants to earn rewards and build your transaction history!
               </p>

@@ -1,17 +1,17 @@
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { LoginModal, RegisterModal } from '../components/auth';
-import { MerchantEnquiryForm } from '../components/merchant';
-import { SEO, LanguageSelector } from '../components/shared';
-import { ArrowRight, Gift, Percent, Share2, LayoutDashboard, Users, TrendingUp, Shield, Check } from 'lucide-react';
-import { getTranslation } from '../translations';
-import { useLanguagePreference } from '../hooks/useLanguagePreference';
+import { useState } from "react";
+import { Link } from "react-router-dom";
+import { LoginModal, RegisterModal } from "../components/auth";
+import { MerchantEnquiryForm } from "../components/merchant";
+import { SEO, LanguageSelector } from "../components/shared";
+import { ArrowRight, Gift, Percent, Share2, LayoutDashboard, Users, TrendingUp, Shield, Check } from "lucide-react";
+import { getTranslation } from "../translations";
+import { useLanguagePreference } from "../hooks/useLanguagePreference";
 
 export default function HomePage() {
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [showRegisterModal, setShowRegisterModal] = useState(false);
   const [showMerchantEnquiry, setShowMerchantEnquiry] = useState(false);
-  
+
   // Language preference (no user ID for public page, uses localStorage only)
   const { language, setLanguage } = useLanguagePreference(undefined);
   const t = getTranslation(language);
@@ -28,13 +28,19 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-orange-50 via-amber-50 to-background dark:from-gray-900 dark:to-gray-950 font-montserrat overflow-x-hidden">
-      <SEO title="Home" description="MakanTak - Share the savings, grow the community. The viral restaurant discount platform." />
-      
+      <SEO
+        title="Home"
+        description="MakanTak - Share the savings, grow the community. The viral restaurant discount platform."
+      />
+
       {/* Header */}
       <header className="w-full px-8 sm:px-10 lg:px-12 py-4 flex justify-between items-center">
-        <Link to="/" className="flex items-center gap-1 text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-display font-bold text-primary dark:text-primary-light">
+        <Link
+          to="/"
+          className="flex items-center gap-1 text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-display font-bold text-primary dark:text-primary-light"
+        >
           <img src="/logo.png" alt="MakanTak logo" className="h-12 w-12" />
-          <span className='mt-2'>{t.home.title}</span>
+          <span className="mt-2">{t.home.title}</span>
         </Link>
         <div className="flex items-center gap-3">
           <LanguageSelector language={language} onLanguageChange={setLanguage} />
@@ -46,7 +52,7 @@ export default function HomePage() {
           </button>
         </div>
       </header>
-      
+
       {/* Hero Section */}
       <div className="w-full px-8 sm:px-10 lg:px-12 pt-8 pb-8 sm:pt-16 sm:pb-16 lg:pt-20 lg:pb-20">
         <div className="text-center max-w-4xl mx-auto">
@@ -59,7 +65,7 @@ export default function HomePage() {
           <p className="text-base sm:text-lg text-gray-500 dark:text-gray-400 mb-12 max-w-2xl mx-auto">
             {t.home.subtitle}
           </p>
-          
+
           {/* Main Action Buttons */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center w-full max-w-2xl mx-auto">
             {/* Primary CTA - Get Started with ping animation */}
@@ -69,11 +75,11 @@ export default function HomePage() {
                 onClick={() => setShowRegisterModal(true)}
                 className="relative w-full px-10 py-5 bg-primary text-white text-base sm:text-lg font-semibold rounded-full shadow-md hover:shadow-lg active:opacity-90 transition-all duration-200 flex items-center justify-center gap-3 group cursor-pointer focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-primary outline-none"
               >
-                <span className='pl-3'>{t.home.getStarted}</span>
+                <span className="pl-3">{t.home.getStarted}</span>
                 <ArrowRight className="w-6 h-6 lg:w-7 lg:h-7 motion-safe:group-hover:translate-x-1 transition-transform" />
               </button>
             </div>
-            
+
             {/* Secondary CTA - Demo */}
             <Link
               to="/demo"
@@ -87,9 +93,11 @@ export default function HomePage() {
 
         {/* Features Grid */}
         <div className="mt-20 sm:mt-24 grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8 max-w-6xl mx-auto">
-
           {/* Feature 1 */}
-          <div className="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 border border-gray-100 dark:border-gray-700 cursor-pointer focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 outline-none" tabIndex={0}>
+          <div
+            className="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 border border-gray-100 dark:border-gray-700 cursor-pointer focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 outline-none"
+            tabIndex={0}
+          >
             <div className="w-14 h-14 bg-primary/10 rounded-xl flex items-center justify-center mb-6 text-primary motion-safe:group-hover:scale-110 transition-transform duration-300">
               <Percent className="w-7 h-7" />
             </div>
@@ -102,9 +110,12 @@ export default function HomePage() {
               <span>{t.home.feature1Badge}</span>
             </div>
           </div>
-          
+
           {/* Feature 2 */}
-          <div className="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 border border-gray-100 dark:border-gray-700 cursor-pointer focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 outline-none" tabIndex={0}>
+          <div
+            className="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 border border-gray-100 dark:border-gray-700 cursor-pointer focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 outline-none"
+            tabIndex={0}
+          >
             <div className="w-14 h-14 bg-primary/10 rounded-xl flex items-center justify-center mb-6 text-primary motion-safe:group-hover:scale-110 transition-transform duration-300">
               <Share2 className="w-7 h-7" />
             </div>
@@ -117,9 +128,12 @@ export default function HomePage() {
               <span>{t.home.feature2Badge}</span>
             </div>
           </div>
-          
+
           {/* Feature 3 */}
-          <div className="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 border border-gray-100 dark:border-gray-700 cursor-pointer focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 outline-none" tabIndex={0}>
+          <div
+            className="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 border border-gray-100 dark:border-gray-700 cursor-pointer focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 outline-none"
+            tabIndex={0}
+          >
             <div className="w-14 h-14 bg-primary/10 rounded-xl flex items-center justify-center mb-6 text-primary motion-safe:group-hover:scale-110 transition-transform duration-300">
               <Gift className="w-7 h-7" />
             </div>
@@ -139,12 +153,8 @@ export default function HomePage() {
           <div className="bg-gradient-to-r from-primary to-orange-600 rounded-3xl overflow-hidden shadow-xl">
             <div className="grid md:grid-cols-2 gap-0 items-center">
               <div className="p-8 sm:p-12 text-white">
-                <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4">
-                  {t.home.merchantTitle}
-                </h2>
-                <p className="text-lg sm:text-xl mb-6 opacity-95 text-justify">
-                  {t.home.merchantSubtitle}
-                </p>
+                <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4">{t.home.merchantTitle}</h2>
+                <p className="text-lg sm:text-xl mb-6 opacity-95 text-justify">{t.home.merchantSubtitle}</p>
                 <ul className="space-y-3 lg:space-y-4 mb-8 lg:mb-10 text-justify">
                   <li className="flex items-start gap-3">
                     <div className="w-6 h-6 lg:w-7 lg:h-7 rounded-full bg-white/20 flex items-center justify-center flex-shrink-0 mt-0.5">
@@ -172,7 +182,12 @@ export default function HomePage() {
                   {t.home.merchantCTA}
                 </button>
               </div>
-              <div className="hidden md:block h-full min-h-[400px] bg-cover bg-center" style={{backgroundImage: "url('/restaurant.jpeg')"}} role="img" aria-label="Restaurant interior with dining atmosphere">
+              <div
+                className="hidden md:block h-full min-h-[400px] bg-cover bg-center"
+                style={{ backgroundImage: "url('/restaurant.jpeg')" }}
+                role="img"
+                aria-label="Restaurant interior with dining atmosphere"
+              >
                 <div className="w-full h-full bg-gradient-to-l from-transparent to-primary/20"></div>
               </div>
             </div>
@@ -196,7 +211,9 @@ export default function HomePage() {
               <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-6">
                 <Users className="w-8 h-8 text-primary" />
               </div>
-              <h3 className="text-lg sm:text-xl font-bold mb-3 text-gray-900 dark:text-white">{t.home.aboutCard1Title}</h3>
+              <h3 className="text-lg sm:text-xl font-bold mb-3 text-gray-900 dark:text-white">
+                {t.home.aboutCard1Title}
+              </h3>
               <p className="text-base sm:text-lg text-gray-600 dark:text-gray-300 leading-relaxed">
                 {t.home.aboutCard1Desc}
               </p>
@@ -207,7 +224,9 @@ export default function HomePage() {
               <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-6">
                 <TrendingUp className="w-8 h-8 text-primary" />
               </div>
-              <h3 className="text-lg sm:text-xl font-bold mb-3 text-gray-900 dark:text-white">{t.home.aboutCard2Title}</h3>
+              <h3 className="text-lg sm:text-xl font-bold mb-3 text-gray-900 dark:text-white">
+                {t.home.aboutCard2Title}
+              </h3>
               <p className="text-base sm:text-lg text-gray-600 dark:text-gray-300 leading-relaxed">
                 {t.home.aboutCard2Desc}
               </p>
@@ -218,13 +237,14 @@ export default function HomePage() {
               <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-6">
                 <Shield className="w-8 h-8 text-primary" />
               </div>
-              <h3 className="text-lg sm:text-xl font-bold mb-3 text-gray-900 dark:text-white">{t.home.aboutCard3Title}</h3>
+              <h3 className="text-lg sm:text-xl font-bold mb-3 text-gray-900 dark:text-white">
+                {t.home.aboutCard3Title}
+              </h3>
               <p className="text-base sm:text-lg text-gray-600 dark:text-gray-300 leading-relaxed">
                 {t.home.aboutCard3Desc}
               </p>
             </div>
           </div>
-
         </div>
       </div>
 
@@ -233,29 +253,22 @@ export default function HomePage() {
         <div className="max-w-6xl mx-auto px-8 sm:px-10 lg:px-12 py-12">
           {/* Footer Grid */}
           <div className="grid grid-cols-1 lg:grid-cols-4 gap-7 mb-8 justify-around w-fit">
-
             {/* Brand Column */}
             <div className="md:col-span-1">
-                {/* Brand Name and Logo */}
-                <div className="flex items-center gap-2 mb-3">
-                    <img src="/logo.png" alt="MakanTak logo" className="h-12 w-12"/>
-                    <h3 className="text-3xl sm:text-2xl font-display font-bold">
-                    <span className="flex mt-2 text-primary dark:text-primary-light">{t.home.title}</span>
-                    </h3>
-                </div>
-                <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
-                    {t.home.footerTagline}
-                </p>
-                <p className="text-sm text-gray-600 dark:text-gray-400">
-                    {t.home.footerDesc}
-                </p>
+              {/* Brand Name and Logo */}
+              <div className="flex items-center gap-2 mb-3">
+                <img src="/logo.png" alt="MakanTak logo" className="h-12 w-12" />
+                <h3 className="text-3xl sm:text-2xl font-display font-bold">
+                  <span className="flex mt-2 text-primary dark:text-primary-light">{t.home.title}</span>
+                </h3>
+              </div>
+              <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">{t.home.footerTagline}</p>
+              <p className="text-sm text-gray-600 dark:text-gray-400">{t.home.footerDesc}</p>
             </div>
 
             {/* For Customers Column */}
             <div>
-              <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
-                {t.home.forCustomers}
-              </h4>
+              <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">{t.home.forCustomers}</h4>
               <ul className="space-y-3">
                 <li className="flex flex-col gap-2 text-sm sm:text-base">
                   <Link
@@ -277,9 +290,7 @@ export default function HomePage() {
 
             {/* For Restaurants Column */}
             <div>
-              <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
-                {t.home.forRestaurants}
-              </h4>
+              <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">{t.home.forRestaurants}</h4>
               <ul className="space-y-3">
                 <li className="flex flex-col gap-2 text-sm sm:text-base">
                   <button
@@ -294,9 +305,7 @@ export default function HomePage() {
 
             {/* Company Column */}
             <div>
-              <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
-                {t.home.company}
-              </h4>
+              <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">{t.home.company}</h4>
               <ul className="space-y-3">
                 <li className="flex flex-col gap-2 text-sm sm:text-base">
                   <Link
@@ -336,10 +345,8 @@ export default function HomePage() {
 
           {/* Bottom Bar */}
           <div className="pt-8 border-t border-gray-200 dark:border-gray-800 flex flex-col sm:flex-row justify-between items-center gap-4">
-            <p className="text-sm lg:text-base text-gray-600 dark:text-gray-400">
-              {t.home.copyright}
-            </p>
-            
+            <p className="text-sm lg:text-base text-gray-600 dark:text-gray-400">{t.home.copyright}</p>
+
             {/* Social Media */}
             <div className="flex items-center gap-4">
               <a
@@ -364,20 +371,17 @@ export default function HomePage() {
       </footer>
 
       {/* Auth Modals */}
-      <LoginModal 
-        isOpen={showLoginModal} 
+      <LoginModal
+        isOpen={showLoginModal}
         onClose={() => setShowLoginModal(false)}
         onSwitchToSignUp={handleSwitchToSignUp}
       />
-      <RegisterModal 
-        isOpen={showRegisterModal} 
+      <RegisterModal
+        isOpen={showRegisterModal}
         onClose={() => setShowRegisterModal(false)}
         onSwitchToLogin={handleSwitchToLogin}
       />
-      <MerchantEnquiryForm
-        isOpen={showMerchantEnquiry}
-        onClose={() => setShowMerchantEnquiry(false)}
-      />
+      <MerchantEnquiryForm isOpen={showMerchantEnquiry} onClose={() => setShowMerchantEnquiry(false)} />
     </div>
   );
 }
