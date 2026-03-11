@@ -5,6 +5,7 @@ import { Button } from "../../components/ui/button";
 import { Card, CardContent } from "../../components/ui/card";
 import { ArrowLeft, Search, Edit, ChevronUp, ChevronDown, Filter, ChevronLeft, ChevronRight } from "lucide-react";
 import { showSuccessToast, showErrorToast } from "../../components/ui/toast";
+import { SearchableCheckboxList } from "../../components/ui/searchable-checkbox-list";
 
 // Extended user interface with restaurant and branch info
 interface User {
@@ -65,7 +66,8 @@ export default function AdminUsers() {
   const [showRoleModal, setShowRoleModal] = useState(false);
   const [roleChangeUser, setRoleChangeUser] = useState<User | null>(null);
   const [newRole, setNewRole] = useState<string>("");
-  const [selectedRestaurantId, setSelectedRestaurantId] = useState<string>("");
+  const [selectedRestaurantId, setSelectedRestaurantId] = useState<string>(""); // For staff - single restaurant
+  const [selectedRestaurantIds, setSelectedRestaurantIds] = useState<string[]>([]); // For merchant - multiple restaurants
   const [selectedBranchId, setSelectedBranchId] = useState<string>("");
   const [roleChangeLoading, setRoleChangeLoading] = useState(false);
 
@@ -149,7 +151,7 @@ export default function AdminUsers() {
       return;
     }
 
-    if (newRole === "merchant" && !selectedRestaurantId) {
+    if (newRole === "merchant" && selectedRestaurantIds.length === 0) {
       showErrorToast("Merchant role requires at least one restaurant assignment");
       return;
     }
@@ -175,17 +177,33 @@ export default function AdminUsers() {
 
       if (userError) throw userError;
 
-      // For merchant role, also update the restaurant's merchant_id
-      if (newRole === "merchant" && selectedRestaurantId) {
-        const { error: restaurantError } = await supabase
-          .from("restaurants")
-          .update({ merchant_id: roleChangeUser.id })
-          .eq("id", selectedRestaurantId);
+      // For merchant role, diff current vs selected restaurants and batch-update merchant_id
+      if (newRole === "merchant") {
+        // IDs of restaurants the merchant previously owned
+        const previousIds = (roleChangeUser.owned_restaurants || []).map((r) => r.id);
 
-        if (restaurantError) throw restaurantError;
+        // Restaurants to newly assign (not previously owned)
+        const toAssign = selectedRestaurantIds.filter((id) => !previousIds.includes(id));
+        // Restaurants to unassign (previously owned but no longer selected)
+        const toUnassign = previousIds.filter((id) => !selectedRestaurantIds.includes(id));
+
+        // Set merchant_id on newly assigned restaurants
+        for (const restaurantId of toAssign) {
+          const { error } = await supabase
+            .from("restaurants")
+            .update({ merchant_id: roleChangeUser.id })
+            .eq("id", restaurantId);
+          if (error) throw error;
+        }
+
+        // Clear merchant_id on unassigned restaurants
+        for (const restaurantId of toUnassign) {
+          const { error } = await supabase.from("restaurants").update({ merchant_id: null }).eq("id", restaurantId);
+          if (error) throw error;
+        }
       }
 
-      // If changing FROM merchant to another role, clear merchant_id from any restaurants they owned
+      // If changing FROM merchant to another role, clear merchant_id from all restaurants they owned
       if (roleChangeUser.role === "merchant" && newRole !== "merchant") {
         const { error: clearError } = await supabase
           .from("restaurants")
@@ -202,6 +220,7 @@ export default function AdminUsers() {
       setRoleChangeUser(null);
       setNewRole("");
       setSelectedRestaurantId("");
+      setSelectedRestaurantIds([]);
       setSelectedBranchId("");
       showSuccessToast(`User role updated to ${newRole}`);
     } catch (error) {
@@ -212,21 +231,27 @@ export default function AdminUsers() {
     }
   };
 
-  // Open role change modal
+  // Open role change modal, pre-populating restaurant selections based on role
   const openRoleChangeModal = (user: User) => {
     setRoleChangeUser(user);
     setNewRole(user.role);
+    // For staff: pre-select their single restaurant/branch
     setSelectedRestaurantId(user.restaurant_id || "");
     setSelectedBranchId(user.branch_id || "");
+    // For merchants: pre-select all restaurants they currently own
+    setSelectedRestaurantIds(
+      user.role === "merchant" && user.owned_restaurants ? user.owned_restaurants.map((r) => r.id) : []
+    );
     setShowRoleModal(true);
   };
 
-  // Close role change modal
+  // Close role change modal and reset all selection state
   const closeRoleChangeModal = () => {
     setShowRoleModal(false);
     setRoleChangeUser(null);
     setNewRole("");
     setSelectedRestaurantId("");
+    setSelectedRestaurantIds([]);
     setSelectedBranchId("");
   };
 
@@ -547,9 +572,10 @@ export default function AdminUsers() {
                   value={newRole}
                   onChange={(e) => {
                     setNewRole(e.target.value);
-                    // Clear restaurant/branch when switching to customer/admin
+                    // Clear restaurant/branch selections when switching to customer/admin
                     if (e.target.value === "customer" || e.target.value === "admin") {
                       setSelectedRestaurantId("");
+                      setSelectedRestaurantIds([]);
                       setSelectedBranchId("");
                     }
                   }}
@@ -562,8 +588,8 @@ export default function AdminUsers() {
                 </select>
               </div>
 
-              {/* Restaurant selection - shown for staff and merchant */}
-              {(newRole === "staff" || newRole === "merchant") && (
+              {/* Restaurant single-select dropdown - shown only for staff */}
+              {newRole === "staff" && (
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     Restaurant <span className="text-red-500">*</span>
@@ -583,6 +609,26 @@ export default function AdminUsers() {
                       </option>
                     ))}
                   </select>
+                  {restaurants.length === 0 && (
+                    <p className="text-xs text-amber-600 mt-1">No active restaurants found</p>
+                  )}
+                </div>
+              )}
+
+              {/* Restaurant multi-select with search - shown only for merchant */}
+              {newRole === "merchant" && (
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Restaurants <span className="text-red-500">*</span>
+                  </label>
+                  <SearchableCheckboxList
+                    options={restaurants.map((r) => ({ id: r.id, label: r.name }))}
+                    selectedIds={selectedRestaurantIds}
+                    onChange={setSelectedRestaurantIds}
+                    searchPlaceholder="Search restaurants..."
+                    emptyMessage="No restaurants found"
+                    maxHeight="180px"
+                  />
                   {restaurants.length === 0 && (
                     <p className="text-xs text-amber-600 mt-1">No active restaurants found</p>
                   )}
@@ -626,7 +672,7 @@ export default function AdminUsers() {
               {newRole === "merchant" && (
                 <div className="bg-purple-50 border border-purple-200 rounded-lg p-3">
                   <p className="text-xs text-purple-700">
-                    Merchants own a restaurant and can access all branches and analytics for that restaurant.
+                    Merchants can own multiple restaurants and access all branches and analytics for each.
                   </p>
                 </div>
               )}
