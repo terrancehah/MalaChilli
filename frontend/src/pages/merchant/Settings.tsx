@@ -6,7 +6,18 @@ import { Button } from "../../components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "../../components/ui/card";
 import { Input } from "../../components/ui/input";
 import { Label } from "../../components/ui/label";
-import { ArrowLeft, Save, Building2, Percent, Clock, DollarSign } from "lucide-react";
+import {
+  ArrowLeft,
+  Save,
+  Building2,
+  Percent,
+  Clock,
+  DollarSign,
+  ChevronDown,
+  Globe,
+  Utensils,
+  Share2,
+} from "lucide-react";
 
 interface RestaurantSettings {
   id: string;
@@ -17,28 +28,89 @@ interface RestaurantSettings {
   upline_reward_percent: number;
   max_redemption_percent: number;
   virtual_currency_expiry_days: number;
+  // Contact & Identity
+  email: string | null;
+  website_url: string | null;
+  registration_number: string | null;
+  // Cuisine & Discovery
+  cuisine_type: string[] | null;
+  price_range: number | null;
+  halal_certified: boolean;
+  // Visual Branding
+  cover_image_url: string | null;
+  // Social & Online Presence
+  social_media: { facebook?: string; instagram?: string; tiktok?: string; google_maps_url?: string } | null;
 }
+
+// Common Malaysian cuisine types for quick-add tags
+const CUISINE_OPTIONS = [
+  "Malay",
+  "Chinese",
+  "Indian",
+  "Japanese",
+  "Korean",
+  "Thai",
+  "Western",
+  "Fusion",
+  "Mamak",
+  "Kopitiam",
+  "Seafood",
+  "Steamboat",
+  "BBQ",
+  "Nasi Kandar",
+  "Dim Sum",
+  "Cafe",
+  "Bakery",
+  "Vegetarian",
+  "Halal",
+];
 
 export default function RestaurantSettings() {
   const { user } = useAuth();
   const navigate = useNavigate();
+  const [ownedRestaurants, setOwnedRestaurants] = useState<RestaurantSettings[]>([]); // All restaurants owned by merchant
+  const [selectedRestaurantId, setSelectedRestaurantId] = useState<string | null>(null);
   const [settings, setSettings] = useState<RestaurantSettings | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
 
+  // Fetch restaurants owned by this merchant via merchant_id
   useEffect(() => {
-    const fetchSettings = async () => {
-      if (!user?.restaurant_id) return;
+    const fetchOwnedRestaurants = async () => {
+      if (!user) return;
 
       try {
         setLoading(true);
 
-        const { data, error } = await supabase.from("restaurants").select("*").eq("id", user.restaurant_id).single();
+        // Query restaurants where this merchant is the owner
+        const { data, error } = await supabase
+          .from("restaurants")
+          .select("*")
+          .eq("merchant_id", user.id)
+          .eq("is_active", true)
+          .order("name");
 
         if (error) throw error;
 
-        if (data) {
-          setSettings(data);
+        if (data && data.length > 0) {
+          setOwnedRestaurants(data);
+          setSelectedRestaurantId(data[0].id);
+          setSettings(data[0]);
+        } else if (user.restaurant_id) {
+          // Fallback: legacy restaurant_id on user record
+          const { data: fallbackData, error: fallbackError } = await supabase
+            .from("restaurants")
+            .select("*")
+            .eq("id", user.restaurant_id)
+            .single();
+
+          if (fallbackError) throw fallbackError;
+
+          if (fallbackData) {
+            setOwnedRestaurants([fallbackData]);
+            setSelectedRestaurantId(fallbackData.id);
+            setSettings(fallbackData);
+          }
         }
       } catch (error) {
         console.error("Error fetching settings:", error);
@@ -47,8 +119,17 @@ export default function RestaurantSettings() {
       }
     };
 
-    fetchSettings();
+    fetchOwnedRestaurants();
   }, [user]);
+
+  // Handle switching between owned restaurants
+  const handleRestaurantSwitch = (newRestaurantId: string) => {
+    const selected = ownedRestaurants.find((r) => r.id === newRestaurantId);
+    if (selected) {
+      setSelectedRestaurantId(selected.id);
+      setSettings(selected);
+    }
+  };
 
   const handleSave = async () => {
     if (!settings) return;
@@ -56,11 +137,30 @@ export default function RestaurantSettings() {
     try {
       setSaving(true);
 
+      // Build social_media JSONB — only include non-empty values
+      const socialMedia: Record<string, string> = {};
+      if (settings.social_media?.facebook) socialMedia.facebook = settings.social_media.facebook;
+      if (settings.social_media?.instagram) socialMedia.instagram = settings.social_media.instagram;
+      if (settings.social_media?.tiktok) socialMedia.tiktok = settings.social_media.tiktok;
+      if (settings.social_media?.google_maps_url) socialMedia.google_maps_url = settings.social_media.google_maps_url;
+
       const { error } = await supabase
         .from("restaurants")
         .update({
           name: settings.name,
           description: settings.description,
+          // Contact & Identity
+          email: settings.email || null,
+          website_url: settings.website_url || null,
+          // Cuisine & Discovery
+          cuisine_type: settings.cuisine_type && settings.cuisine_type.length > 0 ? settings.cuisine_type : null,
+          price_range: settings.price_range || null,
+          halal_certified: settings.halal_certified,
+          // Visual Branding
+          cover_image_url: settings.cover_image_url || null,
+          // Social & Online Presence
+          social_media: Object.keys(socialMedia).length > 0 ? socialMedia : null,
+          // Reward mechanics
           guaranteed_discount_percent: settings.guaranteed_discount_percent,
           upline_reward_percent: settings.upline_reward_percent,
           max_redemption_percent: settings.max_redemption_percent,
@@ -117,6 +217,27 @@ export default function RestaurantSettings() {
       </div>
 
       <div className="max-w-2xl mx-auto px-4 sm:px-6 mt-4 sm:mt-6 space-y-4 sm:space-y-6">
+        {/* Restaurant selector for merchants with multiple restaurants */}
+        {ownedRestaurants.length > 1 && (
+          <div className="flex items-center gap-2">
+            <label className="text-sm font-medium text-muted-foreground whitespace-nowrap">Restaurant:</label>
+            <div className="relative flex-1">
+              <select
+                value={selectedRestaurantId || ""}
+                onChange={(e) => handleRestaurantSwitch(e.target.value)}
+                className="w-full appearance-none pl-3 pr-8 py-2 text-sm font-medium rounded-lg border border-border bg-background focus:ring-2 focus:ring-primary focus:border-transparent"
+              >
+                {ownedRestaurants.map((r) => (
+                  <option key={r.id} value={r.id}>
+                    {r.name}
+                  </option>
+                ))}
+              </select>
+              <ChevronDown className="absolute right-2 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
+            </div>
+          </div>
+        )}
+
         {/* Basic Information */}
         <Card className="border-border/50">
           <CardHeader>
@@ -151,6 +272,197 @@ export default function RestaurantSettings() {
                 placeholder="Brief description of your restaurant"
                 className="w-full min-h-[80px] px-3 py-2 rounded-md border border-input bg-background text-sm"
               />
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Contact */}
+        <Card className="border-border/50">
+          <CardHeader>
+            <CardTitle className="text-base flex items-center gap-2">
+              <Globe className="h-5 w-5" />
+              Contact & Online
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <Label htmlFor="email">Business Email</Label>
+                <Input
+                  id="email"
+                  type="email"
+                  value={settings.email || ""}
+                  onChange={(e) => setSettings({ ...settings, email: e.target.value })}
+                  placeholder="info@restaurant.com"
+                />
+              </div>
+              <div>
+                <Label htmlFor="website">Website</Label>
+                <Input
+                  id="website"
+                  value={settings.website_url || ""}
+                  onChange={(e) => setSettings({ ...settings, website_url: e.target.value })}
+                  placeholder="https://restaurant.com"
+                />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Cuisine & Discovery */}
+        <Card className="border-border/50">
+          <CardHeader>
+            <CardTitle className="text-base flex items-center gap-2">
+              <Utensils className="h-5 w-5" />
+              Cuisine & Discovery
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            {/* Cuisine tags — clickable pills */}
+            <div>
+              <Label>Cuisine Tags</Label>
+              <div className="flex flex-wrap gap-1.5 mt-2">
+                {CUISINE_OPTIONS.map((cuisine) => {
+                  const isSelected =
+                    settings.cuisine_type?.map((c) => c.toLowerCase()).includes(cuisine.toLowerCase()) ?? false;
+                  return (
+                    <button
+                      key={cuisine}
+                      type="button"
+                      onClick={() => {
+                        const current = settings.cuisine_type || [];
+                        const updated = isSelected
+                          ? current.filter((c) => c.toLowerCase() !== cuisine.toLowerCase())
+                          : [...current, cuisine];
+                        setSettings({ ...settings, cuisine_type: updated });
+                      }}
+                      className={`px-2.5 py-1 rounded-full text-xs font-medium transition-colors ${
+                        isSelected
+                          ? "bg-primary text-primary-foreground"
+                          : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                      }`}
+                    >
+                      {cuisine}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {/* Price range */}
+              <div>
+                <Label htmlFor="price-range">Price Range</Label>
+                <select
+                  id="price-range"
+                  value={settings.price_range?.toString() || ""}
+                  onChange={(e) =>
+                    setSettings({ ...settings, price_range: e.target.value ? parseInt(e.target.value) : null })
+                  }
+                  className="w-full px-3 py-2 text-sm border border-input rounded-lg bg-background focus:ring-2 focus:ring-primary focus:border-transparent"
+                >
+                  <option value="">Not set</option>
+                  <option value="1">$ — Budget (&lt; RM15)</option>
+                  <option value="2">$$ — Moderate (RM15–40)</option>
+                  <option value="3">$$$ — Premium (RM40+)</option>
+                </select>
+              </div>
+
+              {/* Halal certified */}
+              <div className="flex items-end pb-2">
+                <label className="flex items-center gap-2 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={settings.halal_certified ?? false}
+                    onChange={(e) => setSettings({ ...settings, halal_certified: e.target.checked })}
+                    className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
+                  />
+                  <span className="text-sm font-medium">Halal Certified</span>
+                </label>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Branding */}
+        <Card className="border-border/50">
+          <CardHeader>
+            <CardTitle className="text-base flex items-center gap-2">
+              <Building2 className="h-5 w-5" />
+              Branding
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div>
+              <Label htmlFor="cover-image">Cover Image URL</Label>
+              <Input
+                id="cover-image"
+                value={settings.cover_image_url || ""}
+                onChange={(e) => setSettings({ ...settings, cover_image_url: e.target.value })}
+                placeholder="https://images.example.com/cover.jpg"
+              />
+              <p className="text-xs text-muted-foreground mt-1">Banner image for your restaurant profile page</p>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Social Media */}
+        <Card className="border-border/50">
+          <CardHeader>
+            <CardTitle className="text-base flex items-center gap-2">
+              <Share2 className="h-5 w-5" />
+              Social Media
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <Label htmlFor="social-facebook">Facebook</Label>
+                <Input
+                  id="social-facebook"
+                  value={settings.social_media?.facebook || ""}
+                  onChange={(e) =>
+                    setSettings({ ...settings, social_media: { ...settings.social_media, facebook: e.target.value } })
+                  }
+                  placeholder="https://facebook.com/..."
+                />
+              </div>
+              <div>
+                <Label htmlFor="social-instagram">Instagram</Label>
+                <Input
+                  id="social-instagram"
+                  value={settings.social_media?.instagram || ""}
+                  onChange={(e) =>
+                    setSettings({ ...settings, social_media: { ...settings.social_media, instagram: e.target.value } })
+                  }
+                  placeholder="https://instagram.com/..."
+                />
+              </div>
+              <div>
+                <Label htmlFor="social-tiktok">TikTok</Label>
+                <Input
+                  id="social-tiktok"
+                  value={settings.social_media?.tiktok || ""}
+                  onChange={(e) =>
+                    setSettings({ ...settings, social_media: { ...settings.social_media, tiktok: e.target.value } })
+                  }
+                  placeholder="https://tiktok.com/@..."
+                />
+              </div>
+              <div>
+                <Label htmlFor="social-google-maps">Google Maps</Label>
+                <Input
+                  id="social-google-maps"
+                  value={settings.social_media?.google_maps_url || ""}
+                  onChange={(e) =>
+                    setSettings({
+                      ...settings,
+                      social_media: { ...settings.social_media, google_maps_url: e.target.value },
+                    })
+                  }
+                  placeholder="https://maps.google.com/..."
+                />
+              </div>
             </div>
           </CardContent>
         </Card>

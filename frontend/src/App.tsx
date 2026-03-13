@@ -31,6 +31,7 @@ import MerchantSettings from "./pages/merchant/Settings";
 // Admin pages
 import AdminDashboard from "./pages/admin/Dashboard";
 import AdminUsers from "./pages/admin/Users";
+import AdminRestaurants from "./pages/admin/Restaurants";
 
 // Other pages
 import HomePage from "./pages/HomePage";
@@ -165,6 +166,14 @@ function App() {
             element={
               <ProtectedRoute allowedRoles={["admin"]}>
                 <AdminUsers />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/restaurants"
+            element={
+              <ProtectedRoute allowedRoles={["admin"]}>
+                <AdminRestaurants />
               </ProtectedRoute>
             }
           />

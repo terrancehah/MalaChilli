@@ -4,7 +4,8 @@ import { useAuth } from "../../contexts/AuthContext";
 import { supabase } from "../../lib/supabase";
 import { Button } from "../../components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "../../components/ui/card";
-import { ArrowLeft, Plus, Edit, Trash2, Building2, MapPin, Phone } from "lucide-react";
+import { ArrowLeft, Plus, Edit, Trash2, Building2, MapPin, Phone, ChevronDown } from "lucide-react";
+import type { Restaurant } from "../../types/database.types";
 
 interface Branch {
   id: string;
@@ -18,12 +19,54 @@ interface Branch {
 export default function BranchesManagement() {
   const { user } = useAuth();
   const navigate = useNavigate();
+  const [ownedRestaurants, setOwnedRestaurants] = useState<Restaurant[]>([]); // All restaurants owned by merchant
+  const [selectedRestaurantId, setSelectedRestaurantId] = useState<string | null>(null);
   const [branches, setBranches] = useState<Branch[]>([]);
   const [loading, setLoading] = useState(true);
 
+  // Fetch restaurants owned by this merchant via merchant_id
+  useEffect(() => {
+    const fetchOwnedRestaurants = async () => {
+      if (!user) return;
+
+      try {
+        const { data, error } = await supabase
+          .from("restaurants")
+          .select("*")
+          .eq("merchant_id", user.id)
+          .eq("is_active", true)
+          .order("name");
+
+        if (error) throw error;
+
+        if (data && data.length > 0) {
+          setOwnedRestaurants(data);
+          setSelectedRestaurantId(data[0].id);
+        } else if (user.restaurant_id) {
+          // Fallback: legacy restaurant_id on user record
+          const { data: fallbackData } = await supabase
+            .from("restaurants")
+            .select("*")
+            .eq("id", user.restaurant_id)
+            .single();
+
+          if (fallbackData) {
+            setOwnedRestaurants([fallbackData]);
+            setSelectedRestaurantId(fallbackData.id);
+          }
+        }
+      } catch (error) {
+        console.error("Error fetching owned restaurants:", error);
+      }
+    };
+
+    fetchOwnedRestaurants();
+  }, [user]);
+
+  // Fetch branches for the selected restaurant
   useEffect(() => {
     const fetchBranches = async () => {
-      if (!user?.restaurant_id) return;
+      if (!selectedRestaurantId) return;
 
       try {
         setLoading(true);
@@ -31,7 +74,7 @@ export default function BranchesManagement() {
         const { data } = await supabase
           .from("branches")
           .select("*")
-          .eq("restaurant_id", user.restaurant_id)
+          .eq("restaurant_id", selectedRestaurantId)
           .order("created_at", { ascending: false });
 
         if (data) {
@@ -45,7 +88,7 @@ export default function BranchesManagement() {
     };
 
     fetchBranches();
-  }, [user]);
+  }, [selectedRestaurantId]);
 
   const handleDeactivate = async (branchId: string) => {
     if (!confirm("Are you sure you want to deactivate this branch?")) return;
@@ -99,6 +142,27 @@ export default function BranchesManagement() {
       </div>
 
       <div className="max-w-4xl mx-auto px-4 sm:px-6 mt-4 sm:mt-6 space-y-4 sm:space-y-6">
+        {/* Restaurant selector for merchants with multiple restaurants */}
+        {ownedRestaurants.length > 1 && (
+          <div className="flex items-center gap-2">
+            <label className="text-sm font-medium text-muted-foreground whitespace-nowrap">Restaurant:</label>
+            <div className="relative flex-1">
+              <select
+                value={selectedRestaurantId || ""}
+                onChange={(e) => setSelectedRestaurantId(e.target.value)}
+                className="w-full appearance-none pl-3 pr-8 py-2 text-sm font-medium rounded-lg border border-border bg-background focus:ring-2 focus:ring-primary focus:border-transparent"
+              >
+                {ownedRestaurants.map((r) => (
+                  <option key={r.id} value={r.id}>
+                    {r.name}
+                  </option>
+                ))}
+              </select>
+              <ChevronDown className="absolute right-2 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
+            </div>
+          </div>
+        )}
+
         {/* Stats */}
         <div className="grid grid-cols-2 gap-3 sm:gap-4">
           <Card className="border-border/50">

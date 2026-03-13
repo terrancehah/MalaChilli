@@ -5,7 +5,8 @@ import { supabase } from "../../lib/supabase";
 import { Button } from "../../components/ui/button";
 import { Card, CardContent } from "../../components/ui/card";
 import { Skeleton, HeaderSkeleton } from "../../components/ui/skeleton";
-import { Settings, Share2, DollarSign, Users as UsersIcon, Briefcase, Loader2 } from "lucide-react";
+import { Settings, Share2, DollarSign, Users as UsersIcon, Briefcase, Loader2, ChevronDown } from "lucide-react";
+import type { Restaurant } from "../../types/database.types";
 import type { DashboardSummary } from "../../types/analytics.types";
 import { getTranslation } from "../../translations";
 
@@ -32,6 +33,7 @@ export default function MerchantDashboard() {
   const [activeTab, setActiveTab] = useState<TabType>("viral");
   const [summary, setSummary] = useState<DashboardSummary | null>(null);
   const [loading, setLoading] = useState(true);
+  const [ownedRestaurants, setOwnedRestaurants] = useState<Restaurant[]>([]); // All restaurants owned by this merchant
   const [restaurantId, setRestaurantId] = useState<string | null>(null);
   const [restaurantName, setRestaurantName] = useState<string>("");
   const [showSettings, setShowSettings] = useState(false);
@@ -43,37 +45,62 @@ export default function MerchantDashboard() {
   // Get translations
   const t = getTranslation(language);
 
-  // Get restaurant ID from user
+  // Fetch restaurants owned by this merchant via merchant_id
   useEffect(() => {
-    const getRestaurantId = async () => {
+    const fetchOwnedRestaurants = async () => {
       if (!user) return;
 
       try {
-        // Merchant users should have restaurant_id directly
-        if (user.restaurant_id) {
-          setRestaurantId(user.restaurant_id);
+        // Query restaurants where this merchant is the owner
+        const { data, error } = await supabase
+          .from("restaurants")
+          .select("*")
+          .eq("merchant_id", user.id)
+          .eq("is_active", true)
+          .order("name");
 
-          // Fetch restaurant name
-          const { data: restaurantData } = await supabase
-            .from("restaurants")
-            .select("name")
-            .eq("id", user.restaurant_id)
-            .single();
+        if (error) throw error;
 
-          if (restaurantData) {
-            setRestaurantName(restaurantData.name);
-          }
+        if (data && data.length > 0) {
+          setOwnedRestaurants(data);
+          // Default to the first owned restaurant
+          setRestaurantId(data[0].id);
+          setRestaurantName(data[0].name);
         } else {
-          // Merchant users should always have restaurant_id set
-          console.warn("Merchant user missing restaurant_id association");
+          // Fallback: check legacy restaurant_id on user record
+          if (user.restaurant_id) {
+            const { data: fallbackData } = await supabase
+              .from("restaurants")
+              .select("*")
+              .eq("id", user.restaurant_id)
+              .single();
+
+            if (fallbackData) {
+              setOwnedRestaurants([fallbackData]);
+              setRestaurantId(fallbackData.id);
+              setRestaurantName(fallbackData.name);
+            }
+          } else {
+            console.warn("Merchant has no restaurants assigned");
+          }
         }
       } catch (error) {
-        console.error("Error fetching restaurant ID:", error);
+        console.error("Error fetching owned restaurants:", error);
       }
     };
 
-    getRestaurantId();
+    fetchOwnedRestaurants();
   }, [user]);
+
+  // Handle switching between owned restaurants
+  const handleRestaurantSwitch = (newRestaurantId: string) => {
+    const selected = ownedRestaurants.find((r) => r.id === newRestaurantId);
+    if (selected) {
+      setRestaurantId(selected.id);
+      setRestaurantName(selected.name);
+      setSummary(null); // Reset summary to trigger re-fetch
+    }
+  };
 
   // Fetch dashboard summary
   useEffect(() => {
@@ -208,6 +235,27 @@ export default function MerchantDashboard() {
         />
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 mt-4 sm:mt-6 pb-6">
+          {/* Restaurant selector for merchants with multiple restaurants */}
+          {ownedRestaurants.length > 1 && (
+            <div className="flex items-center gap-2 mb-4">
+              <label className="text-sm font-medium text-muted-foreground whitespace-nowrap">Restaurant:</label>
+              <div className="relative flex-1 max-w-xs">
+                <select
+                  value={restaurantId || ""}
+                  onChange={(e) => handleRestaurantSwitch(e.target.value)}
+                  className="w-full appearance-none pl-3 pr-8 py-2 text-sm font-medium rounded-lg border border-border bg-background focus:ring-2 focus:ring-primary focus:border-transparent"
+                >
+                  {ownedRestaurants.map((r) => (
+                    <option key={r.id} value={r.id}>
+                      {r.name}
+                    </option>
+                  ))}
+                </select>
+                <ChevronDown className="absolute right-2 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
+              </div>
+            </div>
+          )}
+
           {/* Tab Navigation - Responsive */}
           <div className="flex gap-2 overflow-x-auto pb-4 -mx-4 px-4 sm:mx-0 sm:px-0 scrollbar-hide">
             <Button

@@ -201,6 +201,13 @@ export default function AdminDashboard() {
                 <Users className="h-4 w-4 mr-2" />
                 Manage Users
               </Button>
+              <Button
+                onClick={() => navigate("/admin/restaurants")}
+                className="bg-white glass-card border-0 text-foreground hover:shadow-lg"
+              >
+                <Store className="h-4 w-4 mr-2" />
+                Manage Restaurants
+              </Button>
             </div>
           </div>
         </div>

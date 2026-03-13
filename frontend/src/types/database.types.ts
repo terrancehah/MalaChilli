@@ -1,8 +1,8 @@
 // Database types based on our schema design
 
-export type UserRole = 'customer' | 'staff' | 'merchant' | 'admin';
+export type UserRole = "customer" | "staff" | "merchant" | "admin";
 
-export type TransactionType = 'earn' | 'redeem' | 'expire' | 'adjust';
+export type TransactionType = "earn" | "redeem" | "expire" | "adjust";
 
 export interface User {
   id: string;
@@ -14,7 +14,7 @@ export interface User {
   branch_id: string | null; // For staff - which branch they work at
   restaurant_id: string | null; // For staff and merchants - which restaurant they belong to
   email_verified: boolean;
-  preferred_language: 'en' | 'ms' | 'zh'; // User preferred UI language
+  preferred_language: "en" | "ms" | "zh"; // User preferred UI language
   is_deleted: boolean; // Soft-delete flag for PDPA compliance
   deleted_at: string | null; // When user was soft-deleted
   deletion_reason: string | null; // Reason for account deletion (PDPA compliance)
@@ -34,6 +34,18 @@ export interface Restaurant {
   upline_reward_percent: number; // Percentage given to each upline (default 1%)
   max_redemption_percent: number; // Max VC redemption percentage (default 20%)
   virtual_currency_expiry_days: number; // Days until VC expires (default 30)
+  // Contact & Identity
+  email: string | null; // Business email address
+  website_url: string | null; // Restaurant website URL
+  registration_number: string | null; // SSM business registration number (Malaysia)
+  // Cuisine & Discovery
+  cuisine_type: string[] | null; // Array of cuisine tags, e.g. ["Chinese", "Steamboat"]
+  price_range: number | null; // 1 = Budget (<RM15), 2 = Moderate (RM15-40), 3 = Premium (RM40+)
+  halal_certified: boolean; // Whether restaurant has halal certification
+  // Visual Branding
+  cover_image_url: string | null; // Hero/banner image URL
+  // Social & Online Presence
+  social_media: { facebook?: string; instagram?: string; tiktok?: string; google_maps_url?: string } | null;
   is_active: boolean;
   created_at: string;
   updated_at: string;
@@ -48,6 +60,9 @@ export interface Branch {
   city: string | null; // City name for location filtering
   state: string | null; // State/region for location filtering
   postal_code: string | null; // Postal/ZIP code for location filtering
+  operating_hours: Record<string, string> | null; // e.g. { "mon": "10:00-22:00", "tue": "closed" }
+  latitude: number | null; // For map integration
+  longitude: number | null; // For map integration
   is_active: boolean;
   created_at: string;
   updated_at: string;
@@ -84,7 +99,7 @@ export interface UserRestaurantReferralCode {
 }
 
 // Transaction status for voiding/completing transactions
-export type TransactionStatus = 'completed' | 'voided';
+export type TransactionStatus = "completed" | "voided";
 
 export interface Transaction {
   id: string;
@@ -132,7 +147,7 @@ export interface CustomerRestaurantHistory {
 }
 
 // Transaction line items extracted from receipts via OCR or manual entry
-export type TransactionItemSource = 'ocr' | 'manual' | 'corrected';
+export type TransactionItemSource = "ocr" | "manual" | "corrected";
 
 export interface TransactionItem {
   id: string;
