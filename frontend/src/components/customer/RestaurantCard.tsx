@@ -14,7 +14,7 @@ interface Restaurant {
     name: string;
     slug: string;
   };
-  referral_code: string;
+  referral_code?: string;
   total_visits?: number;
   first_visit_date?: string;
   last_visit_date?: string;
@@ -113,22 +113,27 @@ export function RestaurantCard({
           </div>
         </div>
 
-        <Button
-          onClick={() =>
-            onShare(
-              restaurant.restaurant.name,
-              restaurant.restaurant.slug,
-              restaurant.referral_code,
-              balance,
-              totalSpent
-            )
-          }
-          className="w-full bg-primary hover:bg-primary/90"
-          size="lg"
-        >
-          <Share2 className="h-4 w-4 mr-2" />
-          {t.restaurantCard.share}
-        </Button>
+        {/* Share button only shown when referral code exists */}
+        {restaurant.referral_code ? (
+          <Button
+            onClick={() =>
+              onShare(
+                restaurant.restaurant.name,
+                restaurant.restaurant.slug,
+                restaurant.referral_code!,
+                balance,
+                totalSpent
+              )
+            }
+            className="w-full bg-primary hover:bg-primary/90"
+            size="lg"
+          >
+            <Share2 className="h-4 w-4 mr-2" />
+            {t.restaurantCard.share}
+          </Button>
+        ) : (
+          <p className="text-xs text-muted-foreground text-center py-2">{t.restaurantCard.noCodeYet}</p>
+        )}
 
         {/* Expandable Transactions Section */}
         {transactions.length > 0 && (

@@ -20,7 +20,7 @@ import { Loader2 } from "lucide-react";
 interface RestaurantCode {
   id: string;
   restaurant_id: string;
-  referral_code: string;
+  referral_code?: string;
   restaurant: {
     name: string;
     slug: string;
@@ -28,6 +28,7 @@ interface RestaurantCode {
   total_visits?: number;
   first_visit_date?: string;
   last_visit_date?: string;
+  total_spent?: number;
   // Virtual currency fields (restaurant-specific)
   balance?: number;
   earned?: number;
@@ -178,17 +179,6 @@ export default function CustomerDashboard() {
           });
         });
 
-        // Create visit history map
-        const visitHistoryMap = new Map();
-        (visitedData || []).forEach((item: any) => {
-          visitHistoryMap.set(item.restaurant_id, {
-            first_visit_date: item.first_visit_date,
-            last_visit_date: item.last_visit_date,
-            total_visits: item.total_visits,
-            total_spent: item.total_spent,
-          });
-        });
-
         // Fetch existing referral codes
         const { data: codesData, error: codesError } = await supabase
           .from("user_restaurant_referral_codes")
@@ -196,8 +186,7 @@ export default function CustomerDashboard() {
             `
             id,
             restaurant_id,
-            referral_code,
-            restaurants (name, slug)
+            referral_code
           `
           )
           .eq("user_id", user.id)
@@ -205,21 +194,32 @@ export default function CustomerDashboard() {
 
         if (codesError) throw codesError;
 
-        // Transform and merge data with VC balances
-        const transformedCodes: RestaurantCode[] = (codesData || []).map((item: any) => {
-          const visitInfo = visitHistoryMap.get(item.restaurant_id);
+        // Create referral code map by restaurant_id
+        const codeMap = new Map();
+        (codesData || []).forEach((item: any) => {
+          codeMap.set(item.restaurant_id, {
+            id: item.id,
+            referral_code: item.referral_code,
+          });
+        });
+
+        // Build restaurant list from customer_restaurant_history (primary source)
+        // This ensures restaurants show even without a referral code
+        const transformedCodes: RestaurantCode[] = (visitedData || []).map((item: any) => {
+          const codeInfo = codeMap.get(item.restaurant_id);
           const walletInfo = walletMap.get(item.restaurant_id);
           return {
-            id: item.id,
+            id: codeInfo?.id || item.restaurant_id,
             restaurant_id: item.restaurant_id,
-            referral_code: item.referral_code,
+            referral_code: codeInfo?.referral_code,
             restaurant: item.restaurants || {
               name: "Unknown",
               slug: "unknown",
             },
-            total_visits: visitInfo?.total_visits,
-            first_visit_date: visitInfo?.first_visit_date,
-            last_visit_date: visitInfo?.last_visit_date,
+            total_visits: item.total_visits,
+            first_visit_date: item.first_visit_date,
+            last_visit_date: item.last_visit_date,
+            total_spent: item.total_spent,
             balance: walletInfo?.balance,
             earned: walletInfo?.earned,
             redeemed: walletInfo?.redeemed,
