@@ -3,7 +3,8 @@ import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { Separator } from "../ui/separator";
-import { X, Plus, Minus, Loader2, CheckCircle } from "lucide-react";
+import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerDescription } from "../ui/drawer";
+import { Plus, Minus, Loader2, CheckCircle } from "lucide-react";
 import { CustomerInfoCard } from "./CustomerInfoCard";
 import { formatCurrency } from "../../lib/utils";
 import { getTranslation, type Language } from "../../translations";
@@ -42,13 +43,6 @@ export function CheckoutSheet({
   const [finalAmount, setFinalAmount] = useState(0);
   const [maxRedeemable, setMaxRedeemable] = useState(0);
 
-  // Touch gestures for swipe to dismiss
-  const [touchStart, setTouchStart] = useState(0);
-  const [touchCurrent, setTouchCurrent] = useState(0);
-  const [isDragging, setIsDragging] = useState(false);
-  const [isAnimating, setIsAnimating] = useState(false);
-  const [shouldRender, setShouldRender] = useState(false);
-
   // Calculate discounts whenever bill amount or redeem amount changes
   useEffect(() => {
     const bill = parseFloat(billAmount) || 0;
@@ -80,37 +74,6 @@ export function CheckoutSheet({
       setFinalAmount(0);
     }
   }, [billAmount, redeemAmount, isFirstVisit, walletBalance]);
-
-  // Handle animation and body scroll
-  useEffect(() => {
-    if (isOpen) {
-      setShouldRender(true);
-      document.body.style.overflow = "hidden";
-      requestAnimationFrame(() => {
-        setIsAnimating(true);
-      });
-    } else {
-      setIsAnimating(false);
-      document.body.style.overflow = "unset";
-      const timer = setTimeout(() => {
-        setShouldRender(false);
-      }, 300); // Match transition duration
-      return () => clearTimeout(timer);
-    }
-    return () => {
-      document.body.style.overflow = "unset";
-    };
-  }, [isOpen]);
-
-  const handleTouchEnd = () => {
-    setIsDragging(false);
-    const dragDistance = touchCurrent - touchStart;
-    if (dragDistance > 100) {
-      onClose();
-    } else {
-      setTouchCurrent(touchStart);
-    }
-  };
 
   const handleIncreaseRedeem = () => {
     const step = 1; // RM 1 increment
@@ -152,204 +115,153 @@ export function CheckoutSheet({
     }
   };
 
-  if (!shouldRender) return null;
-
   return (
-    <>
-      {/* Backdrop */}
-      <div
-        className={`fixed inset-0 bg-black/50 backdrop-blur-sm z-50 transition-opacity duration-300 overflow-hidden ${
-          isAnimating ? "opacity-100" : "opacity-0"
-        }`}
-        onClick={onClose}
-        style={{ touchAction: "none" }}
-      />
+    <Drawer open={isOpen} onOpenChange={(open) => !open && onClose()}>
+      <DrawerContent className="max-h-[85vh]">
+        <div className="overflow-y-auto px-6 pb-6">
+          {/* Header */}
+          <DrawerHeader className="px-0 pt-2">
+            <DrawerTitle className="text-xl font-bold text-foreground">{t.staffDashboard.checkout}</DrawerTitle>
+            <DrawerDescription>{t.staffDashboard.enterBillAmount}</DrawerDescription>
+          </DrawerHeader>
 
-      {/* Bottom Sheet */}
-      <div
-        className="fixed inset-x-0 bottom-0 z-50 transition-transform duration-300 ease-out"
-        style={{
-          transform:
-            isDragging && touchCurrent > touchStart
-              ? `translateY(${touchCurrent - touchStart}px)`
-              : isAnimating
-                ? "translateY(0)"
-                : "translateY(100%)",
-          transition: isDragging ? "none" : "transform 0.3s ease-out",
-        }}
-        onTouchStart={(e) => {
-          setTouchStart(e.targetTouches[0].clientY);
-          setTouchCurrent(e.targetTouches[0].clientY);
-          setIsDragging(true);
-        }}
-        onTouchMove={(e) => {
-          if (isDragging) {
-            const current = e.targetTouches[0].clientY;
-            if (current > touchStart) {
-              setTouchCurrent(current);
-            }
-          }
-        }}
-        onTouchEnd={handleTouchEnd}
-      >
-        <div className="bg-background rounded-t-3xl shadow-2xl border-t border-border max-h-[85vh] overflow-y-auto">
-          <div className="p-6 pt-4">
-            {/* Close Button - Top Right */}
-            <button
-              onClick={onClose}
-              className="absolute top-4 right-4 p-2 hover:bg-muted rounded-full transition-colors z-10"
-              aria-label="Close"
-            >
-              <X className="h-5 w-5 text-muted-foreground" />
-            </button>
+          {/* Customer Info Card */}
+          <div className="mb-5">
+            <CustomerInfoCard
+              customerName={customerData.full_name}
+              referralCode={customerData.referral_code}
+              walletBalance={walletBalance}
+              isFirstVisit={isFirstVisit}
+              language={language}
+            />
+          </div>
 
-            {/* Handle Bar */}
-            <div className="w-12 h-1.5 bg-muted rounded-full mx-auto mb-4"></div>
-
-            {/* Header */}
-            <div className="mb-5">
-              <h3 className="text-xl font-bold text-foreground mb-1">{t.staffDashboard.checkout}</h3>
-              <p className="text-sm text-muted-foreground">{t.staffDashboard.enterBillAmount}</p>
-            </div>
-
-            {/* Customer Info Card */}
-            <div className="mb-5">
-              <CustomerInfoCard
-                customerName={customerData.full_name}
-                referralCode={customerData.referral_code}
-                walletBalance={walletBalance}
-                isFirstVisit={isFirstVisit}
-                language={language}
+          {/* Bill Amount */}
+          <div className="mb-5">
+            <Label htmlFor="bill-amount" className="text-sm font-semibold mb-2 block">
+              {t.staffDashboard.billAmount}
+            </Label>
+            <div className="relative">
+              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">RM</span>
+              <Input
+                id="bill-amount"
+                type="number"
+                inputMode="decimal"
+                placeholder={t.staffDashboard.billAmountPlaceholder}
+                value={billAmount}
+                onChange={(e) => setBillAmount(e.target.value)}
+                className="pl-12 text-lg h-12"
+                step="0.01"
+                min="0"
               />
             </div>
+          </div>
 
-            {/* Bill Amount */}
+          {/* VC Redemption */}
+          {parseFloat(billAmount) > 0 && (
             <div className="mb-5">
-              <Label htmlFor="bill-amount" className="text-sm font-semibold mb-2 block">
-                {t.staffDashboard.billAmount}
-              </Label>
-              <div className="relative">
-                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">RM</span>
-                <Input
-                  id="bill-amount"
-                  type="number"
-                  inputMode="decimal"
-                  placeholder={t.staffDashboard.billAmountPlaceholder}
-                  value={billAmount}
-                  onChange={(e) => setBillAmount(e.target.value)}
-                  className="pl-12 text-lg h-12"
-                  step="0.01"
-                  min="0"
-                />
+              <div className="flex items-center justify-between mb-2">
+                <Label className="text-sm font-semibold">{t.staffDashboard.redeemAmount}</Label>
+                <span className="text-xs text-muted-foreground">
+                  {t.staffDashboard.maxRedeemable}: {formatCurrency(maxRedeemable)}
+                </span>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="icon"
+                  className="h-12 w-12 flex-shrink-0"
+                  onClick={handleDecreaseRedeem}
+                  disabled={redeemAmount <= 0}
+                >
+                  <Minus className="h-5 w-5" />
+                </Button>
+
+                <div className="relative flex-1">
+                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">RM</span>
+                  <Input
+                    type="number"
+                    inputMode="decimal"
+                    value={redeemAmount}
+                    onChange={(e) => handleRedeemInputChange(e.target.value)}
+                    className="pl-12 text-lg h-12 text-center"
+                    step="0.01"
+                    min="0"
+                    max={maxRedeemable}
+                  />
+                </div>
+
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="icon"
+                  className="h-12 w-12 flex-shrink-0"
+                  onClick={handleIncreaseRedeem}
+                  disabled={redeemAmount >= maxRedeemable}
+                >
+                  <Plus className="h-5 w-5" />
+                </Button>
               </div>
             </div>
+          )}
 
-            {/* VC Redemption */}
-            {parseFloat(billAmount) > 0 && (
-              <div className="mb-5">
-                <div className="flex items-center justify-between mb-2">
-                  <Label className="text-sm font-semibold">{t.staffDashboard.redeemAmount}</Label>
-                  <span className="text-xs text-muted-foreground">
-                    {t.staffDashboard.maxRedeemable}: {formatCurrency(maxRedeemable)}
-                  </span>
-                </div>
-
-                <div className="flex items-center gap-2">
-                  <Button
-                    type="button"
-                    variant="outline"
-                    size="icon"
-                    className="h-12 w-12 flex-shrink-0"
-                    onClick={handleDecreaseRedeem}
-                    disabled={redeemAmount <= 0}
-                  >
-                    <Minus className="h-5 w-5" />
-                  </Button>
-
-                  <div className="relative flex-1">
-                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">RM</span>
-                    <Input
-                      type="number"
-                      inputMode="decimal"
-                      value={redeemAmount}
-                      onChange={(e) => handleRedeemInputChange(e.target.value)}
-                      className="pl-12 text-lg h-12 text-center"
-                      step="0.01"
-                      min="0"
-                      max={maxRedeemable}
-                    />
-                  </div>
-
-                  <Button
-                    type="button"
-                    variant="outline"
-                    size="icon"
-                    className="h-12 w-12 flex-shrink-0"
-                    onClick={handleIncreaseRedeem}
-                    disabled={redeemAmount >= maxRedeemable}
-                  >
-                    <Plus className="h-5 w-5" />
-                  </Button>
-                </div>
-              </div>
-            )}
-
-            {/* Discount Summary */}
-            {parseFloat(billAmount) > 0 && (
-              <div className="mb-5 p-4 bg-muted/50 rounded-lg">
-                <h4 className="text-sm font-semibold mb-3">{t.staffDashboard.summary}</h4>
-                <div className="space-y-2 text-sm">
-                  {isFirstVisit && (
-                    <div className="flex justify-between">
-                      <span className="text-muted-foreground">{t.staffDashboard.discount}</span>
-                      <span className="font-semibold text-green-600">-{formatCurrency(guaranteedDiscount)}</span>
-                    </div>
-                  )}
-                  {redeemAmount > 0 && (
-                    <div className="flex justify-between">
-                      <span className="text-muted-foreground">{t.staffDashboard.vcRedeemed}</span>
-                      <span className="font-semibold text-primary">-{formatCurrency(redeemAmount)}</span>
-                    </div>
-                  )}
-                  <Separator className="my-2" />
-                  <div className="flex justify-between">
-                    <span className="text-muted-foreground">{t.staffDashboard.originalAmount}</span>
-                    <span className="font-semibold">{formatCurrency(parseFloat(billAmount))}</span>
-                  </div>
+          {/* Discount Summary */}
+          {parseFloat(billAmount) > 0 && (
+            <div className="mb-5 p-4 bg-muted/50 rounded-lg">
+              <h4 className="text-sm font-semibold mb-3">{t.staffDashboard.summary}</h4>
+              <div className="space-y-2 text-sm">
+                {isFirstVisit && (
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">{t.staffDashboard.discount}</span>
-                    <span className="font-semibold">-{formatCurrency(totalDiscount)}</span>
+                    <span className="font-semibold text-green-600">-{formatCurrency(guaranteedDiscount)}</span>
                   </div>
-                  <div className="flex justify-between text-base">
-                    <span className="font-bold">{t.staffDashboard.finalAmount}</span>
-                    <span className="font-bold text-primary text-lg">{formatCurrency(finalAmount)}</span>
+                )}
+                {redeemAmount > 0 && (
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground">{t.staffDashboard.vcRedeemed}</span>
+                    <span className="font-semibold text-primary">-{formatCurrency(redeemAmount)}</span>
                   </div>
+                )}
+                <Separator className="my-2" />
+                <div className="flex justify-between">
+                  <span className="text-muted-foreground">{t.staffDashboard.originalAmount}</span>
+                  <span className="font-semibold">{formatCurrency(parseFloat(billAmount))}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-muted-foreground">{t.staffDashboard.discount}</span>
+                  <span className="font-semibold">-{formatCurrency(totalDiscount)}</span>
+                </div>
+                <div className="flex justify-between text-base">
+                  <span className="font-bold">{t.staffDashboard.finalAmount}</span>
+                  <span className="font-bold text-primary text-lg">{formatCurrency(finalAmount)}</span>
                 </div>
               </div>
-            )}
+            </div>
+          )}
 
-            {/* Submit Button */}
-            <Button
-              onClick={handleSubmit}
-              className="w-full bg-primary hover:bg-primary/90"
-              size="lg"
-              disabled={!billAmount || parseFloat(billAmount) <= 0 || loading}
-            >
-              {loading ? (
-                <>
-                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                  {t.staffDashboard.processing}
-                </>
-              ) : (
-                <>
-                  <CheckCircle className="h-5 w-5 mr-2" />
-                  {t.staffDashboard.processCheckout}
-                </>
-              )}
-            </Button>
-          </div>
+          {/* Submit Button */}
+          <Button
+            onClick={handleSubmit}
+            className="w-full bg-primary hover:bg-primary/90"
+            size="lg"
+            disabled={!billAmount || parseFloat(billAmount) <= 0 || loading}
+          >
+            {loading ? (
+              <>
+                <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                {t.staffDashboard.processing}
+              </>
+            ) : (
+              <>
+                <CheckCircle className="h-5 w-5 mr-2" />
+                {t.staffDashboard.processCheckout}
+              </>
+            )}
+          </Button>
         </div>
-      </div>
-    </>
+      </DrawerContent>
+    </Drawer>
   );
 }

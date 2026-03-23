@@ -1,6 +1,7 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Button } from "../ui/button";
-import { Share2, Copy, Check, X } from "lucide-react";
+import { Drawer, DrawerContent } from "../ui/drawer";
+import { Share2, Copy, Check } from "lucide-react";
 import { getTranslation } from "../../translations";
 import type { Language } from "../../translations";
 
@@ -33,28 +34,8 @@ interface ShareBottomSheetProps {
 export function ShareBottomSheet({ isOpen, onClose, restaurant, language = "en" }: ShareBottomSheetProps) {
   const t = getTranslation(language);
   const [copied, setCopied] = useState<string | null>(null);
-  const [touchStart, setTouchStart] = useState(0);
-  const [touchCurrent, setTouchCurrent] = useState(0);
-  const [isDragging, setIsDragging] = useState(false);
-  const [isAnimating, setIsAnimating] = useState(false);
-  const [shouldRender, setShouldRender] = useState(false);
 
-  useEffect(() => {
-    if (isOpen) {
-      setShouldRender(true);
-      requestAnimationFrame(() => {
-        setIsAnimating(true);
-      });
-    } else {
-      setIsAnimating(false);
-      const timer = setTimeout(() => {
-        setShouldRender(false);
-      }, 300); // Match transition duration
-      return () => clearTimeout(timer);
-    }
-  }, [isOpen]);
-
-  if (!shouldRender || !restaurant) return null;
+  if (!restaurant) return null;
 
   const handleCopyLink = () => {
     const link = `${window.location.origin}/join/${restaurant.slug}/${restaurant.code}`;
@@ -102,155 +83,96 @@ export function ShareBottomSheet({ isOpen, onClose, restaurant, language = "en" 
     }
   };
 
-  const handleTouchEnd = () => {
-    setIsDragging(false);
-    const dragDistance = touchCurrent - touchStart;
-    if (dragDistance > 100) {
-      onClose();
-    } else {
-      setTouchCurrent(touchStart);
-    }
-  };
-
   return (
-    <>
-      {/* Backdrop */}
-      <div
-        className={`fixed inset-0 bg-black/50 backdrop-blur-sm z-50 transition-opacity duration-300 overflow-hidden ${
-          isAnimating ? "opacity-100" : "opacity-0"
-        }`}
-        onClick={onClose}
-        style={{ touchAction: "none" }}
-      />
+    <Drawer open={isOpen} onOpenChange={(open) => !open && onClose()}>
+      <DrawerContent className="max-h-[85vh]">
+        <div className="overflow-y-auto px-6 pb-6">
+          {/* Header */}
+          <div className="mb-5">
+            <h3 className="text-xl font-bold text-foreground mb-1">
+              {t.shareSheet.title} {restaurant.name}
+            </h3>
+            <p className="text-sm text-muted-foreground">{t.shareSheet.subtitle}</p>
+          </div>
 
-      {/* Bottom Sheet */}
-      <div
-        className="fixed inset-x-0 bottom-0 z-50 transition-transform duration-300 ease-out"
-        style={{
-          transform:
-            isDragging && touchCurrent > touchStart
-              ? `translateY(${touchCurrent - touchStart}px)`
-              : isAnimating
-                ? "translateY(0)"
-                : "translateY(100%)",
-          transition: isDragging ? "none" : "transform 0.3s ease-out",
-        }}
-        onTouchStart={(e) => {
-          setTouchStart(e.targetTouches[0].clientY);
-          setTouchCurrent(e.targetTouches[0].clientY);
-          setIsDragging(true);
-        }}
-        onTouchMove={(e) => {
-          if (isDragging) {
-            const current = e.targetTouches[0].clientY;
-            if (current > touchStart) {
-              setTouchCurrent(current);
-            }
-          }
-        }}
-        onTouchEnd={handleTouchEnd}
-      >
-        <div className="glass rounded-b-none rounded-t-3xl max-h-[85vh] overflow-y-auto">
-          <div className="p-6 pt-4">
-            {/* Close Button - Top Right */}
-            <button
-              onClick={onClose}
-              className="absolute top-4 right-4 p-2 hover:bg-muted rounded-full transition-colors z-10"
-              aria-label="Close"
-            >
-              <X className="h-5 w-5 text-muted-foreground" />
-            </button>
-
-            {/* Handle Bar */}
-            <div className="w-12 h-1.5 bg-muted rounded-full mx-auto mb-4"></div>
-
-            {/* Header */}
-            <div className="mb-5">
-              <h3 className="text-xl font-bold text-foreground mb-1">
-                {t.shareSheet.title} {restaurant.name}
-              </h3>
-              <p className="text-sm text-muted-foreground">{t.shareSheet.subtitle}</p>
+          {/* Referral Link Section */}
+          <div className="mb-5">
+            <label className="text-sm font-medium text-foreground mb-2 block">{t.shareSheet.referralLink}</label>
+            <div className="bg-muted/50 rounded-lg p-4 border border-border/50">
+              <p className="text-xs font-mono text-muted-foreground break-all leading-relaxed mb-3">
+                {window.location.origin}/join/{restaurant.slug}/{restaurant.code}
+              </p>
+              <Button onClick={handleCopyLink} className="w-full bg-primary hover:bg-primary/90" size="lg">
+                {copied === "link" ? (
+                  <>
+                    <Check className="h-4 w-4 mr-2" />
+                    {t.shareSheet.linkCopied}
+                  </>
+                ) : (
+                  <>
+                    <Copy className="h-4 w-4 mr-2" />
+                    {t.shareSheet.copyLink}
+                  </>
+                )}
+              </Button>
             </div>
+          </div>
 
-            {/* Referral Link Section */}
-            <div className="mb-5">
-              <label className="text-sm font-medium text-foreground mb-2 block">{t.shareSheet.referralLink}</label>
-              <div className="bg-muted/50 rounded-lg p-4 border border-border/50">
-                <p className="text-xs font-mono text-muted-foreground break-all leading-relaxed mb-3">
-                  {window.location.origin}/join/{restaurant.slug}/{restaurant.code}
-                </p>
-                <Button onClick={handleCopyLink} className="w-full bg-primary hover:bg-primary/90" size="lg">
-                  {copied === "link" ? (
+          {/* Social Share Options */}
+          <div className="mb-5">
+            <label className="text-sm font-medium text-foreground mb-2 block">{t.shareSheet.shareViaSocial}</label>
+            <div className="grid grid-cols-3 gap-3">
+              <Button
+                variant="outline"
+                onClick={handleShareWhatsApp}
+                className="bg-[#25D366] hover:bg-[#20BA5A] text-white border-0 flex flex-col items-center justify-center h-20 gap-2"
+              >
+                <WhatsAppIcon />
+                <span className="text-xs">{t.shareSheet.whatsapp}</span>
+              </Button>
+              <Button
+                variant="outline"
+                onClick={handleShareFacebook}
+                className="bg-[#1877F2] hover:bg-[#0C63D4] text-white border-0 flex flex-col items-center justify-center h-20 gap-2"
+              >
+                <FacebookIcon />
+                <span className="text-xs">{t.shareSheet.facebook}</span>
+              </Button>
+              <Button
+                variant="outline"
+                onClick={handleNativeShare}
+                className="bg-muted hover:bg-muted/80 text-foreground border border-border flex flex-col items-center justify-center h-20 gap-2"
+              >
+                <Share2 className="h-5 w-5" />
+                <span className="text-xs">{t.shareSheet.more}</span>
+              </Button>
+            </div>
+          </div>
+
+          {/* Promotion Code Section */}
+          <div className="mb-4">
+            <label className="text-sm font-medium text-foreground mb-2 block">{t.shareSheet.promotionCode}</label>
+            <div className="bg-muted/50 rounded-lg p-2.5 border border-border/50">
+              <div className="flex items-center justify-between gap-3">
+                <code className="text-base font-mono text-foreground flex-1">{restaurant.code}</code>
+                <Button size="sm" variant="outline" onClick={handleCopyCode} className="shrink-0">
+                  {copied === "code" ? (
                     <>
-                      <Check className="h-4 w-4 mr-2" />
-                      {t.shareSheet.linkCopied}
+                      <Check className="h-4 w-4 mr-1" />
+                      {t.shareSheet.codeCopied}
                     </>
                   ) : (
                     <>
-                      <Copy className="h-4 w-4 mr-2" />
-                      {t.shareSheet.copyLink}
+                      <Copy className="h-4 w-4 mr-1" />
+                      {t.shareSheet.copyCode}
                     </>
                   )}
                 </Button>
               </div>
             </div>
-
-            {/* Social Share Options */}
-            <div className="mb-5">
-              <label className="text-sm font-medium text-foreground mb-2 block">{t.shareSheet.shareViaSocial}</label>
-              <div className="grid grid-cols-3 gap-3">
-                <Button
-                  variant="outline"
-                  onClick={handleShareWhatsApp}
-                  className="bg-[#25D366] hover:bg-[#20BA5A] text-white border-0 flex flex-col items-center justify-center h-20 gap-2"
-                >
-                  <WhatsAppIcon />
-                  <span className="text-xs">{t.shareSheet.whatsapp}</span>
-                </Button>
-                <Button
-                  variant="outline"
-                  onClick={handleShareFacebook}
-                  className="bg-[#1877F2] hover:bg-[#0C63D4] text-white border-0 flex flex-col items-center justify-center h-20 gap-2"
-                >
-                  <FacebookIcon />
-                  <span className="text-xs">{t.shareSheet.facebook}</span>
-                </Button>
-                <Button
-                  variant="outline"
-                  onClick={handleNativeShare}
-                  className="bg-muted hover:bg-muted/80 text-foreground border border-border flex flex-col items-center justify-center h-20 gap-2"
-                >
-                  <Share2 className="h-5 w-5" />
-                  <span className="text-xs">{t.shareSheet.more}</span>
-                </Button>
-              </div>
-            </div>
-
-            {/* Promotion Code Section */}
-            <div className="mb-4">
-              <label className="text-sm font-medium text-foreground mb-2 block">{t.shareSheet.promotionCode}</label>
-              <div className="bg-muted/50 rounded-lg p-2.5 border border-border/50">
-                <div className="flex items-center justify-between gap-3">
-                  <code className="text-base font-mono text-foreground flex-1">{restaurant.code}</code>
-                  <Button size="sm" variant="outline" onClick={handleCopyCode} className="shrink-0">
-                    {copied === "code" ? (
-                      <>
-                        <Check className="h-4 w-4 mr-1" />
-                        {t.shareSheet.codeCopied}
-                      </>
-                    ) : (
-                      <>
-                        <Copy className="h-4 w-4 mr-1" />
-                        {t.shareSheet.copyCode}
-                      </>
-                    )}
-                  </Button>
-                </div>
-              </div>
-            </div>
           </div>
         </div>
-      </div>
-    </>
+      </DrawerContent>
+    </Drawer>
   );
 }
