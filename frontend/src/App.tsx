@@ -25,7 +25,11 @@ import MerchantDashboard from "./pages/merchant/Dashboard";
 import MerchantCustomers from "./pages/merchant/Customers";
 import MerchantTransactions from "./pages/merchant/Transactions";
 import MerchantStaff from "./pages/merchant/Staff";
+import MerchantStaffAdd from "./pages/merchant/StaffAdd";
+import MerchantStaffEdit from "./pages/merchant/StaffEdit";
 import MerchantBranches from "./pages/merchant/Branches";
+import MerchantBranchAdd from "./pages/merchant/BranchAdd";
+import MerchantBranchEdit from "./pages/merchant/BranchEdit";
 import MerchantSettings from "./pages/merchant/Settings";
 
 // Admin pages
@@ -136,10 +140,42 @@ function App() {
             }
           />
           <Route
+            path="/merchant/staff/add"
+            element={
+              <ProtectedRoute allowedRoles={["merchant"]}>
+                <MerchantStaffAdd />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/merchant/staff/edit/:staffId"
+            element={
+              <ProtectedRoute allowedRoles={["merchant"]}>
+                <MerchantStaffEdit />
+              </ProtectedRoute>
+            }
+          />
+          <Route
             path="/merchant/branches"
             element={
               <ProtectedRoute allowedRoles={["merchant"]}>
                 <MerchantBranches />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/merchant/branches/add"
+            element={
+              <ProtectedRoute allowedRoles={["merchant"]}>
+                <MerchantBranchAdd />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/merchant/branches/edit/:branchId"
+            element={
+              <ProtectedRoute allowedRoles={["merchant"]}>
+                <MerchantBranchEdit />
               </ProtectedRoute>
             }
           />

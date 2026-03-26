@@ -5,6 +5,7 @@ import { supabase } from "../../lib/supabase";
 import { Button } from "../../components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "../../components/ui/card";
 import { ArrowLeft, Plus, Edit, Trash2, Building2, MapPin, Phone, ChevronDown } from "lucide-react";
+import { showSuccessToast, showErrorToast } from "../../components/ui/toast";
 import type { Restaurant } from "../../types/database.types";
 
 interface Branch {
@@ -98,10 +99,11 @@ export default function BranchesManagement() {
 
       if (error) throw error;
 
+      showSuccessToast("Branch deactivated");
       setBranches(branches.map((b) => (b.id === branchId ? { ...b, is_active: false } : b)));
     } catch (error) {
       console.error("Error deactivating branch:", error);
-      alert("Failed to deactivate branch");
+      showErrorToast("Failed to deactivate branch");
     }
   };
 
@@ -111,10 +113,11 @@ export default function BranchesManagement() {
 
       if (error) throw error;
 
+      showSuccessToast("Branch reactivated");
       setBranches(branches.map((b) => (b.id === branchId ? { ...b, is_active: true } : b)));
     } catch (error) {
       console.error("Error reactivating branch:", error);
-      alert("Failed to reactivate branch");
+      showErrorToast("Failed to reactivate branch");
     }
   };
 
