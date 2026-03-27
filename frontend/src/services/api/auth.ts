@@ -3,22 +3,20 @@
  * Centralizes all Supabase authentication operations.
  */
 
-import { supabase } from '../../lib/supabase';
-import type { User } from '../../types/database.types';
+import { supabase } from "../../lib/supabase";
+import type { User } from "../../types/database.types";
 
 /**
  * Sign up a new user with email and password.
- * Creates both auth user and user profile in database.
+ * The public.users profile row is auto-created by the handle_new_user()
+ * database trigger on auth.users INSERT, reading from raw_user_meta_data.
  */
-export async function signUpUser(
-  email: string,
-  password: string,
-  userData: Partial<User>
-): Promise<{ id: string }> {
+export async function signUpUser(email: string, password: string, userData: Partial<User>): Promise<{ id: string }> {
   const { data, error } = await supabase.auth.signUp({
     email,
     password,
     options: {
+      // Metadata is read by the handle_new_user() trigger to populate public.users
       data: userData,
       emailRedirectTo: `${window.location.origin}/login`,
     },
@@ -26,41 +24,16 @@ export async function signUpUser(
 
   if (error) {
     // Improve error message for duplicate email
-    if (
-      error.message.includes('already registered') ||
-      error.message.includes('User already registered')
-    ) {
-      throw new Error(
-        'This email is already registered. Please login or use a different email.'
-      );
+    if (error.message.includes("already registered") || error.message.includes("User already registered")) {
+      throw new Error("This email is already registered. Please login or use a different email.");
     }
     throw error;
   }
 
   if (!data.user) {
-    throw new Error('Failed to create user');
+    throw new Error("Failed to create user");
   }
 
-  // Generate referral code
-  const referralCode = `MAKAN-${Math.random()
-    .toString(36)
-    .substring(2, 8)
-    .toUpperCase()}`;
-
-  // Insert user profile (only fields that exist in database schema)
-  const { error: profileError } = await supabase.from('users').insert({
-    id: data.user.id,
-    email: data.user.email,
-    full_name: userData.full_name || data.user.email?.split('@')[0],
-    birthday: userData.birthday || null,
-    referral_code: referralCode,
-    role: userData.role || 'customer',
-    email_verified: data.user.email_confirmed_at ? true : false,
-  });
-
-  if (profileError) throw profileError;
-
-  // Return user ID for referral code saving
   return { id: data.user.id };
 }
 
@@ -68,10 +41,7 @@ export async function signUpUser(
  * Sign in an existing user with email and password.
  * Returns the user profile data.
  */
-export async function signInUser(
-  email: string,
-  password: string
-): Promise<User> {
+export async function signInUser(email: string, password: string): Promise<User> {
   const { data, error } = await supabase.auth.signInWithPassword({
     email,
     password,
@@ -79,9 +49,9 @@ export async function signInUser(
 
   if (error) {
     // Better error message for unconfirmed email
-    if (error.message.includes('Email not confirmed')) {
+    if (error.message.includes("Email not confirmed")) {
       throw new Error(
-        'Please confirm your email address before signing in. Check your inbox for the confirmation link.'
+        "Please confirm your email address before signing in. Check your inbox for the confirmation link."
       );
     }
     throw error;
@@ -90,19 +60,19 @@ export async function signInUser(
   // Fetch user profile immediately after sign in
   if (data.user) {
     const { data: userData, error: profileError } = await supabase
-      .from('users')
-      .select('*')
-      .eq('id', data.user.id)
+      .from("users")
+      .select("*")
+      .eq("id", data.user.id)
       .single();
 
     if (profileError) {
-      throw new Error('User profile not found. Please contact support.');
+      throw new Error("User profile not found. Please contact support.");
     }
 
     return userData;
   }
 
-  throw new Error('User not found');
+  throw new Error("User not found");
 }
 
 /**
@@ -137,11 +107,7 @@ export async function getCurrentSession() {
  * Fetch user profile by user ID.
  */
 export async function fetchUserProfile(userId: string): Promise<User> {
-  const { data, error } = await supabase
-    .from('users')
-    .select('*')
-    .eq('id', userId)
-    .single();
+  const { data, error } = await supabase.from("users").select("*").eq("id", userId).single();
 
   if (error) throw error;
   return data;
@@ -150,12 +116,9 @@ export async function fetchUserProfile(userId: string): Promise<User> {
 /**
  * Update user profile with allowed fields only.
  */
-export async function updateUserProfile(
-  userId: string,
-  updates: Partial<User>
-): Promise<void> {
+export async function updateUserProfile(userId: string, updates: Partial<User>): Promise<void> {
   // Only allow updating specific fields
-  const allowedFields: (keyof User)[] = ['full_name', 'birthday'];
+  const allowedFields: (keyof User)[] = ["full_name", "birthday"];
   const filteredUpdates: Record<string, any> = {};
 
   allowedFields.forEach((field) => {
@@ -164,10 +127,7 @@ export async function updateUserProfile(
     }
   });
 
-  const { error } = await supabase
-    .from('users')
-    .update(filteredUpdates)
-    .eq('id', userId);
+  const { error } = await supabase.from("users").update(filteredUpdates).eq("id", userId);
 
   if (error) throw error;
 }
@@ -177,12 +137,12 @@ export async function updateUserProfile(
  * This calls the server-side function to soft-delete and cleanup.
  */
 export async function deleteUser(userId: string): Promise<void> {
-  const { error } = await supabase.rpc('anonymize_user', {
-    p_user_id: userId
+  const { error } = await supabase.rpc("anonymize_user", {
+    p_user_id: userId,
   });
 
   if (error) throw error;
-  
+
   // Sign out after successful deletion
   await signOutUser();
 }
