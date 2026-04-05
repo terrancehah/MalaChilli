@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
-// import { supabase } from '../../lib/supabase'; // TODO: Uncomment when voucher claim is active
+import { supabase } from "../../lib/supabase";
 import { showSuccessToast, showErrorToast } from "../ui/toast";
 import { checkRateLimit, recordAttempt, clearRateLimit, getRemainingAttempts } from "../../lib/rate-limiter";
 import { validatePassword, getPasswordRequirements } from "../../lib/password-validator";
@@ -41,6 +41,9 @@ export function RegisterForm({ onSuccess, showLoginLink = true, onSwitchToLogin,
   });
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+  // Tracks whether registration succeeded but email verification is pending
+  const [pendingVerification, setPendingVerification] = useState(false);
+  const [registeredEmail, setRegisteredEmail] = useState("");
 
   const { signUp } = useAuth();
   const navigate = useNavigate();
@@ -160,17 +163,27 @@ export function RegisterForm({ onSuccess, showLoginLink = true, onSwitchToLogin,
 
       // Clear rate limit on successful signup
       clearRateLimit("signup");
-      showSuccessToast("Account created successfully!", { description: "Redirecting..." });
 
-      // Call onSuccess callback if provided (for modal close)
-      if (onSuccess) {
-        onSuccess();
+      // Check if email verification is required by looking for a confirmed session
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+      if (session?.user?.email_confirmed_at) {
+        // Email auto-confirmed (e.g. dev mode) — redirect to dashboard
+        showSuccessToast("Account created successfully!", { description: "Redirecting..." });
+
+        if (onSuccess) {
+          onSuccess();
+        }
+
+        setTimeout(() => {
+          navigate("/dashboard");
+        }, 1500);
+      } else {
+        // Email verification required — show verification pending message
+        setRegisteredEmail(formData.email);
+        setPendingVerification(true);
       }
-
-      // Redirect after short delay
-      setTimeout(() => {
-        navigate("/dashboard");
-      }, 1500);
     } catch (err: any) {
       // Record failed attempt for rate limiting
       recordAttempt("signup");
@@ -229,6 +242,36 @@ export function RegisterForm({ onSuccess, showLoginLink = true, onSwitchToLogin,
       [name]: validateField(name, value),
     });
   };
+
+  // Show email verification pending message after successful registration
+  if (pendingVerification) {
+    return (
+      <div className="text-center space-y-4">
+        {/* Green checkmark icon — same pattern as ForgotPassword success state */}
+        <div className="w-16 h-16 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center mx-auto">
+          <svg className="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+          </svg>
+        </div>
+
+        <h2 className="text-xl font-bold text-gray-900 dark:text-white">Check Your Email</h2>
+
+        <p className="text-sm text-gray-600 dark:text-gray-400">We've sent a verification link to:</p>
+        <p className="text-sm font-semibold text-gray-900 dark:text-white">{registeredEmail}</p>
+
+        <p className="text-xs text-gray-500 dark:text-gray-400 mt-4">
+          Please click the link in your email to verify your account before signing in. If you don't see the email,
+          check your spam folder.
+        </p>
+
+        <div className="pt-4">
+          <Link to="/login" className="text-primary hover:text-primary-dark font-medium underline text-sm">
+            Go to Login
+          </Link>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <>
