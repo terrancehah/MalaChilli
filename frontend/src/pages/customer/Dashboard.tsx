@@ -268,24 +268,27 @@ export default function CustomerDashboard() {
 
         if (transactionsError) throw transactionsError;
 
-        // Fetch VC earned from each transaction (from downlines)
-        const transactionsWithVC = await Promise.all(
-          (transactionsData || []).map(async (transaction: any) => {
-            const { data: vcEarned } = await supabase
-              .from("virtual_currency_ledger")
-              .select("amount")
-              .eq("user_id", user.id)
-              .eq("related_transaction_id", transaction.id)
-              .eq("transaction_type", "earn");
+        // Batch fetch VC earned for all transactions in a single query (avoids N+1)
+        const transactionIds = (transactionsData || []).map((t: any) => t.id);
+        const { data: allVCEarned } = await supabase
+          .from("virtual_currency_ledger")
+          .select("related_transaction_id, amount")
+          .eq("user_id", user.id)
+          .in("related_transaction_id", transactionIds)
+          .eq("transaction_type", "earn");
 
-            const totalVCEarned = (vcEarned || []).reduce((sum, vc) => sum + parseFloat(vc.amount), 0);
+        // Group VC earnings by transaction ID and sum amounts
+        const vcByTransaction: Record<string, number> = {};
+        (allVCEarned || []).forEach((vc: any) => {
+          const txId = vc.related_transaction_id;
+          vcByTransaction[txId] = (vcByTransaction[txId] || 0) + parseFloat(vc.amount);
+        });
 
-            return {
-              ...transaction,
-              vc_earned: totalVCEarned,
-            };
-          })
-        );
+        // Merge VC totals into each transaction
+        const transactionsWithVC = (transactionsData || []).map((transaction: any) => ({
+          ...transaction,
+          vc_earned: vcByTransaction[transaction.id] || 0,
+        }));
 
         setRecentTransactions(transactionsWithVC);
       } catch (error) {
