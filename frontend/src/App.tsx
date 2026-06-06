@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider } from "./contexts/AuthContext";
 import { ProtectedRoute } from "./components/auth/ProtectedRoute";
 import { ToastProvider } from "./components/ui/toast";
+import { ErrorBoundary } from "./components/shared/ErrorBoundary";
 
 // Auth pages with new Malaysian green food design
 import Login from "./pages/customer/Login";
@@ -53,176 +54,179 @@ function App() {
       <AuthProvider>
         {/* Centralized toast notifications - Design System State Patterns */}
         <ToastProvider />
-        <Routes>
-          {/* Public routes */}
-          <Route path="/" element={<HomePage />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/join/:restaurantSlug/:referralCode" element={<JoinPage />} />
-          <Route path="/forgot-password" element={<ForgotPassword />} />
-          <Route path="/reset-password" element={<ResetPassword />} />
-          <Route path="/auth/verify-email" element={<VerifyEmail />} />
+        {/* Global error boundary — catches unhandled render errors */}
+        <ErrorBoundary>
+          <Routes>
+            {/* Public routes */}
+            <Route path="/" element={<HomePage />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/join/:restaurantSlug/:referralCode" element={<JoinPage />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route path="/reset-password" element={<ResetPassword />} />
+            <Route path="/auth/verify-email" element={<VerifyEmail />} />
 
-          {/* Legal pages */}
-          <Route path="/privacy" element={<PrivacyPolicy />} />
-          <Route path="/terms" element={<TermsOfService />} />
-          <Route path="/faq" element={<FAQ />} />
-          <Route path="/about" element={<AboutUs />} />
-          <Route path="/contact" element={<Contact />} />
+            {/* Legal pages */}
+            <Route path="/privacy" element={<PrivacyPolicy />} />
+            <Route path="/terms" element={<TermsOfService />} />
+            <Route path="/faq" element={<FAQ />} />
+            <Route path="/about" element={<AboutUs />} />
+            <Route path="/contact" element={<Contact />} />
 
-          {/* Customer Dashboard (protected) */}
-          <Route
-            path="/customer/dashboard"
-            element={
-              <ProtectedRoute allowedRoles={["customer"]}>
-                <CustomerDashboard />
-              </ProtectedRoute>
-            }
-          />
+            {/* Customer Dashboard (protected) */}
+            <Route
+              path="/customer/dashboard"
+              element={
+                <ProtectedRoute allowedRoles={["customer"]}>
+                  <CustomerDashboard />
+                </ProtectedRoute>
+              }
+            />
 
-          {/* Staff Portal (protected) */}
-          <Route
-            path="/staff/dashboard"
-            element={
-              <ProtectedRoute allowedRoles={["staff"]}>
-                <StaffDashboard />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/staff/transactions"
-            element={
-              <ProtectedRoute allowedRoles={["staff"]}>
-                <StaffTransactions />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/staff/menu"
-            element={
-              <ProtectedRoute allowedRoles={["staff"]}>
-                <MenuManagement />
-              </ProtectedRoute>
-            }
-          />
+            {/* Staff Portal (protected) */}
+            <Route
+              path="/staff/dashboard"
+              element={
+                <ProtectedRoute allowedRoles={["staff"]}>
+                  <StaffDashboard />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/staff/transactions"
+              element={
+                <ProtectedRoute allowedRoles={["staff"]}>
+                  <StaffTransactions />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/staff/menu"
+              element={
+                <ProtectedRoute allowedRoles={["staff"]}>
+                  <MenuManagement />
+                </ProtectedRoute>
+              }
+            />
 
-          {/* Merchant Portal (protected) */}
-          <Route
-            path="/merchant/dashboard"
-            element={
-              <ProtectedRoute allowedRoles={["merchant"]}>
-                <MerchantDashboard />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/merchant/customers"
-            element={
-              <ProtectedRoute allowedRoles={["merchant"]}>
-                <MerchantCustomers />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/merchant/transactions"
-            element={
-              <ProtectedRoute allowedRoles={["merchant"]}>
-                <MerchantTransactions />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/merchant/staff"
-            element={
-              <ProtectedRoute allowedRoles={["merchant"]}>
-                <MerchantStaff />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/merchant/staff/add"
-            element={
-              <ProtectedRoute allowedRoles={["merchant"]}>
-                <MerchantStaffAdd />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/merchant/staff/edit/:staffId"
-            element={
-              <ProtectedRoute allowedRoles={["merchant"]}>
-                <MerchantStaffEdit />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/merchant/branches"
-            element={
-              <ProtectedRoute allowedRoles={["merchant"]}>
-                <MerchantBranches />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/merchant/branches/add"
-            element={
-              <ProtectedRoute allowedRoles={["merchant"]}>
-                <MerchantBranchAdd />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/merchant/branches/edit/:branchId"
-            element={
-              <ProtectedRoute allowedRoles={["merchant"]}>
-                <MerchantBranchEdit />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/merchant/settings"
-            element={
-              <ProtectedRoute allowedRoles={["merchant"]}>
-                <MerchantSettings />
-              </ProtectedRoute>
-            }
-          />
+            {/* Merchant Portal (protected) */}
+            <Route
+              path="/merchant/dashboard"
+              element={
+                <ProtectedRoute allowedRoles={["merchant"]}>
+                  <MerchantDashboard />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/merchant/customers"
+              element={
+                <ProtectedRoute allowedRoles={["merchant"]}>
+                  <MerchantCustomers />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/merchant/transactions"
+              element={
+                <ProtectedRoute allowedRoles={["merchant"]}>
+                  <MerchantTransactions />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/merchant/staff"
+              element={
+                <ProtectedRoute allowedRoles={["merchant"]}>
+                  <MerchantStaff />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/merchant/staff/add"
+              element={
+                <ProtectedRoute allowedRoles={["merchant"]}>
+                  <MerchantStaffAdd />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/merchant/staff/edit/:staffId"
+              element={
+                <ProtectedRoute allowedRoles={["merchant"]}>
+                  <MerchantStaffEdit />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/merchant/branches"
+              element={
+                <ProtectedRoute allowedRoles={["merchant"]}>
+                  <MerchantBranches />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/merchant/branches/add"
+              element={
+                <ProtectedRoute allowedRoles={["merchant"]}>
+                  <MerchantBranchAdd />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/merchant/branches/edit/:branchId"
+              element={
+                <ProtectedRoute allowedRoles={["merchant"]}>
+                  <MerchantBranchEdit />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/merchant/settings"
+              element={
+                <ProtectedRoute allowedRoles={["merchant"]}>
+                  <MerchantSettings />
+                </ProtectedRoute>
+              }
+            />
 
-          {/* Admin Portal (protected) */}
-          <Route
-            path="/admin/dashboard"
-            element={
-              <ProtectedRoute allowedRoles={["admin"]}>
-                <AdminDashboard />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/admin/users"
-            element={
-              <ProtectedRoute allowedRoles={["admin"]}>
-                <AdminUsers />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/admin/restaurants"
-            element={
-              <ProtectedRoute allowedRoles={["admin"]}>
-                <AdminRestaurants />
-              </ProtectedRoute>
-            }
-          />
+            {/* Admin Portal (protected) */}
+            <Route
+              path="/admin/dashboard"
+              element={
+                <ProtectedRoute allowedRoles={["admin"]}>
+                  <AdminDashboard />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/users"
+              element={
+                <ProtectedRoute allowedRoles={["admin"]}>
+                  <AdminUsers />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/restaurants"
+              element={
+                <ProtectedRoute allowedRoles={["admin"]}>
+                  <AdminRestaurants />
+                </ProtectedRoute>
+              }
+            />
 
-          {/* Demo Dashboard (public) */}
-          <Route path="/demo" element={<DemoDashboard />} />
+            {/* Demo Dashboard (public) */}
+            <Route path="/demo" element={<DemoDashboard />} />
 
-          {/* Backward compatibility - redirect old /dashboard to customer dashboard */}
-          <Route path="/dashboard" element={<Navigate to="/customer/dashboard" replace />} />
+            {/* Backward compatibility - redirect old /dashboard to customer dashboard */}
+            <Route path="/dashboard" element={<Navigate to="/customer/dashboard" replace />} />
 
-          {/* Catch all - redirect to home */}
-          <Route path="*" element={<Navigate to="/" replace />} />
-        </Routes>
+            {/* Catch all - redirect to home */}
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+        </ErrorBoundary>
       </AuthProvider>
     </BrowserRouter>
   );
