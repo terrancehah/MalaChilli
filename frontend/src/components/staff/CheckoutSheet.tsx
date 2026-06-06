@@ -19,6 +19,10 @@ interface CheckoutSheetProps {
   };
   walletBalance: number;
   isFirstVisit: boolean;
+  /** Restaurant's first-visit discount percentage (e.g. 5 = 5%). Defaults to 5. */
+  guaranteedDiscountPercent?: number;
+  /** Restaurant's max VC redemption percentage per bill (e.g. 20 = 20%). Defaults to 20. */
+  maxRedemptionPercent?: number;
   language?: Language;
   onSubmit: (data: { billAmount: number; redeemAmount: number }) => Promise<void>;
 }
@@ -29,6 +33,8 @@ export function CheckoutSheet({
   customerData,
   walletBalance,
   isFirstVisit,
+  guaranteedDiscountPercent = 5,
+  maxRedemptionPercent = 20,
   language = "en",
   onSubmit,
 }: CheckoutSheetProps) {
@@ -48,11 +54,11 @@ export function CheckoutSheet({
     const bill = parseFloat(billAmount) || 0;
 
     if (bill > 0) {
-      // First visit discount: 5% of bill
-      const guaranteed = isFirstVisit ? bill * 0.05 : 0;
+      // First visit discount: uses restaurant's configured percentage
+      const guaranteed = isFirstVisit ? bill * (guaranteedDiscountPercent / 100) : 0;
 
-      // Max redeemable: 20% of bill or available balance, whichever is lower
-      const maxRedeem = Math.min(bill * 0.2, walletBalance);
+      // Max redeemable: uses restaurant's configured percentage, capped by available balance
+      const maxRedeem = Math.min(bill * (maxRedemptionPercent / 100), walletBalance);
       const redeem = Math.min(maxRedeem, redeemAmount);
 
       const total = guaranteed + redeem;
@@ -73,7 +79,7 @@ export function CheckoutSheet({
       setTotalDiscount(0);
       setFinalAmount(0);
     }
-  }, [billAmount, redeemAmount, isFirstVisit, walletBalance]);
+  }, [billAmount, redeemAmount, isFirstVisit, walletBalance, guaranteedDiscountPercent, maxRedemptionPercent]);
 
   const handleIncreaseRedeem = () => {
     const step = 1; // RM 1 increment

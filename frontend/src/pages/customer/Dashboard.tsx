@@ -115,17 +115,8 @@ export default function CustomerDashboard() {
     }
   }, [loading, user, navigate]);
 
-  // Prevent body scroll when bottom sheet is open
-  useEffect(() => {
-    if (showShareSheet || showTransactionSheet) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "unset";
-    }
-    return () => {
-      document.body.style.overflow = "unset";
-    };
-  }, [showShareSheet, showTransactionSheet]);
+  // NOTE: Body scroll lock is handled natively by the vaul Drawer component.
+  // No manual document.body.style.overflow management needed.
 
   // Fetches all customer dashboard data (restaurants, wallets, referrals, transactions)
   const fetchData = useCallback(async () => {

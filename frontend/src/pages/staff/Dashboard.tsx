@@ -61,13 +61,38 @@ export default function StaffDashboard() {
     birthdayBonus?: number;
   } | null>(null);
 
+  // Restaurant config (discount and redemption percentages)
+  const [restaurantConfig, setRestaurantConfig] = useState<{
+    guaranteedDiscountPercent: number;
+    maxRedemptionPercent: number;
+  }>({ guaranteedDiscountPercent: 5, maxRedemptionPercent: 20 });
+
   // Customer Data
   const [customerData, setCustomerData] = useState<CustomerInfo | null>(null);
   const [customerWalletBalance, setCustomerWalletBalance] = useState(0);
   const [isFirstVisit, setIsFirstVisit] = useState(false);
   const [isBirthday, setIsBirthday] = useState(false);
 
+  // Fetch restaurant config (discount/redemption percentages) on load
   useEffect(() => {
+    if (user?.restaurant_id) {
+      const fetchRestaurantConfig = async () => {
+        const { data, error: configError } = await supabase
+          .from("restaurants")
+          .select("guaranteed_discount_percent, max_redemption_percent")
+          .eq("id", user.restaurant_id)
+          .single();
+
+        if (!configError && data) {
+          setRestaurantConfig({
+            guaranteedDiscountPercent: parseFloat(data.guaranteed_discount_percent) || 5,
+            maxRedemptionPercent: parseFloat(data.max_redemption_percent) || 20,
+          });
+        }
+      };
+      fetchRestaurantConfig();
+    }
+
     // Set loading to false once user is loaded
     if (user) {
       setLoading(false);
@@ -166,8 +191,8 @@ export default function StaffDashboard() {
 
       if (transactionError) throw transactionError;
 
-      // Calculate discount applied (5% guaranteed discount always applied)
-      const discountApplied = data.billAmount * 0.05;
+      // Calculate discount applied using the restaurant's configured percentage
+      const discountApplied = isFirstVisit ? data.billAmount * (restaurantConfig.guaranteedDiscountPercent / 100) : 0;
 
       // Store transaction data and show success modal
       setLastTransaction({
@@ -384,6 +409,8 @@ export default function StaffDashboard() {
               customerData={customerData}
               walletBalance={customerWalletBalance}
               isFirstVisit={isFirstVisit}
+              guaranteedDiscountPercent={restaurantConfig.guaranteedDiscountPercent}
+              maxRedemptionPercent={restaurantConfig.maxRedemptionPercent}
               language={language}
               onSubmit={handleCheckoutSubmit}
             />

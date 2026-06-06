@@ -51,17 +51,15 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
             </div>
 
             {/* Heading */}
-            <h1 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
-              Something went wrong
-            </h1>
+            <h1 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">Something went wrong</h1>
 
             {/* Description */}
             <p className="text-sm text-gray-600 dark:text-gray-400 mb-6">
               An unexpected error occurred. Please try again or return to the home page.
             </p>
 
-            {/* Error details (dev only — collapsed for brevity) */}
-            {this.state.error && (
+            {/* Error details — only shown in development to prevent leaking internals in production */}
+            {import.meta.env.DEV && this.state.error && (
               <details className="mb-6 text-left">
                 <summary className="text-xs text-gray-500 dark:text-gray-400 cursor-pointer hover:text-gray-700 dark:hover:text-gray-300">
                   Technical details
