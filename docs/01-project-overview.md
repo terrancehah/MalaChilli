@@ -3,7 +3,7 @@
 ## MakanTak - Viral Restaurant Discount Platform
 
 **Document Type:** Master Project Overview  
-**Last Updated:** 2025-12-19 (Schema Sync)  
+**Last Updated:** 2026-06-07 (Configurable Discount Percentages)  
 **Status:** Production Ready / Active Development
 
 ---
@@ -12,7 +12,7 @@
 
 MakanTak is a web-based viral marketing platform that helps Malaysian local restaurants increase foot traffic and sales through multi-level discount sharing.
 
-**Tagline:** *"Share the savings, grow the community"*
+**Tagline:** _"Share the savings, grow the community"_
 
 ### The Core Problem
 
@@ -22,8 +22,8 @@ MakanTak is a web-based viral marketing platform that helps Malaysian local rest
 
 ### The Solution
 
-* **For Customers:** Guaranteed 5% discount + Unlimited earning potential (1% of downline spending) + Passive income from 3 levels of referrals.
-* **For Restaurants:** Pay-for-performance (cost caps at ~8%) + Measurable ROI + Zero upfront marketing cost.
+- **For Customers:** Guaranteed discount on first visit (default 5%, configurable per restaurant) + Unlimited earning potential (1% of downline spending) + Passive income from 3 levels of referrals.
+- **For Restaurants:** Pay-for-performance (cost caps at ~8%) + Measurable ROI + Zero upfront marketing cost. Discount and max redemption percentages are configurable per restaurant.
 
 ---
 
@@ -32,20 +32,20 @@ MakanTak is a web-based viral marketing platform that helps Malaysian local rest
 ### The Viral Loop
 
 1. **Register:** Customer scans QR at counter, registers, and gets a unique **Customer ID** (e.g., `MAKANTAK-ABC123`).
-2. **First Visit:** Customer gets a **Guaranteed 5% Discount** on their first visit to *any* participating restaurant.
+2. **First Visit:** Customer gets a **Guaranteed 5% Discount** on their first visit to _any_ participating restaurant.
 3. **Share:** System automatically generates a **Restaurant-Specific Promotion Code** (e.g., `MAKANTAK-CHUANXING-JOHNSMITH`) for that customer.
 4. **Earn:** When a friend uses that code:
-    * Friend gets 5% discount (First Visit).
-    * Original Customer earns **1% of the bill** as Virtual Currency (VC).
-    * Uplines (Level 2 & 3) also earn 1% each.
+   - Friend gets 5% discount (First Visit).
+   - Original Customer earns **1% of the bill** as Virtual Currency (VC).
+   - Uplines (Level 2 & 3) also earn 1% each.
 5. **Redeem:** VC can be redeemed at checkout (capped at 20% of total bill).
 
 ### Multi-Level Rewards Model
 
-* **Level 1 (Direct Referrer):** Earns 1%
-* **Level 2 (Upline's Upline):** Earns 1%
-* **Level 3 (Grand-upline):** Earns 1%
-* **Restaurant Cost Cap:** 5% (Guaranteed) + 3% (Referrals) = **Max 8% Marketing Cost**
+- **Level 1 (Direct Referrer):** Earns 1%
+- **Level 2 (Upline's Upline):** Earns 1%
+- **Level 3 (Grand-upline):** Earns 1%
+- **Restaurant Cost Cap:** 5% (Guaranteed) + 3% (Referrals) = **Max 8% Marketing Cost**
 
 ---
 
@@ -55,47 +55,47 @@ MakanTak is a web-based viral marketing platform that helps Malaysian local rest
 
 #### Customer Portal
 
-* ✅ **Registration/Auth:** Email, Password, Birthday, Age validation.
-* ✅ **Referral System:** Unique Customer ID generation, QR display.
-* ✅ **Wallet:** Balance display, transaction history (Earnings/Redemptions).
-* ✅ **Restaurant Promotion:** Auto-generation of restaurant-specific share codes.
+- ✅ **Registration/Auth:** Email, Password, Birthday, Age validation.
+- ✅ **Referral System:** Unique Customer ID generation, QR display.
+- ✅ **Wallet:** Balance display, transaction history (Earnings/Redemptions).
+- ✅ **Restaurant Promotion:** Auto-generation of restaurant-specific share codes.
 
 #### Staff Portal
 
-* ✅ **Checkout Flow:** QR Scanning (Camera), Manual Code Entry fallback.
-* ✅ **Transaction Processing:** Bill entry, VC redemption (max 20%), AI Receipt OCR.
-* ✅ **Customer Verification:** First-visit detection, Birthday detection.
+- ✅ **Checkout Flow:** QR Scanning (Camera), Manual Code Entry fallback.
+- ✅ **Transaction Processing:** Bill entry, VC redemption (max 20%), AI Receipt OCR.
+- ✅ **Customer Verification:** First-visit detection, Birthday detection.
 
 #### Merchant Portal
 
-* ✅ **Analytics Dashboard:** Revenue, Discounts, ROI tracking.
-* ✅ **Customer Insights:** RFM Segmentation (Recency, Frequency, Monetary).
-* ✅ **Management:** Branch and Staff management.
+- ✅ **Analytics Dashboard:** Revenue, Discounts, ROI tracking.
+- ✅ **Customer Insights:** RFM Segmentation (Recency, Frequency, Monetary).
+- ✅ **Management:** Branch and Staff management.
 
 #### Backend
 
-* ✅ **Referral Logic:** 3-level upline tracking.
-* ✅ **Expiry System:** 30-day expiry for earned VC (Cron job).
-* ✅ **Security:** RLS policies, Role-based access (Customer/Staff/Merchant).
+- ✅ **Referral Logic:** 3-level upline tracking.
+- ✅ **Expiry System:** 30-day expiry for earned VC (Cron job).
+- ✅ **Security:** RLS policies, Role-based access (Customer/Staff/Merchant).
 
 ### SHOULD HAVE (High Priority Post-MVP)
 
-* 🔶 **Detailed Tree View:** Visual graph of downlines (currently list view).
-* 🔶 **CSV Exports:** Data export for merchants.
-* 🔶 **Transaction List:** Searchable history for merchants.
+- 🔶 **Detailed Tree View:** Visual graph of downlines (currently list view).
+- 🔶 **CSV Exports:** Data export for merchants.
+- 🔶 **Transaction List:** Searchable history for merchants.
 
 ### WON'T HAVE (Phase 2/3)
 
-* ❌ **Cross-Restaurant Network:** Wallet is currently scoped to the specific restaurant chain for the pilot.
-* ❌ **Native Mobile Apps:** PWA/Web-only for now.
+- ❌ **Cross-Restaurant Network:** Wallet is currently scoped to the specific restaurant chain for the pilot.
+- ❌ **Native Mobile Apps:** PWA/Web-only for now.
 
 ---
 
 ## 4. Market Opportunity
 
-* **Target:** Malaysian local restaurants (Kopitiam, Mamak, Cafes).
-* **Initial Focus:** Klang Valley (Pilot phase).
-* **Differentiation:** Unlike GrabFood/Foodpanda (high commissions) or Fave (one-off deals), MakanTak builds **owned** referral networks for restaurants.
+- **Target:** Malaysian local restaurants (Kopitiam, Mamak, Cafes).
+- **Initial Focus:** Klang Valley (Pilot phase).
+- **Differentiation:** Unlike GrabFood/Foodpanda (high commissions) or Fave (one-off deals), MakanTak builds **owned** referral networks for restaurants.
 
 ---
 

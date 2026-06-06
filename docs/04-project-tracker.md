@@ -3,7 +3,7 @@
 ## MakanTak - Development Status
 
 **Document Type:** Project Management  
-**Last Updated:** 2026-06-06 (Security Hardening — API Key Migration, CORS, RLS & N+1 Fix)  
+**Last Updated:** 2026-06-07 (RLS InitPlan Optimization, SECURITY DEFINER Lockdown, Frontend Audit Fixes)  
 **Overall Status:** 🟢 Production Ready (100%)
 
 ---
@@ -11,6 +11,14 @@
 ## 1. Recent Updates (Changelog)
 
 ### 📅 Jun 2026 Updates
+
+**Security & Performance Audit — Deep Fixes** ✅ (Jun 6-7)
+
+- **SECURITY DEFINER Lockdown (P0):** Revoked `EXECUTE` from both `anon` and `public` roles on all 19 user-facing `SECURITY DEFINER` functions. Re-granted to `authenticated` for 18 functions. `generate_restaurant_referral_code` fully locked (internal-only). Migrations: `revoke_anon_execute_on_security_definer_functions`, `revoke_public_execute_regrant_authenticated`.
+- **RLS InitPlan Optimization (P1):** Rewrote all 44 RLS policies to wrap `auth.uid()` in `(SELECT auth.uid())`, forcing PostgreSQL to evaluate the JWT once per query instead of per-row. Eliminates O(n) function calls on every table scan. Migrations: `fix_rls_initplan_wrap_auth_uid_in_select`, `fix_rls_initplan_remaining_policies_batch2`.
+- **Configurable Discount Percentages (P1):** Removed hardcoded `5%` discount and `20%` max redemption from `CheckoutSheet`. Staff Dashboard now fetches `guaranteed_discount_percent` and `max_redemption_percent` from the `restaurants` table at runtime and passes them as props.
+- **ErrorBoundary Production Guard (P2):** Wrapped technical error details in `import.meta.env.DEV` check. Vite dead-code eliminates the entire block in production builds.
+- **Body Scroll Lock Dedup (P2):** Removed redundant manual `document.body.style.overflow` management from `CustomerDashboard`. The vaul Drawer component handles scroll locking natively.
 
 **Security Hardening & Performance Fixes** ✅ (Jun 5-6)
 

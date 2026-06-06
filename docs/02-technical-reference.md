@@ -3,7 +3,7 @@
 ## MakanTak - System Architecture & Data Model
 
 **Document Type:** Technical Reference  
-**Last Updated:** 2026-06-06 (Security Hardening — API Key Migration, CORS, RLS & N+1 Fix)  
+**Last Updated:** 2026-06-07 (RLS InitPlan Optimization, SECURITY DEFINER Lockdown, Frontend Audit Fixes)  
 **Source of Truth:**
 
 - **Database Schema:** `/supabase/migrations/`
@@ -94,6 +94,9 @@
   - _Merchants_ can see data for all restaurants they own (via `restaurants.merchant_id`).
   - _Admins_ have full system access (via specific admin policies).
 - **SECURITY DEFINER Functions:** Critical transaction functions include explicit authorization checks at the start of the function body, verifying the caller's role and restaurant/branch assignment before executing business logic. This prevents unauthorized access even though these functions bypass RLS.
+- **Function Privilege Lockdown:** `EXECUTE` permissions on all 19 user-facing `SECURITY DEFINER` functions have been revoked from both `anon` and `public` roles (preventing inheritance). Only `authenticated` users can call them via RPC. `generate_restaurant_referral_code` is fully locked (internal-only, called by `process_checkout_transaction`). RLS helper functions (`is_admin`, `is_staff`) and the `handle_new_user` trigger remain accessible.
+- **RLS Performance (InitPlan Optimization):** All 44 RLS policies that use `auth.uid()` wrap the call in `(SELECT auth.uid())`. This forces PostgreSQL to evaluate the function once per query (as an InitPlan) rather than re-executing for every row scanned. This is critical for performance at scale.
+- **Production Error Handling:** The global `ErrorBoundary` component gates technical error details behind `import.meta.env.DEV`, preventing internal stack traces from leaking in production builds.
 
 ### Client-Side Security Utilities
 
@@ -124,24 +127,24 @@
 
 Instead of exposing raw table access for complex logic, we use **PostgreSQL Stored Procedures** (RPCs) or **Edge Functions**.
 
-| Function Name                       | Type | Purpose                                                                                                                                 |
-| :---------------------------------- | :--- | :-------------------------------------------------------------------------------------------------------------------------------------- |
-| `create_referral_chain`             | RPC  | Links a new customer to their referrer (up to 3 levels) upon first transaction. **Auth: staff at same restaurant or admin.**            |
-| `distribute_upline_rewards`         | RPC  | Calculates and inserts VC earnings for the upline chain (1% per level).                                                                 |
-| `redeem_virtual_currency`           | RPC  | Deducts VC from wallet during checkout (FIFO logic).                                                                                    |
-| `expire_virtual_currency`           | Cron | Runs daily. Expires VC older than 30 days.                                                                                              |
-| `get_dashboard_summary`             | RPC  | Returns comprehensive dashboard data including RFM segmentation. **Auth: merchant who owns the restaurant or admin.**                   |
-| `process_checkout_transaction`      | RPC  | Creates a checkout transaction with discount calculation, referral chain, and reward distribution. **Auth: staff-only, branch-scoped.** |
-| `void_transaction`                  | RPC  | Voids a transaction and reverses all ledger entries. **Auth: staff at same restaurant or admin.**                                       |
-| `update_transaction_with_receipt`   | RPC  | Updates a transaction with receipt photo URL and OCR data. **Auth: staff at same restaurant or admin.**                                 |
-| `find_transaction_by_receipt`       | RPC  | Finds transactions matching receipt date/time and amount. **Auth: staff at same restaurant or admin.**                                  |
-| `get_top_sharers`                   | RPC  | Returns top referral sharers for a restaurant with network value. **Auth: merchant who owns the restaurant or admin.**                  |
-| `generate_restaurant_referral_code` | RPC  | Generates a unique referral code for a user at a restaurant. **Auth: service role or caller = target user.**                            |
-| `check_ai_chat_rate_limit`          | RPC  | Validates user hasn't exceeded 50 messages/hour limit. **Auth: service role or caller = target user.**                                  |
-| `ai-chat`                           | Edge | Secure AI chat endpoint with Gemini streaming and session persistence.                                                                  |
-| `receipt-ocr`                       | Edge | Proxies Gemini Vision API for receipt OCR. Authenticates caller and enforces staff/merchant/admin role. API key stays server-side.      |
-| `expire-vc`                         | Edge | Cron job (daily 2 AM MYT). Expires VC older than 30 days via `expire_virtual_currency()` RPC.                                           |
-| `send-earning-notification`         | Edge | Sends email via SendGrid when a user earns VC.                                                                                          |
+| Function Name                       | Type | Purpose                                                                                                                                                |
+| :---------------------------------- | :--- | :----------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `create_referral_chain`             | RPC  | Links a new customer to their referrer (up to 3 levels) upon first transaction. **Auth: staff at same restaurant or admin.**                           |
+| `distribute_upline_rewards`         | RPC  | Calculates and inserts VC earnings for the upline chain (1% per level).                                                                                |
+| `redeem_virtual_currency`           | RPC  | Deducts VC from wallet during checkout (FIFO logic).                                                                                                   |
+| `expire_virtual_currency`           | Cron | Runs daily. Expires VC older than 30 days.                                                                                                             |
+| `get_dashboard_summary`             | RPC  | Returns comprehensive dashboard data including RFM segmentation. **Auth: merchant who owns the restaurant or admin.**                                  |
+| `process_checkout_transaction`      | RPC  | Creates a checkout transaction with discount calculation, referral chain, and reward distribution. **Auth: staff-only, branch-scoped.**                |
+| `void_transaction`                  | RPC  | Voids a transaction and reverses all ledger entries. **Auth: staff at same restaurant or admin.**                                                      |
+| `update_transaction_with_receipt`   | RPC  | Updates a transaction with receipt photo URL and OCR data. **Auth: staff at same restaurant or admin.**                                                |
+| `find_transaction_by_receipt`       | RPC  | Finds transactions matching receipt date/time and amount. **Auth: staff at same restaurant or admin.**                                                 |
+| `get_top_sharers`                   | RPC  | Returns top referral sharers for a restaurant with network value. **Auth: merchant who owns the restaurant or admin.**                                 |
+| `generate_restaurant_referral_code` | RPC  | Generates a unique referral code for a user at a restaurant. **Auth: internal-only (no direct RPC access); called by `process_checkout_transaction`.** |
+| `check_ai_chat_rate_limit`          | RPC  | Validates user hasn't exceeded 50 messages/hour limit. **Auth: service role or caller = target user.**                                                 |
+| `ai-chat`                           | Edge | Secure AI chat endpoint with Gemini streaming and session persistence.                                                                                 |
+| `receipt-ocr`                       | Edge | Proxies Gemini Vision API for receipt OCR. Authenticates caller and enforces staff/merchant/admin role. API key stays server-side.                     |
+| `expire-vc`                         | Edge | Cron job (daily 2 AM MYT). Expires VC older than 30 days via `expire_virtual_currency()` RPC.                                                          |
+| `send-earning-notification`         | Edge | Sends email via SendGrid when a user earns VC.                                                                                                         |
 
 ### API Patterns
 
