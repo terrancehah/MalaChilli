@@ -3,7 +3,7 @@
 ## MakanTak - System Architecture & Data Model
 
 **Document Type:** Technical Reference  
-**Last Updated:** 2026-03-06 (Security Audit — Function Authorization & RLS Policy Fixes)  
+**Last Updated:** 2026-06-06 (Security Hardening — API Key Migration, CORS, RLS & N+1 Fix)  
 **Source of Truth:**
 
 - **Database Schema:** `/supabase/migrations/`
@@ -139,6 +139,8 @@ Instead of exposing raw table access for complex logic, we use **PostgreSQL Stor
 | `generate_restaurant_referral_code` | RPC  | Generates a unique referral code for a user at a restaurant. **Auth: service role or caller = target user.**                            |
 | `check_ai_chat_rate_limit`          | RPC  | Validates user hasn't exceeded 50 messages/hour limit. **Auth: service role or caller = target user.**                                  |
 | `ai-chat`                           | Edge | Secure AI chat endpoint with Gemini streaming and session persistence.                                                                  |
+| `receipt-ocr`                       | Edge | Proxies Gemini Vision API for receipt OCR. Authenticates caller and enforces staff/merchant/admin role. API key stays server-side.      |
+| `expire-vc`                         | Edge | Cron job (daily 2 AM MYT). Expires VC older than 30 days via `expire_virtual_currency()` RPC.                                           |
 | `send-earning-notification`         | Edge | Sends email via SendGrid when a user earns VC.                                                                                          |
 
 ### API Patterns

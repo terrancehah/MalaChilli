@@ -3,12 +3,21 @@
 ## MakanTak - Development Status
 
 **Document Type:** Project Management  
-**Last Updated:** 2026-03-06 (Security Audit — Function Authorization & RLS Policy Fixes)  
+**Last Updated:** 2026-06-06 (Security Hardening — API Key Migration, CORS, RLS & N+1 Fix)  
 **Overall Status:** 🟢 Production Ready (100%)
 
 ---
 
 ## 1. Recent Updates (Changelog)
+
+### 📅 Jun 2026 Updates
+
+**Security Hardening & Performance Fixes** ✅ (Jun 5-6)
+
+- **Gemini API Key Migration (P0):** Moved Gemini API key from client-side (`VITE_GEMINI_API_KEY`) to server-side. Created `receipt-ocr` edge function to proxy Gemini Vision API calls securely. Removed `@google/generative-ai` from frontend dependencies.
+- **Audit Log RLS Fix (P1):** Replaced permissive `WITH CHECK (true)` INSERT policy on `audit_logs` with `WITH CHECK (false)`. All legitimate inserts use SECURITY DEFINER functions or service role (both bypass RLS). Migration: `20260605000001_fix_audit_logs_insert_policy.sql`.
+- **N+1 Query Fix (P1):** Customer dashboard was firing 1 + N queries (one per transaction) to fetch VC earned. Replaced with a single batch query using `.in()` filter, reducing 11 queries to 2.
+- **CORS Hardening (P1):** Replaced wildcard `Access-Control-Allow-Origin: *` on all edge functions with an origin whitelist (`www.makantak.com`, `makantak.com`, `localhost:5173`). Removed CORS from `expire-vc` entirely (cron-only, never called from browsers).
 
 ### 📅 Mar 2026 Updates
 

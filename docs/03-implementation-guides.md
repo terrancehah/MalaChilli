@@ -12,8 +12,8 @@
 
 ### 1. Prerequisites
 
-* **Node.js:** Version 20 (enforced by `.nvmrc`)
-* **Supabase:** Account and project created.
+- **Node.js:** Version 20 (enforced by `.nvmrc`)
+- **Supabase:** Account and project created.
 
 ### 2. Installation
 
@@ -26,16 +26,16 @@ npm install
 
 1. Create `.env` file in `frontend/` directory:
 
-    ```bash
-    cp .env.example .env
-    ```
+   ```bash
+   cp .env.example .env
+   ```
 
 2. Add Supabase credentials:
 
-    ```env
-    VITE_SUPABASE_URL=your_supabase_url
-    VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
-    ```
+   ```env
+   VITE_SUPABASE_URL=your_supabase_url
+   VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
+   ```
 
 ### 4. Running Locally
 
@@ -49,22 +49,23 @@ npm run dev
 ## PART B: Design System
 
 > **📖 Full Reference:** See `05-design-system.md` for comprehensive visual design standards
-including typography, colors, spacing, components, and state patterns.
+> including typography, colors, spacing, components, and state patterns.
 >
 > **📝 Content Guidelines:** See `06-content-voice-guidelines.md` for UX writing standards, terminology, and tone guidelines.
 
 ### Quick Reference
 
-* **Mobile-First:** All designs start with mobile viewport.
-* **Touch-Optimized:** Min 44px touch targets.
-* **Shadow Depth:** Use shadows to simulate physical button presses (`shadow-md` -> `shadow-sm` on press).
-* **QR Scanner:** `@yudiel/react-qr-scanner` library with 256x256px transparent cutout.
+- **Mobile-First:** All designs start with mobile viewport.
+- **Touch-Optimized:** Min 44px touch targets.
+- **Shadow Depth:** Use shadows to simulate physical button presses (`shadow-md` -> `shadow-sm` on press).
+- **QR Scanner:** `@yudiel/react-qr-scanner` library with 256x256px transparent cutout.
 
 ### Responsive Typography Implementation (Feb 2026)
 
 **Overview:** All pages now use mobile-first responsive typography following industry best practices.
 
 **Implementation Pattern:**
+
 ```tsx
 // Landing Page (Text-Heavy)
 <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl">Hero Title</h1>
@@ -76,12 +77,14 @@ including typography, colors, spacing, components, and state patterns.
 ```
 
 **Key Principles:**
+
 - **16px minimum** on mobile for body text (iOS requirement)
 - **2-3 breakpoints maximum** (sm, md, lg) - avoid excessive scaling
 - **Text-heavy pages** use larger base sizes (16-18px)
 - **Interaction-heavy pages** use smaller base sizes (14-16px)
 
 **Files Updated:**
+
 - `frontend/src/pages/HomePage.tsx` - Landing page typography
 - `frontend/src/pages/customer/Dashboard.tsx` - Customer dashboard
 - `frontend/src/pages/staff/Dashboard.tsx` - Staff dashboard
@@ -97,8 +100,7 @@ including typography, colors, spacing, components, and state patterns.
 
 ### 1. Directory Structure
 
-``
-/src
+`/src
   ├── /components          # UI Components
   │   ├── /auth            # Authentication (ProtectedRoute, etc.)
   │   ├── /customer        # Customer dashboard components
@@ -112,15 +114,14 @@ including typography, colors, spacing, components, and state patterns.
   ├── /pages               # Route Views
   ├── /services            # API service layer
   ├── /translations        # i18n (en/, ms/, zh/ subdirectories)
-  └── /types               # TypeScript type definitions
-``
+  └── /types               # TypeScript type definitions`
 
 ### 2. Internationalization (i18n)
 
-* **Files:** `/src/translations/{en,ms,zh}.ts`
-* **Pattern:** centralized `getTranslation(lang)` function.
-* **Usage:** `const t = getTranslation(language);` -> `{t.dashboard.title}`.
-* **Storage:** User preference stored in `users.preferred_language` column.
+- **Files:** `/src/translations/{en,ms,zh}.ts`
+- **Pattern:** centralized `getTranslation(lang)` function.
+- **Usage:** `const t = getTranslation(language);` -> `{t.dashboard.title}`.
+- **Storage:** User preference stored in `users.preferred_language` column.
 
 ### 3. Authentication Flow
 
@@ -130,20 +131,20 @@ including typography, colors, spacing, components, and state patterns.
 
 #### Auth UI Features
 
-* **Show/Hide Password:** Toggle visibility on all password fields.
-* **Remember Me:** Checkbox on login forms (default: checked).
-* **Rate Limiting:** Client-side protection against brute-force attacks.
-* **Password Requirements:** Minimum 8 characters, 1 uppercase letter, 1 number.
-* **Dark Mode:** Full dark mode support on all auth pages.
+- **Show/Hide Password:** Toggle visibility on all password fields.
+- **Remember Me:** Checkbox on login forms (default: checked).
+- **Rate Limiting:** Client-side protection against brute-force attacks.
+- **Password Requirements:** Minimum 8 characters, 1 uppercase letter, 1 number.
+- **Dark Mode:** Full dark mode support on all auth pages.
 
 #### Auth Components
 
-| Component | Location | Purpose |
-| :--- | :--- | :--- |
-| `LoginForm` | `/components/auth/LoginForm.tsx` | Reusable login form (modal + page) |
-| `RegisterForm` | `/components/auth/RegisterForm.tsx` | Reusable registration form |
-| `Login` | `/pages/customer/Login.tsx` | Standalone login page wrapper |
-| `Register` | `/pages/RegisterPage.tsx` | Standalone registration page |
+| Component      | Location                            | Purpose                            |
+| :------------- | :---------------------------------- | :--------------------------------- |
+| `LoginForm`    | `/components/auth/LoginForm.tsx`    | Reusable login form (modal + page) |
+| `RegisterForm` | `/components/auth/RegisterForm.tsx` | Reusable registration form         |
+| `Login`        | `/pages/customer/Login.tsx`         | Standalone login page wrapper      |
+| `Register`     | `/pages/RegisterPage.tsx`           | Standalone registration page       |
 
 ### 4. Admin User Management
 
@@ -151,24 +152,24 @@ The Super Admin dashboard (`/admin/users`) provides comprehensive user managemen
 
 #### Features
 
-* **Sortable Columns:** Click headers to sort by Name, Role, Joined Date, or Last Login.
-  * Role sorting uses hierarchy: Admin > Merchant > Staff > Customer (not alphabetical).
-* **Role Filter:** Dropdown to filter by Customer, Staff, Merchant, or Admin.
-* **Restaurant/Branch Display:** Shows assigned restaurant(s) for merchants and staff.
-  * Merchants: Displays up to 3 restaurant names, with "+N more" for additional.
-  * Staff: Shows restaurant name and branch name.
-* **Pagination:** 15 users per page with navigation controls.
+- **Sortable Columns:** Click headers to sort by Name, Role, Joined Date, or Last Login.
+  - Role sorting uses hierarchy: Admin > Merchant > Staff > Customer (not alphabetical).
+- **Role Filter:** Dropdown to filter by Customer, Staff, Merchant, or Admin.
+- **Restaurant/Branch Display:** Shows assigned restaurant(s) for merchants and staff.
+  - Merchants: Displays up to 3 restaurant names, with "+N more" for additional.
+  - Staff: Shows restaurant name and branch name.
+- **Pagination:** 15 users per page with navigation controls.
 
 #### Role Change Workflow
 
 When changing a user's role via the Edit modal:
 
-| New Role | Required Fields | Database Updates |
-| :--- | :--- | :--- |
-| Customer | None | Clears `user.restaurant_id`, `user.branch_id` |
-| Staff | Restaurant + Branch | Sets `user.restaurant_id`, `user.branch_id` |
-| Merchant | Restaurant | Sets `restaurant.merchant_id` to user ID |
-| Admin | None | Clears `user.restaurant_id`, `user.branch_id` |
+| New Role | Required Fields     | Database Updates                              |
+| :------- | :------------------ | :-------------------------------------------- |
+| Customer | None                | Clears `user.restaurant_id`, `user.branch_id` |
+| Staff    | Restaurant + Branch | Sets `user.restaurant_id`, `user.branch_id`   |
+| Merchant | Restaurant          | Sets `restaurant.merchant_id` to user ID      |
+| Admin    | None                | Clears `user.restaurant_id`, `user.branch_id` |
 
 **Note:** Merchants are linked via `restaurants.merchant_id`, not `users.restaurant_id`. One merchant can own multiple restaurants.
 
@@ -185,7 +186,7 @@ Restaurant ownership can **only** be modified by Super Admins via the admin dash
 #### The "One Customer, Multiple Codes" Model
 
 A user has one **Customer ID** (stored in `users.referral_code`) for identification,
-but generates unique **Promotion Codes** for *each* restaurant they visit.
+but generates unique **Promotion Codes** for _each_ restaurant they visit.
 
 **Flow:**
 
@@ -196,27 +197,29 @@ but generates unique **Promotion Codes** for *each* restaurant they visit.
 
 #### Link Handling
 
-* **Route:** `/join/:restaurantSlug/:code`
-* **Logic:**
-  * Validates code belongs to that restaurant.
-  * If user logged in -> Saves code to `saved_referral_codes`.
-  * If user new -> Redirects to Register (code persists in session).
+- **Route:** `/join/:restaurantSlug/:code`
+- **Logic:**
+  - Validates code belongs to that restaurant.
+  - If user logged in -> Saves code to `saved_referral_codes`.
+  - If user new -> Redirects to Register (code persists in session).
 
 ### 2. OCR Receipt Scanning (Staff) - ✅ Implemented
 
-#### Engine: Google Gemini 2.5 Flash
+#### Engine: Google Gemini 2.5 Flash (via `receipt-ocr` Edge Function)
 
-* **Why:** Contextual understanding of receipts vs raw text OCR.
-* **Capabilities:** Extracts Date, Time, Total, and Line Items. Matches items against restaurant menu.
+- **Why:** Contextual understanding of receipts vs raw text OCR.
+- **Capabilities:** Extracts Date, Time, Total, and Line Items. Matches items against restaurant menu.
+- **Security:** Gemini API key is stored server-side as a Supabase secret. The frontend calls the `receipt-ocr` edge function which authenticates the caller (JWT), verifies staff/merchant/admin role, then proxies the request to Gemini.
 
 #### Workflow
 
 1. **Scan:** Staff uploads/snaps receipt photo in Dashboard.
-2. **Process:** Gemini extracts structured data (JSON).
-3. **Match:**
-   * **Fuzzy Match:** Compares extracted text with `menu_items` using Levenshtein distance.
-   * **Transaction Match:** Looks for existing transaction by `bill_amount` and `timestamp`.
-4. **Link:** Updates the transaction with `receipt_photo_url` and structured item data.
+2. **Proxy:** Frontend sends base64 image to `receipt-ocr` edge function (auth required).
+3. **Process:** Edge function calls Gemini Vision API and returns structured data (JSON).
+4. **Match:**
+   - **Fuzzy Match:** Compares extracted text with `menu_items` using Levenshtein distance.
+   - **Transaction Match:** Looks for existing transaction by `bill_amount` and `timestamp`.
+5. **Link:** Updates the transaction with `receipt_photo_url` and structured item data.
 
 ### 3. Staff Checkout Flow (Streamlined)
 
