@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useAuth } from "../../contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "../../lib/supabase";
@@ -127,18 +127,17 @@ export default function CustomerDashboard() {
     };
   }, [showShareSheet, showTransactionSheet]);
 
-  // Fetch restaurant codes and visited restaurants with VC balances
-  useEffect(() => {
-    const fetchData = async () => {
-      if (!user) return;
+  // Fetches all customer dashboard data (restaurants, wallets, referrals, transactions)
+  const fetchData = useCallback(async () => {
+    if (!user) return;
 
-      setLoadingCodes(true);
-      try {
-        // Fetch visited restaurants
-        const { data: visitedData, error: visitedError } = await supabase
-          .from("customer_restaurant_history")
-          .select(
-            `
+    setLoadingCodes(true);
+    try {
+      // Fetch visited restaurants
+      const { data: visitedData, error: visitedError } = await supabase
+        .from("customer_restaurant_history")
+        .select(
+          `
             restaurant_id,
             first_visit_date,
             last_visit_date,
@@ -146,106 +145,106 @@ export default function CustomerDashboard() {
             total_spent,
             restaurants (name, slug)
           `
-          )
-          .eq("customer_id", user.id);
+        )
+        .eq("customer_id", user.id);
 
-        if (visitedError) throw visitedError;
+      if (visitedError) throw visitedError;
 
-        // Fetch restaurant-specific virtual currency balances
-        const { data: walletData, error: walletError } = await supabase
-          .from("customer_wallet_balance_by_restaurant")
-          .select("*")
-          .eq("user_id", user.id);
+      // Fetch restaurant-specific virtual currency balances
+      const { data: walletData, error: walletError } = await supabase
+        .from("customer_wallet_balance_by_restaurant")
+        .select("*")
+        .eq("user_id", user.id);
 
-        if (walletError) throw walletError;
+      if (walletError) throw walletError;
 
-        // Fetch total referred count (count unique downlines where user is upline)
-        const { data: referralData, error: referralError } = await supabase
-          .from("referrals")
-          .select("downline_id")
-          .eq("upline_id", user.id);
+      // Fetch total referred count (count unique downlines where user is upline)
+      const { data: referralData, error: referralError } = await supabase
+        .from("referrals")
+        .select("downline_id")
+        .eq("upline_id", user.id);
 
-        if (referralError) throw referralError;
-        const uniqueReferrals = new Set((referralData || []).map((r) => r.downline_id)).size;
-        setTotalReferred(uniqueReferrals);
+      if (referralError) throw referralError;
+      const uniqueReferrals = new Set((referralData || []).map((r) => r.downline_id)).size;
+      setTotalReferred(uniqueReferrals);
 
-        // Create wallet balance map by restaurant_id (restaurant-specific VC)
-        const walletMap = new Map();
-        (walletData || []).forEach((wallet: any) => {
-          walletMap.set(wallet.restaurant_id, {
-            balance: parseFloat(wallet.available_balance) || 0,
-            earned: parseFloat(wallet.total_earned) || 0,
-            redeemed: parseFloat(wallet.total_redeemed) || 0,
-          });
+      // Create wallet balance map by restaurant_id (restaurant-specific VC)
+      const walletMap = new Map();
+      (walletData || []).forEach((wallet: any) => {
+        walletMap.set(wallet.restaurant_id, {
+          balance: parseFloat(wallet.available_balance) || 0,
+          earned: parseFloat(wallet.total_earned) || 0,
+          redeemed: parseFloat(wallet.total_redeemed) || 0,
         });
+      });
 
-        // Fetch existing referral codes
-        const { data: codesData, error: codesError } = await supabase
-          .from("user_restaurant_referral_codes")
-          .select(
-            `
+      // Fetch existing referral codes
+      const { data: codesData, error: codesError } = await supabase
+        .from("user_restaurant_referral_codes")
+        .select(
+          `
             id,
             restaurant_id,
             referral_code
           `
-          )
-          .eq("user_id", user.id)
-          .eq("is_active", true);
+        )
+        .eq("user_id", user.id)
+        .eq("is_active", true);
 
-        if (codesError) throw codesError;
+      if (codesError) throw codesError;
 
-        // Create referral code map by restaurant_id
-        const codeMap = new Map();
-        (codesData || []).forEach((item: any) => {
-          codeMap.set(item.restaurant_id, {
-            id: item.id,
-            referral_code: item.referral_code,
-          });
+      // Create referral code map by restaurant_id
+      const codeMap = new Map();
+      (codesData || []).forEach((item: any) => {
+        codeMap.set(item.restaurant_id, {
+          id: item.id,
+          referral_code: item.referral_code,
         });
+      });
 
-        // Build restaurant list from customer_restaurant_history (primary source)
-        // This ensures restaurants show even without a referral code
-        const transformedCodes: RestaurantCode[] = (visitedData || []).map((item: any) => {
-          const codeInfo = codeMap.get(item.restaurant_id);
-          const walletInfo = walletMap.get(item.restaurant_id);
-          return {
-            id: codeInfo?.id || item.restaurant_id,
-            restaurant_id: item.restaurant_id,
-            referral_code: codeInfo?.referral_code,
-            restaurant: item.restaurants || {
-              name: "Unknown",
-              slug: "unknown",
-            },
-            total_visits: item.total_visits,
-            first_visit_date: item.first_visit_date,
-            last_visit_date: item.last_visit_date,
-            total_spent: item.total_spent,
-            balance: walletInfo?.balance,
-            earned: walletInfo?.earned,
-            redeemed: walletInfo?.redeemed,
-          };
-        });
+      // Build restaurant list from customer_restaurant_history (primary source)
+      // This ensures restaurants show even without a referral code
+      const transformedCodes: RestaurantCode[] = (visitedData || []).map((item: any) => {
+        const codeInfo = codeMap.get(item.restaurant_id);
+        const walletInfo = walletMap.get(item.restaurant_id);
+        return {
+          id: codeInfo?.id || item.restaurant_id,
+          restaurant_id: item.restaurant_id,
+          referral_code: codeInfo?.referral_code,
+          restaurant: item.restaurants || {
+            name: "Unknown",
+            slug: "unknown",
+          },
+          total_visits: item.total_visits,
+          first_visit_date: item.first_visit_date,
+          last_visit_date: item.last_visit_date,
+          total_spent: item.total_spent,
+          balance: walletInfo?.balance,
+          earned: walletInfo?.earned,
+          redeemed: walletInfo?.redeemed,
+        };
+      });
 
-        setRestaurantCodes(transformedCodes);
+      setRestaurantCodes(transformedCodes);
 
-        // Calculate totals across all restaurants
-        const totalEarnedAmount = (walletData || []).reduce(
-          (sum: number, wallet: any) => sum + (parseFloat(wallet.total_earned) || 0),
-          0
-        );
-        const totalRedeemedAmount = (walletData || []).reduce(
-          (sum: number, wallet: any) => sum + (parseFloat(wallet.total_redeemed) || 0),
-          0
-        );
+      // Calculate totals across all restaurants
+      const totalEarnedAmount = (walletData || []).reduce(
+        (sum: number, wallet: any) => sum + (parseFloat(wallet.total_earned) || 0),
+        0
+      );
+      const totalRedeemedAmount = (walletData || []).reduce(
+        (sum: number, wallet: any) => sum + (parseFloat(wallet.total_redeemed) || 0),
+        0
+      );
 
-        setTotalEarned(totalEarnedAmount);
-        setTotalRedeemed(totalRedeemedAmount);
+      setTotalEarned(totalEarnedAmount);
+      setTotalRedeemed(totalRedeemedAmount);
 
-        // Fetch recent transactions with VC earned
-        const { data: transactionsData, error: transactionsError } = await supabase
-          .from("transactions")
-          .select(
-            `
+      // Fetch recent transactions with VC earned
+      const { data: transactionsData, error: transactionsError } = await supabase
+        .from("transactions")
+        .select(
+          `
             id,
             bill_amount,
             guaranteed_discount_amount,
@@ -261,45 +260,47 @@ export default function CustomerDashboard() {
               )
             )
           `
-          )
-          .eq("customer_id", user.id)
-          .order("created_at", { ascending: false })
-          .limit(10);
+        )
+        .eq("customer_id", user.id)
+        .order("created_at", { ascending: false })
+        .limit(10);
 
-        if (transactionsError) throw transactionsError;
+      if (transactionsError) throw transactionsError;
 
-        // Batch fetch VC earned for all transactions in a single query (avoids N+1)
-        const transactionIds = (transactionsData || []).map((t: any) => t.id);
-        const { data: allVCEarned } = await supabase
-          .from("virtual_currency_ledger")
-          .select("related_transaction_id, amount")
-          .eq("user_id", user.id)
-          .in("related_transaction_id", transactionIds)
-          .eq("transaction_type", "earn");
+      // Batch fetch VC earned for all transactions in a single query (avoids N+1)
+      const transactionIds = (transactionsData || []).map((t: any) => t.id);
+      const { data: allVCEarned } = await supabase
+        .from("virtual_currency_ledger")
+        .select("related_transaction_id, amount")
+        .eq("user_id", user.id)
+        .in("related_transaction_id", transactionIds)
+        .eq("transaction_type", "earn");
 
-        // Group VC earnings by transaction ID and sum amounts
-        const vcByTransaction: Record<string, number> = {};
-        (allVCEarned || []).forEach((vc: any) => {
-          const txId = vc.related_transaction_id;
-          vcByTransaction[txId] = (vcByTransaction[txId] || 0) + parseFloat(vc.amount);
-        });
+      // Group VC earnings by transaction ID and sum amounts
+      const vcByTransaction: Record<string, number> = {};
+      (allVCEarned || []).forEach((vc: any) => {
+        const txId = vc.related_transaction_id;
+        vcByTransaction[txId] = (vcByTransaction[txId] || 0) + parseFloat(vc.amount);
+      });
 
-        // Merge VC totals into each transaction
-        const transactionsWithVC = (transactionsData || []).map((transaction: any) => ({
-          ...transaction,
-          vc_earned: vcByTransaction[transaction.id] || 0,
-        }));
+      // Merge VC totals into each transaction
+      const transactionsWithVC = (transactionsData || []).map((transaction: any) => ({
+        ...transaction,
+        vc_earned: vcByTransaction[transaction.id] || 0,
+      }));
 
-        setRecentTransactions(transactionsWithVC);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      } finally {
-        setLoadingCodes(false);
-      }
-    };
-
-    fetchData();
+      setRecentTransactions(transactionsWithVC);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    } finally {
+      setLoadingCodes(false);
+    }
   }, [user]);
+
+  // Initial data load
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
 
   const handleSignOut = async () => {
     try {
@@ -351,9 +352,9 @@ export default function CustomerDashboard() {
     },
   ];
 
+  // Pull-to-refresh handler — re-fetches all data without full page reload
   const handleRefresh = async () => {
-    // Reload all data
-    window.location.reload();
+    await fetchData();
   };
 
   return (

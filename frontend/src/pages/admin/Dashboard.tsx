@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "../../lib/supabase";
 import { Button } from "../../components/ui/button";
@@ -26,45 +26,47 @@ export default function AdminDashboard() {
   // Language preference with database persistence
   const { language, setLanguage } = useLanguagePreference(user?.id);
 
-  useEffect(() => {
-    const fetchStats = async () => {
-      try {
-        setLoading(true);
+  // Fetches admin statistics (user counts by role + transaction count)
+  const fetchStats = useCallback(async () => {
+    try {
+      setLoading(true);
 
-        // Fetch user counts by role
-        const { data: users, error: userError } = await supabase.from("users").select("role");
+      // Fetch user counts by role
+      const { data: users, error: userError } = await supabase.from("users").select("role");
 
-        if (userError) throw userError;
+      if (userError) throw userError;
 
-        const { count: transactionCount, error: txError } = await supabase
-          .from("transactions")
-          .select("*", { count: "exact", head: true });
+      const { count: transactionCount, error: txError } = await supabase
+        .from("transactions")
+        .select("*", { count: "exact", head: true });
 
-        if (txError) throw txError;
+      if (txError) throw txError;
 
-        const totalUsers = users?.length || 0;
-        const totalMerchants = users?.filter((u) => u.role === "merchant").length || 0;
-        const totalStaff = users?.filter((u) => u.role === "staff").length || 0;
+      const totalUsers = users?.length || 0;
+      const totalMerchants = users?.filter((u) => u.role === "merchant").length || 0;
+      const totalStaff = users?.filter((u) => u.role === "staff").length || 0;
 
-        setStats({
-          totalUsers,
-          totalMerchants,
-          totalStaff,
-          totalTransactions: transactionCount || 0,
-        });
-      } catch (error) {
-        console.error("Error fetching admin stats:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchStats();
+      setStats({
+        totalUsers,
+        totalMerchants,
+        totalStaff,
+        totalTransactions: transactionCount || 0,
+      });
+    } catch (error) {
+      console.error("Error fetching admin stats:", error);
+    } finally {
+      setLoading(false);
+    }
   }, []);
 
+  // Initial data load
+  useEffect(() => {
+    fetchStats();
+  }, [fetchStats]);
+
+  // Pull-to-refresh handler — re-fetches stats without full page reload
   const handleRefresh = async () => {
-    // Reload statistics
-    window.location.reload();
+    await fetchStats();
   };
 
   const handleManagement = () => {

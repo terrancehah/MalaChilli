@@ -200,9 +200,15 @@ export default function StaffDashboard() {
     );
   }
 
+  // Pull-to-refresh handler — resets stale UI state without full page reload
   const handleRefresh = async () => {
-    // Just a simple refresh - reload the page state
-    window.location.reload();
+    setError("");
+    setSuccess("");
+    setCustomerData(null);
+    setCustomerWalletBalance(0);
+    setIsFirstVisit(false);
+    setIsBirthday(false);
+    setLastTransaction(null);
   };
 
   return (
