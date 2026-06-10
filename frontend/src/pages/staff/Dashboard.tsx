@@ -52,9 +52,10 @@ export default function StaffDashboard() {
   const [error, setError] = useState<string>("");
   const [success, setSuccess] = useState<string>("");
 
-  // Transaction data for success modal
+  // Transaction data for success modal (includes customerName so modal renders independently of customerData)
   const [lastTransaction, setLastTransaction] = useState<{
     id: string;
+    customerName: string;
     billAmount: number;
     discountApplied: number;
     vcRedeemed: number;
@@ -195,8 +196,10 @@ export default function StaffDashboard() {
       const discountApplied = isFirstVisit ? data.billAmount * (restaurantConfig.guaranteedDiscountPercent / 100) : 0;
 
       // Store transaction data and show success modal
+      // NOTE: customerName is captured here because customerData is nulled in the same batch
       setLastTransaction({
         id: transactionResult.transaction_id,
+        customerName: customerData.full_name,
         billAmount: data.billAmount,
         discountApplied: discountApplied,
         vcRedeemed: data.redeemAmount,
@@ -470,7 +473,7 @@ export default function StaffDashboard() {
         )}
 
         {/* Transaction Success Modal */}
-        {lastTransaction && customerData && (
+        {lastTransaction && (
           <TransactionSuccessModal
             isOpen={showSuccessModal}
             onClose={() => {
@@ -478,7 +481,7 @@ export default function StaffDashboard() {
               setLastTransaction(null);
             }}
             transactionId={lastTransaction.id}
-            customerName={customerData.full_name}
+            customerName={lastTransaction.customerName}
             billAmount={lastTransaction.billAmount}
             discountApplied={lastTransaction.discountApplied}
             vcRedeemed={lastTransaction.vcRedeemed}
